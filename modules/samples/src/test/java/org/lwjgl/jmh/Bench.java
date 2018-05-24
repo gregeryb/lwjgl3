@@ -26,6 +26,7 @@ public final class Bench {
             .include(args[0])
             .forks(1)
             //.addProfiler(WinPerfAsmProfiler.class)
+            //.addProfiler(GCProfiler.class)
             .warmupIterations(3)
             .measurementIterations(5)
             .mode(Mode.AverageTime)
