@@ -58,23 +58,22 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct VkPipelineViewportStateCreateInfo {
  *     VkStructureType sType;
- *     void const * pNext;
+ *     const void * pNext;
  *     VkPipelineViewportStateCreateFlags flags;
  *     uint32_t viewportCount;
- *     {@link VkViewport VkViewport const} * pViewports;
+ *     const {@link VkViewport VkViewport} * pViewports;
  *     uint32_t scissorCount;
- *     {@link VkRect2D VkRect2D const} * pScissors;
- * }</code></pre>
+ *     const {@link VkRect2D VkRect2D} * pScissors;
+ * }</pre></code>
  */
 public class VkPipelineViewportStateCreateInfo extends Struct implements NativeResource {
 
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */
@@ -131,7 +130,7 @@ public class VkPipelineViewportStateCreateInfo extends Struct implements NativeR
     @NativeType("VkStructureType")
     public int sType() { return nsType(address()); }
     /** Returns the value of the {@code pNext} field. */
-    @NativeType("void const *")
+    @NativeType("const void *")
     public long pNext() { return npNext(address()); }
     /** Returns the value of the {@code flags} field. */
     @NativeType("VkPipelineViewportStateCreateFlags")
@@ -141,30 +140,30 @@ public class VkPipelineViewportStateCreateInfo extends Struct implements NativeR
     public int viewportCount() { return nviewportCount(address()); }
     /** Returns a {@link VkViewport.Buffer} view of the struct array pointed to by the {@code pViewports} field. */
     @Nullable
-    @NativeType("VkViewport const *")
+    @NativeType("const VkViewport *")
     public VkViewport.Buffer pViewports() { return npViewports(address()); }
     /** Returns the value of the {@code scissorCount} field. */
     @NativeType("uint32_t")
     public int scissorCount() { return nscissorCount(address()); }
     /** Returns a {@link VkRect2D.Buffer} view of the struct array pointed to by the {@code pScissors} field. */
     @Nullable
-    @NativeType("VkRect2D const *")
+    @NativeType("const VkRect2D *")
     public VkRect2D.Buffer pScissors() { return npScissors(address()); }
 
     /** Sets the specified value to the {@code sType} field. */
     public VkPipelineViewportStateCreateInfo sType(@NativeType("VkStructureType") int value) { nsType(address(), value); return this; }
     /** Sets the specified value to the {@code pNext} field. */
-    public VkPipelineViewportStateCreateInfo pNext(@NativeType("void const *") long value) { npNext(address(), value); return this; }
+    public VkPipelineViewportStateCreateInfo pNext(@NativeType("const void *") long value) { npNext(address(), value); return this; }
     /** Sets the specified value to the {@code flags} field. */
     public VkPipelineViewportStateCreateInfo flags(@NativeType("VkPipelineViewportStateCreateFlags") int value) { nflags(address(), value); return this; }
     /** Sets the specified value to the {@code viewportCount} field. */
     public VkPipelineViewportStateCreateInfo viewportCount(@NativeType("uint32_t") int value) { nviewportCount(address(), value); return this; }
     /** Sets the address of the specified {@link VkViewport.Buffer} to the {@code pViewports} field. */
-    public VkPipelineViewportStateCreateInfo pViewports(@Nullable @NativeType("VkViewport const *") VkViewport.Buffer value) { npViewports(address(), value); return this; }
+    public VkPipelineViewportStateCreateInfo pViewports(@Nullable @NativeType("const VkViewport *") VkViewport.Buffer value) { npViewports(address(), value); return this; }
     /** Sets the specified value to the {@code scissorCount} field. */
     public VkPipelineViewportStateCreateInfo scissorCount(@NativeType("uint32_t") int value) { nscissorCount(address(), value); return this; }
     /** Sets the address of the specified {@link VkRect2D.Buffer} to the {@code pScissors} field. */
-    public VkPipelineViewportStateCreateInfo pScissors(@Nullable @NativeType("VkRect2D const *") VkRect2D.Buffer value) { npScissors(address(), value); return this; }
+    public VkPipelineViewportStateCreateInfo pScissors(@Nullable @NativeType("const VkRect2D *") VkRect2D.Buffer value) { npScissors(address(), value); return this; }
 
     /** Initializes this struct with the specified values. */
     public VkPipelineViewportStateCreateInfo set(
@@ -172,9 +171,9 @@ public class VkPipelineViewportStateCreateInfo extends Struct implements NativeR
         long pNext,
         int flags,
         int viewportCount,
-        @Nullable VkViewport.Buffer pViewports,
+        VkViewport.Buffer pViewports,
         int scissorCount,
-        @Nullable VkRect2D.Buffer pScissors
+        VkRect2D.Buffer pScissors
     ) {
         sType(sType);
         pNext(pNext);
@@ -420,7 +419,7 @@ public class VkPipelineViewportStateCreateInfo extends Struct implements NativeR
         @NativeType("VkStructureType")
         public int sType() { return VkPipelineViewportStateCreateInfo.nsType(address()); }
         /** Returns the value of the {@code pNext} field. */
-        @NativeType("void const *")
+        @NativeType("const void *")
         public long pNext() { return VkPipelineViewportStateCreateInfo.npNext(address()); }
         /** Returns the value of the {@code flags} field. */
         @NativeType("VkPipelineViewportStateCreateFlags")
@@ -430,30 +429,30 @@ public class VkPipelineViewportStateCreateInfo extends Struct implements NativeR
         public int viewportCount() { return VkPipelineViewportStateCreateInfo.nviewportCount(address()); }
         /** Returns a {@link VkViewport.Buffer} view of the struct array pointed to by the {@code pViewports} field. */
         @Nullable
-        @NativeType("VkViewport const *")
+        @NativeType("const VkViewport *")
         public VkViewport.Buffer pViewports() { return VkPipelineViewportStateCreateInfo.npViewports(address()); }
         /** Returns the value of the {@code scissorCount} field. */
         @NativeType("uint32_t")
         public int scissorCount() { return VkPipelineViewportStateCreateInfo.nscissorCount(address()); }
         /** Returns a {@link VkRect2D.Buffer} view of the struct array pointed to by the {@code pScissors} field. */
         @Nullable
-        @NativeType("VkRect2D const *")
+        @NativeType("const VkRect2D *")
         public VkRect2D.Buffer pScissors() { return VkPipelineViewportStateCreateInfo.npScissors(address()); }
 
         /** Sets the specified value to the {@code sType} field. */
         public VkPipelineViewportStateCreateInfo.Buffer sType(@NativeType("VkStructureType") int value) { VkPipelineViewportStateCreateInfo.nsType(address(), value); return this; }
         /** Sets the specified value to the {@code pNext} field. */
-        public VkPipelineViewportStateCreateInfo.Buffer pNext(@NativeType("void const *") long value) { VkPipelineViewportStateCreateInfo.npNext(address(), value); return this; }
+        public VkPipelineViewportStateCreateInfo.Buffer pNext(@NativeType("const void *") long value) { VkPipelineViewportStateCreateInfo.npNext(address(), value); return this; }
         /** Sets the specified value to the {@code flags} field. */
         public VkPipelineViewportStateCreateInfo.Buffer flags(@NativeType("VkPipelineViewportStateCreateFlags") int value) { VkPipelineViewportStateCreateInfo.nflags(address(), value); return this; }
         /** Sets the specified value to the {@code viewportCount} field. */
         public VkPipelineViewportStateCreateInfo.Buffer viewportCount(@NativeType("uint32_t") int value) { VkPipelineViewportStateCreateInfo.nviewportCount(address(), value); return this; }
         /** Sets the address of the specified {@link VkViewport.Buffer} to the {@code pViewports} field. */
-        public VkPipelineViewportStateCreateInfo.Buffer pViewports(@Nullable @NativeType("VkViewport const *") VkViewport.Buffer value) { VkPipelineViewportStateCreateInfo.npViewports(address(), value); return this; }
+        public VkPipelineViewportStateCreateInfo.Buffer pViewports(@Nullable @NativeType("const VkViewport *") VkViewport.Buffer value) { VkPipelineViewportStateCreateInfo.npViewports(address(), value); return this; }
         /** Sets the specified value to the {@code scissorCount} field. */
         public VkPipelineViewportStateCreateInfo.Buffer scissorCount(@NativeType("uint32_t") int value) { VkPipelineViewportStateCreateInfo.nscissorCount(address(), value); return this; }
         /** Sets the address of the specified {@link VkRect2D.Buffer} to the {@code pScissors} field. */
-        public VkPipelineViewportStateCreateInfo.Buffer pScissors(@Nullable @NativeType("VkRect2D const *") VkRect2D.Buffer value) { VkPipelineViewportStateCreateInfo.npScissors(address(), value); return this; }
+        public VkPipelineViewportStateCreateInfo.Buffer pScissors(@Nullable @NativeType("const VkRect2D *") VkRect2D.Buffer value) { VkPipelineViewportStateCreateInfo.npScissors(address(), value); return this; }
 
     }
 

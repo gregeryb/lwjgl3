@@ -34,7 +34,7 @@ import static org.lwjgl.system.MemoryUtil.*;
  * </ul></dd>
  * <dt><b>Contact</b></dt>
  * <dd><ul>
- * <li>Courtney Goeltzenleuchter @courtney-g</li>
+ * <li>Courtney Goeltzenleuchter @courtneygo</li>
  * </ul></dd>
  * <dt><b>Last Modified Date</b></dt>
  * <dd>2017-03-04</dd>
@@ -61,9 +61,9 @@ public class EXTHdrMetadata {
         throw new UnsupportedOperationException();
     }
 
-    static boolean checkCapsDevice(FunctionProvider provider, java.util.Map<String, Long> caps, java.util.Set<String> ext) {
-        return ext.contains("VK_EXT_hdr_metadata") && VK.checkExtension("VK_EXT_hdr_metadata",
-               VK.isSupported(provider, "vkSetHdrMetadataEXT", caps)
+    static boolean isAvailable(VKCapabilitiesDevice caps) {
+        return checkFunctions(
+            caps.vkSetHdrMetadataEXT
         );
     }
 
@@ -87,12 +87,12 @@ public class EXTHdrMetadata {
      * 
      * <h5>C Specification</h5>
      * 
-     * <pre><code>
+     * <code><pre>
      * void vkSetHdrMetadataEXT(
      *     VkDevice                                    device,
      *     uint32_t                                    swapchainCount,
      *     const VkSwapchainKHR*                       pSwapchains,
-     *     const VkHdrMetadataEXT*                     pMetadata);</code></pre>
+     *     const VkHdrMetadataEXT*                     pMetadata);</pre></code>
      * 
      * <h5>Valid Usage (Implicit)</h5>
      * 
@@ -112,15 +112,15 @@ public class EXTHdrMetadata {
      * @param pSwapchains a pointer to the array of {@code swapchainCount} {@code VkSwapchainKHR} handles.
      * @param pMetadata   a pointer to the array of {@code swapchainCount} {@link VkHdrMetadataEXT} structures.
      */
-    public static void vkSetHdrMetadataEXT(VkDevice device, @NativeType("VkSwapchainKHR const *") LongBuffer pSwapchains, @NativeType("VkHdrMetadataEXT const *") VkHdrMetadataEXT.Buffer pMetadata) {
+    public static void vkSetHdrMetadataEXT(VkDevice device, @NativeType("const VkSwapchainKHR *") LongBuffer pSwapchains, @NativeType("const VkHdrMetadataEXT *") VkHdrMetadataEXT.Buffer pMetadata) {
         if (CHECKS) {
             check(pMetadata, pSwapchains.remaining());
         }
         nvkSetHdrMetadataEXT(device, pSwapchains.remaining(), memAddress(pSwapchains), pMetadata.address());
     }
 
-    /** Array version of: {@link #vkSetHdrMetadataEXT SetHdrMetadataEXT} */
-    public static void vkSetHdrMetadataEXT(VkDevice device, @NativeType("VkSwapchainKHR const *") long[] pSwapchains, @NativeType("VkHdrMetadataEXT const *") VkHdrMetadataEXT.Buffer pMetadata) {
+    /** register Array version of: {@link #vkSetHdrMetadataEXT SetHdrMetadataEXT} */
+    public static void vkSetHdrMetadataEXT(VkDevice device, @NativeType("const VkSwapchainKHR *") long[] pSwapchains, @NativeType("const VkHdrMetadataEXT *") VkHdrMetadataEXT.Buffer pMetadata) {
         long __functionAddress = device.getCapabilities().vkSetHdrMetadataEXT;
         if (CHECKS) {
             check(__functionAddress);

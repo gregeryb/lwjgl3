@@ -53,8 +53,8 @@ import static org.lwjgl.system.MemoryStack.*;
  * <li>If {@code pStages} includes a fragment shader stage and a geometry shader stage, and the fragment shader code reads from an input variable that is decorated with {@code PrimitiveID}, then the geometry shader code <b>must</b> write to a matching output variable, decorated with {@code PrimitiveID}, in all execution paths</li>
  * <li>If {@code pStages} includes a fragment shader stage, its shader code <b>must</b> not read from any input attachment that is defined as {@link VK10#VK_ATTACHMENT_UNUSED ATTACHMENT_UNUSED} in {@code subpass}</li>
  * <li>The shader code for the entry points identified by {@code pStages}, and the rest of the state identified by this structure <b>must</b> adhere to the pipeline linking rules described in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#interfaces">Shader Interfaces</a> chapter</li>
- * <li>If rasterization is not disabled and {@code subpass} uses a depth/stencil attachment in {@code renderPass} that has a layout of {@link VK10#VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL} or {@link VK11#VK_IMAGE_LAYOUT_DEPTH_READ_ONLY_STENCIL_ATTACHMENT_OPTIMAL IMAGE_LAYOUT_DEPTH_READ_ONLY_STENCIL_ATTACHMENT_OPTIMAL} in the {@link VkAttachmentReference} defined by {@code subpass}, the {@code depthWriteEnable} member of {@code pDepthStencilState} <b>must</b> be {@link VK10#VK_FALSE FALSE}</li>
- * <li>If rasterization is not disabled and {@code subpass} uses a depth/stencil attachment in {@code renderPass} that has a layout of {@link VK10#VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL} or {@link VK11#VK_IMAGE_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_OPTIMAL IMAGE_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_OPTIMAL} in the {@link VkAttachmentReference} defined by {@code subpass}, the {@code failOp}, {@code passOp} and {@code depthFailOp} members of each of the {@code front} and {@code back} members of {@code pDepthStencilState} <b>must</b> be {@link VK10#VK_STENCIL_OP_KEEP STENCIL_OP_KEEP}</li>
+ * <li>If rasterization is not disabled and {@code subpass} uses a depth/stencil attachment in {@code renderPass} that has a layout of {@link VK10#VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL} or {@link KHRMaintenance2#VK_IMAGE_LAYOUT_DEPTH_READ_ONLY_STENCIL_ATTACHMENT_OPTIMAL_KHR IMAGE_LAYOUT_DEPTH_READ_ONLY_STENCIL_ATTACHMENT_OPTIMAL_KHR} in the {@link VkAttachmentReference} defined by {@code subpass}, the {@code depthWriteEnable} member of {@code pDepthStencilState} <b>must</b> be {@link VK10#VK_FALSE FALSE}</li>
+ * <li>If rasterization is not disabled and {@code subpass} uses a depth/stencil attachment in {@code renderPass} that has a layout of {@link VK10#VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL} or {@link KHRMaintenance2#VK_IMAGE_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_OPTIMAL_KHR IMAGE_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_OPTIMAL_KHR} in the {@link VkAttachmentReference} defined by {@code subpass}, the {@code failOp}, {@code passOp} and {@code depthFailOp} members of each of the {@code front} and {@code back} members of {@code pDepthStencilState} <b>must</b> be {@link VK10#VK_STENCIL_OP_KEEP STENCIL_OP_KEEP}</li>
  * <li>If rasterization is not disabled and the subpass uses color attachments, then for each color attachment in the subpass the {@code blendEnable} member of the corresponding element of the {@code pAttachment} member of {@code pColorBlendState} <b>must</b> be {@link VK10#VK_FALSE FALSE} if the {@code format} of the attachment does not support color blend operations, as specified by the {@link VK10#VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BLEND_BIT FORMAT_FEATURE_COLOR_ATTACHMENT_BLEND_BIT} flag in {@link VkFormatProperties}{@code ::linearTilingFeatures} or {@link VkFormatProperties}{@code ::optimalTilingFeatures} returned by {@link VK10#vkGetPhysicalDeviceFormatProperties GetPhysicalDeviceFormatProperties}</li>
  * <li>If rasterization is not disabled and the subpass uses color attachments, the {@code attachmentCount} member of {@code pColorBlendState} <b>must</b> be equal to the {@code colorAttachmentCount} used to create {@code subpass}</li>
  * <li>If no element of the {@code pDynamicStates} member of {@code pDynamicState} is {@link VK10#VK_DYNAMIC_STATE_VIEWPORT DYNAMIC_STATE_VIEWPORT}, the {@code pViewports} member of {@code pViewportState} <b>must</b> be a valid pointer to an array of {@code pViewportState}{@code ::viewportCount} {@link VkViewport} structures</li>
@@ -65,7 +65,6 @@ import static org.lwjgl.system.MemoryStack.*;
  * <li>If the {@code rasterizerDiscardEnable} member of {@code pRasterizationState} is {@link VK10#VK_FALSE FALSE}, and {@code subpass} uses a depth/stencil attachment, {@code pDepthStencilState} <b>must</b> be a valid pointer to a valid {@link VkPipelineDepthStencilStateCreateInfo} structure</li>
  * <li>If the {@code rasterizerDiscardEnable} member of {@code pRasterizationState} is {@link VK10#VK_FALSE FALSE}, and {@code subpass} uses color attachments, {@code pColorBlendState} <b>must</b> be a valid pointer to a valid {@link VkPipelineColorBlendStateCreateInfo} structure</li>
  * <li>If the depth bias clamping feature is not enabled, no element of the {@code pDynamicStates} member of {@code pDynamicState} is {@link VK10#VK_DYNAMIC_STATE_DEPTH_BIAS DYNAMIC_STATE_DEPTH_BIAS}, and the {@code depthBiasEnable} member of {@code pRasterizationState} is {@link VK10#VK_TRUE TRUE}, the {@code depthBiasClamp} member of {@code pRasterizationState} <b>must</b> be {@code 0.0}</li>
- * <li>If the {@link EXTDepthRangeUnrestricted VK_EXT_depth_range_unrestricted} extension is not enabled and no element of the {@code pDynamicStates} member of {@code pDynamicState} is {@link VK10#VK_DYNAMIC_STATE_DEPTH_BOUNDS DYNAMIC_STATE_DEPTH_BOUNDS}, and the {@code depthBoundsTestEnable} member of {@code pDepthStencilState} is {@link VK10#VK_TRUE TRUE}, the {@code minDepthBounds} and {@code maxDepthBounds} members of {@code pDepthStencilState} <b>must</b> be between {@code 0.0} and {@code 1.0}, inclusive</li>
  * <li>If no element of the {@code pDynamicStates} member of {@code pDynamicState} is {@link EXTSampleLocations#VK_DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT}, and the {@code sampleLocationsEnable} member of a {@link VkPipelineSampleLocationsStateCreateInfoEXT} structure chained to the {@code pNext} chain of {@code pMultisampleState} is {@link VK10#VK_TRUE TRUE}, {@code sampleLocationsInfo.sampleLocationGridSize.width} <b>must</b> evenly divide {@link VkMultisamplePropertiesEXT}{@code ::sampleLocationGridSize}.width as returned by {@link EXTSampleLocations#vkGetPhysicalDeviceMultisamplePropertiesEXT GetPhysicalDeviceMultisamplePropertiesEXT} with a {@code samples} parameter equaling {@code rasterizationSamples}</li>
  * <li>If no element of the {@code pDynamicStates} member of {@code pDynamicState} is {@link EXTSampleLocations#VK_DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT}, and the {@code sampleLocationsEnable} member of a {@link VkPipelineSampleLocationsStateCreateInfoEXT} structure chained to the {@code pNext} chain of {@code pMultisampleState} is {@link VK10#VK_TRUE TRUE}, {@code sampleLocationsInfo.sampleLocationGridSize.height} <b>must</b> evenly divide {@link VkMultisamplePropertiesEXT}{@code ::sampleLocationGridSize}.height as returned by {@link EXTSampleLocations#vkGetPhysicalDeviceMultisamplePropertiesEXT GetPhysicalDeviceMultisamplePropertiesEXT} with a {@code samples} parameter equaling {@code rasterizationSamples}</li>
  * <li>If no element of the {@code pDynamicStates} member of {@code pDynamicState} is {@link EXTSampleLocations#VK_DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT}, and the {@code sampleLocationsEnable} member of a {@link VkPipelineSampleLocationsStateCreateInfoEXT} structure chained to the {@code pNext} chain of {@code pMultisampleState} is {@link VK10#VK_TRUE TRUE}, {@code sampleLocationsInfo.sampleLocationsPerPixel} <b>must</b> equal {@code rasterizationSamples}</li>
@@ -80,8 +79,8 @@ import static org.lwjgl.system.MemoryStack.*;
  * <li>If the {@code renderPass} has multiview enabled and {@code subpass} has more than one bit set in the view mask and {@code multiviewGeometryShader} is not enabled, then {@code pStages} <b>must</b> not include a geometry shader.</li>
  * <li>If the {@code renderPass} has multiview enabled and {@code subpass} has more than one bit set in the view mask, shaders in the pipeline <b>must</b> not write to the {@code Layer} built-in output</li>
  * <li>If the {@code renderPass} has multiview enabled, then all shaders <b>must</b> not include variables decorated with the {@code Layer} built-in decoration in their interfaces.</li>
- * <li>{@code flags} <b>must</b> not contain the {@link VK11#VK_PIPELINE_CREATE_DISPATCH_BASE PIPELINE_CREATE_DISPATCH_BASE} flag.</li>
- * <li>If {@code pStages} includes a fragment shader stage and an input attachment was referenced by the {@link VkRenderPassInputAttachmentAspectCreateInfo} at {@code renderPass} create time, its shader code <b>must</b> not read from any aspect that was not specified in the {@code aspectMask} of the corresponding {@link VkInputAttachmentAspectReference} structure.</li>
+ * <li>{@code flags} <b>must</b> not contain the {@link KHXDeviceGroup#VK_PIPELINE_CREATE_DISPATCH_BASE_KHX PIPELINE_CREATE_DISPATCH_BASE_KHX} flag.</li>
+ * <li>If {@code pStages} includes a fragment shader stage and an input attachment was referenced by the {@link VkRenderPassInputAttachmentAspectCreateInfoKHR} at {@code renderPass} create time, its shader code <b>must</b> not read from any aspect that was not specified in the {@code aspectMask} of the corresponding {@link VkInputAttachmentAspectReferenceKHR} structure.</li>
  * <li>The number of resources in {@code layout} accessible to each shader stage that is used by the pipeline <b>must</b> be less than or equal to {@link VkPhysicalDeviceLimits}{@code ::maxPerStageResources}</li>
  * <li>If no element of the {@code pDynamicStates} member of {@code pDynamicState} is {@link NVClipSpaceWScaling#VK_DYNAMIC_STATE_VIEWPORT_W_SCALING_NV DYNAMIC_STATE_VIEWPORT_W_SCALING_NV}, and the {@code viewportWScalingEnable} member of a {@link VkPipelineViewportWScalingStateCreateInfoNV} structure, chained to the {@code pNext} chain of {@code pViewportState}, is {@link VK10#VK_TRUE TRUE}, the {@code pViewportWScalings} member of the {@link VkPipelineViewportWScalingStateCreateInfoNV} <b>must</b> be a pointer to an array of {@link VkPipelineViewportWScalingStateCreateInfoNV}{@code ::viewportCount} valid {@link VkViewportWScalingNV} structures</li>
  * </ul>
@@ -133,35 +132,34 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct VkGraphicsPipelineCreateInfo {
  *     VkStructureType sType;
- *     void const * pNext;
+ *     const void * pNext;
  *     VkPipelineCreateFlags flags;
  *     uint32_t stageCount;
- *     {@link VkPipelineShaderStageCreateInfo VkPipelineShaderStageCreateInfo const} * pStages;
- *     {@link VkPipelineVertexInputStateCreateInfo VkPipelineVertexInputStateCreateInfo const} * pVertexInputState;
- *     {@link VkPipelineInputAssemblyStateCreateInfo VkPipelineInputAssemblyStateCreateInfo const} * pInputAssemblyState;
- *     {@link VkPipelineTessellationStateCreateInfo VkPipelineTessellationStateCreateInfo const} * pTessellationState;
- *     {@link VkPipelineViewportStateCreateInfo VkPipelineViewportStateCreateInfo const} * pViewportState;
- *     {@link VkPipelineRasterizationStateCreateInfo VkPipelineRasterizationStateCreateInfo const} * pRasterizationState;
- *     {@link VkPipelineMultisampleStateCreateInfo VkPipelineMultisampleStateCreateInfo const} * pMultisampleState;
- *     {@link VkPipelineDepthStencilStateCreateInfo VkPipelineDepthStencilStateCreateInfo const} * pDepthStencilState;
- *     {@link VkPipelineColorBlendStateCreateInfo VkPipelineColorBlendStateCreateInfo const} * pColorBlendState;
- *     {@link VkPipelineDynamicStateCreateInfo VkPipelineDynamicStateCreateInfo const} * pDynamicState;
+ *     const {@link VkPipelineShaderStageCreateInfo VkPipelineShaderStageCreateInfo} * pStages;
+ *     const {@link VkPipelineVertexInputStateCreateInfo VkPipelineVertexInputStateCreateInfo} * pVertexInputState;
+ *     const {@link VkPipelineInputAssemblyStateCreateInfo VkPipelineInputAssemblyStateCreateInfo} * pInputAssemblyState;
+ *     const {@link VkPipelineTessellationStateCreateInfo VkPipelineTessellationStateCreateInfo} * pTessellationState;
+ *     const {@link VkPipelineViewportStateCreateInfo VkPipelineViewportStateCreateInfo} * pViewportState;
+ *     const {@link VkPipelineRasterizationStateCreateInfo VkPipelineRasterizationStateCreateInfo} * pRasterizationState;
+ *     const {@link VkPipelineMultisampleStateCreateInfo VkPipelineMultisampleStateCreateInfo} * pMultisampleState;
+ *     const {@link VkPipelineDepthStencilStateCreateInfo VkPipelineDepthStencilStateCreateInfo} * pDepthStencilState;
+ *     const {@link VkPipelineColorBlendStateCreateInfo VkPipelineColorBlendStateCreateInfo} * pColorBlendState;
+ *     const {@link VkPipelineDynamicStateCreateInfo VkPipelineDynamicStateCreateInfo} * pDynamicState;
  *     VkPipelineLayout layout;
  *     VkRenderPass renderPass;
  *     uint32_t subpass;
  *     VkPipeline basePipelineHandle;
  *     int32_t basePipelineIndex;
- * }</code></pre>
+ * }</pre></code>
  */
 public class VkGraphicsPipelineCreateInfo extends Struct implements NativeResource {
 
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */
@@ -254,7 +252,7 @@ public class VkGraphicsPipelineCreateInfo extends Struct implements NativeResour
     @NativeType("VkStructureType")
     public int sType() { return nsType(address()); }
     /** Returns the value of the {@code pNext} field. */
-    @NativeType("void const *")
+    @NativeType("const void *")
     public long pNext() { return npNext(address()); }
     /** Returns the value of the {@code flags} field. */
     @NativeType("VkPipelineCreateFlags")
@@ -263,40 +261,40 @@ public class VkGraphicsPipelineCreateInfo extends Struct implements NativeResour
     @NativeType("uint32_t")
     public int stageCount() { return nstageCount(address()); }
     /** Returns a {@link VkPipelineShaderStageCreateInfo.Buffer} view of the struct array pointed to by the {@code pStages} field. */
-    @NativeType("VkPipelineShaderStageCreateInfo const *")
+    @NativeType("const VkPipelineShaderStageCreateInfo *")
     public VkPipelineShaderStageCreateInfo.Buffer pStages() { return npStages(address()); }
     /** Returns a {@link VkPipelineVertexInputStateCreateInfo} view of the struct pointed to by the {@code pVertexInputState} field. */
-    @NativeType("VkPipelineVertexInputStateCreateInfo const *")
+    @NativeType("const VkPipelineVertexInputStateCreateInfo *")
     public VkPipelineVertexInputStateCreateInfo pVertexInputState() { return npVertexInputState(address()); }
     /** Returns a {@link VkPipelineInputAssemblyStateCreateInfo} view of the struct pointed to by the {@code pInputAssemblyState} field. */
-    @NativeType("VkPipelineInputAssemblyStateCreateInfo const *")
+    @NativeType("const VkPipelineInputAssemblyStateCreateInfo *")
     public VkPipelineInputAssemblyStateCreateInfo pInputAssemblyState() { return npInputAssemblyState(address()); }
     /** Returns a {@link VkPipelineTessellationStateCreateInfo} view of the struct pointed to by the {@code pTessellationState} field. */
     @Nullable
-    @NativeType("VkPipelineTessellationStateCreateInfo const *")
+    @NativeType("const VkPipelineTessellationStateCreateInfo *")
     public VkPipelineTessellationStateCreateInfo pTessellationState() { return npTessellationState(address()); }
     /** Returns a {@link VkPipelineViewportStateCreateInfo} view of the struct pointed to by the {@code pViewportState} field. */
     @Nullable
-    @NativeType("VkPipelineViewportStateCreateInfo const *")
+    @NativeType("const VkPipelineViewportStateCreateInfo *")
     public VkPipelineViewportStateCreateInfo pViewportState() { return npViewportState(address()); }
     /** Returns a {@link VkPipelineRasterizationStateCreateInfo} view of the struct pointed to by the {@code pRasterizationState} field. */
-    @NativeType("VkPipelineRasterizationStateCreateInfo const *")
+    @NativeType("const VkPipelineRasterizationStateCreateInfo *")
     public VkPipelineRasterizationStateCreateInfo pRasterizationState() { return npRasterizationState(address()); }
     /** Returns a {@link VkPipelineMultisampleStateCreateInfo} view of the struct pointed to by the {@code pMultisampleState} field. */
     @Nullable
-    @NativeType("VkPipelineMultisampleStateCreateInfo const *")
+    @NativeType("const VkPipelineMultisampleStateCreateInfo *")
     public VkPipelineMultisampleStateCreateInfo pMultisampleState() { return npMultisampleState(address()); }
     /** Returns a {@link VkPipelineDepthStencilStateCreateInfo} view of the struct pointed to by the {@code pDepthStencilState} field. */
     @Nullable
-    @NativeType("VkPipelineDepthStencilStateCreateInfo const *")
+    @NativeType("const VkPipelineDepthStencilStateCreateInfo *")
     public VkPipelineDepthStencilStateCreateInfo pDepthStencilState() { return npDepthStencilState(address()); }
     /** Returns a {@link VkPipelineColorBlendStateCreateInfo} view of the struct pointed to by the {@code pColorBlendState} field. */
     @Nullable
-    @NativeType("VkPipelineColorBlendStateCreateInfo const *")
+    @NativeType("const VkPipelineColorBlendStateCreateInfo *")
     public VkPipelineColorBlendStateCreateInfo pColorBlendState() { return npColorBlendState(address()); }
     /** Returns a {@link VkPipelineDynamicStateCreateInfo} view of the struct pointed to by the {@code pDynamicState} field. */
     @Nullable
-    @NativeType("VkPipelineDynamicStateCreateInfo const *")
+    @NativeType("const VkPipelineDynamicStateCreateInfo *")
     public VkPipelineDynamicStateCreateInfo pDynamicState() { return npDynamicState(address()); }
     /** Returns the value of the {@code layout} field. */
     @NativeType("VkPipelineLayout")
@@ -317,29 +315,29 @@ public class VkGraphicsPipelineCreateInfo extends Struct implements NativeResour
     /** Sets the specified value to the {@code sType} field. */
     public VkGraphicsPipelineCreateInfo sType(@NativeType("VkStructureType") int value) { nsType(address(), value); return this; }
     /** Sets the specified value to the {@code pNext} field. */
-    public VkGraphicsPipelineCreateInfo pNext(@NativeType("void const *") long value) { npNext(address(), value); return this; }
+    public VkGraphicsPipelineCreateInfo pNext(@NativeType("const void *") long value) { npNext(address(), value); return this; }
     /** Sets the specified value to the {@code flags} field. */
     public VkGraphicsPipelineCreateInfo flags(@NativeType("VkPipelineCreateFlags") int value) { nflags(address(), value); return this; }
     /** Sets the address of the specified {@link VkPipelineShaderStageCreateInfo.Buffer} to the {@code pStages} field. */
-    public VkGraphicsPipelineCreateInfo pStages(@NativeType("VkPipelineShaderStageCreateInfo const *") VkPipelineShaderStageCreateInfo.Buffer value) { npStages(address(), value); return this; }
+    public VkGraphicsPipelineCreateInfo pStages(@NativeType("const VkPipelineShaderStageCreateInfo *") VkPipelineShaderStageCreateInfo.Buffer value) { npStages(address(), value); return this; }
     /** Sets the address of the specified {@link VkPipelineVertexInputStateCreateInfo} to the {@code pVertexInputState} field. */
-    public VkGraphicsPipelineCreateInfo pVertexInputState(@NativeType("VkPipelineVertexInputStateCreateInfo const *") VkPipelineVertexInputStateCreateInfo value) { npVertexInputState(address(), value); return this; }
+    public VkGraphicsPipelineCreateInfo pVertexInputState(@NativeType("const VkPipelineVertexInputStateCreateInfo *") VkPipelineVertexInputStateCreateInfo value) { npVertexInputState(address(), value); return this; }
     /** Sets the address of the specified {@link VkPipelineInputAssemblyStateCreateInfo} to the {@code pInputAssemblyState} field. */
-    public VkGraphicsPipelineCreateInfo pInputAssemblyState(@NativeType("VkPipelineInputAssemblyStateCreateInfo const *") VkPipelineInputAssemblyStateCreateInfo value) { npInputAssemblyState(address(), value); return this; }
+    public VkGraphicsPipelineCreateInfo pInputAssemblyState(@NativeType("const VkPipelineInputAssemblyStateCreateInfo *") VkPipelineInputAssemblyStateCreateInfo value) { npInputAssemblyState(address(), value); return this; }
     /** Sets the address of the specified {@link VkPipelineTessellationStateCreateInfo} to the {@code pTessellationState} field. */
-    public VkGraphicsPipelineCreateInfo pTessellationState(@Nullable @NativeType("VkPipelineTessellationStateCreateInfo const *") VkPipelineTessellationStateCreateInfo value) { npTessellationState(address(), value); return this; }
+    public VkGraphicsPipelineCreateInfo pTessellationState(@Nullable @NativeType("const VkPipelineTessellationStateCreateInfo *") VkPipelineTessellationStateCreateInfo value) { npTessellationState(address(), value); return this; }
     /** Sets the address of the specified {@link VkPipelineViewportStateCreateInfo} to the {@code pViewportState} field. */
-    public VkGraphicsPipelineCreateInfo pViewportState(@Nullable @NativeType("VkPipelineViewportStateCreateInfo const *") VkPipelineViewportStateCreateInfo value) { npViewportState(address(), value); return this; }
+    public VkGraphicsPipelineCreateInfo pViewportState(@Nullable @NativeType("const VkPipelineViewportStateCreateInfo *") VkPipelineViewportStateCreateInfo value) { npViewportState(address(), value); return this; }
     /** Sets the address of the specified {@link VkPipelineRasterizationStateCreateInfo} to the {@code pRasterizationState} field. */
-    public VkGraphicsPipelineCreateInfo pRasterizationState(@NativeType("VkPipelineRasterizationStateCreateInfo const *") VkPipelineRasterizationStateCreateInfo value) { npRasterizationState(address(), value); return this; }
+    public VkGraphicsPipelineCreateInfo pRasterizationState(@NativeType("const VkPipelineRasterizationStateCreateInfo *") VkPipelineRasterizationStateCreateInfo value) { npRasterizationState(address(), value); return this; }
     /** Sets the address of the specified {@link VkPipelineMultisampleStateCreateInfo} to the {@code pMultisampleState} field. */
-    public VkGraphicsPipelineCreateInfo pMultisampleState(@Nullable @NativeType("VkPipelineMultisampleStateCreateInfo const *") VkPipelineMultisampleStateCreateInfo value) { npMultisampleState(address(), value); return this; }
+    public VkGraphicsPipelineCreateInfo pMultisampleState(@Nullable @NativeType("const VkPipelineMultisampleStateCreateInfo *") VkPipelineMultisampleStateCreateInfo value) { npMultisampleState(address(), value); return this; }
     /** Sets the address of the specified {@link VkPipelineDepthStencilStateCreateInfo} to the {@code pDepthStencilState} field. */
-    public VkGraphicsPipelineCreateInfo pDepthStencilState(@Nullable @NativeType("VkPipelineDepthStencilStateCreateInfo const *") VkPipelineDepthStencilStateCreateInfo value) { npDepthStencilState(address(), value); return this; }
+    public VkGraphicsPipelineCreateInfo pDepthStencilState(@Nullable @NativeType("const VkPipelineDepthStencilStateCreateInfo *") VkPipelineDepthStencilStateCreateInfo value) { npDepthStencilState(address(), value); return this; }
     /** Sets the address of the specified {@link VkPipelineColorBlendStateCreateInfo} to the {@code pColorBlendState} field. */
-    public VkGraphicsPipelineCreateInfo pColorBlendState(@Nullable @NativeType("VkPipelineColorBlendStateCreateInfo const *") VkPipelineColorBlendStateCreateInfo value) { npColorBlendState(address(), value); return this; }
+    public VkGraphicsPipelineCreateInfo pColorBlendState(@Nullable @NativeType("const VkPipelineColorBlendStateCreateInfo *") VkPipelineColorBlendStateCreateInfo value) { npColorBlendState(address(), value); return this; }
     /** Sets the address of the specified {@link VkPipelineDynamicStateCreateInfo} to the {@code pDynamicState} field. */
-    public VkGraphicsPipelineCreateInfo pDynamicState(@Nullable @NativeType("VkPipelineDynamicStateCreateInfo const *") VkPipelineDynamicStateCreateInfo value) { npDynamicState(address(), value); return this; }
+    public VkGraphicsPipelineCreateInfo pDynamicState(@Nullable @NativeType("const VkPipelineDynamicStateCreateInfo *") VkPipelineDynamicStateCreateInfo value) { npDynamicState(address(), value); return this; }
     /** Sets the specified value to the {@code layout} field. */
     public VkGraphicsPipelineCreateInfo layout(@NativeType("VkPipelineLayout") long value) { nlayout(address(), value); return this; }
     /** Sets the specified value to the {@code renderPass} field. */
@@ -359,13 +357,13 @@ public class VkGraphicsPipelineCreateInfo extends Struct implements NativeResour
         VkPipelineShaderStageCreateInfo.Buffer pStages,
         VkPipelineVertexInputStateCreateInfo pVertexInputState,
         VkPipelineInputAssemblyStateCreateInfo pInputAssemblyState,
-        @Nullable VkPipelineTessellationStateCreateInfo pTessellationState,
-        @Nullable VkPipelineViewportStateCreateInfo pViewportState,
+        VkPipelineTessellationStateCreateInfo pTessellationState,
+        VkPipelineViewportStateCreateInfo pViewportState,
         VkPipelineRasterizationStateCreateInfo pRasterizationState,
-        @Nullable VkPipelineMultisampleStateCreateInfo pMultisampleState,
-        @Nullable VkPipelineDepthStencilStateCreateInfo pDepthStencilState,
-        @Nullable VkPipelineColorBlendStateCreateInfo pColorBlendState,
-        @Nullable VkPipelineDynamicStateCreateInfo pDynamicState,
+        VkPipelineMultisampleStateCreateInfo pMultisampleState,
+        VkPipelineDepthStencilStateCreateInfo pDepthStencilState,
+        VkPipelineColorBlendStateCreateInfo pColorBlendState,
+        VkPipelineDynamicStateCreateInfo pDynamicState,
         long layout,
         long renderPass,
         int subpass,
@@ -712,7 +710,7 @@ public class VkGraphicsPipelineCreateInfo extends Struct implements NativeResour
         @NativeType("VkStructureType")
         public int sType() { return VkGraphicsPipelineCreateInfo.nsType(address()); }
         /** Returns the value of the {@code pNext} field. */
-        @NativeType("void const *")
+        @NativeType("const void *")
         public long pNext() { return VkGraphicsPipelineCreateInfo.npNext(address()); }
         /** Returns the value of the {@code flags} field. */
         @NativeType("VkPipelineCreateFlags")
@@ -721,40 +719,40 @@ public class VkGraphicsPipelineCreateInfo extends Struct implements NativeResour
         @NativeType("uint32_t")
         public int stageCount() { return VkGraphicsPipelineCreateInfo.nstageCount(address()); }
         /** Returns a {@link VkPipelineShaderStageCreateInfo.Buffer} view of the struct array pointed to by the {@code pStages} field. */
-        @NativeType("VkPipelineShaderStageCreateInfo const *")
+        @NativeType("const VkPipelineShaderStageCreateInfo *")
         public VkPipelineShaderStageCreateInfo.Buffer pStages() { return VkGraphicsPipelineCreateInfo.npStages(address()); }
         /** Returns a {@link VkPipelineVertexInputStateCreateInfo} view of the struct pointed to by the {@code pVertexInputState} field. */
-        @NativeType("VkPipelineVertexInputStateCreateInfo const *")
+        @NativeType("const VkPipelineVertexInputStateCreateInfo *")
         public VkPipelineVertexInputStateCreateInfo pVertexInputState() { return VkGraphicsPipelineCreateInfo.npVertexInputState(address()); }
         /** Returns a {@link VkPipelineInputAssemblyStateCreateInfo} view of the struct pointed to by the {@code pInputAssemblyState} field. */
-        @NativeType("VkPipelineInputAssemblyStateCreateInfo const *")
+        @NativeType("const VkPipelineInputAssemblyStateCreateInfo *")
         public VkPipelineInputAssemblyStateCreateInfo pInputAssemblyState() { return VkGraphicsPipelineCreateInfo.npInputAssemblyState(address()); }
         /** Returns a {@link VkPipelineTessellationStateCreateInfo} view of the struct pointed to by the {@code pTessellationState} field. */
         @Nullable
-        @NativeType("VkPipelineTessellationStateCreateInfo const *")
+        @NativeType("const VkPipelineTessellationStateCreateInfo *")
         public VkPipelineTessellationStateCreateInfo pTessellationState() { return VkGraphicsPipelineCreateInfo.npTessellationState(address()); }
         /** Returns a {@link VkPipelineViewportStateCreateInfo} view of the struct pointed to by the {@code pViewportState} field. */
         @Nullable
-        @NativeType("VkPipelineViewportStateCreateInfo const *")
+        @NativeType("const VkPipelineViewportStateCreateInfo *")
         public VkPipelineViewportStateCreateInfo pViewportState() { return VkGraphicsPipelineCreateInfo.npViewportState(address()); }
         /** Returns a {@link VkPipelineRasterizationStateCreateInfo} view of the struct pointed to by the {@code pRasterizationState} field. */
-        @NativeType("VkPipelineRasterizationStateCreateInfo const *")
+        @NativeType("const VkPipelineRasterizationStateCreateInfo *")
         public VkPipelineRasterizationStateCreateInfo pRasterizationState() { return VkGraphicsPipelineCreateInfo.npRasterizationState(address()); }
         /** Returns a {@link VkPipelineMultisampleStateCreateInfo} view of the struct pointed to by the {@code pMultisampleState} field. */
         @Nullable
-        @NativeType("VkPipelineMultisampleStateCreateInfo const *")
+        @NativeType("const VkPipelineMultisampleStateCreateInfo *")
         public VkPipelineMultisampleStateCreateInfo pMultisampleState() { return VkGraphicsPipelineCreateInfo.npMultisampleState(address()); }
         /** Returns a {@link VkPipelineDepthStencilStateCreateInfo} view of the struct pointed to by the {@code pDepthStencilState} field. */
         @Nullable
-        @NativeType("VkPipelineDepthStencilStateCreateInfo const *")
+        @NativeType("const VkPipelineDepthStencilStateCreateInfo *")
         public VkPipelineDepthStencilStateCreateInfo pDepthStencilState() { return VkGraphicsPipelineCreateInfo.npDepthStencilState(address()); }
         /** Returns a {@link VkPipelineColorBlendStateCreateInfo} view of the struct pointed to by the {@code pColorBlendState} field. */
         @Nullable
-        @NativeType("VkPipelineColorBlendStateCreateInfo const *")
+        @NativeType("const VkPipelineColorBlendStateCreateInfo *")
         public VkPipelineColorBlendStateCreateInfo pColorBlendState() { return VkGraphicsPipelineCreateInfo.npColorBlendState(address()); }
         /** Returns a {@link VkPipelineDynamicStateCreateInfo} view of the struct pointed to by the {@code pDynamicState} field. */
         @Nullable
-        @NativeType("VkPipelineDynamicStateCreateInfo const *")
+        @NativeType("const VkPipelineDynamicStateCreateInfo *")
         public VkPipelineDynamicStateCreateInfo pDynamicState() { return VkGraphicsPipelineCreateInfo.npDynamicState(address()); }
         /** Returns the value of the {@code layout} field. */
         @NativeType("VkPipelineLayout")
@@ -775,29 +773,29 @@ public class VkGraphicsPipelineCreateInfo extends Struct implements NativeResour
         /** Sets the specified value to the {@code sType} field. */
         public VkGraphicsPipelineCreateInfo.Buffer sType(@NativeType("VkStructureType") int value) { VkGraphicsPipelineCreateInfo.nsType(address(), value); return this; }
         /** Sets the specified value to the {@code pNext} field. */
-        public VkGraphicsPipelineCreateInfo.Buffer pNext(@NativeType("void const *") long value) { VkGraphicsPipelineCreateInfo.npNext(address(), value); return this; }
+        public VkGraphicsPipelineCreateInfo.Buffer pNext(@NativeType("const void *") long value) { VkGraphicsPipelineCreateInfo.npNext(address(), value); return this; }
         /** Sets the specified value to the {@code flags} field. */
         public VkGraphicsPipelineCreateInfo.Buffer flags(@NativeType("VkPipelineCreateFlags") int value) { VkGraphicsPipelineCreateInfo.nflags(address(), value); return this; }
         /** Sets the address of the specified {@link VkPipelineShaderStageCreateInfo.Buffer} to the {@code pStages} field. */
-        public VkGraphicsPipelineCreateInfo.Buffer pStages(@NativeType("VkPipelineShaderStageCreateInfo const *") VkPipelineShaderStageCreateInfo.Buffer value) { VkGraphicsPipelineCreateInfo.npStages(address(), value); return this; }
+        public VkGraphicsPipelineCreateInfo.Buffer pStages(@NativeType("const VkPipelineShaderStageCreateInfo *") VkPipelineShaderStageCreateInfo.Buffer value) { VkGraphicsPipelineCreateInfo.npStages(address(), value); return this; }
         /** Sets the address of the specified {@link VkPipelineVertexInputStateCreateInfo} to the {@code pVertexInputState} field. */
-        public VkGraphicsPipelineCreateInfo.Buffer pVertexInputState(@NativeType("VkPipelineVertexInputStateCreateInfo const *") VkPipelineVertexInputStateCreateInfo value) { VkGraphicsPipelineCreateInfo.npVertexInputState(address(), value); return this; }
+        public VkGraphicsPipelineCreateInfo.Buffer pVertexInputState(@NativeType("const VkPipelineVertexInputStateCreateInfo *") VkPipelineVertexInputStateCreateInfo value) { VkGraphicsPipelineCreateInfo.npVertexInputState(address(), value); return this; }
         /** Sets the address of the specified {@link VkPipelineInputAssemblyStateCreateInfo} to the {@code pInputAssemblyState} field. */
-        public VkGraphicsPipelineCreateInfo.Buffer pInputAssemblyState(@NativeType("VkPipelineInputAssemblyStateCreateInfo const *") VkPipelineInputAssemblyStateCreateInfo value) { VkGraphicsPipelineCreateInfo.npInputAssemblyState(address(), value); return this; }
+        public VkGraphicsPipelineCreateInfo.Buffer pInputAssemblyState(@NativeType("const VkPipelineInputAssemblyStateCreateInfo *") VkPipelineInputAssemblyStateCreateInfo value) { VkGraphicsPipelineCreateInfo.npInputAssemblyState(address(), value); return this; }
         /** Sets the address of the specified {@link VkPipelineTessellationStateCreateInfo} to the {@code pTessellationState} field. */
-        public VkGraphicsPipelineCreateInfo.Buffer pTessellationState(@Nullable @NativeType("VkPipelineTessellationStateCreateInfo const *") VkPipelineTessellationStateCreateInfo value) { VkGraphicsPipelineCreateInfo.npTessellationState(address(), value); return this; }
+        public VkGraphicsPipelineCreateInfo.Buffer pTessellationState(@Nullable @NativeType("const VkPipelineTessellationStateCreateInfo *") VkPipelineTessellationStateCreateInfo value) { VkGraphicsPipelineCreateInfo.npTessellationState(address(), value); return this; }
         /** Sets the address of the specified {@link VkPipelineViewportStateCreateInfo} to the {@code pViewportState} field. */
-        public VkGraphicsPipelineCreateInfo.Buffer pViewportState(@Nullable @NativeType("VkPipelineViewportStateCreateInfo const *") VkPipelineViewportStateCreateInfo value) { VkGraphicsPipelineCreateInfo.npViewportState(address(), value); return this; }
+        public VkGraphicsPipelineCreateInfo.Buffer pViewportState(@Nullable @NativeType("const VkPipelineViewportStateCreateInfo *") VkPipelineViewportStateCreateInfo value) { VkGraphicsPipelineCreateInfo.npViewportState(address(), value); return this; }
         /** Sets the address of the specified {@link VkPipelineRasterizationStateCreateInfo} to the {@code pRasterizationState} field. */
-        public VkGraphicsPipelineCreateInfo.Buffer pRasterizationState(@NativeType("VkPipelineRasterizationStateCreateInfo const *") VkPipelineRasterizationStateCreateInfo value) { VkGraphicsPipelineCreateInfo.npRasterizationState(address(), value); return this; }
+        public VkGraphicsPipelineCreateInfo.Buffer pRasterizationState(@NativeType("const VkPipelineRasterizationStateCreateInfo *") VkPipelineRasterizationStateCreateInfo value) { VkGraphicsPipelineCreateInfo.npRasterizationState(address(), value); return this; }
         /** Sets the address of the specified {@link VkPipelineMultisampleStateCreateInfo} to the {@code pMultisampleState} field. */
-        public VkGraphicsPipelineCreateInfo.Buffer pMultisampleState(@Nullable @NativeType("VkPipelineMultisampleStateCreateInfo const *") VkPipelineMultisampleStateCreateInfo value) { VkGraphicsPipelineCreateInfo.npMultisampleState(address(), value); return this; }
+        public VkGraphicsPipelineCreateInfo.Buffer pMultisampleState(@Nullable @NativeType("const VkPipelineMultisampleStateCreateInfo *") VkPipelineMultisampleStateCreateInfo value) { VkGraphicsPipelineCreateInfo.npMultisampleState(address(), value); return this; }
         /** Sets the address of the specified {@link VkPipelineDepthStencilStateCreateInfo} to the {@code pDepthStencilState} field. */
-        public VkGraphicsPipelineCreateInfo.Buffer pDepthStencilState(@Nullable @NativeType("VkPipelineDepthStencilStateCreateInfo const *") VkPipelineDepthStencilStateCreateInfo value) { VkGraphicsPipelineCreateInfo.npDepthStencilState(address(), value); return this; }
+        public VkGraphicsPipelineCreateInfo.Buffer pDepthStencilState(@Nullable @NativeType("const VkPipelineDepthStencilStateCreateInfo *") VkPipelineDepthStencilStateCreateInfo value) { VkGraphicsPipelineCreateInfo.npDepthStencilState(address(), value); return this; }
         /** Sets the address of the specified {@link VkPipelineColorBlendStateCreateInfo} to the {@code pColorBlendState} field. */
-        public VkGraphicsPipelineCreateInfo.Buffer pColorBlendState(@Nullable @NativeType("VkPipelineColorBlendStateCreateInfo const *") VkPipelineColorBlendStateCreateInfo value) { VkGraphicsPipelineCreateInfo.npColorBlendState(address(), value); return this; }
+        public VkGraphicsPipelineCreateInfo.Buffer pColorBlendState(@Nullable @NativeType("const VkPipelineColorBlendStateCreateInfo *") VkPipelineColorBlendStateCreateInfo value) { VkGraphicsPipelineCreateInfo.npColorBlendState(address(), value); return this; }
         /** Sets the address of the specified {@link VkPipelineDynamicStateCreateInfo} to the {@code pDynamicState} field. */
-        public VkGraphicsPipelineCreateInfo.Buffer pDynamicState(@Nullable @NativeType("VkPipelineDynamicStateCreateInfo const *") VkPipelineDynamicStateCreateInfo value) { VkGraphicsPipelineCreateInfo.npDynamicState(address(), value); return this; }
+        public VkGraphicsPipelineCreateInfo.Buffer pDynamicState(@Nullable @NativeType("const VkPipelineDynamicStateCreateInfo *") VkPipelineDynamicStateCreateInfo value) { VkGraphicsPipelineCreateInfo.npDynamicState(address(), value); return this; }
         /** Sets the specified value to the {@code layout} field. */
         public VkGraphicsPipelineCreateInfo.Buffer layout(@NativeType("VkPipelineLayout") long value) { VkGraphicsPipelineCreateInfo.nlayout(address(), value); return this; }
         /** Sets the specified value to the {@code renderPass} field. */

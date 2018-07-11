@@ -62,10 +62,9 @@ public class EXTAcquireXlibDisplay {
         throw new UnsupportedOperationException();
     }
 
-    static boolean checkCapsInstance(FunctionProvider provider, java.util.Map<String, Long> caps, java.util.Set<String> ext) {
-        return ext.contains("VK_EXT_acquire_xlib_display") && VK.checkExtension("VK_EXT_acquire_xlib_display",
-               VK.isSupported(provider, "vkAcquireXlibDisplayEXT", caps)
-            && VK.isSupported(provider, "vkGetRandROutputDisplayEXT", caps)
+    static boolean isAvailable(VKCapabilitiesInstance caps) {
+        return checkFunctions(
+            caps.vkAcquireXlibDisplayEXT, caps.vkGetRandROutputDisplayEXT
         );
     }
 
@@ -78,11 +77,11 @@ public class EXTAcquireXlibDisplay {
      * 
      * <p>To acquire permission to directly access a display in Vulkan from an X11 server, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * VkResult vkAcquireXlibDisplayEXT(
      *     VkPhysicalDevice                            physicalDevice,
      *     Display*                                    dpy,
-     *     VkDisplayKHR                                display);</code></pre>
+     *     VkDisplayKHR                                display);</pre></code>
      * 
      * <h5>Description</h5>
      * 
@@ -147,12 +146,12 @@ public class EXTAcquireXlibDisplay {
      * 
      * <p>When acquiring displays from an X11 server, an application may also wish to enumerate and identify them using a native handle rather than a {@code VkDisplayKHR} handle. To determine the {@code VkDisplayKHR} handle corresponding to an X11 RandR Output, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * VkResult vkGetRandROutputDisplayEXT(
      *     VkPhysicalDevice                            physicalDevice,
      *     Display*                                    dpy,
      *     RROutput                                    rrOutput,
-     *     VkDisplayKHR*                               pDisplay);</code></pre>
+     *     VkDisplayKHR*                               pDisplay);</pre></code>
      * 
      * <h5>Description</h5>
      * 
@@ -188,7 +187,7 @@ public class EXTAcquireXlibDisplay {
         return nvkGetRandROutputDisplayEXT(physicalDevice, dpy, rrOutput, memAddress(pDisplay));
     }
 
-    /** Array version of: {@link #vkGetRandROutputDisplayEXT GetRandROutputDisplayEXT} */
+    /** register Array version of: {@link #vkGetRandROutputDisplayEXT GetRandROutputDisplayEXT} */
     @NativeType("VkResult")
     public static int vkGetRandROutputDisplayEXT(VkPhysicalDevice physicalDevice, @NativeType("Display *") long dpy, @NativeType("RROutput") long rrOutput, @NativeType("VkDisplayKHR *") long[] pDisplay) {
         long __functionAddress = physicalDevice.getCapabilities().vkGetRandROutputDisplayEXT;

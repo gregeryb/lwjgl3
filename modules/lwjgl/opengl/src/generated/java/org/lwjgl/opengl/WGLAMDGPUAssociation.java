@@ -210,7 +210,7 @@ public class WGLAMDGPUAssociation {
      * @param attribList   a 0-terminated list of attributes for the context
      */
     @NativeType("HGLRC")
-    public static long wglCreateAssociatedContextAttribsAMD(@NativeType("UINT") int id, @NativeType("HGLRC") long shareContext, @Nullable @NativeType("int const *") IntBuffer attribList) {
+    public static long wglCreateAssociatedContextAttribsAMD(@NativeType("UINT") int id, @NativeType("HGLRC") long shareContext, @Nullable @NativeType("const int *") IntBuffer attribList) {
         if (CHECKS) {
             checkNTSafe(attribList);
         }
@@ -290,7 +290,7 @@ public class WGLAMDGPUAssociation {
         callPV(__functionAddress, dstCtx, srcX0, srcY0, srcX1, srcY1, dstX0, dstY0, dstX1, dstY1, mask, filter);
     }
 
-    /** Array version of: {@link #wglGetGPUIDsAMD GetGPUIDsAMD} */
+    /** register Array version of: {@link #wglGetGPUIDsAMD GetGPUIDsAMD} */
     @NativeType("UINT")
     public static int wglGetGPUIDsAMD(@Nullable @NativeType("UINT *") int[] ids) {
         long __functionAddress = GL.getCapabilitiesWGL().wglGetGPUIDsAMD;
@@ -300,7 +300,7 @@ public class WGLAMDGPUAssociation {
         return callPI(__functionAddress, lengthSafe(ids), ids);
     }
 
-    /** Array version of: {@link #wglGetGPUInfoAMD GetGPUInfoAMD} */
+    /** register Array version of: {@link #wglGetGPUInfoAMD GetGPUInfoAMD} */
     public static int wglGetGPUInfoAMD(@NativeType("UINT") int id, int property, @NativeType("GLenum") int dataType, @NativeType("void *") int[] data) {
         long __functionAddress = GL.getCapabilitiesWGL().wglGetGPUInfoAMD;
         if (CHECKS) {
@@ -309,7 +309,7 @@ public class WGLAMDGPUAssociation {
         return callPI(__functionAddress, id, property, dataType, data.length, data);
     }
 
-    /** Array version of: {@link #wglGetGPUInfoAMD GetGPUInfoAMD} */
+    /** register Array version of: {@link #wglGetGPUInfoAMD GetGPUInfoAMD} */
     public static int wglGetGPUInfoAMD(@NativeType("UINT") int id, int property, @NativeType("GLenum") int dataType, @NativeType("void *") float[] data) {
         long __functionAddress = GL.getCapabilitiesWGL().wglGetGPUInfoAMD;
         if (CHECKS) {
@@ -318,9 +318,9 @@ public class WGLAMDGPUAssociation {
         return callPI(__functionAddress, id, property, dataType, data.length, data);
     }
 
-    /** Array version of: {@link #wglCreateAssociatedContextAttribsAMD CreateAssociatedContextAttribsAMD} */
+    /** register Array version of: {@link #wglCreateAssociatedContextAttribsAMD CreateAssociatedContextAttribsAMD} */
     @NativeType("HGLRC")
-    public static long wglCreateAssociatedContextAttribsAMD(@NativeType("UINT") int id, @NativeType("HGLRC") long shareContext, @Nullable @NativeType("int const *") int[] attribList) {
+    public static long wglCreateAssociatedContextAttribsAMD(@NativeType("UINT") int id, @NativeType("HGLRC") long shareContext, @Nullable @NativeType("const int *") int[] attribList) {
         long __functionAddress = GL.getCapabilitiesWGL().wglCreateAssociatedContextAttribsAMD;
         if (CHECKS) {
             check(__functionAddress);

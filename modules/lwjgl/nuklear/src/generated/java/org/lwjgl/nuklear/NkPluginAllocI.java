@@ -12,12 +12,12 @@ import static org.lwjgl.system.dyncall.DynCallback.*;
 /**
  * <h3>Type</h3>
  * 
- * <pre><code>
- * void * (*) (
+ * <code><pre>
+ * void* (*) (
  *     nk_handle handle,
  *     void *old,
  *     nk_size size
- * )</code></pre>
+ * )</pre></code>
  */
 @FunctionalInterface
 @NativeType("nk_plugin_alloc")

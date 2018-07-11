@@ -73,7 +73,7 @@ public class QCOMFramebufferFoveated {
 
     public static native void glFramebufferFoveationParametersQCOM(@NativeType("GLuint") int fbo, @NativeType("GLuint") int layer, @NativeType("GLuint") int focalPoint, @NativeType("GLfloat") float focalX, @NativeType("GLfloat") float focalY, @NativeType("GLfloat") float gainX, @NativeType("GLfloat") float gainY, @NativeType("GLfloat") float foveaArea);
 
-    /** Array version of: {@link #glFramebufferFoveationConfigQCOM FramebufferFoveationConfigQCOM} */
+    /** register Array version of: {@link #glFramebufferFoveationConfigQCOM FramebufferFoveationConfigQCOM} */
     public static void glFramebufferFoveationConfigQCOM(@NativeType("GLuint") int fbo, @NativeType("GLuint") int numLayers, @NativeType("GLuint") int focalPointsPerLayer, @NativeType("GLuint") int requestedFeatures, @NativeType("GLuint *") int[] providedFeatures) {
         long __functionAddress = GLES.getICD().glFramebufferFoveationConfigQCOM;
         if (CHECKS) {

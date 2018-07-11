@@ -612,11 +612,11 @@ static void nsvg__curveBounds(float* bounds, float* curve)
 static NSVGparser* nsvg__createParser()
 {
 	NSVGparser* p;
-	p = (NSVGparser*)NVG_MALLOC(sizeof(NSVGparser));
+	p = (NSVGparser*)malloc(sizeof(NSVGparser));
 	if (p == NULL) goto error;
 	memset(p, 0, sizeof(NSVGparser));
 
-	p->image = (NSVGimage*)NVG_MALLOC(sizeof(NSVGimage));
+	p->image = (NSVGimage*)malloc(sizeof(NSVGimage));
 	if (p->image == NULL) goto error;
 	memset(p->image, 0, sizeof(NSVGimage));
 
@@ -641,8 +641,8 @@ static NSVGparser* nsvg__createParser()
 
 error:
 	if (p) {
-		if (p->image) NVG_FREE(p->image);
-		NVG_FREE(p);
+		if (p->image) free(p->image);
+		free(p);
 	}
 	return NULL;
 }
@@ -652,8 +652,8 @@ static void nsvg__deletePaths(NSVGpath* path)
 	while (path) {
 		NSVGpath *next = path->next;
 		if (path->pts != NULL)
-			NVG_FREE(path->pts);
-		NVG_FREE(path);
+			free(path->pts);
+		free(path);
 		path = next;
 	}
 }
@@ -661,7 +661,7 @@ static void nsvg__deletePaths(NSVGpath* path)
 static void nsvg__deletePaint(NSVGpaint* paint)
 {
 	if (paint->type == NSVG_PAINT_LINEAR_GRADIENT || paint->type == NSVG_PAINT_RADIAL_GRADIENT)
-		NVG_FREE(paint->gradient);
+		free(paint->gradient);
 }
 
 static void nsvg__deleteGradientData(NSVGgradientData* grad)
@@ -669,8 +669,8 @@ static void nsvg__deleteGradientData(NSVGgradientData* grad)
 	NSVGgradientData* next;
 	while (grad != NULL) {
 		next = grad->next;
-		NVG_FREE(grad->stops);
-		NVG_FREE(grad);
+		free(grad->stops);
+		free(grad);
 		grad = next;
 	}
 }
@@ -681,8 +681,8 @@ static void nsvg__deleteParser(NSVGparser* p)
 		nsvg__deletePaths(p->plist);
 		nsvg__deleteGradientData(p->gradients);
 		nsvgDelete(p->image);
-		NVG_FREE(p->pts);
-		NVG_FREE(p);
+		free(p->pts);
+		free(p);
 	}
 }
 
@@ -695,7 +695,7 @@ static void nsvg__addPoint(NSVGparser* p, float x, float y)
 {
 	if (p->npts+1 > p->cpts) {
 		p->cpts = p->cpts ? p->cpts*2 : 8;
-		p->pts = (float*)NVG_REALLOC(p->pts, p->cpts*2*sizeof(float));
+		p->pts = (float*)realloc(p->pts, p->cpts*2*sizeof(float));
 		if (!p->pts) return;
 	}
 	p->pts[p->npts*2+0] = x;
@@ -833,7 +833,7 @@ static NSVGgradient* nsvg__createGradient(NSVGparser* p, const char* id, const f
 	}
 	if (stops == NULL) return NULL;
 
-	grad = (NSVGgradient*)NVG_MALLOC(sizeof(NSVGgradient) + sizeof(NSVGgradientStop)*(nstops-1));
+	grad = (NSVGgradient*)malloc(sizeof(NSVGgradient) + sizeof(NSVGgradientStop)*(nstops-1));
 	if (grad == NULL) return NULL;
 
 	// The shape width and height.
@@ -937,7 +937,7 @@ static void nsvg__addShape(NSVGparser* p)
 	if (p->plist == NULL)
 		return;
 
-	shape = (NSVGshape*)NVG_MALLOC(sizeof(NSVGshape));
+	shape = (NSVGshape*)malloc(sizeof(NSVGshape));
 	if (shape == NULL) goto error;
 	memset(shape, 0, sizeof(NSVGshape));
 
@@ -1015,7 +1015,7 @@ static void nsvg__addShape(NSVGparser* p)
 	return;
 
 error:
-	if (shape) NVG_FREE(shape);
+	if (shape) free(shape);
 }
 
 static void nsvg__addPath(NSVGparser* p, char closed)
@@ -1032,11 +1032,11 @@ static void nsvg__addPath(NSVGparser* p, char closed)
 	if (closed)
 		nsvg__lineTo(p, p->pts[0], p->pts[1]);
 
-	path = (NSVGpath*)NVG_MALLOC(sizeof(NSVGpath));
+	path = (NSVGpath*)malloc(sizeof(NSVGpath));
 	if (path == NULL) goto error;
 	memset(path, 0, sizeof(NSVGpath));
 
-	path->pts = (float*)NVG_MALLOC(p->npts*2*sizeof(float));
+	path->pts = (float*)malloc(p->npts*2*sizeof(float));
 	if (path->pts == NULL) goto error;
 	path->closed = closed;
 	path->npts = p->npts;
@@ -1069,8 +1069,8 @@ static void nsvg__addPath(NSVGparser* p, char closed)
 
 error:
 	if (path != NULL) {
-		if (path->pts != NULL) NVG_FREE(path->pts);
-		NVG_FREE(path);
+		if (path->pts != NULL) free(path->pts);
+		free(path);
 	}
 }
 
@@ -1649,7 +1649,7 @@ static char nsvg__parseLineJoin(const char* str)
 	else if (strcmp(str, "bevel") == 0)
 		return NSVG_JOIN_BEVEL;
 	// TODO: handle inherit.
-	return NSVG_JOIN_MITER;
+	return NSVG_CAP_BUTT;
 }
 
 static char nsvg__parseFillRule(const char* str)
@@ -2493,9 +2493,9 @@ static void nsvg__parseSVG(NSVGparser* p, const char** attr)
 	for (i = 0; attr[i]; i += 2) {
 		if (!nsvg__parseAttr(p, attr[i], attr[i + 1])) {
 			if (strcmp(attr[i], "width") == 0) {
-				p->image->width = nsvg__parseCoordinate(p, attr[i + 1], 0.0f, 0.0f);
+				p->image->width = nsvg__parseCoordinate(p, attr[i + 1], 0.0f, 1.0f);
 			} else if (strcmp(attr[i], "height") == 0) {
-				p->image->height = nsvg__parseCoordinate(p, attr[i + 1], 0.0f, 0.0f);
+				p->image->height = nsvg__parseCoordinate(p, attr[i + 1], 0.0f, 1.0f);
 			} else if (strcmp(attr[i], "viewBox") == 0) {
 				sscanf(attr[i + 1], "%f%*[%%, \t]%f%*[%%, \t]%f%*[%%, \t]%f", &p->viewMinx, &p->viewMiny, &p->viewWidth, &p->viewHeight);
 			} else if (strcmp(attr[i], "preserveAspectRatio") == 0) {
@@ -2530,7 +2530,7 @@ static void nsvg__parseSVG(NSVGparser* p, const char** attr)
 static void nsvg__parseGradient(NSVGparser* p, const char** attr, char type)
 {
 	int i;
-	NSVGgradientData* grad = (NSVGgradientData*)NVG_MALLOC(sizeof(NSVGgradientData));
+	NSVGgradientData* grad = (NSVGgradientData*)malloc(sizeof(NSVGgradientData));
 	if (grad == NULL) return;
 	memset(grad, 0, sizeof(NSVGgradientData));
 	grad->units = NSVG_OBJECT_SPACE;
@@ -2617,7 +2617,7 @@ static void nsvg__parseGradientStop(NSVGparser* p, const char** attr)
 	if (grad == NULL) return;
 
 	grad->nstops++;
-	grad->stops = (NSVGgradientStop*)NVG_REALLOC(grad->stops, sizeof(NSVGgradientStop)*grad->nstops);
+	grad->stops = (NSVGgradientStop*)realloc(grad->stops, sizeof(NSVGgradientStop)*grad->nstops);
 	if (grad->stops == NULL) return;
 
 	// Insert
@@ -2888,19 +2888,19 @@ NSVGimage* nsvgParseFromFile(const char* filename, const char* units, float dpi)
 	fseek(fp, 0, SEEK_END);
 	size = ftell(fp);
 	fseek(fp, 0, SEEK_SET);
-	data = (char*)NVG_MALLOC(size+1);
+	data = (char*)malloc(size+1);
 	if (data == NULL) goto error;
 	if (fread(data, 1, size, fp) != size) goto error;
 	data[size] = '\0';	// Must be null terminated.
 	fclose(fp);
 	image = nsvgParse(data, units, dpi);
-	NVG_FREE(data);
+	free(data);
 
 	return image;
 
 error:
 	if (fp) fclose(fp);
-	if (data) NVG_FREE(data);
+	if (data) free(data);
 	if (image) nsvgDelete(image);
 	return NULL;
 }
@@ -2915,10 +2915,10 @@ void nsvgDelete(NSVGimage* image)
 		nsvg__deletePaths(shape->paths);
 		nsvg__deletePaint(&shape->fill);
 		nsvg__deletePaint(&shape->stroke);
-		NVG_FREE(shape);
+		free(shape);
 		shape = snext;
 	}
-	NVG_FREE(image);
+	free(image);
 }
 
 #endif

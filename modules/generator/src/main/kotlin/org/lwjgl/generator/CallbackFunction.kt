@@ -6,7 +6,7 @@ package org.lwjgl.generator
 
 import java.io.*
 
-class CallbackFunction internal constructor(
+class CallbackFunction(
     module: Module,
     className: String,
     nativeType: String,
@@ -17,8 +17,13 @@ class CallbackFunction internal constructor(
     internal var functionDoc: (CallbackFunction) -> String = { "" }
     var additionalCode = ""
 
+    private var stdcall = false
+    fun useSystemCallConvention() {
+        stdcall = true
+    }
+
     internal fun nativeType(name: String, separator: String = ", ", prefix: String = "", postfix: String = "") =
-        "${returns.name} (*$name) (${signature.asSequence()
+        "${returns.name}${if (returns is PointerType && !returns.includesPointer) "*" else ""} (*$name) (${signature.asSequence()
             .joinToString(separator, prefix = prefix, postfix = postfix) { param ->
                 param.toNativeType(null).let {
                     if (it.endsWith('*')) {
@@ -31,7 +36,7 @@ class CallbackFunction internal constructor(
         })"
 
     internal val nativeType = if (nativeType === ANONYMOUS)
-        "${returns.name} (*) (${
+        "${returns.name}${if (returns is PointerType && !returns.includesPointer) "*" else ""} (*) (${
         signature.asSequence().joinToString(", ") { it.toNativeType(null) }
         })"
     else
@@ -39,7 +44,7 @@ class CallbackFunction internal constructor(
 
     private val NativeType.dyncall
         get() = when (this) {
-            is PointerType<*>   -> 'p'
+            is PointerType   -> 'p'
             is PrimitiveType -> when (mapping) {
                 PrimitiveMapping.BOOLEAN -> 'B'
                 PrimitiveMapping.BYTE    -> 'c'
@@ -56,12 +61,14 @@ class CallbackFunction internal constructor(
         }
 
     private val NativeType.argType
-        get() = when {
-            this.isPointer                       -> "Pointer"
-            mapping === PrimitiveMapping.BOOLEAN -> "Bool"
-            mapping === PrimitiveMapping.LONG    -> "LongLong"
-            else                                 -> (mapping as PrimitiveMapping).javaMethodName.upperCaseFirst
-        }
+        get() = if (this is PointerType || mapping === PrimitiveMapping.POINTER)
+            "Pointer"
+        else if (mapping === PrimitiveMapping.BOOLEAN)
+            "Bool"
+        else if (mapping === PrimitiveMapping.LONG)
+            "LongLong"
+        else
+            (mapping as PrimitiveMapping).javaMethodName.upperCaseFirst
 
     private fun PrintWriter.generateDocumentation(isClass: Boolean) {
         val documentation = if (module === Module.VULKAN)
@@ -181,10 +188,10 @@ import static org.lwjgl.system.dyncall.DynCallback.*;
         generateDocumentation(false)
         print("""@FunctionalInterface
 @NativeType("$nativeType")
-${access.modifier}interface ${className}I extends CallbackI.${returns.jniSignature} {
+${access.modifier}interface ${className}I extends CallbackI.${returns.mapping.jniSignature} {
 
     String SIGNATURE = ${"\"(${signature.asSequence().map { it.nativeType.dyncall }.joinToString("")})${returns.dyncall}\"".let {
-            if (module.callingConvention === CallingConvention.STDCALL) "Callback.__stdcall($it)" else it
+            if (stdcall) "Callback.__stdcall($it)" else it
         }};
 
     @Override
@@ -208,8 +215,8 @@ ${signature.asSequence().map {
             print(doc)
         }
         print("""
-    ${returns.annotate(returns.nativeMethodType)} invoke(${signature.asSequence().joinToString(", ") {
-            "${it.nativeType.annotate(if (it.nativeType.mapping == PrimitiveMapping.BOOLEAN4) "boolean" else it.nativeType.nativeMethodType)} ${it.name}"
+    ${returns.annotate(returns.nativeMethodType, false)} invoke(${signature.asSequence().joinToString(", ") {
+            "${it.nativeType.annotate(if (it.nativeType.mapping == PrimitiveMapping.BOOLEAN4) "boolean" else it.nativeType.nativeMethodType, it.has(const))} ${it.name}"
         }});
 
 }""")
@@ -217,10 +224,43 @@ ${signature.asSequence().map {
 
 }
 
-internal class CallbackInterface(
+private class CallbackInterface(
     val callback: CallbackFunction
 ) : GeneratorTarget(callback.module, "${callback.className}I") {
     override fun PrintWriter.generateJava() = callback.run {
         this@generateJava.generateInterface()
     }
+}
+
+// anonymous callback type
+fun callback(
+    module: Module,
+    returns: NativeType,
+    className: String,
+    functionDoc: String,
+    vararg signature: Parameter,
+    returnDoc: String = "",
+    see: Array<String>? = null,
+    since: String = "",
+    init: (CallbackFunction.() -> Unit)? = null
+) = ANONYMOUS.callback(module, returns, className, functionDoc, *signature, returnDoc = returnDoc, see = see, since = since, init = init)
+
+fun String.callback(
+    module: Module,
+    returns: NativeType,
+    className: String,
+    functionDoc: String,
+    vararg signature: Parameter,
+    returnDoc: String = "",
+    see: Array<String>? = null,
+    since: String = "",
+    init: (CallbackFunction.() -> Unit)? = null
+): CallbackType {
+    val callback = CallbackFunction(module, className, this, returns, *signature)
+    if (init != null)
+        callback.init()
+    callback.functionDoc = { it -> it.toJavaDoc(it.processDocumentation(functionDoc), it.signature.asSequence(), it.returns, returnDoc, see, since) }
+    Generator.register(callback)
+    Generator.register(CallbackInterface(callback))
+    return CallbackType(callback)
 }

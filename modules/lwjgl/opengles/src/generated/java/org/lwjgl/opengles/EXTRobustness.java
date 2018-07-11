@@ -148,7 +148,16 @@ public class EXTRobustness {
         }
     }
 
-    /** Array version of: {@link #glReadnPixelsEXT ReadnPixelsEXT} */
+    /** register Array version of: {@link #glReadnPixelsEXT ReadnPixelsEXT} */
+    public static void glReadnPixelsEXT(@NativeType("GLint") int x, @NativeType("GLint") int y, @NativeType("GLsizei") int width, @NativeType("GLsizei") int height, @NativeType("GLenum") int format, @NativeType("GLenum") int type, @NativeType("void *") byte[] data) {
+        long __functionAddress = GLES.getICD().glReadnPixelsEXT;
+        if (CHECKS) {
+            check(__functionAddress);
+        }
+        callPV(__functionAddress, x, y, width, height, format, type, data.length << 0, data);
+    }
+
+    /** register Array version of: {@link #glReadnPixelsEXT ReadnPixelsEXT} */
     public static void glReadnPixelsEXT(@NativeType("GLint") int x, @NativeType("GLint") int y, @NativeType("GLsizei") int width, @NativeType("GLsizei") int height, @NativeType("GLenum") int format, @NativeType("GLenum") int type, @NativeType("void *") short[] data) {
         long __functionAddress = GLES.getICD().glReadnPixelsEXT;
         if (CHECKS) {
@@ -157,7 +166,7 @@ public class EXTRobustness {
         callPV(__functionAddress, x, y, width, height, format, type, data.length << 1, data);
     }
 
-    /** Array version of: {@link #glReadnPixelsEXT ReadnPixelsEXT} */
+    /** register Array version of: {@link #glReadnPixelsEXT ReadnPixelsEXT} */
     public static void glReadnPixelsEXT(@NativeType("GLint") int x, @NativeType("GLint") int y, @NativeType("GLsizei") int width, @NativeType("GLsizei") int height, @NativeType("GLenum") int format, @NativeType("GLenum") int type, @NativeType("void *") int[] data) {
         long __functionAddress = GLES.getICD().glReadnPixelsEXT;
         if (CHECKS) {
@@ -166,7 +175,7 @@ public class EXTRobustness {
         callPV(__functionAddress, x, y, width, height, format, type, data.length << 2, data);
     }
 
-    /** Array version of: {@link #glReadnPixelsEXT ReadnPixelsEXT} */
+    /** register Array version of: {@link #glReadnPixelsEXT ReadnPixelsEXT} */
     public static void glReadnPixelsEXT(@NativeType("GLint") int x, @NativeType("GLint") int y, @NativeType("GLsizei") int width, @NativeType("GLsizei") int height, @NativeType("GLenum") int format, @NativeType("GLenum") int type, @NativeType("void *") float[] data) {
         long __functionAddress = GLES.getICD().glReadnPixelsEXT;
         if (CHECKS) {
@@ -175,7 +184,7 @@ public class EXTRobustness {
         callPV(__functionAddress, x, y, width, height, format, type, data.length << 2, data);
     }
 
-    /** Array version of: {@link #glGetnUniformfvEXT GetnUniformfvEXT} */
+    /** register Array version of: {@link #glGetnUniformfvEXT GetnUniformfvEXT} */
     public static void glGetnUniformfvEXT(@NativeType("GLuint") int program, @NativeType("GLint") int location, @NativeType("GLfloat *") float[] params) {
         long __functionAddress = GLES.getICD().glGetnUniformfvEXT;
         if (CHECKS) {
@@ -184,7 +193,7 @@ public class EXTRobustness {
         callPV(__functionAddress, program, location, params.length, params);
     }
 
-    /** Array version of: {@link #glGetnUniformivEXT GetnUniformivEXT} */
+    /** register Array version of: {@link #glGetnUniformivEXT GetnUniformivEXT} */
     public static void glGetnUniformivEXT(@NativeType("GLuint") int program, @NativeType("GLint") int location, @NativeType("GLint *") int[] params) {
         long __functionAddress = GLES.getICD().glGetnUniformivEXT;
         if (CHECKS) {

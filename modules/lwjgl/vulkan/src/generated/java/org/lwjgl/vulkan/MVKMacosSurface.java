@@ -61,9 +61,9 @@ public class MVKMacosSurface {
         throw new UnsupportedOperationException();
     }
 
-    static boolean checkCapsInstance(FunctionProvider provider, java.util.Map<String, Long> caps, java.util.Set<String> ext) {
-        return ext.contains("VK_MVK_macos_surface") && VK.checkExtension("VK_MVK_macos_surface",
-               VK.isSupported(provider, "vkCreateMacOSSurfaceMVK", caps)
+    static boolean isAvailable(VKCapabilitiesInstance caps) {
+        return checkFunctions(
+            caps.vkCreateMacOSSurfaceMVK
         );
     }
 
@@ -87,12 +87,12 @@ public class MVKMacosSurface {
      * 
      * <p>To create a {@code VkSurfaceKHR} object for a macOS {@code NSView}, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * VkResult vkCreateMacOSSurfaceMVK(
      *     VkInstance                                  instance,
      *     const VkMacOSSurfaceCreateInfoMVK*          pCreateInfo,
      *     const VkAllocationCallbacks*                pAllocator,
-     *     VkSurfaceKHR*                               pSurface);</code></pre>
+     *     VkSurfaceKHR*                               pSurface);</pre></code>
      * 
      * <h5>Valid Usage (Implicit)</h5>
      * 
@@ -128,16 +128,16 @@ public class MVKMacosSurface {
      * @param pSurface    points to a {@code VkSurfaceKHR} handle in which the created surface object is returned.
      */
     @NativeType("VkResult")
-    public static int vkCreateMacOSSurfaceMVK(VkInstance instance, @NativeType("VkMacOSSurfaceCreateInfoMVK const *") VkMacOSSurfaceCreateInfoMVK pCreateInfo, @Nullable @NativeType("VkAllocationCallbacks const *") VkAllocationCallbacks pAllocator, @NativeType("VkSurfaceKHR *") LongBuffer pSurface) {
+    public static int vkCreateMacOSSurfaceMVK(VkInstance instance, @NativeType("const VkMacOSSurfaceCreateInfoMVK *") VkMacOSSurfaceCreateInfoMVK pCreateInfo, @Nullable @NativeType("const VkAllocationCallbacks *") VkAllocationCallbacks pAllocator, @NativeType("VkSurfaceKHR *") LongBuffer pSurface) {
         if (CHECKS) {
             check(pSurface, 1);
         }
         return nvkCreateMacOSSurfaceMVK(instance, pCreateInfo.address(), memAddressSafe(pAllocator), memAddress(pSurface));
     }
 
-    /** Array version of: {@link #vkCreateMacOSSurfaceMVK CreateMacOSSurfaceMVK} */
+    /** register Array version of: {@link #vkCreateMacOSSurfaceMVK CreateMacOSSurfaceMVK} */
     @NativeType("VkResult")
-    public static int vkCreateMacOSSurfaceMVK(VkInstance instance, @NativeType("VkMacOSSurfaceCreateInfoMVK const *") VkMacOSSurfaceCreateInfoMVK pCreateInfo, @Nullable @NativeType("VkAllocationCallbacks const *") VkAllocationCallbacks pAllocator, @NativeType("VkSurfaceKHR *") long[] pSurface) {
+    public static int vkCreateMacOSSurfaceMVK(VkInstance instance, @NativeType("const VkMacOSSurfaceCreateInfoMVK *") VkMacOSSurfaceCreateInfoMVK pCreateInfo, @Nullable @NativeType("const VkAllocationCallbacks *") VkAllocationCallbacks pAllocator, @NativeType("VkSurfaceKHR *") long[] pSurface) {
         long __functionAddress = instance.getCapabilities().vkCreateMacOSSurfaceMVK;
         if (CHECKS) {
             check(__functionAddress);

@@ -34,7 +34,7 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct nk_convert_config {
  *     float global_alpha;
  *     enum nk_anti_aliasing line_AA;
@@ -46,7 +46,7 @@ import static org.lwjgl.system.MemoryStack.*;
  *     {@link NkDrawVertexLayoutElement struct nk_draw_vertex_layout_element} * vertex_layout;
  *     nk_size vertex_size;
  *     nk_size vertex_alignment;
- * }</code></pre>
+ * }</pre></code>
  */
 @NativeType("struct nk_convert_config")
 public class NkConvertConfig extends Struct implements NativeResource {
@@ -54,7 +54,6 @@ public class NkConvertConfig extends Struct implements NativeResource {
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */
@@ -136,8 +135,6 @@ public class NkConvertConfig extends Struct implements NativeResource {
     /** Returns a {@link NkDrawNullTexture} view of the {@code null_texture} field. */
     @NativeType("struct nk_draw_null_texture")
     public NkDrawNullTexture null_texture() { return nnull_texture(address()); }
-    /** Passes the {@code null_texture} field to the specified {@link java.util.function.Consumer Consumer}. */
-    public NkConvertConfig null_texture(java.util.function.Consumer<NkDrawNullTexture> consumer) { consumer.accept(null_texture()); return this; }
     /**
      * Returns a {@link NkDrawVertexLayoutElement.Buffer} view of the struct array pointed to by the {@code vertex_layout} field.
      *
@@ -482,8 +479,6 @@ public class NkConvertConfig extends Struct implements NativeResource {
         /** Returns a {@link NkDrawNullTexture} view of the {@code null_texture} field. */
         @NativeType("struct nk_draw_null_texture")
         public NkDrawNullTexture null_texture() { return NkConvertConfig.nnull_texture(address()); }
-        /** Passes the {@code null_texture} field to the specified {@link java.util.function.Consumer Consumer}. */
-        public NkConvertConfig.Buffer null_texture(java.util.function.Consumer<NkDrawNullTexture> consumer) { consumer.accept(null_texture()); return this; }
         /**
          * Returns a {@link NkDrawVertexLayoutElement.Buffer} view of the struct array pointed to by the {@code vertex_layout} field.
          *

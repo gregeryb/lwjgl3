@@ -27,13 +27,13 @@ import static org.lwjgl.system.MemoryUtil.*;
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct NVGLUframebuffer {
  *     GLuint fbo;
  *     GLuint rbo;
  *     GLuint texture;
  *     int image;
- * }</code></pre>
+ * }</pre></code>
  */
 @NativeType("struct NVGLUframebuffer")
 public class NVGLUFramebuffer extends Struct {
@@ -41,7 +41,6 @@ public class NVGLUFramebuffer extends Struct {
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */

@@ -113,7 +113,7 @@ public class INTELAccelerator {
      *         </ul>
      */
     @NativeType("cl_accelerator_intel")
-    public static long clCreateAcceleratorINTEL(@NativeType("cl_context") long context, @NativeType("cl_accelerator_type_intel") int accelerator_type, @NativeType("void const *") ByteBuffer descriptor, @Nullable @NativeType("cl_int *") IntBuffer errcode_ret) {
+    public static long clCreateAcceleratorINTEL(@NativeType("cl_context") long context, @NativeType("cl_accelerator_type_intel") int accelerator_type, @NativeType("const void *") ByteBuffer descriptor, @Nullable @NativeType("cl_int *") IntBuffer errcode_ret) {
         if (CHECKS) {
             checkSafe(errcode_ret, 1);
         }
@@ -236,7 +236,7 @@ public class INTELAccelerator {
         if (CHECKS) {
             checkSafe(param_value_size_ret, 1);
         }
-        return nclGetAcceleratorInfoINTEL(accelerator, param_name, Integer.toUnsignedLong(remainingSafe(param_value)) << 2, memAddressSafe(param_value), memAddressSafe(param_value_size_ret));
+        return nclGetAcceleratorInfoINTEL(accelerator, param_name, remainingSafe(param_value) << 2, memAddressSafe(param_value), memAddressSafe(param_value_size_ret));
     }
 
     /**
@@ -262,12 +262,12 @@ public class INTELAccelerator {
         if (CHECKS) {
             checkSafe(param_value_size_ret, 1);
         }
-        return nclGetAcceleratorInfoINTEL(accelerator, param_name, Integer.toUnsignedLong(remainingSafe(param_value)) << POINTER_SHIFT, memAddressSafe(param_value), memAddressSafe(param_value_size_ret));
+        return nclGetAcceleratorInfoINTEL(accelerator, param_name, remainingSafe(param_value) << POINTER_SHIFT, memAddressSafe(param_value), memAddressSafe(param_value_size_ret));
     }
 
-    /** Array version of: {@link #clCreateAcceleratorINTEL CreateAcceleratorINTEL} */
+    /** register Array version of: {@link #clCreateAcceleratorINTEL CreateAcceleratorINTEL} */
     @NativeType("cl_accelerator_intel")
-    public static long clCreateAcceleratorINTEL(@NativeType("cl_context") long context, @NativeType("cl_accelerator_type_intel") int accelerator_type, @NativeType("void const *") ByteBuffer descriptor, @Nullable @NativeType("cl_int *") int[] errcode_ret) {
+    public static long clCreateAcceleratorINTEL(@NativeType("cl_context") long context, @NativeType("cl_accelerator_type_intel") int accelerator_type, @NativeType("const void *") ByteBuffer descriptor, @Nullable @NativeType("cl_int *") int[] errcode_ret) {
         long __functionAddress = CL.getICD().clCreateAcceleratorINTEL;
         if (CHECKS) {
             check(__functionAddress);
@@ -277,7 +277,7 @@ public class INTELAccelerator {
         return callPPPPP(__functionAddress, context, accelerator_type, (long)descriptor.remaining(), memAddress(descriptor), errcode_ret);
     }
 
-    /** Array version of: {@link #clGetAcceleratorInfoINTEL GetAcceleratorInfoINTEL} */
+    /** register Array version of: {@link #clGetAcceleratorInfoINTEL GetAcceleratorInfoINTEL} */
     @NativeType("cl_int")
     public static int clGetAcceleratorInfoINTEL(@NativeType("cl_accelerator_intel") long accelerator, @NativeType("cl_accelerator_info_intel") int param_name, @Nullable @NativeType("void *") int[] param_value, @Nullable @NativeType("size_t *") PointerBuffer param_value_size_ret) {
         long __functionAddress = CL.getICD().clGetAcceleratorInfoINTEL;
@@ -286,7 +286,7 @@ public class INTELAccelerator {
             check(accelerator);
             checkSafe(param_value_size_ret, 1);
         }
-        return callPPPPI(__functionAddress, accelerator, param_name, Integer.toUnsignedLong(lengthSafe(param_value)) << 2, param_value, memAddressSafe(param_value_size_ret));
+        return callPPPPI(__functionAddress, accelerator, param_name, (long)(lengthSafe(param_value) << 2), param_value, memAddressSafe(param_value_size_ret));
     }
 
 }

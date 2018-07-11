@@ -28,19 +28,18 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct VkSparseImageFormatProperties {
  *     VkImageAspectFlags aspectMask;
  *     {@link VkExtent3D VkExtent3D} imageGranularity;
  *     VkSparseImageFormatFlags flags;
- * }</code></pre>
+ * }</pre></code>
  */
 public class VkSparseImageFormatProperties extends Struct implements NativeResource {
 
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */
@@ -86,8 +85,6 @@ public class VkSparseImageFormatProperties extends Struct implements NativeResou
     public int aspectMask() { return naspectMask(address()); }
     /** Returns a {@link VkExtent3D} view of the {@code imageGranularity} field. */
     public VkExtent3D imageGranularity() { return nimageGranularity(address()); }
-    /** Passes the {@code imageGranularity} field to the specified {@link java.util.function.Consumer Consumer}. */
-    public VkSparseImageFormatProperties imageGranularity(java.util.function.Consumer<VkExtent3D> consumer) { consumer.accept(imageGranularity()); return this; }
     /** Returns the value of the {@code flags} field. */
     @NativeType("VkSparseImageFormatFlags")
     public int flags() { return nflags(address()); }
@@ -291,8 +288,6 @@ public class VkSparseImageFormatProperties extends Struct implements NativeResou
         public int aspectMask() { return VkSparseImageFormatProperties.naspectMask(address()); }
         /** Returns a {@link VkExtent3D} view of the {@code imageGranularity} field. */
         public VkExtent3D imageGranularity() { return VkSparseImageFormatProperties.nimageGranularity(address()); }
-        /** Passes the {@code imageGranularity} field to the specified {@link java.util.function.Consumer Consumer}. */
-        public VkSparseImageFormatProperties.Buffer imageGranularity(java.util.function.Consumer<VkExtent3D> consumer) { consumer.accept(imageGranularity()); return this; }
         /** Returns the value of the {@code flags} field. */
         @NativeType("VkSparseImageFormatFlags")
         public int flags() { return VkSparseImageFormatProperties.nflags(address()); }

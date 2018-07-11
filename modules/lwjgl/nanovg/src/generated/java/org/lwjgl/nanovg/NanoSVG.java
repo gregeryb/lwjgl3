@@ -128,10 +128,16 @@ public class NanoSVG {
     /** Unsafe version of: {@link #nsvgParseFromFile ParseFromFile} */
     public static native long nnsvgParseFromFile(long filename, long units, float dpi);
 
-    /** Parses SVG file from a file, returns SVG image as paths. */
+    /**
+     * Parses SVG file from a file, returns SVG image as paths.
+     *
+     * @param filename 
+     * @param units    
+     * @param dpi      
+     */
     @Nullable
     @NativeType("NSVGimage *")
-    public static NSVGImage nsvgParseFromFile(@NativeType("char const *") ByteBuffer filename, @NativeType("char const *") ByteBuffer units, float dpi) {
+    public static NSVGImage nsvgParseFromFile(@NativeType("const char *") ByteBuffer filename, @NativeType("const char *") ByteBuffer units, float dpi) {
         if (CHECKS) {
             checkNT1(filename);
             checkNT1(units);
@@ -140,10 +146,16 @@ public class NanoSVG {
         return NSVGImage.createSafe(__result);
     }
 
-    /** Parses SVG file from a file, returns SVG image as paths. */
+    /**
+     * Parses SVG file from a file, returns SVG image as paths.
+     *
+     * @param filename 
+     * @param units    
+     * @param dpi      
+     */
     @Nullable
     @NativeType("NSVGimage *")
-    public static NSVGImage nsvgParseFromFile(@NativeType("char const *") CharSequence filename, @NativeType("char const *") CharSequence units, float dpi) {
+    public static NSVGImage nsvgParseFromFile(@NativeType("const char *") CharSequence filename, @NativeType("const char *") CharSequence units, float dpi) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
             ByteBuffer filenameEncoded = stack.ASCII(filename);
@@ -164,10 +176,14 @@ public class NanoSVG {
      * Parses SVG file from a null terminated string, returns SVG image as paths.
      * 
      * <p>Important note: changes the string.</p>
+     *
+     * @param input 
+     * @param units 
+     * @param dpi   
      */
     @Nullable
     @NativeType("NSVGimage *")
-    public static NSVGImage nsvgParse(@NativeType("char *") ByteBuffer input, @NativeType("char const *") ByteBuffer units, float dpi) {
+    public static NSVGImage nsvgParse(@NativeType("char *") ByteBuffer input, @NativeType("const char *") ByteBuffer units, float dpi) {
         if (CHECKS) {
             checkNT1(input);
             checkNT1(units);
@@ -180,10 +196,14 @@ public class NanoSVG {
      * Parses SVG file from a null terminated string, returns SVG image as paths.
      * 
      * <p>Important note: changes the string.</p>
+     *
+     * @param input 
+     * @param units 
+     * @param dpi   
      */
     @Nullable
     @NativeType("NSVGimage *")
-    public static NSVGImage nsvgParse(@NativeType("char *") CharSequence input, @NativeType("char const *") CharSequence units, float dpi) {
+    public static NSVGImage nsvgParse(@NativeType("char *") CharSequence input, @NativeType("const char *") CharSequence units, float dpi) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
             ByteBuffer inputEncoded = stack.ASCII(input);
@@ -200,7 +220,11 @@ public class NanoSVG {
     /** Unsafe version of: {@link #nsvgDelete Delete} */
     public static native void nnsvgDelete(long image);
 
-    /** Deletes list of paths. */
+    /**
+     * Deletes list of paths.
+     *
+     * @param image 
+     */
     public static void nsvgDelete(@NativeType("NSVGimage *") NSVGImage image) {
         nnsvgDelete(image.address());
     }

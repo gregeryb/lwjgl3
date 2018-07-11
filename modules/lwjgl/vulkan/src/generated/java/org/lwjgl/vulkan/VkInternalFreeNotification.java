@@ -18,12 +18,12 @@ import static org.lwjgl.system.MemoryUtil.*;
  * 
  * <p>The type of {@code pfnInternalFree} is:</p>
  * 
- * <pre><code>
+ * <code><pre>
  * typedef void (VKAPI_PTR *PFN_vkInternalFreeNotification)(
  *     void*                                       pUserData,
  *     size_t                                      size,
  *     VkInternalAllocationType                    allocationType,
- *     VkSystemAllocationScope                     allocationScope);</code></pre>
+ *     VkSystemAllocationScope                     allocationScope);</pre></code>
  * 
  * <h5>See Also</h5>
  * 

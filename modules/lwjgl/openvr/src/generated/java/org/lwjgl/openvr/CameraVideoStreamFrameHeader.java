@@ -18,7 +18,7 @@ import static org.lwjgl.system.MemoryStack.*;
 /**
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct CameraVideoStreamFrameHeader_t {
  *     EVRTrackedCameraFrameType eFrameType;
  *     uint32_t nWidth;
@@ -26,7 +26,7 @@ import static org.lwjgl.system.MemoryStack.*;
  *     uint32_t nBytesPerPixel;
  *     uint32_t nFrameSequence;
  *     {@link TrackedDevicePose TrackedDevicePose_t} standingTrackedDevicePose;
- * }</code></pre>
+ * }</pre></code>
  */
 @NativeType("struct CameraVideoStreamFrameHeader_t")
 public class CameraVideoStreamFrameHeader extends Struct implements NativeResource {
@@ -34,7 +34,6 @@ public class CameraVideoStreamFrameHeader extends Struct implements NativeResour
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */
@@ -102,8 +101,6 @@ public class CameraVideoStreamFrameHeader extends Struct implements NativeResour
     /** Returns a {@link TrackedDevicePose} view of the {@code standingTrackedDevicePose} field. */
     @NativeType("TrackedDevicePose_t")
     public TrackedDevicePose standingTrackedDevicePose() { return nstandingTrackedDevicePose(address()); }
-    /** Passes the {@code standingTrackedDevicePose} field to the specified {@link java.util.function.Consumer Consumer}. */
-    public CameraVideoStreamFrameHeader standingTrackedDevicePose(java.util.function.Consumer<TrackedDevicePose> consumer) { consumer.accept(standingTrackedDevicePose()); return this; }
 
     // -----------------------------------
 
@@ -323,8 +320,6 @@ public class CameraVideoStreamFrameHeader extends Struct implements NativeResour
         /** Returns a {@link TrackedDevicePose} view of the {@code standingTrackedDevicePose} field. */
         @NativeType("TrackedDevicePose_t")
         public TrackedDevicePose standingTrackedDevicePose() { return CameraVideoStreamFrameHeader.nstandingTrackedDevicePose(address()); }
-        /** Passes the {@code standingTrackedDevicePose} field to the specified {@link java.util.function.Consumer Consumer}. */
-        public CameraVideoStreamFrameHeader.Buffer standingTrackedDevicePose(java.util.function.Consumer<TrackedDevicePose> consumer) { consumer.accept(standingTrackedDevicePose()); return this; }
 
     }
 

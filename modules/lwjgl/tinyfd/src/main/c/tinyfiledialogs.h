@@ -1,19 +1,24 @@
 /*_________
- /         \ tinyfiledialogs.h v3.3.5 [Apr 18, 2018] zlib licence
+ /         \ tinyfiledialogs.h v3.2.9 [Feb 1, 2018] zlib licence
  |tiny file| Unique header file created [November 9, 2014]
  | dialogs | Copyright (c) 2014 - 2018 Guillaume Vareille http://ysengrin.com
  \____  ___/ http://tinyfiledialogs.sourceforge.net
-      \|     git clone http://git.code.sf.net/p/tinyfiledialogs/code tinyfd
+      \|
+		git://git.code.sf.net/p/tinyfiledialogs/code
 		 ____________________________________________
 		|                                            |
 		|   email: tinyfiledialogs at ysengrin.com   |
 		|____________________________________________|
-         ________________________________________________________________________
-        |                                                                        |
-        | the windows only wchar_t UTF-16 prototypes are at the end of this file |
-        |________________________________________________________________________|
+     ________________________________________________________________________
+    |                                                                        |
+    | the windows only wchar_t UTF-16 prototypes are at the end of this file |
+    |________________________________________________________________________|
 
-Please upvote my stackoverflow answer https://stackoverflow.com/a/47651444
+A big thank you to Don Heyse http://ldglite.sf.net for bug corrections & thorough testing!
+
+Please 1) let me know If you are using it on exotic hardware / OS / compiler
+       2) if you have a sourceforge account, leave a 1-word review on Sourceforge.
+	   3) upvote my stackoverflow answer https://stackoverflow.com/a/47651444
 
 tiny file dialogs (cross-platform C C++)
 InputBox PasswordBox MessageBox ColorPicker
@@ -21,7 +26,7 @@ OpenFileDialog SaveFileDialog SelectFolderDialog
 Native dialog library for WINDOWS MAC OSX GTK+ QT CONSOLE & more
 SSH supported via automatic switch to console mode or X11 forwarding
 
-one C file and a header (add them to your C or C++ project) with 8 functions:
+a C file + a header (add them to your C or C++ project) with 8 functions:
 - beep
 - notify popup
 - message & question
@@ -31,9 +36,8 @@ one C file and a header (add them to your C or C++ project) with 8 functions:
 - select folder
 - color picker
 
-Complements OpenGL Vulkan GLFW GLUT GLUI VTK SFML TGUI
-SDL Ogre Unity3d ION OpenCV CEGUI MathGL GLM CPW GLOW
-IMGUI MyGUI GLT NGL STB & GUI less programs
+Complements OpenGL GLFW GLUT GLUI VTK SFML TGUI SDL Ogre Unity3d ION OpenCV
+CEGUI MathGL GLM CPW GLOW IMGUI MyGUI GLT NGL STB & GUI less programs
 
 NO INIT
 NO MAIN LOOP
@@ -56,13 +60,12 @@ Unix (command line calls) ASCII UTF-8
 The same executable can run across desktops & distributions
 
 C89 & C++98 compliant: tested with C & C++ compilers
-VisualStudio MinGW-gcc GCC Clang TinyCC OpenWatcom-v2 BorlandC SunCC ZapCC
-on Windows Mac Linux Bsd Solaris Minix Raspbian
-using Gnome Kde Enlightenment Mate Cinnamon Budgie Unity Lxde Lxqt Xfce
+on VisualStudio MinGW Mac Linux Bsd Solaris Minix Raspbian
+using Gnome Kde Enlightenment Mate Cinnamon Unity Lxde Lxqt Xfce
 WindowMaker IceWm Cde Jds OpenBox Awesome Jwm Xdm
 
-Bindings for LUA and C# dll, Haskell
-Included in LWJGL(java), Rust, Allegrobasic
+bindings for LUA and C# dll, Haskell
+included in LWJGL(java), Rust, Allegrobasic
 
 - License -
 
@@ -101,8 +104,8 @@ and the corresponding closing bracket near the end of this file:
 extern "C" {
 #endif
 
-extern char const tinyfd_version[8]; /* contains tinyfd current version number */
-extern char const tinyfd_needs[]; /* info about requirements */
+extern char tinyfd_version[8]; /* contains tinyfd current version number */
+
 extern int tinyfd_verbose; /* 0 (default) or 1 : on unix, prints the command line calls */
 
 #ifdef _WIN32
@@ -132,7 +135,7 @@ for graphic mode:
   python2-tkinter python3-tkinter python-dbus perl-dbus
   gxmessage gmessage xmessage xdialog gdialog
 for console mode:
-  dialog whiptail basicinput no_solution */
+  dialog whiptail basicinput */
 
 void tinyfd_beep(void);
 

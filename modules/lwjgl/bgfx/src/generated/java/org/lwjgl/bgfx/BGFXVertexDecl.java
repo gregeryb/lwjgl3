@@ -30,13 +30,13 @@ import static org.lwjgl.bgfx.BGFX.BGFX_ATTRIB_COUNT;
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct bgfx_vertex_decl_t {
  *     uint32_t hash;
  *     uint16_t stride;
  *     uint16_t offset[BGFX_ATTRIB_COUNT];
  *     uint16_t attributes[BGFX_ATTRIB_COUNT];
- * }</code></pre>
+ * }</pre></code>
  */
 @NativeType("struct bgfx_vertex_decl_t")
 public class BGFXVertexDecl extends Struct implements NativeResource {
@@ -44,7 +44,6 @@ public class BGFXVertexDecl extends Struct implements NativeResource {
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */
@@ -296,13 +295,15 @@ public class BGFXVertexDecl extends Struct implements NativeResource {
     public static ShortBuffer noffset(long struct) { return memShortBuffer(struct + BGFXVertexDecl.OFFSET, BGFX_ATTRIB_COUNT); }
     /** Unsafe version of {@link #offset(int) offset}. */
     public static short noffset(long struct, int index) {
-        return memGetShort(struct + BGFXVertexDecl.OFFSET + check(index, BGFX_ATTRIB_COUNT) * 2);
+        if (CHECKS) { check(index, BGFX_ATTRIB_COUNT); }
+        return memGetShort(struct + BGFXVertexDecl.OFFSET + index * 2);
     }
     /** Unsafe version of {@link #attributes}. */
     public static ShortBuffer nattributes(long struct) { return memShortBuffer(struct + BGFXVertexDecl.ATTRIBUTES, BGFX_ATTRIB_COUNT); }
     /** Unsafe version of {@link #attributes(int) attributes}. */
     public static short nattributes(long struct, int index) {
-        return memGetShort(struct + BGFXVertexDecl.ATTRIBUTES + check(index, BGFX_ATTRIB_COUNT) * 2);
+        if (CHECKS) { check(index, BGFX_ATTRIB_COUNT); }
+        return memGetShort(struct + BGFXVertexDecl.ATTRIBUTES + index * 2);
     }
 
     /** Unsafe version of {@link #hash(int) hash}. */
@@ -316,7 +317,8 @@ public class BGFXVertexDecl extends Struct implements NativeResource {
     }
     /** Unsafe version of {@link #offset(int, short) offset}. */
     public static void noffset(long struct, int index, short value) {
-        memPutShort(struct + BGFXVertexDecl.OFFSET + check(index, BGFX_ATTRIB_COUNT) * 2, value);
+        if (CHECKS) { check(index, BGFX_ATTRIB_COUNT); }
+        memPutShort(struct + BGFXVertexDecl.OFFSET + index * 2, value);
     }
     /** Unsafe version of {@link #attributes(ShortBuffer) attributes}. */
     public static void nattributes(long struct, ShortBuffer value) {
@@ -325,7 +327,8 @@ public class BGFXVertexDecl extends Struct implements NativeResource {
     }
     /** Unsafe version of {@link #attributes(int, short) attributes}. */
     public static void nattributes(long struct, int index, short value) {
-        memPutShort(struct + BGFXVertexDecl.ATTRIBUTES + check(index, BGFX_ATTRIB_COUNT) * 2, value);
+        if (CHECKS) { check(index, BGFX_ATTRIB_COUNT); }
+        memPutShort(struct + BGFXVertexDecl.ATTRIBUTES + index * 2, value);
     }
 
     // -----------------------------------

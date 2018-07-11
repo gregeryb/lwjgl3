@@ -25,7 +25,7 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct nk_style_scrollbar {
  *     {@link NkStyleItem struct nk_style_item} normal;
  *     {@link NkStyleItem struct nk_style_item} hover;
@@ -48,7 +48,7 @@ import static org.lwjgl.system.MemoryStack.*;
  *     {@link NkHandle nk_handle} userdata;
  *     {@link NkDrawBeginCallbackI nk_draw_begin} draw_begin;
  *     {@link NkDrawEndCallbackI nk_draw_end} draw_end;
- * }</code></pre>
+ * }</pre></code>
  */
 @NativeType("struct nk_style_scrollbar")
 public class NkStyleScrollbar extends Struct implements NativeResource {
@@ -56,7 +56,6 @@ public class NkStyleScrollbar extends Struct implements NativeResource {
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */
@@ -154,43 +153,27 @@ public class NkStyleScrollbar extends Struct implements NativeResource {
     /** Returns a {@link NkStyleItem} view of the {@code normal} field. */
     @NativeType("struct nk_style_item")
     public NkStyleItem normal() { return nnormal(address()); }
-    /** Passes the {@code normal} field to the specified {@link java.util.function.Consumer Consumer}. */
-    public NkStyleScrollbar normal(java.util.function.Consumer<NkStyleItem> consumer) { consumer.accept(normal()); return this; }
     /** Returns a {@link NkStyleItem} view of the {@code hover} field. */
     @NativeType("struct nk_style_item")
     public NkStyleItem hover() { return nhover(address()); }
-    /** Passes the {@code hover} field to the specified {@link java.util.function.Consumer Consumer}. */
-    public NkStyleScrollbar hover(java.util.function.Consumer<NkStyleItem> consumer) { consumer.accept(hover()); return this; }
     /** Returns a {@link NkStyleItem} view of the {@code active} field. */
     @NativeType("struct nk_style_item")
     public NkStyleItem active() { return nactive(address()); }
-    /** Passes the {@code active} field to the specified {@link java.util.function.Consumer Consumer}. */
-    public NkStyleScrollbar active(java.util.function.Consumer<NkStyleItem> consumer) { consumer.accept(active()); return this; }
     /** Returns a {@link NkColor} view of the {@code border_color} field. */
     @NativeType("struct nk_color")
     public NkColor border_color() { return nborder_color(address()); }
-    /** Passes the {@code border_color} field to the specified {@link java.util.function.Consumer Consumer}. */
-    public NkStyleScrollbar border_color(java.util.function.Consumer<NkColor> consumer) { consumer.accept(border_color()); return this; }
     /** Returns a {@link NkStyleItem} view of the {@code cursor_normal} field. */
     @NativeType("struct nk_style_item")
     public NkStyleItem cursor_normal() { return ncursor_normal(address()); }
-    /** Passes the {@code cursor_normal} field to the specified {@link java.util.function.Consumer Consumer}. */
-    public NkStyleScrollbar cursor_normal(java.util.function.Consumer<NkStyleItem> consumer) { consumer.accept(cursor_normal()); return this; }
     /** Returns a {@link NkStyleItem} view of the {@code cursor_hover} field. */
     @NativeType("struct nk_style_item")
     public NkStyleItem cursor_hover() { return ncursor_hover(address()); }
-    /** Passes the {@code cursor_hover} field to the specified {@link java.util.function.Consumer Consumer}. */
-    public NkStyleScrollbar cursor_hover(java.util.function.Consumer<NkStyleItem> consumer) { consumer.accept(cursor_hover()); return this; }
     /** Returns a {@link NkStyleItem} view of the {@code cursor_active} field. */
     @NativeType("struct nk_style_item")
     public NkStyleItem cursor_active() { return ncursor_active(address()); }
-    /** Passes the {@code cursor_active} field to the specified {@link java.util.function.Consumer Consumer}. */
-    public NkStyleScrollbar cursor_active(java.util.function.Consumer<NkStyleItem> consumer) { consumer.accept(cursor_active()); return this; }
     /** Returns a {@link NkColor} view of the {@code cursor_border_color} field. */
     @NativeType("struct nk_color")
     public NkColor cursor_border_color() { return ncursor_border_color(address()); }
-    /** Passes the {@code cursor_border_color} field to the specified {@link java.util.function.Consumer Consumer}. */
-    public NkStyleScrollbar cursor_border_color(java.util.function.Consumer<NkColor> consumer) { consumer.accept(cursor_border_color()); return this; }
     /** Returns the value of the {@code border} field. */
     public float border() { return nborder(address()); }
     /** Returns the value of the {@code rounding} field. */
@@ -202,20 +185,14 @@ public class NkStyleScrollbar extends Struct implements NativeResource {
     /** Returns a {@link NkVec2} view of the {@code padding} field. */
     @NativeType("struct nk_vec2")
     public NkVec2 padding() { return npadding(address()); }
-    /** Passes the {@code padding} field to the specified {@link java.util.function.Consumer Consumer}. */
-    public NkStyleScrollbar padding(java.util.function.Consumer<NkVec2> consumer) { consumer.accept(padding()); return this; }
     /** Returns the value of the {@code show_buttons} field. */
     public int show_buttons() { return nshow_buttons(address()); }
     /** Returns a {@link NkStyleButton} view of the {@code inc_button} field. */
     @NativeType("struct nk_style_button")
     public NkStyleButton inc_button() { return ninc_button(address()); }
-    /** Passes the {@code inc_button} field to the specified {@link java.util.function.Consumer Consumer}. */
-    public NkStyleScrollbar inc_button(java.util.function.Consumer<NkStyleButton> consumer) { consumer.accept(inc_button()); return this; }
     /** Returns a {@link NkStyleButton} view of the {@code dec_button} field. */
     @NativeType("struct nk_style_button")
     public NkStyleButton dec_button() { return ndec_button(address()); }
-    /** Passes the {@code dec_button} field to the specified {@link java.util.function.Consumer Consumer}. */
-    public NkStyleScrollbar dec_button(java.util.function.Consumer<NkStyleButton> consumer) { consumer.accept(dec_button()); return this; }
     /** Returns the value of the {@code inc_symbol} field. */
     @NativeType("enum nk_symbol_type")
     public int inc_symbol() { return ninc_symbol(address()); }
@@ -225,8 +202,6 @@ public class NkStyleScrollbar extends Struct implements NativeResource {
     /** Returns a {@link NkHandle} view of the {@code userdata} field. */
     @NativeType("nk_handle")
     public NkHandle userdata() { return nuserdata(address()); }
-    /** Passes the {@code userdata} field to the specified {@link java.util.function.Consumer Consumer}. */
-    public NkStyleScrollbar userdata(java.util.function.Consumer<NkHandle> consumer) { consumer.accept(userdata()); return this; }
     /** Returns the value of the {@code draw_begin} field. */
     @Nullable
     @NativeType("nk_draw_begin")
@@ -616,43 +591,27 @@ public class NkStyleScrollbar extends Struct implements NativeResource {
         /** Returns a {@link NkStyleItem} view of the {@code normal} field. */
         @NativeType("struct nk_style_item")
         public NkStyleItem normal() { return NkStyleScrollbar.nnormal(address()); }
-        /** Passes the {@code normal} field to the specified {@link java.util.function.Consumer Consumer}. */
-        public NkStyleScrollbar.Buffer normal(java.util.function.Consumer<NkStyleItem> consumer) { consumer.accept(normal()); return this; }
         /** Returns a {@link NkStyleItem} view of the {@code hover} field. */
         @NativeType("struct nk_style_item")
         public NkStyleItem hover() { return NkStyleScrollbar.nhover(address()); }
-        /** Passes the {@code hover} field to the specified {@link java.util.function.Consumer Consumer}. */
-        public NkStyleScrollbar.Buffer hover(java.util.function.Consumer<NkStyleItem> consumer) { consumer.accept(hover()); return this; }
         /** Returns a {@link NkStyleItem} view of the {@code active} field. */
         @NativeType("struct nk_style_item")
         public NkStyleItem active() { return NkStyleScrollbar.nactive(address()); }
-        /** Passes the {@code active} field to the specified {@link java.util.function.Consumer Consumer}. */
-        public NkStyleScrollbar.Buffer active(java.util.function.Consumer<NkStyleItem> consumer) { consumer.accept(active()); return this; }
         /** Returns a {@link NkColor} view of the {@code border_color} field. */
         @NativeType("struct nk_color")
         public NkColor border_color() { return NkStyleScrollbar.nborder_color(address()); }
-        /** Passes the {@code border_color} field to the specified {@link java.util.function.Consumer Consumer}. */
-        public NkStyleScrollbar.Buffer border_color(java.util.function.Consumer<NkColor> consumer) { consumer.accept(border_color()); return this; }
         /** Returns a {@link NkStyleItem} view of the {@code cursor_normal} field. */
         @NativeType("struct nk_style_item")
         public NkStyleItem cursor_normal() { return NkStyleScrollbar.ncursor_normal(address()); }
-        /** Passes the {@code cursor_normal} field to the specified {@link java.util.function.Consumer Consumer}. */
-        public NkStyleScrollbar.Buffer cursor_normal(java.util.function.Consumer<NkStyleItem> consumer) { consumer.accept(cursor_normal()); return this; }
         /** Returns a {@link NkStyleItem} view of the {@code cursor_hover} field. */
         @NativeType("struct nk_style_item")
         public NkStyleItem cursor_hover() { return NkStyleScrollbar.ncursor_hover(address()); }
-        /** Passes the {@code cursor_hover} field to the specified {@link java.util.function.Consumer Consumer}. */
-        public NkStyleScrollbar.Buffer cursor_hover(java.util.function.Consumer<NkStyleItem> consumer) { consumer.accept(cursor_hover()); return this; }
         /** Returns a {@link NkStyleItem} view of the {@code cursor_active} field. */
         @NativeType("struct nk_style_item")
         public NkStyleItem cursor_active() { return NkStyleScrollbar.ncursor_active(address()); }
-        /** Passes the {@code cursor_active} field to the specified {@link java.util.function.Consumer Consumer}. */
-        public NkStyleScrollbar.Buffer cursor_active(java.util.function.Consumer<NkStyleItem> consumer) { consumer.accept(cursor_active()); return this; }
         /** Returns a {@link NkColor} view of the {@code cursor_border_color} field. */
         @NativeType("struct nk_color")
         public NkColor cursor_border_color() { return NkStyleScrollbar.ncursor_border_color(address()); }
-        /** Passes the {@code cursor_border_color} field to the specified {@link java.util.function.Consumer Consumer}. */
-        public NkStyleScrollbar.Buffer cursor_border_color(java.util.function.Consumer<NkColor> consumer) { consumer.accept(cursor_border_color()); return this; }
         /** Returns the value of the {@code border} field. */
         public float border() { return NkStyleScrollbar.nborder(address()); }
         /** Returns the value of the {@code rounding} field. */
@@ -664,20 +623,14 @@ public class NkStyleScrollbar extends Struct implements NativeResource {
         /** Returns a {@link NkVec2} view of the {@code padding} field. */
         @NativeType("struct nk_vec2")
         public NkVec2 padding() { return NkStyleScrollbar.npadding(address()); }
-        /** Passes the {@code padding} field to the specified {@link java.util.function.Consumer Consumer}. */
-        public NkStyleScrollbar.Buffer padding(java.util.function.Consumer<NkVec2> consumer) { consumer.accept(padding()); return this; }
         /** Returns the value of the {@code show_buttons} field. */
         public int show_buttons() { return NkStyleScrollbar.nshow_buttons(address()); }
         /** Returns a {@link NkStyleButton} view of the {@code inc_button} field. */
         @NativeType("struct nk_style_button")
         public NkStyleButton inc_button() { return NkStyleScrollbar.ninc_button(address()); }
-        /** Passes the {@code inc_button} field to the specified {@link java.util.function.Consumer Consumer}. */
-        public NkStyleScrollbar.Buffer inc_button(java.util.function.Consumer<NkStyleButton> consumer) { consumer.accept(inc_button()); return this; }
         /** Returns a {@link NkStyleButton} view of the {@code dec_button} field. */
         @NativeType("struct nk_style_button")
         public NkStyleButton dec_button() { return NkStyleScrollbar.ndec_button(address()); }
-        /** Passes the {@code dec_button} field to the specified {@link java.util.function.Consumer Consumer}. */
-        public NkStyleScrollbar.Buffer dec_button(java.util.function.Consumer<NkStyleButton> consumer) { consumer.accept(dec_button()); return this; }
         /** Returns the value of the {@code inc_symbol} field. */
         @NativeType("enum nk_symbol_type")
         public int inc_symbol() { return NkStyleScrollbar.ninc_symbol(address()); }
@@ -687,8 +640,6 @@ public class NkStyleScrollbar extends Struct implements NativeResource {
         /** Returns a {@link NkHandle} view of the {@code userdata} field. */
         @NativeType("nk_handle")
         public NkHandle userdata() { return NkStyleScrollbar.nuserdata(address()); }
-        /** Passes the {@code userdata} field to the specified {@link java.util.function.Consumer Consumer}. */
-        public NkStyleScrollbar.Buffer userdata(java.util.function.Consumer<NkHandle> consumer) { consumer.accept(userdata()); return this; }
         /** Returns the value of the {@code draw_begin} field. */
         @Nullable
         @NativeType("nk_draw_begin")

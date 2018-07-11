@@ -62,7 +62,7 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <ul>
  * <li>{@code flags} &ndash; a bitmask of {@code VkAttachmentDescriptionFlagBits} specifying additional properties of the attachment.</li>
- * <li>{@code format} &ndash; a {@code VkFormat} value specifying the format of the image view that will be used for the attachment.</li>
+ * <li>{@code format} &ndash; a {@code VkFormat} value specifying the format of the image that will be used for the attachment.</li>
  * <li>{@code samples} &ndash; the number of samples of the image as defined in {@code VkSampleCountFlagBits}.</li>
  * <li>{@code loadOp} &ndash; a {@code VkAttachmentLoadOp} value specifying how the contents of color and depth components of the attachment are treated at the beginning of the subpass where it is first used.</li>
  * <li>{@code storeOp} &ndash; a {@code VkAttachmentStoreOp} value specifying how the contents of color and depth components of the attachment are treated at the end of the subpass where it is last used.</li>
@@ -74,7 +74,7 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct VkAttachmentDescription {
  *     VkAttachmentDescriptionFlags flags;
  *     VkFormat format;
@@ -85,14 +85,13 @@ import static org.lwjgl.system.MemoryStack.*;
  *     VkAttachmentStoreOp stencilStoreOp;
  *     VkImageLayout initialLayout;
  *     VkImageLayout finalLayout;
- * }</code></pre>
+ * }</pre></code>
  */
 public class VkAttachmentDescription extends Struct implements NativeResource {
 
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */

@@ -9,7 +9,6 @@ import org.lwjgl.*;
 import javax.annotation.*;
 import java.nio.*;
 
-import static org.lwjgl.system.CheckIntrinsics.*;
 import static org.lwjgl.system.MemoryUtil.*;
 
 /**
@@ -40,7 +39,7 @@ public final class Checks {
      *
      * <p>When enabled, LWJGL will perform additional checks during its operation. These checks are more expensive than the ones enabled with {@link #CHECKS}
      * and will have a noticeable effect on performance, so they are disabled by default. Examples of such checks are: buffer object binding state check (GL),
-     * buffer capacity checks for texture images (GL &amp; CL), etc. LWJGL will also print additional information, mainly during start-up.</p>
+     * buffer capacity checks for texture images (GL & CL), etc. LWJGL will also print additional information, mainly during start-up.</p>
      *
      * <p>Can be enabled by setting {@link Configuration#DEBUG} to true.</p>
      */
@@ -69,6 +68,7 @@ public final class Checks {
     public static int lengthSafe(@Nullable long[] array)              { return array == null ? 0 : array.length; }
     public static int lengthSafe(@Nullable float[] array)             { return array == null ? 0 : array.length;}
     public static int lengthSafe(@Nullable double[] array)            { return array == null ? 0 : array.length;}
+    public static int lengthSafe(@Nullable byte[] array)          { return array == null ? 0 : array.length;}
     public static int remainingSafe(@Nullable Buffer buffer)          { return buffer == null ? 0 : buffer.remaining(); }
     public static int remainingSafe(@Nullable CustomBuffer<?> buffer) { return buffer == null ? 0 : buffer.remaining(); }
 
@@ -93,7 +93,7 @@ public final class Checks {
      *
      * @param pointer the pointer to check
      *
-     * @throws NullPointerException if {@code pointer} is {@code NULL}
+     * @throws NullPointerException
      */
     public static long check(long pointer) {
         if (pointer == NULL) {
@@ -251,7 +251,7 @@ public final class Checks {
      * @param buf  the array to check
      * @param size the minimum array capacity
      *
-     * @throws IllegalArgumentException if {@code buf.length < size}
+     * @throws IllegalArgumentException
      */
     public static void check(byte[] buf, int size) {
         checkBuffer(buf.length, size);
@@ -263,7 +263,7 @@ public final class Checks {
      * @param buf  the array to check
      * @param size the minimum array capacity
      *
-     * @throws IllegalArgumentException if {@code buf.length < size}
+     * @throws IllegalArgumentException
      */
     public static void check(short[] buf, int size) {
         checkBuffer(buf.length, size);
@@ -275,7 +275,7 @@ public final class Checks {
      * @param buf  the array to check
      * @param size the minimum array capacity
      *
-     * @throws IllegalArgumentException if {@code buf.length < size}
+     * @throws IllegalArgumentException
      */
     public static void check(int[] buf, int size) {
         checkBuffer(buf.length, size);
@@ -287,7 +287,7 @@ public final class Checks {
      * @param buf  the array to check
      * @param size the minimum array capacity
      *
-     * @throws IllegalArgumentException if {@code buf.length < size}
+     * @throws IllegalArgumentException
      */
     public static void check(long[] buf, int size) {
         checkBuffer(buf.length, size);
@@ -299,7 +299,7 @@ public final class Checks {
      * @param buf  the array to check
      * @param size the minimum array capacity
      *
-     * @throws IllegalArgumentException if {@code buf.length < size}
+     * @throws IllegalArgumentException
      */
     public static void check(float[] buf, int size) {
         checkBuffer(buf.length, size);
@@ -311,7 +311,7 @@ public final class Checks {
      * @param buf  the array to check
      * @param size the minimum array capacity
      *
-     * @throws IllegalArgumentException if {@code buf.length < size}
+     * @throws IllegalArgumentException
      */
     public static void check(double[] buf, int size) {
         checkBuffer(buf.length, size);
@@ -322,8 +322,6 @@ public final class Checks {
      *
      * @param text the text to check
      * @param size the minimum number of characters
-     *
-     * @throws IllegalArgumentException if {@code text.length() < size}
      */
     public static void check(CharSequence text, int size) {
         checkBuffer(text.length(), size);
@@ -335,7 +333,7 @@ public final class Checks {
      * @param buf  the buffer to check
      * @param size the minimum buffer capacity
      *
-     * @throws IllegalArgumentException if {@code buf.remaining() < size}
+     * @throws IllegalArgumentException
      */
     public static void check(Buffer buf, int size) {
         checkBuffer(buf.remaining(), size);
@@ -352,7 +350,7 @@ public final class Checks {
      * @param buf  the buffer to check
      * @param size the minimum buffer capacity
      *
-     * @throws IllegalArgumentException if {@code buf.remaining() < size}
+     * @throws IllegalArgumentException
      */
     public static void check(CustomBuffer<?> buf, int size) {
         checkBuffer(buf.remaining(), size);
@@ -422,14 +420,10 @@ public final class Checks {
         checkBufferGT(buf.remaining(), size);
     }
 
-    public static long check(int index, int length) {
-        // Convert to long to support addressing up to 2^31-1 elements, regardless of sizeof(element).
-        // The unsigned conversion helps the JIT produce code that is as fast as if int was returned.
-        return Integer.toUnsignedLong(
-            CHECKS
-                ? checkIndex(index, length)
-                : index
-        );
+    public static void check(int index, int size) {
+        if (index < 0 || size <= index) {
+            throwIOBE(index, size);
+        }
     }
 
     // Separate calls to help inline check.
@@ -440,6 +434,10 @@ public final class Checks {
 
     private static void throwIAEGT(int bufferSize, int maximumSize) {
         throw new IllegalArgumentException("Number of remaining buffer elements is " + bufferSize + ", must be at most " + maximumSize);
+    }
+
+    private static void throwIOBE(int index, int size) {
+        throw new IndexOutOfBoundsException("Index is " + index + ", must be between 0 and  " + (size - 1));
     }
 
 }

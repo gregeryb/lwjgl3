@@ -64,11 +64,11 @@ public class NVTransformFeedback2 {
 
     public static native void nglDeleteTransformFeedbacksNV(int n, long ids);
 
-    public static void glDeleteTransformFeedbacksNV(@NativeType("GLuint const *") IntBuffer ids) {
+    public static void glDeleteTransformFeedbacksNV(@NativeType("const GLuint *") IntBuffer ids) {
         nglDeleteTransformFeedbacksNV(ids.remaining(), memAddress(ids));
     }
 
-    public static void glDeleteTransformFeedbacksNV(@NativeType("GLuint const *") int id) {
+    public static void glDeleteTransformFeedbacksNV(@NativeType("const GLuint *") int id) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
             IntBuffer ids = stack.ints(id);
@@ -118,8 +118,8 @@ public class NVTransformFeedback2 {
 
     public static native void glDrawTransformFeedbackNV(@NativeType("GLenum") int mode, @NativeType("GLuint") int id);
 
-    /** Array version of: {@link #glDeleteTransformFeedbacksNV DeleteTransformFeedbacksNV} */
-    public static void glDeleteTransformFeedbacksNV(@NativeType("GLuint const *") int[] ids) {
+    /** register Array version of: {@link #glDeleteTransformFeedbacksNV DeleteTransformFeedbacksNV} */
+    public static void glDeleteTransformFeedbacksNV(@NativeType("const GLuint *") int[] ids) {
         long __functionAddress = GL.getICD().glDeleteTransformFeedbacksNV;
         if (CHECKS) {
             check(__functionAddress);
@@ -127,7 +127,7 @@ public class NVTransformFeedback2 {
         callPV(__functionAddress, ids.length, ids);
     }
 
-    /** Array version of: {@link #glGenTransformFeedbacksNV GenTransformFeedbacksNV} */
+    /** register Array version of: {@link #glGenTransformFeedbacksNV GenTransformFeedbacksNV} */
     public static void glGenTransformFeedbacksNV(@NativeType("GLuint *") int[] ids) {
         long __functionAddress = GL.getICD().glGenTransformFeedbacksNV;
         if (CHECKS) {

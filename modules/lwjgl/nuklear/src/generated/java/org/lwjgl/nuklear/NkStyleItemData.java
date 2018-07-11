@@ -18,11 +18,11 @@ import static org.lwjgl.system.MemoryStack.*;
 /**
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * union nk_style_item_data {
  *     {@link NkImage struct nk_image} image;
  *     {@link NkColor struct nk_color} color;
- * }</code></pre>
+ * }</pre></code>
  */
 @NativeType("union nk_style_item_data")
 public class NkStyleItemData extends Struct implements NativeResource {
@@ -30,7 +30,6 @@ public class NkStyleItemData extends Struct implements NativeResource {
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */
@@ -71,13 +70,9 @@ public class NkStyleItemData extends Struct implements NativeResource {
     /** Returns a {@link NkImage} view of the {@code image} field. */
     @NativeType("struct nk_image")
     public NkImage image() { return nimage(address()); }
-    /** Passes the {@code image} field to the specified {@link java.util.function.Consumer Consumer}. */
-    public NkStyleItemData image(java.util.function.Consumer<NkImage> consumer) { consumer.accept(image()); return this; }
     /** Returns a {@link NkColor} view of the {@code color} field. */
     @NativeType("struct nk_color")
     public NkColor color() { return ncolor(address()); }
-    /** Passes the {@code color} field to the specified {@link java.util.function.Consumer Consumer}. */
-    public NkStyleItemData color(java.util.function.Consumer<NkColor> consumer) { consumer.accept(color()); return this; }
 
     /** Copies the specified {@link NkImage} to the {@code image} field. */
     public NkStyleItemData image(@NativeType("struct nk_image") NkImage value) { nimage(address(), value); return this; }
@@ -296,13 +291,9 @@ public class NkStyleItemData extends Struct implements NativeResource {
         /** Returns a {@link NkImage} view of the {@code image} field. */
         @NativeType("struct nk_image")
         public NkImage image() { return NkStyleItemData.nimage(address()); }
-        /** Passes the {@code image} field to the specified {@link java.util.function.Consumer Consumer}. */
-        public NkStyleItemData.Buffer image(java.util.function.Consumer<NkImage> consumer) { consumer.accept(image()); return this; }
         /** Returns a {@link NkColor} view of the {@code color} field. */
         @NativeType("struct nk_color")
         public NkColor color() { return NkStyleItemData.ncolor(address()); }
-        /** Passes the {@code color} field to the specified {@link java.util.function.Consumer Consumer}. */
-        public NkStyleItemData.Buffer color(java.util.function.Consumer<NkColor> consumer) { consumer.accept(color()); return this; }
 
         /** Copies the specified {@link NkImage} to the {@code image} field. */
         public NkStyleItemData.Buffer image(@NativeType("struct nk_image") NkImage value) { NkStyleItemData.nimage(address(), value); return this; }

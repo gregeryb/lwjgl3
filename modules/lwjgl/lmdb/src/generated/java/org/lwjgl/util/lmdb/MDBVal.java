@@ -33,11 +33,11 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct MDB_val {
  *     size_t mv_size;
  *     void * mv_data;
- * }</code></pre>
+ * }</pre></code>
  */
 @NativeType("struct MDB_val")
 public class MDBVal extends Struct implements NativeResource {
@@ -45,7 +45,6 @@ public class MDBVal extends Struct implements NativeResource {
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */
@@ -99,7 +98,7 @@ public class MDBVal extends Struct implements NativeResource {
     /** Initializes this struct with the specified values. */
     public MDBVal set(
         long mv_size,
-        @Nullable ByteBuffer mv_data
+        ByteBuffer mv_data
     ) {
         mv_size(mv_size);
         mv_data(mv_data);

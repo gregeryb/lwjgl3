@@ -19,7 +19,14 @@ import static org.lwjgl.glfw.Callbacks.*;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.nuklear.Nuklear.*;
 import static org.lwjgl.opengl.ARBDebugOutput.*;
-import static org.lwjgl.opengl.GL30C.*;
+import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL12.*;
+import static org.lwjgl.opengl.GL13.*;
+import static org.lwjgl.opengl.GL14.*;
+import static org.lwjgl.opengl.GL15.*;
+import static org.lwjgl.opengl.GL20.*;
+import static org.lwjgl.opengl.GL30.*;
+import static org.lwjgl.opengl.GL43.*;
 import static org.lwjgl.stb.STBTruetype.*;
 import static org.lwjgl.system.MemoryStack.*;
 import static org.lwjgl.system.MemoryUtil.*;
@@ -42,9 +49,9 @@ public class GLFWDemo {
     private static final NkDrawVertexLayoutElement.Buffer VERTEX_LAYOUT;
 
     static {
-        ALLOCATOR = NkAllocator.create()
-            .alloc((handle, old, size) -> nmemAllocChecked(size))
-            .mfree((handle, ptr) -> nmemFree(ptr));
+        ALLOCATOR = NkAllocator.create();
+        ALLOCATOR.alloc((handle, old, size) -> nmemAllocChecked(size));
+        ALLOCATOR.mfree((handle, ptr) -> nmemFree(ptr));
 
         VERTEX_LAYOUT = NkDrawVertexLayoutElement.create(4)
             .position(0).attribute(NK_VERTEX_POSITION).format(NK_FORMAT_FLOAT).offset(0)
@@ -123,7 +130,7 @@ public class GLFWDemo {
         Callback       debugProc = GLUtil.setupDebugMessageCallback();
 
         if (caps.OpenGL43) {
-            GL43.glDebugMessageControl(GL43.GL_DEBUG_SOURCE_API, GL43.GL_DEBUG_TYPE_OTHER, GL43.GL_DEBUG_SEVERITY_NOTIFICATION, (IntBuffer)null, false);
+            glDebugMessageControl(GL_DEBUG_SOURCE_API, GL_DEBUG_TYPE_OTHER, GL_DEBUG_SEVERITY_NOTIFICATION, (IntBuffer)null, false);
         } else if (caps.GL_KHR_debug) {
             KHRDebug.glDebugMessageControl(
                 KHRDebug.GL_DEBUG_SOURCE_API,
@@ -234,8 +241,7 @@ public class GLFWDemo {
                     ufg.uv(1).set(q.s1(), q.t1());
                 }
             })
-            .texture(it -> it
-                .id(fontTexID));
+            .texture().id(fontTexID);
 
         nk_style_set_font(ctx, default_font);
 
@@ -474,7 +480,7 @@ public class GLFWDemo {
         });
 
         nk_init(ctx, ALLOCATOR, null);
-        ctx.clip(it -> it
+        ctx.clip()
             .copy((handle, text, len) -> {
                 if (len == 0) {
                     return;
@@ -493,8 +499,7 @@ public class GLFWDemo {
                 if (text != NULL) {
                     nnk_textedit_paste(edit, text, nnk_strlen(text));
                 }
-            }));
-
+            });
         setupContext();
         return ctx;
     }
@@ -636,8 +641,6 @@ public class GLFWDemo {
         glDeleteBuffers(vbo);
         glDeleteBuffers(ebo);
         nk_buffer_free(cmds);
-
-        GL.setCapabilities(null);
     }
 
     private void shutdown() {

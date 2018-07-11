@@ -16,18 +16,42 @@ import static org.lwjgl.system.MemoryUtil.*;
 import static org.lwjgl.system.MemoryStack.*;
 
 /**
- * See {@link VkSparseImageMemoryRequirements2}.
- * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct VkSparseImageMemoryRequirements2KHR {
  *     VkStructureType sType;
  *     void * pNext;
  *     {@link VkSparseImageMemoryRequirements VkSparseImageMemoryRequirements} memoryRequirements;
- * }</code></pre>
+ * }</pre></code>
  */
-public class VkSparseImageMemoryRequirements2KHR extends VkSparseImageMemoryRequirements2 {
+public class VkSparseImageMemoryRequirements2KHR extends Struct implements NativeResource {
+
+    /** The struct size in bytes. */
+    public static final int SIZEOF;
+
+    public static final int ALIGNOF;
+
+    /** The struct member offsets. */
+    public static final int
+        STYPE,
+        PNEXT,
+        MEMORYREQUIREMENTS;
+
+    static {
+        Layout layout = __struct(
+            __member(4),
+            __member(POINTER_SIZE),
+            __member(VkSparseImageMemoryRequirements.SIZEOF, VkSparseImageMemoryRequirements.ALIGNOF)
+        );
+
+        SIZEOF = layout.getSize();
+        ALIGNOF = layout.getAlignment();
+
+        STYPE = layout.offsetof(0);
+        PNEXT = layout.offsetof(1);
+        MEMORYREQUIREMENTS = layout.offsetof(2);
+    }
 
     VkSparseImageMemoryRequirements2KHR(long address, @Nullable ByteBuffer container) {
         super(address, container);
@@ -43,36 +67,17 @@ public class VkSparseImageMemoryRequirements2KHR extends VkSparseImageMemoryRequ
         this(memAddress(container), __checkContainer(container, SIZEOF));
     }
 
-    /** Sets the specified value to the {@code sType} field. */
     @Override
-    public VkSparseImageMemoryRequirements2KHR sType(@NativeType("VkStructureType") int value) { nsType(address(), value); return this; }
-    /** Sets the specified value to the {@code pNext} field. */
-    @Override
-    public VkSparseImageMemoryRequirements2KHR pNext(@NativeType("void *") long value) { npNext(address(), value); return this; }
+    public int sizeof() { return SIZEOF; }
 
-    /** Initializes this struct with the specified values. */
-    @Override
-    public VkSparseImageMemoryRequirements2KHR set(
-        int sType,
-        long pNext
-    ) {
-        sType(sType);
-        pNext(pNext);
-
-        return this;
-    }
-
-    /**
-     * Copies the specified struct data to this struct.
-     *
-     * @param src the source struct
-     *
-     * @return this struct
-     */
-    public VkSparseImageMemoryRequirements2KHR set(VkSparseImageMemoryRequirements2KHR src) {
-        memCopy(src.address(), address(), SIZEOF);
-        return this;
-    }
+    /** Returns the value of the {@code sType} field. */
+    @NativeType("VkStructureType")
+    public int sType() { return nsType(address()); }
+    /** Returns the value of the {@code pNext} field. */
+    @NativeType("void *")
+    public long pNext() { return npNext(address()); }
+    /** Returns a {@link VkSparseImageMemoryRequirements} view of the {@code memoryRequirements} field. */
+    public VkSparseImageMemoryRequirements memoryRequirements() { return nmemoryRequirements(address()); }
 
     // -----------------------------------
 
@@ -215,8 +220,17 @@ public class VkSparseImageMemoryRequirements2KHR extends VkSparseImageMemoryRequ
 
     // -----------------------------------
 
+    /** Unsafe version of {@link #sType}. */
+    public static int nsType(long struct) { return memGetInt(struct + VkSparseImageMemoryRequirements2KHR.STYPE); }
+    /** Unsafe version of {@link #pNext}. */
+    public static long npNext(long struct) { return memGetAddress(struct + VkSparseImageMemoryRequirements2KHR.PNEXT); }
+    /** Unsafe version of {@link #memoryRequirements}. */
+    public static VkSparseImageMemoryRequirements nmemoryRequirements(long struct) { return VkSparseImageMemoryRequirements.create(struct + VkSparseImageMemoryRequirements2KHR.MEMORYREQUIREMENTS); }
+
+    // -----------------------------------
+
     /** An array of {@link VkSparseImageMemoryRequirements2KHR} structs. */
-    public static class Buffer extends VkSparseImageMemoryRequirements2.Buffer {
+    public static class Buffer extends StructBuffer<VkSparseImageMemoryRequirements2KHR, Buffer> implements NativeResource {
 
         /**
          * Creates a new {@link VkSparseImageMemoryRequirements2KHR.Buffer} instance backed by the specified container.
@@ -228,7 +242,7 @@ public class VkSparseImageMemoryRequirements2KHR extends VkSparseImageMemoryRequ
          * <p>The created buffer instance holds a strong reference to the container object.</p>
          */
         public Buffer(ByteBuffer container) {
-            super(container);
+            super(container, container.remaining() / SIZEOF);
         }
 
         public Buffer(long address, int cap) {
@@ -254,12 +268,19 @@ public class VkSparseImageMemoryRequirements2KHR extends VkSparseImageMemoryRequ
             return new VkSparseImageMemoryRequirements2KHR(address, container);
         }
 
-        /** Sets the specified value to the {@code sType} field. */
         @Override
-        public VkSparseImageMemoryRequirements2KHR.Buffer sType(@NativeType("VkStructureType") int value) { VkSparseImageMemoryRequirements2KHR.nsType(address(), value); return this; }
-        /** Sets the specified value to the {@code pNext} field. */
-        @Override
-        public VkSparseImageMemoryRequirements2KHR.Buffer pNext(@NativeType("void *") long value) { VkSparseImageMemoryRequirements2KHR.npNext(address(), value); return this; }
+        public int sizeof() {
+            return SIZEOF;
+        }
+
+        /** Returns the value of the {@code sType} field. */
+        @NativeType("VkStructureType")
+        public int sType() { return VkSparseImageMemoryRequirements2KHR.nsType(address()); }
+        /** Returns the value of the {@code pNext} field. */
+        @NativeType("void *")
+        public long pNext() { return VkSparseImageMemoryRequirements2KHR.npNext(address()); }
+        /** Returns a {@link VkSparseImageMemoryRequirements} view of the {@code memoryRequirements} field. */
+        public VkSparseImageMemoryRequirements memoryRequirements() { return VkSparseImageMemoryRequirements2KHR.nmemoryRequirements(address()); }
 
     }
 

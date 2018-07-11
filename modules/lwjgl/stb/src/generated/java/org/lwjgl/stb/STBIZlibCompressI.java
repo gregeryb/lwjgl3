@@ -14,16 +14,16 @@ import static org.lwjgl.system.dyncall.DynCallback.*;
  * 
  * <h3>Type</h3>
  * 
- * <pre><code>
- * unsigned char * (*) (
+ * <code><pre>
+ * unsigned char* (*) (
  *     unsigned char *data,
  *     int data_len,
  *     int *out_len,
  *     int quality
- * )</code></pre>
+ * )</pre></code>
  */
 @FunctionalInterface
-@NativeType("unsigned char * (*) (unsigned char *, int, int *, int)")
+@NativeType("unsigned char* (*) (unsigned char *, int, int *, int)")
 public interface STBIZlibCompressI extends CallbackI.P {
 
     String SIGNATURE = "(pipi)p";

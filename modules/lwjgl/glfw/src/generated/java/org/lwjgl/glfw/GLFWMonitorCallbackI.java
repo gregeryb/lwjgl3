@@ -14,11 +14,11 @@ import static org.lwjgl.system.dyncall.DynCallback.*;
  * 
  * <h3>Type</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * void (*) (
  *     GLFWmonitor *monitor,
  *     int event
- * )</code></pre>
+ * )</pre></code>
  *
  * @since version 3.0
  */
@@ -43,7 +43,7 @@ public interface GLFWMonitorCallbackI extends CallbackI.V {
      * Will be called when a monitor is connected to or disconnected from the system.
      *
      * @param monitor the monitor that was connected or disconnected
-     * @param event   one of {@link GLFW#GLFW_CONNECTED CONNECTED} or {@link GLFW#GLFW_DISCONNECTED DISCONNECTED}. Remaining values reserved for future use.
+     * @param event   one of {@link GLFW#GLFW_CONNECTED CONNECTED} or {@link GLFW#GLFW_DISCONNECTED DISCONNECTED}
      */
     void invoke(@NativeType("GLFWmonitor *") long monitor, int event);
 

@@ -18,12 +18,12 @@ import java.nio.*;
  * 
  * <h3>Type</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * int (*) (
  *     void *user,
  *     char *data,
  *     int size
- * )</code></pre>
+ * )</pre></code>
  */
 public abstract class STBIReadCallback extends Callback implements STBIReadCallbackI {
 

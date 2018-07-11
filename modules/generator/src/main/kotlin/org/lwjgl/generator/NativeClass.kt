@@ -29,7 +29,8 @@ enum class APICapabilities {
 abstract class APIBinding(
     module: Module,
     className: String,
-    val apiCapabilities: APICapabilities = APICapabilities.NONE
+    val apiCapabilities: APICapabilities = APICapabilities.NONE,
+    val callingConvention: CallingConvention = CallingConvention.STDCALL
 ) : GeneratorTarget(module, className) {
 
     init {
@@ -41,26 +42,13 @@ abstract class APIBinding(
 
     private val _classes: MutableList<NativeClass> = ArrayList()
 
-    fun getClasses(corePrefix: String): List<NativeClass> {
+    protected fun getClasses(
+        comparator: (NativeClass, NativeClass) -> Int = { o1, o2 -> o1.templateName.compareTo(o2.templateName, ignoreCase = true) }
+    ): List<NativeClass> {
         val classes = ArrayList(_classes)
-        classes.sortWith(Comparator { o1, o2 ->
-            // Core functionality first, extensions after
-            val isCore1 = o1.templateName.startsWith(corePrefix)
-            val isCore2 = o2.templateName.startsWith(corePrefix)
-
-            if (isCore1 xor isCore2)
-                (if (isCore1) -1 else 1)
-            else
-                o1.templateName.compareTo(o2.templateName, ignoreCase = true)
-        })
+        classes.sortWith(Comparator { o1, o2 -> comparator(o1, o2) })
         return classes
     }
-
-    protected fun List<NativeClass>.getFunctionPointers() = this.asSequence()
-        .filter { it.hasNativeFunctions }
-        .flatMap { it.functions.asSequence() }
-        .filter { !it.has<Reuse>() }
-        .toList()
 
     fun addClass(clazz: NativeClass) {
         _classes.add(clazz)
@@ -105,8 +93,9 @@ abstract class APIBinding(
 /** An APIBinding without an associated capabilities class.  */
 abstract class SimpleBinding(
     module: Module,
-    private val libraryExpression: String
-) : APIBinding(module, "*") { // TODO
+    private val libraryExpression: String,
+    callingConvention: CallingConvention
+) : APIBinding(module, "*", callingConvention = callingConvention) { // TODO
     override fun PrintWriter.generateJava() = Unit
     override fun generateFunctionAddress(writer: PrintWriter, function: Func) {
         writer.println("$t${t}long ${if (function has Address) RESULT else FUNCTION_ADDRESS} = Functions.${function.simpleName};")
@@ -114,7 +103,7 @@ abstract class SimpleBinding(
 
     protected fun PrintWriter.generateFunctionsClass(nativeClass: NativeClass, javadoc: String) {
         val bindingFunctions = nativeClass.functions.filter { !it.hasExplicitFunctionAddress && !it.has<Macro>() }
-        if (bindingFunctions.none())
+        if (bindingFunctions.isEmpty())
             return
 
         print(javadoc)
@@ -144,8 +133,9 @@ fun simpleBinding(
     module: Module,
     libraryName: String = module.name.toLowerCase(),
     libraryExpression: String = "\"$libraryName\"",
+    callingConvention: CallingConvention = CallingConvention.DEFAULT,
     bundledWithLWJGL: Boolean = false
-) = object : SimpleBinding(module, libraryName.toUpperCase()) {
+) = object : SimpleBinding(module, libraryName.toUpperCase(), callingConvention) {
     override fun PrintWriter.generateFunctionSetup(nativeClass: NativeClass) {
         val libraryReference = libraryName.toUpperCase()
 
@@ -162,7 +152,7 @@ fun simpleBinding(
 /** Creates a simple APIBinding that delegates function pointer loading to this APIBinding. */
 fun APIBinding.delegate(
     libraryExpression: String
-) = object : SimpleBinding(module, libraryExpression) {
+) = object : SimpleBinding(module, libraryExpression, callingConvention) {
     override fun PrintWriter.generateFunctionSetup(nativeClass: NativeClass) {
         generateFunctionsClass(nativeClass, "\n$t/** Contains the function pointers loaded from {@code $libraryExpression}. */")
     }
@@ -171,31 +161,28 @@ fun APIBinding.delegate(
 // TODO: Remove if KT-7859 is fixed.
 private fun APIBinding.generateFunctionSetup(writer: PrintWriter, nativeClass: NativeClass) = writer.generateFunctionSetup(nativeClass)
 
-class NativeClass internal constructor(
+class NativeClass(
     module: Module,
     className: String,
     nativeSubPath: String,
     val templateName: String = className,
     val prefix: String,
-    internal val prefixMethod: String,
-    internal val prefixConstant: String,
+    val prefixMethod: String,
+    val prefixConstant: String,
     val prefixTemplate: String,
     val postfix: String,
     val binding: APIBinding?,
-    internal val library: String?,
-    internal val callingConvention: CallingConvention
+    val library: String?
 ) : GeneratorTargetNative(module, className, nativeSubPath) {
     companion object {
         private val JDOC_LINK_PATTERN = """(?<!\p{javaJavaIdentifierPart}|[@#])#(\p{javaJavaIdentifierStart}\p{javaJavaIdentifierPart}*)""".toRegex()
     }
 
-    var extends: NativeClass? = null
-
     private val constantBlocks = ArrayList<ConstantBlock<*>>()
 
     private val _functions = LinkedHashMap<String, Func>()
-    val functions: Sequence<Func>
-        get() = _functions.values.asSequence()
+    val functions: Iterable<Func>
+        get() = _functions.values
 
     // same as above + array overloads
     private val genFunctions: MutableList<Func> by lazy(LazyThreadSafetyMode.NONE) {
@@ -261,7 +248,7 @@ class NativeClass internal constructor(
             .forEach { func ->
                 val multiTypeParams = func.parameters.filter { it.has<MultiType>() }
                 val autoSizeResultOutParams = func.parameters.count { it.isAutoSizeResultOut }
-                val documentation: ((Parameter) -> Boolean) -> String = { processDocumentation("Array version of: ${func.javaDocLink}").toJavaDoc() }
+                val documentation: ((Parameter) -> Boolean) -> String = { processDocumentation("register Array version of: ${func.javaDocLink}").toJavaDoc() }
 
                 if (multiTypeParams.isEmpty() || func.parameters.any { it.isArrayParameter(autoSizeResultOutParams) }) {
                     val overload = Func(
@@ -272,9 +259,12 @@ class NativeClass internal constructor(
                         nativeClass = this@NativeClass,
                         parameters = *func.parameters.asSequence().map {
                             if (it.isArrayParameter(autoSizeResultOutParams))
-                                it
-                                    .copy(ArrayType(it.nativeType as PointerType<*>))
-                                    .removeArrayModifiers()
+                                Parameter(
+                                    ArrayType(it.nativeType as PointerType),
+                                    it.name,
+                                    it.paramType,
+                                    it.documentation
+                                ).copyModifiers(it).removeArrayModifiers()
                             else
                                 func[it.name].removeArrayModifiers()
                         }.toList().toTypedArray()
@@ -293,7 +283,7 @@ class NativeClass internal constructor(
                 multiType.types.asSequence()
                     .filter { it !== PointerMapping.DATA_POINTER }
                     .let {
-                        if (multiType.byteArray)
+                        if (it.contains(PointerMapping.DATA_SHORT))
                             sequenceOf(PointerMapping.DATA_BYTE) + it
                         else
                             it
@@ -307,19 +297,24 @@ class NativeClass internal constructor(
                             nativeClass = this@NativeClass,
                             parameters = *func.parameters.asSequence().map {
                                 if (it.isArrayParameter(autoSizeResultOutParams))
-                                    it
-                                        .copy(ArrayType(it.nativeType as PointerType<*>))
-                                        .removeArrayModifiers()
+                                    Parameter(
+                                        ArrayType(it.nativeType as PointerType),
+                                        it.name,
+                                        it.paramType,
+                                        it.documentation
+                                    ).copyModifiers(it).removeArrayModifiers()
                                 else if (it.has<MultiType>())
-                                    it
-                                        .copy(ArrayType(it.nativeType as PointerType<*>, autoType))
-                                        .removeArrayModifiers()
-                                        .replaceModifier<Check> {
-                                            if (it === Unsafe)
-                                                it
-                                            else
-                                                Check("${it.expression.let { if (it.contains(' ')) "($it)" else it }} >> ${autoType.byteShift}")
-                                        }
+                                    Parameter(
+                                        ArrayType(it.nativeType as PointerType, autoType),
+                                        it.name,
+                                        it.paramType,
+                                        it.documentation
+                                    ).copyModifiers(it).removeArrayModifiers().replaceModifier<Check> {
+                                        if (it === Unsafe)
+                                            it
+                                        else
+                                            Check("${it.expression.let { if (it.contains(' ')) "($it)" else it }} >> ${autoType.byteShift}")
+                                    }
                                 else
                                     func[it.name].removeArrayModifiers()
                             }.toList().toTypedArray()
@@ -342,25 +337,24 @@ class NativeClass internal constructor(
                                         AutoSizeFactor.shl("${-value}")
                                     else
                                         AutoSizeFactor.shr("$value")
-                                } catch (e: NumberFormatException) {
+                                } catch(e: NumberFormatException) {
                                     return null
                                 }
                             }
 
                             val autoSize = it.get<AutoSize>()
-                            it.replaceModifier(
-                                if (autoSize.factor == null)
-                                    AutoSizeShl(
-                                        autoType.byteShift,
-                                        autoSize.reference,
-                                        *autoSize.dependent
-                                    )
-                                else
-                                    AutoSize(
-                                        autoSize.reference,
-                                        *autoSize.dependent,
-                                        factor = getAutoSizeFactor(autoSize.factor, autoType.byteShift.toInt())
-                                    )
+                            it.replaceModifier(if (autoSize.factor == null)
+                                AutoSizeShl(
+                                    autoType.byteShift!!,
+                                    autoSize.reference,
+                                    *autoSize.dependent
+                                )
+                            else
+                                AutoSize(
+                                    autoSize.reference,
+                                    *autoSize.dependent,
+                                    factor = getAutoSizeFactor(autoSize.factor, autoType.byteShift!!.toInt())
+                                )
                             )
                         }
 
@@ -401,7 +395,7 @@ class NativeClass internal constructor(
             }
         }
 
-        this.functions.asSequence().filter { !it.has<Reuse>() }.forEach {
+        this.functions.asSequence().filter { !it.has(Reuse) }.forEach {
             if (it has macro)
                 registerLink(it.simpleName, "$className#${it.name}", tokens, duplicateTokens)
             else
@@ -413,7 +407,7 @@ class NativeClass internal constructor(
         print(HEADER)
         println("package $packageName;\n")
 
-        val hasFunctions = _functions.isNotEmpty()
+        val hasFunctions = !_functions.isEmpty()
         if (hasFunctions || binding is SimpleBinding) {
             // TODO: This is horrible. Refactor so that we build imports after code generation.
             if (functions.any {
@@ -435,7 +429,7 @@ class NativeClass internal constructor(
                     println("import java.nio.*;\n")
 
                 val needsPointerBuffer: NativeType.() -> Boolean = {
-                    this is PointerType<*> && this.elementType.let { it is PointerType<*> || (it.mapping == PrimitiveMapping.POINTER && it !is StructType) }
+                    this is PointerType && this.elementType.let { it != null && (it is PointerType || (it.mapping == PrimitiveMapping.POINTER && it !is StructType)) }
                 }
                 if (functions.any {
                     it.returns.nativeType.needsPointerBuffer() || it.hasParam {
@@ -445,12 +439,9 @@ class NativeClass internal constructor(
                     println("import org.lwjgl.*;\n")
             }
 
-            val functions = this@NativeClass.functions
-                .filter { !it.has<Reuse>() }
-
             val hasMemoryStack = hasBuffers && functions.any { func ->
                 func.hasParam {
-                    it.nativeType is PointerType<*> &&
+                    it.nativeType is PointerType &&
                     (
                         it.has<Return>() ||
                         it.has<SingleValue>() ||
@@ -469,7 +460,7 @@ class NativeClass internal constructor(
                 println("import static org.lwjgl.system.APIUtil.*;")
             if (hasFunctions && ((binding != null && binding !is SimpleBinding) || functions.any { func ->
                 func.hasParam { param ->
-                    param.nativeType is PointerType<*> && func.getReferenceParam<AutoSize>(param.name).let {
+                    param.nativeType is PointerType && func.getReferenceParam<AutoSize>(param.name).let {
                         if (it == null)
                             !param.has<Nullable>() && param.nativeType.elementType !is StructType
                         else
@@ -484,7 +475,7 @@ class NativeClass internal constructor(
                 println("import static org.lwjgl.system.MemoryStack.*;")
             if (hasBuffers && functions.any {
                 it.returns.isBufferPointer || it.hasParam { param ->
-                    param.nativeType.let { it is PointerType<*> && it.mapping !== PointerMapping.OPAQUE_POINTER && (it.elementType !is StructType || param.has<Nullable>()) }
+                    param.nativeType.let { it is PointerType && it.mapping !== PointerMapping.OPAQUE_POINTER && (it.elementType !is StructType || param.has<Nullable>()) }
                 }
             }) {
                 println("import static org.lwjgl.system.MemoryUtil.*;")
@@ -503,13 +494,7 @@ class NativeClass internal constructor(
         val documentation = super.documentation
         if (!documentation.isNullOrBlank())
             println(processDocumentation(documentation!!).toJavaDoc(indentation = ""))
-        val isOpen = hasFunctions || extends != null
-        print("${access.modifier}${if (isOpen) "" else "final "}class $className")
-        extends.let {
-            if (it != null)
-                print(" extends ${it.className}")
-        }
-        println(" {")
+        println("${access.modifier}${if (hasFunctions) "" else "final "}class $className {")
 
         constantBlocks.forEach {
             it.generate(this)
@@ -535,14 +520,15 @@ class NativeClass internal constructor(
                 if (binding !is SimpleBinding && functions.any(Func::hasCustomJNI))
                     libraryInit()
 
+                printCustomMethods(static = true)
+
                 if (binding is SimpleBinding || functions.any { !it.hasExplicitFunctionAddress }) {
                     println("""
-    ${if (isOpen && access === Access.PUBLIC) "protected" else "private"} $className() {
+    ${if (hasFunctions && access === Access.PUBLIC) "protected" else "private"} $className() {
         throw new UnsupportedOperationException();
     }""")
                     binding.generateFunctionSetup(this, this@NativeClass)
                 }
-                printCustomMethods(static = true)
             } else {
                 libraryInit()
 
@@ -550,16 +536,16 @@ class NativeClass internal constructor(
 
                 // This allows binding classes to be "statically" extended. Not a good practice, but usable with static imports.
                 println("""
-    ${if (isOpen && access === Access.PUBLIC) "protected" else "private"} $className() {
+    ${if (hasFunctions && access === Access.PUBLIC) "protected" else "private"} $className() {
         throw new UnsupportedOperationException();
     }""")
             }
         } else {
-            println("\n$t${if (isOpen && access === Access.PUBLIC) "protected" else "private"} $className() {}")
+            println("\n${t}private $className() {}")
         }
 
         genFunctions.forEach { func ->
-            if (!func.hasParam { it.nativeType is ArrayType<*> })
+            if (!func.hasParam { it.nativeType is ArrayType })
                 println("\n$t// --- [ ${func.name} ] ---")
             try {
                 func.generateMethods(this)
@@ -573,7 +559,7 @@ class NativeClass internal constructor(
         print("\n}")
     }
 
-    override val skipNative get() = functions.none { it.hasCustomJNI && !it.has<Reuse>() }
+    override val skipNative get() = functions.none(Func::hasCustomJNI)
 
     override fun PrintWriter.generateNative() {
         print(HEADER)
@@ -582,14 +568,14 @@ class NativeClass internal constructor(
         if (binding != null) {
             // Generate typedefs for casting the function pointers
             println()
-            functions.asSequence().filter { it.hasCustomJNI && !it.has<Reuse>() }.forEach {
+            functions.asSequence().filter(Func::hasCustomJNI).forEach {
                 it.generateFunctionDefinition(this)
             }
         }
 
         println("\nEXTERN_C_ENTER")
 
-        genFunctions.asSequence().filter { it.hasCustomJNI && !it.has<Reuse>() }.forEach {
+        genFunctions.asSequence().filter(Func::hasCustomJNI).forEach {
             println()
             it.generateFunction(this)
         }
@@ -661,132 +647,19 @@ class NativeClass internal constructor(
     fun String.enum(documentation: String, expression: String) =
         Constant(this, EnumValueExpression({ if (documentation.isEmpty()) null else processDocumentation(documentation) }, expression))
 
-    fun DataType.IN(name: String, javadoc: String, links: String = "", linkMode: LinkMode = LinkMode.SINGLE) = createParameter(name, ParameterType.IN, javadoc, links, linkMode)
-    fun PointerType<*>.OUT(name: String, javadoc: String, links: String = "", linkMode: LinkMode = LinkMode.SINGLE) = createParameter(name, ParameterType.OUT, javadoc, links, linkMode)
-    fun <T : DataType> PointerType<T>.INOUT(name: String, javadoc: String, links: String = "", linkMode: LinkMode = LinkMode.SINGLE) =
-        createParameter(name, ParameterType.INOUT, javadoc, links, linkMode)
+    operator fun NativeType.invoke(name: String, documentation: String, vararg parameters: Parameter, returnDoc: String = "", see: Array<String>? = null, since: String = "", noPrefix: Boolean = false) =
+        ReturnValue(this)(name, documentation, *parameters, returnDoc = returnDoc, see = see, since = since, noPrefix = noPrefix)
 
-    private fun NativeType.createParameter(
-        name: String,
-        paramType: ParameterType,
-        javadoc: String,
-        links: String,
-        linkMode: LinkMode = LinkMode.SINGLE
-    ) = if (links.isEmpty() || !links.contains('+'))
-        Parameter(this, name, paramType, javadoc, links, linkMode)
-    else
-        Parameter(this, name, paramType) { linkMode.appendLinks(javadoc, linksFromRegex(links)) }
-
-    operator fun VoidType.invoke(
-        className: String,
-        functionDoc: String,
-        vararg signature: Parameter,
-        nativeType: String = ANONYMOUS,
-        returnDoc: String = "",
-        see: Array<String>? = null,
-        since: String = "",
-        init: (CallbackFunction.() -> Unit)? = null
-    ) = createCallback(this, nativeType, className, functionDoc, returnDoc, see, since, init, *signature)
-
-    operator fun DataType.invoke(
-        className: String,
-        functionDoc: String,
-        vararg signature: Parameter,
-        nativeType: String = ANONYMOUS,
-        returnDoc: String = "",
-        see: Array<String>? = null,
-        since: String = "",
-        init: (CallbackFunction.() -> Unit)? = null
-    ) = createCallback(this, nativeType, className, functionDoc, returnDoc, see, since, init, *signature)
-
-    private fun createCallback(
-        returns: NativeType,
-        nativeType: String,
-        className: String,
-        functionDoc: String,
-        returnDoc: String,
-        see: Array<String>?,
-        since: String,
-        init: (CallbackFunction.() -> Unit)?,
-        vararg signature: Parameter
-    ): CallbackType {
-        val callback = CallbackFunction(this@NativeClass.module, className, nativeType, returns, *signature)
-        if (init != null)
-            callback.init()
-        callback.functionDoc = { it -> it.toJavaDoc(it.processDocumentation(functionDoc), it.signature.asSequence(), it.returns, returnDoc, see, since) }
-        Generator.register(callback)
-        Generator.register(CallbackInterface(callback))
-        return CallbackType(callback)
-    }
-
-    fun AutoSize(reference: String, vararg dependent: String, factor: AutoSizeFactor? = null) =
-        org.lwjgl.generator.AutoSize(reference, *dependent, factor = factor)
-
-    /** Marks the parameter to be replaced with .remaining() on the buffer parameter specified by reference. */
-    fun AutoSize(div: Int, reference: String, vararg dependent: String) =
-        when {
-            div < 1                    -> throw IllegalArgumentException()
-            div == 1                   -> AutoSize(reference, *dependent)
-            Integer.bitCount(div) == 1 -> AutoSizeShr(Integer.numberOfTrailingZeros(div).toString(), reference, *dependent)
-            else                       -> AutoSizeDiv(div.toString(), reference, dependent = *dependent)
-        }
-
-    fun AutoSizeDiv(expression: String, reference: String, vararg dependent: String) =
-        AutoSize(reference, *dependent, factor = AutoSizeFactor.div(expression))
-
-    fun AutoSizeMul(expression: String, reference: String, vararg dependent: String) =
-        AutoSize(reference, *dependent, factor = AutoSizeFactor.mul(expression))
-
-    fun AutoSizeShr(expression: String, reference: String, vararg dependent: String) =
-        AutoSize(reference, *dependent, factor = AutoSizeFactor.shr(expression))
-
-    fun AutoSizeShl(expression: String, reference: String, vararg dependent: String) =
-        AutoSize(reference, *dependent, factor = AutoSizeFactor.shl(expression))
-
-    /** Marks a pointer parameter as nullable. */
-    val nullable get() = org.lwjgl.generator.nullable
-
-    operator fun VoidType.invoke(
-        name: String,
-        documentation: String,
-        vararg parameters: Parameter,
-        returnDoc: String = "",
-        see: Array<String>? = null,
-        since: String = "",
-        noPrefix: Boolean = false
-    ) =
-        createFunction(ReturnValue(this), name, documentation, returnDoc, see, since, noPrefix, *parameters)
-
-    operator fun DataType.invoke(
-        name: String,
-        documentation: String,
-        vararg parameters: Parameter,
-        returnDoc: String = "",
-        see: Array<String>? = null,
-        since: String = "",
-        noPrefix: Boolean = false
-    ) = createFunction(ReturnValue(this), name, documentation, returnDoc, see, since, noPrefix, *parameters)
-
-    private fun createFunction(
-        returns: ReturnValue,
-        name: String,
-        documentation: String,
-        returnDoc: String,
-        see: Array<String>?,
-        since: String,
-        noPrefix: Boolean,
-        vararg parameters: Parameter
-    ): Func {
-        val overload = name.indexOf('@').let { if (it == -1) name else name.substring(0, it) }
+    operator fun ReturnValue.invoke(name: String, documentation: String, vararg parameters: Parameter, returnDoc: String = "", see: Array<String>? = null, since: String = "", noPrefix: Boolean = false): Func {
         val func = Func(
-            returns = returns,
-            simpleName = overload,
-            name = if (noPrefix) overload else "$prefixMethod$overload",
+            returns = this,
+            simpleName = name,
+            name = if (noPrefix) name else "$prefixMethod$name",
             documentation = { parameterFilter ->
                 this@NativeClass.toJavaDoc(
                     processDocumentation(documentation),
                     parameters.asSequence().filter { it !== JNI_ENV && parameterFilter(it) },
-                    returns.nativeType,
+                    this.nativeType,
                     returnDoc,
                     see,
                     since
@@ -796,22 +669,18 @@ class NativeClass internal constructor(
             parameters = *parameters
         )
 
-        if ((_functions.put(name, func)) != null) {
-            throw IllegalArgumentException("The $name function is already defined in ${this@NativeClass.className}.")
-        }
+        _functions[name] = func
         return func
     }
 
     fun customMethod(method: String) {
-        customMethods.add(method.trim())
+        customMethods.add(method)
     }
 
     private fun PrintWriter.printCustomMethods(static: Boolean) {
-        customMethods
-            .filter { it.startsWith("static {") == static }
-            .forEach {
-                println("\n$t$it")
-            }
+        customMethods.filter { it.startsWith("static {") == static }.forEach {
+            println("\n$t${it.trim()}")
+        }
     }
 
     operator fun NativeClass.get(functionName: String) = _functions[functionName] ?: throw IllegalArgumentException("Referenced function does not exist: $templateName.$functionName")
@@ -819,7 +688,7 @@ class NativeClass internal constructor(
     infix fun NativeClass.reuse(functionName: String): Func {
         val reference = this[functionName]
 
-        val func = Reuse(this)..Func(
+        val func = Reuse..Func(
             returns = reference.returns,
             simpleName = reference.simpleName,
             name = reference.name,
@@ -832,11 +701,19 @@ class NativeClass internal constructor(
         return func
     }
 
-    operator fun Func.get(paramName: String): Parameter = getParam(paramName).let {
-        if (it === EXPLICIT_FUNCTION_ADDRESS || it === JNI_ENV)
-            it
-        else
-            it.copy()
+    operator fun Func.get(paramName: String): Parameter {
+        val param = getParam(paramName)
+
+        return if (param === EXPLICIT_FUNCTION_ADDRESS || param === JNI_ENV)
+            param
+        else {
+            Parameter(
+                param.nativeType,
+                param.name,
+                param.paramType,
+                param.documentation
+            ).copyModifiers(param)
+        }
     }
 
     private fun convertDocumentation(referenceClass: NativeClass, referenceFunction: String, documentation: String) = documentation.replace(JDOC_LINK_PATTERN) { match ->
@@ -878,10 +755,9 @@ fun String.nativeClass(
     postfix: String = "",
     binding: APIBinding? = null,
     library: String? = null,
-    callingConvention: CallingConvention = module.callingConvention,
     init: (NativeClass.() -> Unit)? = null
 ): NativeClass {
-    val ext = NativeClass(module, this, nativeSubPath, templateName, prefix, prefixMethod, prefixConstant, prefixTemplate, postfix, binding, library, callingConvention)
+    val ext = NativeClass(module, this, nativeSubPath, templateName, prefix, prefixMethod, prefixConstant, prefixTemplate, postfix, binding, library)
     if (init != null)
         ext.init()
 

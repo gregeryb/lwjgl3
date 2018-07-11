@@ -16,13 +16,13 @@ import static org.lwjgl.system.MemoryUtil.*;
 /**
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct LZ4_streamDecode_t_internal {
- *     uint8_t const * externalDict;
+ *     const uint8_t * externalDict;
  *     size_t extDictSize;
- *     uint8_t const * prefixEnd;
+ *     const uint8_t * prefixEnd;
  *     size_t prefixSize;
- * }</code></pre>
+ * }</pre></code>
  */
 @NativeType("struct LZ4_streamDecode_t_internal")
 public class LZ4StreamDecodeInternal extends Struct {
@@ -30,7 +30,6 @@ public class LZ4StreamDecodeInternal extends Struct {
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */
@@ -79,7 +78,7 @@ public class LZ4StreamDecodeInternal extends Struct {
      *
      * @param capacity the number of elements in the returned buffer
      */
-    @NativeType("uint8_t const *")
+    @NativeType("const uint8_t *")
     public ByteBuffer externalDict(int capacity) { return nexternalDict(address(), capacity); }
     /** Returns the value of the {@code extDictSize} field. */
     @NativeType("size_t")
@@ -89,7 +88,7 @@ public class LZ4StreamDecodeInternal extends Struct {
      *
      * @param capacity the number of elements in the returned buffer
      */
-    @NativeType("uint8_t const *")
+    @NativeType("const uint8_t *")
     public ByteBuffer prefixEnd(int capacity) { return nprefixEnd(address(), capacity); }
     /** Returns the value of the {@code prefixSize} field. */
     @NativeType("size_t")
@@ -186,7 +185,7 @@ public class LZ4StreamDecodeInternal extends Struct {
          *
          * @param capacity the number of elements in the returned buffer
          */
-        @NativeType("uint8_t const *")
+        @NativeType("const uint8_t *")
         public ByteBuffer externalDict(int capacity) { return LZ4StreamDecodeInternal.nexternalDict(address(), capacity); }
         /** Returns the value of the {@code extDictSize} field. */
         @NativeType("size_t")
@@ -196,7 +195,7 @@ public class LZ4StreamDecodeInternal extends Struct {
          *
          * @param capacity the number of elements in the returned buffer
          */
-        @NativeType("uint8_t const *")
+        @NativeType("const uint8_t *")
         public ByteBuffer prefixEnd(int capacity) { return LZ4StreamDecodeInternal.nprefixEnd(address(), capacity); }
         /** Returns the value of the {@code prefixSize} field. */
         @NativeType("size_t")

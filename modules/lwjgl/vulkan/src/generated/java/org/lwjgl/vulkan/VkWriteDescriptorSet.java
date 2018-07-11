@@ -39,9 +39,6 @@ import static org.lwjgl.system.MemoryStack.*;
  * <li>If {@code descriptorType} is {@link VK10#VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER DESCRIPTOR_TYPE_UNIFORM_BUFFER}, {@link VK10#VK_DESCRIPTOR_TYPE_STORAGE_BUFFER DESCRIPTOR_TYPE_STORAGE_BUFFER}, {@link VK10#VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC}, or {@link VK10#VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC}, {@code pBufferInfo} <b>must</b> be a valid pointer to an array of {@code descriptorCount} valid {@link VkDescriptorBufferInfo} structures</li>
  * <li>If {@code descriptorType} is {@link VK10#VK_DESCRIPTOR_TYPE_SAMPLER DESCRIPTOR_TYPE_SAMPLER} or {@link VK10#VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER}, and {@code dstSet} was not allocated with a layout that included immutable samplers for {@code dstBinding} with {@code descriptorType}, the {@code sampler} member of each element of {@code pImageInfo} <b>must</b> be a valid {@code VkSampler} object</li>
  * <li>If {@code descriptorType} is {@link VK10#VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER}, {@link VK10#VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE DESCRIPTOR_TYPE_SAMPLED_IMAGE}, {@link VK10#VK_DESCRIPTOR_TYPE_STORAGE_IMAGE DESCRIPTOR_TYPE_STORAGE_IMAGE}, or {@link VK10#VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT DESCRIPTOR_TYPE_INPUT_ATTACHMENT}, the {@code imageView} and {@code imageLayout} members of each element of {@code pImageInfo} <b>must</b> be a valid {@code VkImageView} and {@code VkImageLayout}, respectively</li>
- * <li>If {@code descriptorType} is {@link VK10#VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE DESCRIPTOR_TYPE_SAMPLED_IMAGE}, then the {@code imageView} member of each {@code pImageInfo} element <b>must</b> have been created without a {@link VkSamplerYcbcrConversionInfo} structure in its {@code pNext} chain</li>
- * <li>If {@code descriptorType} is {@link VK10#VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER}, and if any element of {@code pImageInfo} has a {@code imageView} member that was created with a {@link VkSamplerYcbcrConversionInfo} structure in its {@code pNext} chain, then {@code dstSet} <b>must</b> have been allocated with a layout that included immutable samplers for {@code dstBinding}</li>
- * <li>If {@code descriptorType} is {@link VK10#VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER}, and {@code dstSet} was allocated with a layout that included immutable samplers for {@code dstBinding}, then the {@code imageView} member of each element of {@code pImageInfo} which corresponds to a immutable sampler that enables <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#samplers-YCbCr-conversion">sampler Y&#8217;C<sub>B</sub>C<sub>R</sub> conversion</a> <b>must</b> have been created with a {@link VkSamplerYcbcrConversionInfo} structure in its {@code pNext} chain with an <em>identically defined</em> {@link VkSamplerYcbcrConversionInfo} to the corresponding immutable sampler</li>
  * <li>If {@code descriptorType} is {@link VK10#VK_DESCRIPTOR_TYPE_STORAGE_IMAGE DESCRIPTOR_TYPE_STORAGE_IMAGE}, for each descriptor that will be accessed via load or store operations the {@code imageLayout} member for corresponding elements of {@code pImageInfo} <b>must</b> be {@link VK10#VK_IMAGE_LAYOUT_GENERAL IMAGE_LAYOUT_GENERAL}</li>
  * <li>If {@code descriptorType} is {@link VK10#VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER DESCRIPTOR_TYPE_UNIFORM_BUFFER} or {@link VK10#VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC}, the {@code offset} member of each element of {@code pBufferInfo} <b>must</b> be a multiple of {@link VkPhysicalDeviceLimits}{@code ::minUniformBufferOffsetAlignment}</li>
  * <li>If {@code descriptorType} is {@link VK10#VK_DESCRIPTOR_TYPE_STORAGE_BUFFER DESCRIPTOR_TYPE_STORAGE_BUFFER} or {@link VK10#VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC}, the {@code offset} member of each element of {@code pBufferInfo} <b>must</b> be a multiple of {@link VkPhysicalDeviceLimits}{@code ::minStorageBufferOffsetAlignment}</li>
@@ -57,7 +54,6 @@ import static org.lwjgl.system.MemoryStack.*;
  * <li>If {@code descriptorType} is {@link VK10#VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE DESCRIPTOR_TYPE_SAMPLED_IMAGE} or {@link VK10#VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER}, the {@code imageLayout} member of each element of {@code pImageInfo} <b>must</b> be {@link VK10#VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL}, {@link VK10#VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL} or {@link VK10#VK_IMAGE_LAYOUT_GENERAL IMAGE_LAYOUT_GENERAL}</li>
  * <li>If {@code descriptorType} is {@link VK10#VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT DESCRIPTOR_TYPE_INPUT_ATTACHMENT}, the {@code imageView} member of each element of {@code pImageInfo} <b>must</b> have been created with {@link VK10#VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT IMAGE_USAGE_INPUT_ATTACHMENT_BIT} set</li>
  * <li>If {@code descriptorType} is {@link VK10#VK_DESCRIPTOR_TYPE_STORAGE_IMAGE DESCRIPTOR_TYPE_STORAGE_IMAGE}, the {@code imageView} member of each element of {@code pImageInfo} <b>must</b> have been created with {@link VK10#VK_IMAGE_USAGE_STORAGE_BIT IMAGE_USAGE_STORAGE_BIT} set</li>
- * <li>All consecutive bindings updated via a single {@link VkWriteDescriptorSet} structure, except those with a {@code descriptorCount} of zero, <b>must</b> have identical {@code VkDescriptorBindingFlagBitsEXT}.</li>
  * </ul>
  * 
  * <h5>Valid Usage (Implicit)</h5>
@@ -91,26 +87,25 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct VkWriteDescriptorSet {
  *     VkStructureType sType;
- *     void const * pNext;
+ *     const void * pNext;
  *     VkDescriptorSet dstSet;
  *     uint32_t dstBinding;
  *     uint32_t dstArrayElement;
  *     uint32_t descriptorCount;
  *     VkDescriptorType descriptorType;
- *     {@link VkDescriptorImageInfo VkDescriptorImageInfo const} * pImageInfo;
- *     {@link VkDescriptorBufferInfo VkDescriptorBufferInfo const} * pBufferInfo;
- *     VkBufferView const * pTexelBufferView;
- * }</code></pre>
+ *     const {@link VkDescriptorImageInfo VkDescriptorImageInfo} * pImageInfo;
+ *     const {@link VkDescriptorBufferInfo VkDescriptorBufferInfo} * pBufferInfo;
+ *     const VkBufferView * pTexelBufferView;
+ * }</pre></code>
  */
 public class VkWriteDescriptorSet extends Struct implements NativeResource {
 
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */
@@ -176,7 +171,7 @@ public class VkWriteDescriptorSet extends Struct implements NativeResource {
     @NativeType("VkStructureType")
     public int sType() { return nsType(address()); }
     /** Returns the value of the {@code pNext} field. */
-    @NativeType("void const *")
+    @NativeType("const void *")
     public long pNext() { return npNext(address()); }
     /** Returns the value of the {@code dstSet} field. */
     @NativeType("VkDescriptorSet")
@@ -195,21 +190,21 @@ public class VkWriteDescriptorSet extends Struct implements NativeResource {
     public int descriptorType() { return ndescriptorType(address()); }
     /** Returns a {@link VkDescriptorImageInfo.Buffer} view of the struct array pointed to by the {@code pImageInfo} field. */
     @Nullable
-    @NativeType("VkDescriptorImageInfo const *")
+    @NativeType("const VkDescriptorImageInfo *")
     public VkDescriptorImageInfo.Buffer pImageInfo() { return npImageInfo(address()); }
     /** Returns a {@link VkDescriptorBufferInfo.Buffer} view of the struct array pointed to by the {@code pBufferInfo} field. */
     @Nullable
-    @NativeType("VkDescriptorBufferInfo const *")
+    @NativeType("const VkDescriptorBufferInfo *")
     public VkDescriptorBufferInfo.Buffer pBufferInfo() { return npBufferInfo(address()); }
     /** Returns a {@link LongBuffer} view of the data pointed to by the {@code pTexelBufferView} field. */
     @Nullable
-    @NativeType("VkBufferView const *")
+    @NativeType("const VkBufferView *")
     public LongBuffer pTexelBufferView() { return npTexelBufferView(address()); }
 
     /** Sets the specified value to the {@code sType} field. */
     public VkWriteDescriptorSet sType(@NativeType("VkStructureType") int value) { nsType(address(), value); return this; }
     /** Sets the specified value to the {@code pNext} field. */
-    public VkWriteDescriptorSet pNext(@NativeType("void const *") long value) { npNext(address(), value); return this; }
+    public VkWriteDescriptorSet pNext(@NativeType("const void *") long value) { npNext(address(), value); return this; }
     /** Sets the specified value to the {@code dstSet} field. */
     public VkWriteDescriptorSet dstSet(@NativeType("VkDescriptorSet") long value) { ndstSet(address(), value); return this; }
     /** Sets the specified value to the {@code dstBinding} field. */
@@ -219,11 +214,11 @@ public class VkWriteDescriptorSet extends Struct implements NativeResource {
     /** Sets the specified value to the {@code descriptorType} field. */
     public VkWriteDescriptorSet descriptorType(@NativeType("VkDescriptorType") int value) { ndescriptorType(address(), value); return this; }
     /** Sets the address of the specified {@link VkDescriptorImageInfo.Buffer} to the {@code pImageInfo} field. */
-    public VkWriteDescriptorSet pImageInfo(@Nullable @NativeType("VkDescriptorImageInfo const *") VkDescriptorImageInfo.Buffer value) { npImageInfo(address(), value); return this; }
+    public VkWriteDescriptorSet pImageInfo(@Nullable @NativeType("const VkDescriptorImageInfo *") VkDescriptorImageInfo.Buffer value) { npImageInfo(address(), value); return this; }
     /** Sets the address of the specified {@link VkDescriptorBufferInfo.Buffer} to the {@code pBufferInfo} field. */
-    public VkWriteDescriptorSet pBufferInfo(@Nullable @NativeType("VkDescriptorBufferInfo const *") VkDescriptorBufferInfo.Buffer value) { npBufferInfo(address(), value); return this; }
+    public VkWriteDescriptorSet pBufferInfo(@Nullable @NativeType("const VkDescriptorBufferInfo *") VkDescriptorBufferInfo.Buffer value) { npBufferInfo(address(), value); return this; }
     /** Sets the address of the specified {@link LongBuffer} to the {@code pTexelBufferView} field. */
-    public VkWriteDescriptorSet pTexelBufferView(@Nullable @NativeType("VkBufferView const *") LongBuffer value) { npTexelBufferView(address(), value); return this; }
+    public VkWriteDescriptorSet pTexelBufferView(@Nullable @NativeType("const VkBufferView *") LongBuffer value) { npTexelBufferView(address(), value); return this; }
 
     /** Initializes this struct with the specified values. */
     public VkWriteDescriptorSet set(
@@ -233,9 +228,9 @@ public class VkWriteDescriptorSet extends Struct implements NativeResource {
         int dstBinding,
         int dstArrayElement,
         int descriptorType,
-        @Nullable VkDescriptorImageInfo.Buffer pImageInfo,
-        @Nullable VkDescriptorBufferInfo.Buffer pBufferInfo,
-        @Nullable LongBuffer pTexelBufferView
+        VkDescriptorImageInfo.Buffer pImageInfo,
+        VkDescriptorBufferInfo.Buffer pBufferInfo,
+        LongBuffer pTexelBufferView
     ) {
         sType(sType);
         pNext(pNext);
@@ -524,7 +519,7 @@ public class VkWriteDescriptorSet extends Struct implements NativeResource {
         @NativeType("VkStructureType")
         public int sType() { return VkWriteDescriptorSet.nsType(address()); }
         /** Returns the value of the {@code pNext} field. */
-        @NativeType("void const *")
+        @NativeType("const void *")
         public long pNext() { return VkWriteDescriptorSet.npNext(address()); }
         /** Returns the value of the {@code dstSet} field. */
         @NativeType("VkDescriptorSet")
@@ -543,21 +538,21 @@ public class VkWriteDescriptorSet extends Struct implements NativeResource {
         public int descriptorType() { return VkWriteDescriptorSet.ndescriptorType(address()); }
         /** Returns a {@link VkDescriptorImageInfo.Buffer} view of the struct array pointed to by the {@code pImageInfo} field. */
         @Nullable
-        @NativeType("VkDescriptorImageInfo const *")
+        @NativeType("const VkDescriptorImageInfo *")
         public VkDescriptorImageInfo.Buffer pImageInfo() { return VkWriteDescriptorSet.npImageInfo(address()); }
         /** Returns a {@link VkDescriptorBufferInfo.Buffer} view of the struct array pointed to by the {@code pBufferInfo} field. */
         @Nullable
-        @NativeType("VkDescriptorBufferInfo const *")
+        @NativeType("const VkDescriptorBufferInfo *")
         public VkDescriptorBufferInfo.Buffer pBufferInfo() { return VkWriteDescriptorSet.npBufferInfo(address()); }
         /** Returns a {@link LongBuffer} view of the data pointed to by the {@code pTexelBufferView} field. */
         @Nullable
-        @NativeType("VkBufferView const *")
+        @NativeType("const VkBufferView *")
         public LongBuffer pTexelBufferView() { return VkWriteDescriptorSet.npTexelBufferView(address()); }
 
         /** Sets the specified value to the {@code sType} field. */
         public VkWriteDescriptorSet.Buffer sType(@NativeType("VkStructureType") int value) { VkWriteDescriptorSet.nsType(address(), value); return this; }
         /** Sets the specified value to the {@code pNext} field. */
-        public VkWriteDescriptorSet.Buffer pNext(@NativeType("void const *") long value) { VkWriteDescriptorSet.npNext(address(), value); return this; }
+        public VkWriteDescriptorSet.Buffer pNext(@NativeType("const void *") long value) { VkWriteDescriptorSet.npNext(address(), value); return this; }
         /** Sets the specified value to the {@code dstSet} field. */
         public VkWriteDescriptorSet.Buffer dstSet(@NativeType("VkDescriptorSet") long value) { VkWriteDescriptorSet.ndstSet(address(), value); return this; }
         /** Sets the specified value to the {@code dstBinding} field. */
@@ -567,11 +562,11 @@ public class VkWriteDescriptorSet extends Struct implements NativeResource {
         /** Sets the specified value to the {@code descriptorType} field. */
         public VkWriteDescriptorSet.Buffer descriptorType(@NativeType("VkDescriptorType") int value) { VkWriteDescriptorSet.ndescriptorType(address(), value); return this; }
         /** Sets the address of the specified {@link VkDescriptorImageInfo.Buffer} to the {@code pImageInfo} field. */
-        public VkWriteDescriptorSet.Buffer pImageInfo(@Nullable @NativeType("VkDescriptorImageInfo const *") VkDescriptorImageInfo.Buffer value) { VkWriteDescriptorSet.npImageInfo(address(), value); return this; }
+        public VkWriteDescriptorSet.Buffer pImageInfo(@Nullable @NativeType("const VkDescriptorImageInfo *") VkDescriptorImageInfo.Buffer value) { VkWriteDescriptorSet.npImageInfo(address(), value); return this; }
         /** Sets the address of the specified {@link VkDescriptorBufferInfo.Buffer} to the {@code pBufferInfo} field. */
-        public VkWriteDescriptorSet.Buffer pBufferInfo(@Nullable @NativeType("VkDescriptorBufferInfo const *") VkDescriptorBufferInfo.Buffer value) { VkWriteDescriptorSet.npBufferInfo(address(), value); return this; }
+        public VkWriteDescriptorSet.Buffer pBufferInfo(@Nullable @NativeType("const VkDescriptorBufferInfo *") VkDescriptorBufferInfo.Buffer value) { VkWriteDescriptorSet.npBufferInfo(address(), value); return this; }
         /** Sets the address of the specified {@link LongBuffer} to the {@code pTexelBufferView} field. */
-        public VkWriteDescriptorSet.Buffer pTexelBufferView(@Nullable @NativeType("VkBufferView const *") LongBuffer value) { VkWriteDescriptorSet.npTexelBufferView(address(), value); return this; }
+        public VkWriteDescriptorSet.Buffer pTexelBufferView(@Nullable @NativeType("const VkBufferView *") LongBuffer value) { VkWriteDescriptorSet.npTexelBufferView(address(), value); return this; }
 
     }
 

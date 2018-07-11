@@ -69,7 +69,7 @@ public class EXTMultiviewDrawBuffers {
 
     public static native void nglDrawBuffersIndexedEXT(int n, long location, long indices);
 
-    public static void glDrawBuffersIndexedEXT(@NativeType("GLenum const *") IntBuffer location, @NativeType("GLint const *") IntBuffer indices) {
+    public static void glDrawBuffersIndexedEXT(@NativeType("const GLenum *") IntBuffer location, @NativeType("const GLint *") IntBuffer indices) {
         if (CHECKS) {
             check(indices, location.remaining());
         }
@@ -99,8 +99,8 @@ public class EXTMultiviewDrawBuffers {
         }
     }
 
-    /** Array version of: {@link #glDrawBuffersIndexedEXT DrawBuffersIndexedEXT} */
-    public static void glDrawBuffersIndexedEXT(@NativeType("GLenum const *") int[] location, @NativeType("GLint const *") int[] indices) {
+    /** register Array version of: {@link #glDrawBuffersIndexedEXT DrawBuffersIndexedEXT} */
+    public static void glDrawBuffersIndexedEXT(@NativeType("const GLenum *") int[] location, @NativeType("const GLint *") int[] indices) {
         long __functionAddress = GLES.getICD().glDrawBuffersIndexedEXT;
         if (CHECKS) {
             check(__functionAddress);
@@ -109,7 +109,7 @@ public class EXTMultiviewDrawBuffers {
         callPPV(__functionAddress, location.length, location, indices);
     }
 
-    /** Array version of: {@link #glGetIntegeri_vEXT GetIntegeri_vEXT} */
+    /** register Array version of: {@link #glGetIntegeri_vEXT GetIntegeri_vEXT} */
     public static void glGetIntegeri_vEXT(@NativeType("GLenum") int target, @NativeType("GLuint") int index, @NativeType("GLint *") int[] data) {
         long __functionAddress = GLES.getICD().glGetIntegeri_vEXT;
         if (CHECKS) {

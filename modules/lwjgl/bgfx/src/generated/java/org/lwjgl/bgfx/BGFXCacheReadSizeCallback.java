@@ -16,11 +16,11 @@ import static org.lwjgl.system.MemoryUtil.*;
  * 
  * <h3>Type</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * uint32_t (*) (
  *     bgfx_callback_interface_t *_this,
  *     uint64_t _id
- * )</code></pre>
+ * )</pre></code>
  */
 public abstract class BGFXCacheReadSizeCallback extends Callback implements BGFXCacheReadSizeCallbackI {
 

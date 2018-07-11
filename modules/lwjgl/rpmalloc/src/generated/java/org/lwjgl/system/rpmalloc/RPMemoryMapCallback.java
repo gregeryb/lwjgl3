@@ -16,11 +16,10 @@ import static org.lwjgl.system.MemoryUtil.*;
  * 
  * <h3>Type</h3>
  * 
- * <pre><code>
- * void * (*) (
- *     size_t size,
- *     size_t *offset
- * )</code></pre>
+ * <code><pre>
+ * void* (*) (
+ *     size_t size
+ * )</pre></code>
  */
 public abstract class RPMemoryMapCallback extends Callback implements RPMemoryMapCallbackI {
 
@@ -67,8 +66,8 @@ public abstract class RPMemoryMapCallback extends Callback implements RPMemoryMa
         }
 
         @Override
-        public long invoke(long size, long offset) {
-            return delegate.invoke(size, offset);
+        public long invoke(long size) {
+            return delegate.invoke(size);
         }
 
     }

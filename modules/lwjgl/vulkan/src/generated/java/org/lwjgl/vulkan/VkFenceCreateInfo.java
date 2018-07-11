@@ -22,7 +22,7 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <ul>
  * <li>{@code sType} <b>must</b> be {@link VK10#VK_STRUCTURE_TYPE_FENCE_CREATE_INFO STRUCTURE_TYPE_FENCE_CREATE_INFO}</li>
- * <li>Each {@code pNext} member of any structure (including this one) in the {@code pNext} chain <b>must</b> be either {@code NULL} or a pointer to a valid instance of {@link VkExportFenceCreateInfo} or {@link VkExportFenceWin32HandleInfoKHR}</li>
+ * <li>Each {@code pNext} member of any structure (including this one) in the {@code pNext} chain <b>must</b> be either {@code NULL} or a pointer to a valid instance of {@link VkExportFenceCreateInfoKHR} or {@link VkExportFenceWin32HandleInfoKHR}</li>
  * <li>Each {@code sType} member in the {@code pNext} chain <b>must</b> be unique</li>
  * <li>{@code flags} <b>must</b> be a valid combination of {@code VkFenceCreateFlagBits} values</li>
  * </ul>
@@ -41,19 +41,18 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct VkFenceCreateInfo {
  *     VkStructureType sType;
- *     void const * pNext;
+ *     const void * pNext;
  *     VkFenceCreateFlags flags;
- * }</code></pre>
+ * }</pre></code>
  */
 public class VkFenceCreateInfo extends Struct implements NativeResource {
 
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */
@@ -98,7 +97,7 @@ public class VkFenceCreateInfo extends Struct implements NativeResource {
     @NativeType("VkStructureType")
     public int sType() { return nsType(address()); }
     /** Returns the value of the {@code pNext} field. */
-    @NativeType("void const *")
+    @NativeType("const void *")
     public long pNext() { return npNext(address()); }
     /** Returns the value of the {@code flags} field. */
     @NativeType("VkFenceCreateFlags")
@@ -107,7 +106,7 @@ public class VkFenceCreateInfo extends Struct implements NativeResource {
     /** Sets the specified value to the {@code sType} field. */
     public VkFenceCreateInfo sType(@NativeType("VkStructureType") int value) { nsType(address(), value); return this; }
     /** Sets the specified value to the {@code pNext} field. */
-    public VkFenceCreateInfo pNext(@NativeType("void const *") long value) { npNext(address(), value); return this; }
+    public VkFenceCreateInfo pNext(@NativeType("const void *") long value) { npNext(address(), value); return this; }
     /** Sets the specified value to the {@code flags} field. */
     public VkFenceCreateInfo flags(@NativeType("VkFenceCreateFlags") int value) { nflags(address(), value); return this; }
 
@@ -341,7 +340,7 @@ public class VkFenceCreateInfo extends Struct implements NativeResource {
         @NativeType("VkStructureType")
         public int sType() { return VkFenceCreateInfo.nsType(address()); }
         /** Returns the value of the {@code pNext} field. */
-        @NativeType("void const *")
+        @NativeType("const void *")
         public long pNext() { return VkFenceCreateInfo.npNext(address()); }
         /** Returns the value of the {@code flags} field. */
         @NativeType("VkFenceCreateFlags")
@@ -350,7 +349,7 @@ public class VkFenceCreateInfo extends Struct implements NativeResource {
         /** Sets the specified value to the {@code sType} field. */
         public VkFenceCreateInfo.Buffer sType(@NativeType("VkStructureType") int value) { VkFenceCreateInfo.nsType(address(), value); return this; }
         /** Sets the specified value to the {@code pNext} field. */
-        public VkFenceCreateInfo.Buffer pNext(@NativeType("void const *") long value) { VkFenceCreateInfo.npNext(address(), value); return this; }
+        public VkFenceCreateInfo.Buffer pNext(@NativeType("const void *") long value) { VkFenceCreateInfo.npNext(address(), value); return this; }
         /** Sets the specified value to the {@code flags} field. */
         public VkFenceCreateInfo.Buffer flags(@NativeType("VkFenceCreateFlags") int value) { VkFenceCreateInfo.nflags(address(), value); return this; }
 

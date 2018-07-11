@@ -14,18 +14,18 @@ import static org.lwjgl.system.dyncall.DynCallback.*;
  * 
  * <h3>Type</h3>
  * 
- * <pre><code>
- * void * (*) (
+ * <code><pre>
+ * void* (*) (
  *     bgfx_allocator_interface_t *_this,
  *     void *_ptr,
  *     size_t _size,
  *     size_t _align,
  *     char *_file,
  *     uint32_t _line
- * )</code></pre>
+ * )</pre></code>
  */
 @FunctionalInterface
-@NativeType("void * (*) (bgfx_allocator_interface_t *, void *, size_t, size_t, char *, uint32_t)")
+@NativeType("void* (*) (bgfx_allocator_interface_t *, void *, size_t, size_t, char *, uint32_t)")
 public interface BGFXReallocCallbackI extends CallbackI.P {
 
     String SIGNATURE = "(pppppi)p";

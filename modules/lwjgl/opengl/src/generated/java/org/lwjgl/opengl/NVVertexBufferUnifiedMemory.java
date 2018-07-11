@@ -143,7 +143,7 @@ public class NVVertexBufferUnifiedMemory {
         }
     }
 
-    /** Array version of: {@link #glGetIntegerui64i_vNV GetIntegerui64i_vNV} */
+    /** register Array version of: {@link #glGetIntegerui64i_vNV GetIntegerui64i_vNV} */
     public static void glGetIntegerui64i_vNV(@NativeType("GLenum") int value, @NativeType("GLuint") int index, @NativeType("GLuint64EXT *") long[] result) {
         long __functionAddress = GL.getICD().glGetIntegerui64i_vNV;
         if (CHECKS) {

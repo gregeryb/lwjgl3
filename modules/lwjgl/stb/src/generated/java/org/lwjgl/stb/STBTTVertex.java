@@ -20,7 +20,7 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct stbtt_vertex {
  *     stbtt_vertex_type x;
  *     stbtt_vertex_type y;
@@ -29,7 +29,7 @@ import static org.lwjgl.system.MemoryStack.*;
  *     stbtt_vertex_type cx1;
  *     stbtt_vertex_type cy1;
  *     unsigned char type;
- * }</code></pre>
+ * }</pre></code>
  */
 @NativeType("struct stbtt_vertex")
 public class STBTTVertex extends Struct implements NativeResource {
@@ -37,7 +37,6 @@ public class STBTTVertex extends Struct implements NativeResource {
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */

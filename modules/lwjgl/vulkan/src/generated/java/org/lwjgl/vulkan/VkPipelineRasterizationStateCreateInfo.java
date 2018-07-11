@@ -66,10 +66,10 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct VkPipelineRasterizationStateCreateInfo {
  *     VkStructureType sType;
- *     void const * pNext;
+ *     const void * pNext;
  *     VkPipelineRasterizationStateCreateFlags flags;
  *     VkBool32 depthClampEnable;
  *     VkBool32 rasterizerDiscardEnable;
@@ -81,14 +81,13 @@ import static org.lwjgl.system.MemoryStack.*;
  *     float depthBiasClamp;
  *     float depthBiasSlopeFactor;
  *     float lineWidth;
- * }</code></pre>
+ * }</pre></code>
  */
 public class VkPipelineRasterizationStateCreateInfo extends Struct implements NativeResource {
 
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */
@@ -163,7 +162,7 @@ public class VkPipelineRasterizationStateCreateInfo extends Struct implements Na
     @NativeType("VkStructureType")
     public int sType() { return nsType(address()); }
     /** Returns the value of the {@code pNext} field. */
-    @NativeType("void const *")
+    @NativeType("const void *")
     public long pNext() { return npNext(address()); }
     /** Returns the value of the {@code flags} field. */
     @NativeType("VkPipelineRasterizationStateCreateFlags")
@@ -198,7 +197,7 @@ public class VkPipelineRasterizationStateCreateInfo extends Struct implements Na
     /** Sets the specified value to the {@code sType} field. */
     public VkPipelineRasterizationStateCreateInfo sType(@NativeType("VkStructureType") int value) { nsType(address(), value); return this; }
     /** Sets the specified value to the {@code pNext} field. */
-    public VkPipelineRasterizationStateCreateInfo pNext(@NativeType("void const *") long value) { npNext(address(), value); return this; }
+    public VkPipelineRasterizationStateCreateInfo pNext(@NativeType("const void *") long value) { npNext(address(), value); return this; }
     /** Sets the specified value to the {@code flags} field. */
     public VkPipelineRasterizationStateCreateInfo flags(@NativeType("VkPipelineRasterizationStateCreateFlags") int value) { nflags(address(), value); return this; }
     /** Sets the specified value to the {@code depthClampEnable} field. */
@@ -512,7 +511,7 @@ public class VkPipelineRasterizationStateCreateInfo extends Struct implements Na
         @NativeType("VkStructureType")
         public int sType() { return VkPipelineRasterizationStateCreateInfo.nsType(address()); }
         /** Returns the value of the {@code pNext} field. */
-        @NativeType("void const *")
+        @NativeType("const void *")
         public long pNext() { return VkPipelineRasterizationStateCreateInfo.npNext(address()); }
         /** Returns the value of the {@code flags} field. */
         @NativeType("VkPipelineRasterizationStateCreateFlags")
@@ -547,7 +546,7 @@ public class VkPipelineRasterizationStateCreateInfo extends Struct implements Na
         /** Sets the specified value to the {@code sType} field. */
         public VkPipelineRasterizationStateCreateInfo.Buffer sType(@NativeType("VkStructureType") int value) { VkPipelineRasterizationStateCreateInfo.nsType(address(), value); return this; }
         /** Sets the specified value to the {@code pNext} field. */
-        public VkPipelineRasterizationStateCreateInfo.Buffer pNext(@NativeType("void const *") long value) { VkPipelineRasterizationStateCreateInfo.npNext(address(), value); return this; }
+        public VkPipelineRasterizationStateCreateInfo.Buffer pNext(@NativeType("const void *") long value) { VkPipelineRasterizationStateCreateInfo.npNext(address(), value); return this; }
         /** Sets the specified value to the {@code flags} field. */
         public VkPipelineRasterizationStateCreateInfo.Buffer flags(@NativeType("VkPipelineRasterizationStateCreateFlags") int value) { VkPipelineRasterizationStateCreateInfo.nflags(address(), value); return this; }
         /** Sets the specified value to the {@code depthClampEnable} field. */

@@ -35,19 +35,18 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct SECURITY_ATTRIBUTES {
  *     DWORD nLength;
  *     LPVOID lpSecurityDescriptor;
  *     BOOL bInheritHandle;
- * }</code></pre>
+ * }</pre></code>
  */
 public class SECURITY_ATTRIBUTES extends Struct implements NativeResource {
 
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */

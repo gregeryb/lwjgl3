@@ -46,20 +46,19 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct VkIndirectCommandsLayoutTokenNVX {
  *     VkIndirectCommandsTokenTypeNVX tokenType;
  *     uint32_t bindingUnit;
  *     uint32_t dynamicCount;
  *     uint32_t divisor;
- * }</code></pre>
+ * }</pre></code>
  */
 public class VkIndirectCommandsLayoutTokenNVX extends Struct implements NativeResource {
 
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */

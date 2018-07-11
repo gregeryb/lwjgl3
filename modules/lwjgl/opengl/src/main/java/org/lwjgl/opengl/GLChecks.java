@@ -4,6 +4,8 @@
  */
 package org.lwjgl.opengl;
 
+import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL30.*;
 import static org.lwjgl.opengl.GL41.*;
 import static org.lwjgl.opengl.NVGPUShader5.*;
 import static org.lwjgl.system.APIUtil.*;

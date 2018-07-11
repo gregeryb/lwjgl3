@@ -14,12 +14,12 @@ import static org.lwjgl.system.dyncall.DynCallback.*;
  * 
  * <h3>Type</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * void (*) (
  *     nk_handle handle,
- *     char const *text,
+ *     const char *text,
  *     int len
- * )</code></pre>
+ * )</pre></code>
  */
 @FunctionalInterface
 @NativeType("nk_plugin_copy")
@@ -39,6 +39,6 @@ public interface NkPluginCopyI extends CallbackI.V {
         );
     }
 
-    void invoke(@NativeType("nk_handle") long handle, @NativeType("char const *") long text, int len);
+    void invoke(@NativeType("nk_handle") long handle, @NativeType("const char *") long text, int len);
 
 }

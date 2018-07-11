@@ -43,18 +43,18 @@ public class EXTMultiDrawIndirect {
 
     public static native void nglMultiDrawArraysIndirectEXT(int mode, long indirect, int drawcount, int stride);
 
-    public static void glMultiDrawArraysIndirectEXT(@NativeType("GLenum") int mode, @NativeType("void const *") ByteBuffer indirect, @NativeType("GLsizei") int drawcount, @NativeType("GLsizei") int stride) {
+    public static void glMultiDrawArraysIndirectEXT(@NativeType("GLenum") int mode, @NativeType("const void *") ByteBuffer indirect, @NativeType("GLsizei") int drawcount, @NativeType("GLsizei") int stride) {
         if (CHECKS) {
             check(indirect, drawcount * (stride == 0 ? (4 * 4) : stride));
         }
         nglMultiDrawArraysIndirectEXT(mode, memAddress(indirect), drawcount, stride);
     }
 
-    public static void glMultiDrawArraysIndirectEXT(@NativeType("GLenum") int mode, @NativeType("void const *") long indirect, @NativeType("GLsizei") int drawcount, @NativeType("GLsizei") int stride) {
+    public static void glMultiDrawArraysIndirectEXT(@NativeType("GLenum") int mode, @NativeType("const void *") long indirect, @NativeType("GLsizei") int drawcount, @NativeType("GLsizei") int stride) {
         nglMultiDrawArraysIndirectEXT(mode, indirect, drawcount, stride);
     }
 
-    public static void glMultiDrawArraysIndirectEXT(@NativeType("GLenum") int mode, @NativeType("void const *") IntBuffer indirect, @NativeType("GLsizei") int drawcount, @NativeType("GLsizei") int stride) {
+    public static void glMultiDrawArraysIndirectEXT(@NativeType("GLenum") int mode, @NativeType("const void *") IntBuffer indirect, @NativeType("GLsizei") int drawcount, @NativeType("GLsizei") int stride) {
         if (CHECKS) {
             check(indirect, (drawcount * (stride == 0 ? (4 * 4) : stride)) >> 2);
         }
@@ -65,26 +65,26 @@ public class EXTMultiDrawIndirect {
 
     public static native void nglMultiDrawElementsIndirectEXT(int mode, int type, long indirect, int drawcount, int stride);
 
-    public static void glMultiDrawElementsIndirectEXT(@NativeType("GLenum") int mode, @NativeType("GLenum") int type, @NativeType("void const *") ByteBuffer indirect, @NativeType("GLsizei") int drawcount, @NativeType("GLsizei") int stride) {
+    public static void glMultiDrawElementsIndirectEXT(@NativeType("GLenum") int mode, @NativeType("GLenum") int type, @NativeType("const void *") ByteBuffer indirect, @NativeType("GLsizei") int drawcount, @NativeType("GLsizei") int stride) {
         if (CHECKS) {
             check(indirect, drawcount * (stride == 0 ? (5 * 4) : stride));
         }
         nglMultiDrawElementsIndirectEXT(mode, type, memAddress(indirect), drawcount, stride);
     }
 
-    public static void glMultiDrawElementsIndirectEXT(@NativeType("GLenum") int mode, @NativeType("GLenum") int type, @NativeType("void const *") long indirect, @NativeType("GLsizei") int drawcount, @NativeType("GLsizei") int stride) {
+    public static void glMultiDrawElementsIndirectEXT(@NativeType("GLenum") int mode, @NativeType("GLenum") int type, @NativeType("const void *") long indirect, @NativeType("GLsizei") int drawcount, @NativeType("GLsizei") int stride) {
         nglMultiDrawElementsIndirectEXT(mode, type, indirect, drawcount, stride);
     }
 
-    public static void glMultiDrawElementsIndirectEXT(@NativeType("GLenum") int mode, @NativeType("GLenum") int type, @NativeType("void const *") IntBuffer indirect, @NativeType("GLsizei") int drawcount, @NativeType("GLsizei") int stride) {
+    public static void glMultiDrawElementsIndirectEXT(@NativeType("GLenum") int mode, @NativeType("GLenum") int type, @NativeType("const void *") IntBuffer indirect, @NativeType("GLsizei") int drawcount, @NativeType("GLsizei") int stride) {
         if (CHECKS) {
             check(indirect, (drawcount * (stride == 0 ? (5 * 4) : stride)) >> 2);
         }
         nglMultiDrawElementsIndirectEXT(mode, type, memAddress(indirect), drawcount, stride);
     }
 
-    /** Array version of: {@link #glMultiDrawArraysIndirectEXT MultiDrawArraysIndirectEXT} */
-    public static void glMultiDrawArraysIndirectEXT(@NativeType("GLenum") int mode, @NativeType("void const *") int[] indirect, @NativeType("GLsizei") int drawcount, @NativeType("GLsizei") int stride) {
+    /** register Array version of: {@link #glMultiDrawArraysIndirectEXT MultiDrawArraysIndirectEXT} */
+    public static void glMultiDrawArraysIndirectEXT(@NativeType("GLenum") int mode, @NativeType("const void *") int[] indirect, @NativeType("GLsizei") int drawcount, @NativeType("GLsizei") int stride) {
         long __functionAddress = GLES.getICD().glMultiDrawArraysIndirectEXT;
         if (CHECKS) {
             check(__functionAddress);
@@ -93,8 +93,8 @@ public class EXTMultiDrawIndirect {
         callPV(__functionAddress, mode, indirect, drawcount, stride);
     }
 
-    /** Array version of: {@link #glMultiDrawElementsIndirectEXT MultiDrawElementsIndirectEXT} */
-    public static void glMultiDrawElementsIndirectEXT(@NativeType("GLenum") int mode, @NativeType("GLenum") int type, @NativeType("void const *") int[] indirect, @NativeType("GLsizei") int drawcount, @NativeType("GLsizei") int stride) {
+    /** register Array version of: {@link #glMultiDrawElementsIndirectEXT MultiDrawElementsIndirectEXT} */
+    public static void glMultiDrawElementsIndirectEXT(@NativeType("GLenum") int mode, @NativeType("GLenum") int type, @NativeType("const void *") int[] indirect, @NativeType("GLsizei") int drawcount, @NativeType("GLsizei") int stride) {
         long __functionAddress = GLES.getICD().glMultiDrawElementsIndirectEXT;
         if (CHECKS) {
             check(__functionAddress);

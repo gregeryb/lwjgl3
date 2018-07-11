@@ -26,10 +26,6 @@ import static org.lwjgl.system.MemoryStack.*;
  * <li>{@code dstBinding} <b>must</b> be a valid binding within {@code dstSet}</li>
  * <li>The sum of {@code dstArrayElement} and {@code descriptorCount} <b>must</b> be less than or equal to the number of array elements in the descriptor set binding specified by {@code dstBinding}, and all applicable consecutive bindings, as described by <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-updates-consecutive">the “consecutive binding updates” section</a></li>
  * <li>If {@code srcSet} is equal to {@code dstSet}, then the source and destination ranges of descriptors <b>must</b> not overlap, where the ranges <b>may</b> include array elements from consecutive bindings as described by <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-updates-consecutive">the “consecutive binding updates” section</a></li>
- * <li>If {@code srcSet}&#8217;s layout was created with the {@link EXTDescriptorIndexing#VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT} flag set, then {@code dstSet}&#8217;s layout <b>must</b> also have been created with the {@link EXTDescriptorIndexing#VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT} flag set</li>
- * <li>If {@code srcSet}&#8217;s layout was created without the {@link EXTDescriptorIndexing#VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT} flag set, then {@code dstSet}&#8217;s layout <b>must</b> also have been created without the {@link EXTDescriptorIndexing#VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT} flag set</li>
- * <li>If the descriptor pool from which {@code srcSet} was allocated was created with the {@link EXTDescriptorIndexing#VK_DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT_EXT DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT_EXT} flag set, then the descriptor pool from which {@code dstSet} was allocated <b>must</b> also have been created with the {@link EXTDescriptorIndexing#VK_DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT_EXT DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT_EXT} flag set</li>
- * <li>If the descriptor pool from which {@code srcSet} was allocated was created without the {@link EXTDescriptorIndexing#VK_DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT_EXT DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT_EXT} flag set, then the descriptor pool from which {@code dstSet} was allocated <b>must</b> also have been created without the {@link EXTDescriptorIndexing#VK_DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT_EXT DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT_EXT} flag set</li>
  * </ul>
  * 
  * <h5>Valid Usage (Implicit)</h5>
@@ -62,10 +58,10 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct VkCopyDescriptorSet {
  *     VkStructureType sType;
- *     void const * pNext;
+ *     const void * pNext;
  *     VkDescriptorSet srcSet;
  *     uint32_t srcBinding;
  *     uint32_t srcArrayElement;
@@ -73,14 +69,13 @@ import static org.lwjgl.system.MemoryStack.*;
  *     uint32_t dstBinding;
  *     uint32_t dstArrayElement;
  *     uint32_t descriptorCount;
- * }</code></pre>
+ * }</pre></code>
  */
 public class VkCopyDescriptorSet extends Struct implements NativeResource {
 
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */
@@ -143,7 +138,7 @@ public class VkCopyDescriptorSet extends Struct implements NativeResource {
     @NativeType("VkStructureType")
     public int sType() { return nsType(address()); }
     /** Returns the value of the {@code pNext} field. */
-    @NativeType("void const *")
+    @NativeType("const void *")
     public long pNext() { return npNext(address()); }
     /** Returns the value of the {@code srcSet} field. */
     @NativeType("VkDescriptorSet")
@@ -170,7 +165,7 @@ public class VkCopyDescriptorSet extends Struct implements NativeResource {
     /** Sets the specified value to the {@code sType} field. */
     public VkCopyDescriptorSet sType(@NativeType("VkStructureType") int value) { nsType(address(), value); return this; }
     /** Sets the specified value to the {@code pNext} field. */
-    public VkCopyDescriptorSet pNext(@NativeType("void const *") long value) { npNext(address(), value); return this; }
+    public VkCopyDescriptorSet pNext(@NativeType("const void *") long value) { npNext(address(), value); return this; }
     /** Sets the specified value to the {@code srcSet} field. */
     public VkCopyDescriptorSet srcSet(@NativeType("VkDescriptorSet") long value) { nsrcSet(address(), value); return this; }
     /** Sets the specified value to the {@code srcBinding} field. */
@@ -452,7 +447,7 @@ public class VkCopyDescriptorSet extends Struct implements NativeResource {
         @NativeType("VkStructureType")
         public int sType() { return VkCopyDescriptorSet.nsType(address()); }
         /** Returns the value of the {@code pNext} field. */
-        @NativeType("void const *")
+        @NativeType("const void *")
         public long pNext() { return VkCopyDescriptorSet.npNext(address()); }
         /** Returns the value of the {@code srcSet} field. */
         @NativeType("VkDescriptorSet")
@@ -479,7 +474,7 @@ public class VkCopyDescriptorSet extends Struct implements NativeResource {
         /** Sets the specified value to the {@code sType} field. */
         public VkCopyDescriptorSet.Buffer sType(@NativeType("VkStructureType") int value) { VkCopyDescriptorSet.nsType(address(), value); return this; }
         /** Sets the specified value to the {@code pNext} field. */
-        public VkCopyDescriptorSet.Buffer pNext(@NativeType("void const *") long value) { VkCopyDescriptorSet.npNext(address(), value); return this; }
+        public VkCopyDescriptorSet.Buffer pNext(@NativeType("const void *") long value) { VkCopyDescriptorSet.npNext(address(), value); return this; }
         /** Sets the specified value to the {@code srcSet} field. */
         public VkCopyDescriptorSet.Buffer srcSet(@NativeType("VkDescriptorSet") long value) { VkCopyDescriptorSet.nsrcSet(address(), value); return this; }
         /** Sets the specified value to the {@code srcBinding} field. */

@@ -13,7 +13,9 @@ import java.nio.*;
 import java.util.*;
 
 import static java.lang.Math.*;
-import static org.lwjgl.opengl.GL32C.*;
+import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL30.*;
+import static org.lwjgl.opengl.GL32.*;
 import static org.lwjgl.opengl.GLX.*;
 import static org.lwjgl.opengl.GLX11.*;
 import static org.lwjgl.opengl.WGL.*;
@@ -205,7 +207,6 @@ public final class GL {
         }
 
         GL.functionProvider = functionProvider;
-        ThreadLocalUtil.setFunctionMissingAddresses(GLCapabilities.class, 3);
     }
 
     /** Unloads the OpenGL native library. */
@@ -213,8 +214,6 @@ public final class GL {
         if (functionProvider == null) {
             return;
         }
-
-        ThreadLocalUtil.setFunctionMissingAddresses(null, 3);
 
         capabilitiesWGL = null;
         capabilitiesGLX = null;
@@ -697,7 +696,7 @@ public final class GL {
         public void set(@Nullable GLCapabilities caps) {
             if (tempCaps == null) {
                 tempCaps = caps;
-            } else if (caps != null && caps != tempCaps && ThreadLocalUtil.areCapabilitiesDifferent(tempCaps.addresses, caps.addresses)) {
+            } else if (caps != null && caps != tempCaps && !ThreadLocalUtil.compareCapabilities(tempCaps.addresses, caps.addresses)) {
                 apiLog("[WARNING] Incompatible context detected. Falling back to thread-local lookup for GL contexts.");
                 icd = GL::getCapabilities; // fall back to thread/process lookup
             }

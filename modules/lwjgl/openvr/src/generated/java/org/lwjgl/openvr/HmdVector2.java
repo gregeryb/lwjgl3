@@ -19,10 +19,10 @@ import static org.lwjgl.system.MemoryStack.*;
 /**
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct HmdVector2_t {
  *     float v[2];
- * }</code></pre>
+ * }</pre></code>
  */
 @NativeType("struct HmdVector2_t")
 public class HmdVector2 extends Struct implements NativeResource {
@@ -30,7 +30,6 @@ public class HmdVector2 extends Struct implements NativeResource {
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */
@@ -233,7 +232,8 @@ public class HmdVector2 extends Struct implements NativeResource {
     public static FloatBuffer nv(long struct) { return memFloatBuffer(struct + HmdVector2.V, 2); }
     /** Unsafe version of {@link #v(int) v}. */
     public static float nv(long struct, int index) {
-        return memGetFloat(struct + HmdVector2.V + check(index, 2) * 4);
+        if (CHECKS) { check(index, 2); }
+        return memGetFloat(struct + HmdVector2.V + index * 4);
     }
 
     /** Unsafe version of {@link #v(FloatBuffer) v}. */
@@ -243,7 +243,8 @@ public class HmdVector2 extends Struct implements NativeResource {
     }
     /** Unsafe version of {@link #v(int, float) v}. */
     public static void nv(long struct, int index, float value) {
-        memPutFloat(struct + HmdVector2.V + check(index, 2) * 4, value);
+        if (CHECKS) { check(index, 2); }
+        memPutFloat(struct + HmdVector2.V + index * 4, value);
     }
 
     // -----------------------------------

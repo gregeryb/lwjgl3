@@ -28,6 +28,7 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <ul>
  * <li>{@code sType} <b>must</b> be {@link EXTConservativeRasterization#VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_CONSERVATIVE_STATE_CREATE_INFO_EXT STRUCTURE_TYPE_PIPELINE_RASTERIZATION_CONSERVATIVE_STATE_CREATE_INFO_EXT}</li>
+ * <li>{@code pNext} <b>must</b> be {@code NULL}</li>
  * <li>{@code flags} <b>must</b> be 0</li>
  * <li>{@code conservativeRasterizationMode} <b>must</b> be a valid {@code VkConservativeRasterizationModeEXT} value</li>
  * </ul>
@@ -44,21 +45,20 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct VkPipelineRasterizationConservativeStateCreateInfoEXT {
  *     VkStructureType sType;
- *     void const * pNext;
+ *     const void * pNext;
  *     VkPipelineRasterizationConservativeStateCreateFlagsEXT flags;
  *     VkConservativeRasterizationModeEXT conservativeRasterizationMode;
  *     float extraPrimitiveOverestimationSize;
- * }</code></pre>
+ * }</pre></code>
  */
 public class VkPipelineRasterizationConservativeStateCreateInfoEXT extends Struct implements NativeResource {
 
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */
@@ -109,7 +109,7 @@ public class VkPipelineRasterizationConservativeStateCreateInfoEXT extends Struc
     @NativeType("VkStructureType")
     public int sType() { return nsType(address()); }
     /** Returns the value of the {@code pNext} field. */
-    @NativeType("void const *")
+    @NativeType("const void *")
     public long pNext() { return npNext(address()); }
     /** Returns the value of the {@code flags} field. */
     @NativeType("VkPipelineRasterizationConservativeStateCreateFlagsEXT")
@@ -123,7 +123,7 @@ public class VkPipelineRasterizationConservativeStateCreateInfoEXT extends Struc
     /** Sets the specified value to the {@code sType} field. */
     public VkPipelineRasterizationConservativeStateCreateInfoEXT sType(@NativeType("VkStructureType") int value) { nsType(address(), value); return this; }
     /** Sets the specified value to the {@code pNext} field. */
-    public VkPipelineRasterizationConservativeStateCreateInfoEXT pNext(@NativeType("void const *") long value) { npNext(address(), value); return this; }
+    public VkPipelineRasterizationConservativeStateCreateInfoEXT pNext(@NativeType("const void *") long value) { npNext(address(), value); return this; }
     /** Sets the specified value to the {@code flags} field. */
     public VkPipelineRasterizationConservativeStateCreateInfoEXT flags(@NativeType("VkPipelineRasterizationConservativeStateCreateFlagsEXT") int value) { nflags(address(), value); return this; }
     /** Sets the specified value to the {@code conservativeRasterizationMode} field. */
@@ -373,7 +373,7 @@ public class VkPipelineRasterizationConservativeStateCreateInfoEXT extends Struc
         @NativeType("VkStructureType")
         public int sType() { return VkPipelineRasterizationConservativeStateCreateInfoEXT.nsType(address()); }
         /** Returns the value of the {@code pNext} field. */
-        @NativeType("void const *")
+        @NativeType("const void *")
         public long pNext() { return VkPipelineRasterizationConservativeStateCreateInfoEXT.npNext(address()); }
         /** Returns the value of the {@code flags} field. */
         @NativeType("VkPipelineRasterizationConservativeStateCreateFlagsEXT")
@@ -387,7 +387,7 @@ public class VkPipelineRasterizationConservativeStateCreateInfoEXT extends Struc
         /** Sets the specified value to the {@code sType} field. */
         public VkPipelineRasterizationConservativeStateCreateInfoEXT.Buffer sType(@NativeType("VkStructureType") int value) { VkPipelineRasterizationConservativeStateCreateInfoEXT.nsType(address(), value); return this; }
         /** Sets the specified value to the {@code pNext} field. */
-        public VkPipelineRasterizationConservativeStateCreateInfoEXT.Buffer pNext(@NativeType("void const *") long value) { VkPipelineRasterizationConservativeStateCreateInfoEXT.npNext(address(), value); return this; }
+        public VkPipelineRasterizationConservativeStateCreateInfoEXT.Buffer pNext(@NativeType("const void *") long value) { VkPipelineRasterizationConservativeStateCreateInfoEXT.npNext(address(), value); return this; }
         /** Sets the specified value to the {@code flags} field. */
         public VkPipelineRasterizationConservativeStateCreateInfoEXT.Buffer flags(@NativeType("VkPipelineRasterizationConservativeStateCreateFlagsEXT") int value) { VkPipelineRasterizationConservativeStateCreateInfoEXT.nflags(address(), value); return this; }
         /** Sets the specified value to the {@code conservativeRasterizationMode} field. */

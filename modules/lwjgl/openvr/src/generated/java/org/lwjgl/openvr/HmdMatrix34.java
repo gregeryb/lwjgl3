@@ -19,10 +19,10 @@ import static org.lwjgl.system.MemoryStack.*;
 /**
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct HmdMatrix34_t {
  *     float m[12];
- * }</code></pre>
+ * }</pre></code>
  */
 @NativeType("struct HmdMatrix34_t")
 public class HmdMatrix34 extends Struct implements NativeResource {
@@ -30,7 +30,6 @@ public class HmdMatrix34 extends Struct implements NativeResource {
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */
@@ -233,7 +232,8 @@ public class HmdMatrix34 extends Struct implements NativeResource {
     public static FloatBuffer nm(long struct) { return memFloatBuffer(struct + HmdMatrix34.M, 12); }
     /** Unsafe version of {@link #m(int) m}. */
     public static float nm(long struct, int index) {
-        return memGetFloat(struct + HmdMatrix34.M + check(index, 12) * 4);
+        if (CHECKS) { check(index, 12); }
+        return memGetFloat(struct + HmdMatrix34.M + index * 4);
     }
 
     /** Unsafe version of {@link #m(FloatBuffer) m}. */
@@ -243,7 +243,8 @@ public class HmdMatrix34 extends Struct implements NativeResource {
     }
     /** Unsafe version of {@link #m(int, float) m}. */
     public static void nm(long struct, int index, float value) {
-        memPutFloat(struct + HmdMatrix34.M + check(index, 12) * 4, value);
+        if (CHECKS) { check(index, 12); }
+        memPutFloat(struct + HmdMatrix34.M + index * 4, value);
     }
 
     // -----------------------------------

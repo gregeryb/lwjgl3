@@ -27,10 +27,10 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct bgfx_allocator_vtbl_t {
- *     void * (*{@link BGFXReallocCallbackI realloc}) (bgfx_allocator_interface_t *_this, void *_ptr, size_t _size, size_t _align, char *_file, uint32_t _line);
- * }</code></pre>
+ *     void* (*{@link BGFXReallocCallbackI realloc}) (bgfx_allocator_interface_t *_this, void *_ptr, size_t _size, size_t _align, char *_file, uint32_t _line);
+ * }</pre></code>
  */
 @NativeType("struct bgfx_allocator_vtbl_t")
 public class BGFXAllocatorVtbl extends Struct implements NativeResource {
@@ -38,7 +38,6 @@ public class BGFXAllocatorVtbl extends Struct implements NativeResource {
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */
@@ -74,11 +73,11 @@ public class BGFXAllocatorVtbl extends Struct implements NativeResource {
     public int sizeof() { return SIZEOF; }
 
     /** Returns the value of the {@code realloc} field. */
-    @NativeType("void * (*) (bgfx_allocator_interface_t *, void *, size_t, size_t, char *, uint32_t)")
+    @NativeType("void* (*) (bgfx_allocator_interface_t *, void *, size_t, size_t, char *, uint32_t)")
     public BGFXReallocCallback realloc() { return nrealloc(address()); }
 
     /** Sets the specified value to the {@code realloc} field. */
-    public BGFXAllocatorVtbl realloc(@NativeType("void * (*) (bgfx_allocator_interface_t *, void *, size_t, size_t, char *, uint32_t)") BGFXReallocCallbackI value) { nrealloc(address(), value); return this; }
+    public BGFXAllocatorVtbl realloc(@NativeType("void* (*) (bgfx_allocator_interface_t *, void *, size_t, size_t, char *, uint32_t)") BGFXReallocCallbackI value) { nrealloc(address(), value); return this; }
 
     /**
      * Copies the specified struct data to this struct.
@@ -307,11 +306,11 @@ public class BGFXAllocatorVtbl extends Struct implements NativeResource {
         }
 
         /** Returns the value of the {@code realloc} field. */
-        @NativeType("void * (*) (bgfx_allocator_interface_t *, void *, size_t, size_t, char *, uint32_t)")
+        @NativeType("void* (*) (bgfx_allocator_interface_t *, void *, size_t, size_t, char *, uint32_t)")
         public BGFXReallocCallback realloc() { return BGFXAllocatorVtbl.nrealloc(address()); }
 
         /** Sets the specified value to the {@code realloc} field. */
-        public BGFXAllocatorVtbl.Buffer realloc(@NativeType("void * (*) (bgfx_allocator_interface_t *, void *, size_t, size_t, char *, uint32_t)") BGFXReallocCallbackI value) { BGFXAllocatorVtbl.nrealloc(address(), value); return this; }
+        public BGFXAllocatorVtbl.Buffer realloc(@NativeType("void* (*) (bgfx_allocator_interface_t *, void *, size_t, size_t, char *, uint32_t)") BGFXReallocCallbackI value) { BGFXAllocatorVtbl.nrealloc(address(), value); return this; }
 
     }
 

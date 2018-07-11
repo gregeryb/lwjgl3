@@ -35,7 +35,7 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct aiAnimation {
  *     {@link AIString struct aiString} mName;
  *     double mDuration;
@@ -44,7 +44,7 @@ import static org.lwjgl.system.MemoryStack.*;
  *     {@link AINodeAnim struct aiNodeAnim} ** mChannels;
  *     unsigned int mNumMeshChannels;
  *     {@link AIMeshAnim struct aiMeshAnim} ** mMeshChannels;
- * }</code></pre>
+ * }</pre></code>
  */
 @NativeType("struct aiAnimation")
 public class AIAnimation extends Struct implements NativeResource {
@@ -52,7 +52,6 @@ public class AIAnimation extends Struct implements NativeResource {
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */
@@ -108,8 +107,6 @@ public class AIAnimation extends Struct implements NativeResource {
     /** Returns a {@link AIString} view of the {@code mName} field. */
     @NativeType("struct aiString")
     public AIString mName() { return nmName(address()); }
-    /** Passes the {@code mName} field to the specified {@link java.util.function.Consumer Consumer}. */
-    public AIAnimation mName(java.util.function.Consumer<AIString> consumer) { consumer.accept(mName()); return this; }
     /** Returns the value of the {@code mDuration} field. */
     public double mDuration() { return nmDuration(address()); }
     /** Returns the value of the {@code mTicksPerSecond} field. */
@@ -409,8 +406,6 @@ public class AIAnimation extends Struct implements NativeResource {
         /** Returns a {@link AIString} view of the {@code mName} field. */
         @NativeType("struct aiString")
         public AIString mName() { return AIAnimation.nmName(address()); }
-        /** Passes the {@code mName} field to the specified {@link java.util.function.Consumer Consumer}. */
-        public AIAnimation.Buffer mName(java.util.function.Consumer<AIString> consumer) { consumer.accept(mName()); return this; }
         /** Returns the value of the {@code mDuration} field. */
         public double mDuration() { return AIAnimation.nmDuration(address()); }
         /** Returns the value of the {@code mTicksPerSecond} field. */

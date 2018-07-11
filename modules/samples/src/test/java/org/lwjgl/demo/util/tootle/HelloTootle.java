@@ -10,6 +10,7 @@ import org.lwjgl.assimp.*;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
 import org.lwjgl.system.*;
+import org.lwjgl.system.Platform;
 import org.lwjgl.util.par.*;
 
 import java.nio.*;
@@ -21,7 +22,13 @@ import static java.lang.Math.*;
 import static org.lwjgl.assimp.Assimp.*;
 import static org.lwjgl.glfw.Callbacks.*;
 import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.opengl.GL31C.*;
+import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL15.*;
+import static org.lwjgl.opengl.GL20.*;
+import static org.lwjgl.opengl.GL30.*;
+import static org.lwjgl.opengl.GL31.*;
+import static org.lwjgl.opengl.GL33.*;
+import static org.lwjgl.opengl.GL43.*;
 import static org.lwjgl.stb.STBEasyFont.*;
 import static org.lwjgl.system.MemoryStack.*;
 import static org.lwjgl.system.MemoryUtil.*;
@@ -120,15 +127,15 @@ public final class HelloTootle {
 
         glfwMakeContextCurrent(window);
         GLCapabilities caps = GL.createCapabilities();
-        if (!caps.OpenGL31) {
-            throw new IllegalStateException("OpenGL 3.1 is required to run this demo.");
+        if (!caps.OpenGL33) {
+            throw new IllegalStateException("OpenGL 3.3 is required to run this demo.");
         }
         debugCB = GLUtil.setupDebugMessageCallback();
         if (debugCB != null) {
             if (caps.OpenGL43) {
-                GL43.glDebugMessageControl(GL43.GL_DEBUG_SOURCE_API, GL43.GL_DEBUG_TYPE_OTHER, GL43.GL_DEBUG_SEVERITY_NOTIFICATION, (IntBuffer)null, false);
+                glDebugMessageControl(GL_DEBUG_SOURCE_API, GL_DEBUG_TYPE_OTHER, GL_DEBUG_SEVERITY_NOTIFICATION, (IntBuffer)null, false);
             } else if (caps.GL_KHR_debug) {
-                KHRDebug.glDebugMessageControl(KHRDebug.GL_DEBUG_SOURCE_API, KHRDebug.GL_DEBUG_TYPE_OTHER, KHRDebug.GL_DEBUG_SEVERITY_NOTIFICATION, (IntBuffer)null, false);
+                KHRDebug.glDebugMessageControl(GL_DEBUG_SOURCE_API, GL_DEBUG_TYPE_OTHER, GL_DEBUG_SEVERITY_NOTIFICATION, (IntBuffer)null, false);
             }
         }
 
@@ -416,8 +423,6 @@ public final class HelloTootle {
         glDeleteBuffers(vboMesh);
 
         glDeleteVertexArrays(vao);
-
-        GL.setCapabilities(null);
 
         glfwFreeCallbacks(window);
         glfwTerminate();
@@ -943,7 +948,7 @@ public final class HelloTootle {
                         null,
                         propertyStore
                     );
-                    nNFD_Free(pp.get(0));
+                    nNFDi_Free(pp.get(0));
 
                     if (scene != null) {
                         try {
@@ -1286,7 +1291,7 @@ public final class HelloTootle {
 
     static class PerfGraph {
         float[] values = new float[GRAPH_HISTORY_COUNT];
-        int     head;
+        int head;
 
         void update(float frameTime) {
             head = (head + 1) % GRAPH_HISTORY_COUNT;
@@ -1311,8 +1316,7 @@ public final class HelloTootle {
             ret;
 
         GPUTimer() {
-            GLCapabilities caps = GL.getCapabilities();
-            supported = caps.OpenGL33 || caps.GL_ARB_timer_query;
+            supported = GL.getCapabilities().GL_ARB_timer_query;
             if (supported) {
                 queries = BufferUtils.createIntBuffer(GPU_QUERY_COUNT);
                 glGenQueries(queries);
@@ -1325,7 +1329,7 @@ public final class HelloTootle {
             if (!supported) {
                 return;
             }
-            glBeginQuery(GL33C.GL_TIME_ELAPSED, queries.get(cur % GPU_QUERY_COUNT));
+            glBeginQuery(GL_TIME_ELAPSED, queries.get(cur % GPU_QUERY_COUNT));
             cur++;
         }
 
@@ -1334,7 +1338,7 @@ public final class HelloTootle {
                 return 0;
             }
 
-            glEndQuery(GL33C.GL_TIME_ELAPSED);
+            glEndQuery(GL_TIME_ELAPSED);
 
             int n = 0;
             try (MemoryStack stack = stackPush()) {
@@ -1344,7 +1348,7 @@ public final class HelloTootle {
                     glGetQueryObjectiv(queries.get(ret % GPU_QUERY_COUNT), GL_QUERY_RESULT_AVAILABLE, available);
                     if (available.get(0) != 0) {
                         LongBuffer timeElapsed = stack.mallocLong(1);
-                        GL33C.glGetQueryObjectui64v(queries.get(ret % GPU_QUERY_COUNT), GL_QUERY_RESULT, timeElapsed);
+                        glGetQueryObjectui64v(queries.get(ret % GPU_QUERY_COUNT), GL_QUERY_RESULT, timeElapsed);
                         ret++;
                         if (n < maxTimes) {
                             times.put(n, (float)((double)timeElapsed.get(0) * 1e-9));

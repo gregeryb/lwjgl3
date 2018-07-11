@@ -14,7 +14,7 @@ import java.util.*;
 
 import static org.lwjgl.glfw.Callbacks.*;
 import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.opengl.GL11C.*;
+import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryStack.*;
 import static org.lwjgl.system.MemoryUtil.*;
 import static org.lwjgl.util.tinyfd.TinyFileDialogs.*;
@@ -111,9 +111,6 @@ public final class HelloTinyFD {
 
         tinyfd_messageBox("tinyfd_query", "", "ok", "info", true);
         System.out.println("tiny file dialogs " + tinyfd_version + " (" + tinyfd_response() + ")");
-        System.out.println();
-        System.out.println(tinyfd_needs);
-        System.out.println();
         System.out.println("Press 1 to launch a message dialog.");
         System.out.println("Press 2 to launch an input box fialog.");
         System.out.println("Press 3 to launch a file open dialog.");
@@ -126,8 +123,6 @@ public final class HelloTinyFD {
             glClear(GL_COLOR_BUFFER_BIT);
             glfwSwapBuffers(window);
         }
-
-        GL.setCapabilities(null);
 
         glfwFreeCallbacks(window);
         glfwDestroyWindow(window);

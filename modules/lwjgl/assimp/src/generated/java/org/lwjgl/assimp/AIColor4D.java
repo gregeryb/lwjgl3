@@ -29,13 +29,13 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct aiColor4D {
  *     float r;
  *     float g;
  *     float b;
  *     float a;
- * }</code></pre>
+ * }</pre></code>
  */
 @NativeType("struct aiColor4D")
 public class AIColor4D extends Struct implements NativeResource {
@@ -43,7 +43,6 @@ public class AIColor4D extends Struct implements NativeResource {
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */

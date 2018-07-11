@@ -51,31 +51,30 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <p>Specifying the exact framebuffer that the secondary command buffer will be executed with <b>may</b> result in better performance at command buffer execution time.</p>
  * </div></li>
- * <li>{@code occlusionQueryEnable} &ndash; specifies whether the command buffer <b>can</b> be executed while an occlusion query is active in the primary command buffer. If this is {@link VK10#VK_TRUE TRUE}, then this command buffer <b>can</b> be executed whether the primary command buffer has an occlusion query active or not. If this is {@link VK10#VK_FALSE FALSE}, then the primary command buffer <b>must</b> not have an occlusion query active.</li>
- * <li>{@code queryFlags} &ndash; specifies the query flags that <b>can</b> be used by an active occlusion query in the primary command buffer when this secondary command buffer is executed. If this value includes the {@link VK10#VK_QUERY_CONTROL_PRECISE_BIT QUERY_CONTROL_PRECISE_BIT} bit, then the active query <b>can</b> return boolean results or actual sample counts. If this bit is not set, then the active query <b>must</b> not use the {@link VK10#VK_QUERY_CONTROL_PRECISE_BIT QUERY_CONTROL_PRECISE_BIT} bit.</li>
+ * <li>{@code occlusionQueryEnable} &ndash; indicates whether the command buffer <b>can</b> be executed while an occlusion query is active in the primary command buffer. If this is {@link VK10#VK_TRUE TRUE}, then this command buffer <b>can</b> be executed whether the primary command buffer has an occlusion query active or not. If this is {@link VK10#VK_FALSE FALSE}, then the primary command buffer <b>must</b> not have an occlusion query active.</li>
+ * <li>{@code queryFlags} &ndash; indicates the query flags that <b>can</b> be used by an active occlusion query in the primary command buffer when this secondary command buffer is executed. If this value includes the {@link VK10#VK_QUERY_CONTROL_PRECISE_BIT QUERY_CONTROL_PRECISE_BIT} bit, then the active query <b>can</b> return boolean results or actual sample counts. If this bit is not set, then the active query <b>must</b> not use the {@link VK10#VK_QUERY_CONTROL_PRECISE_BIT QUERY_CONTROL_PRECISE_BIT} bit.</li>
  * <li>{@code pipelineStatistics} &ndash; a bitmask of {@code VkQueryPipelineStatisticFlagBits} specifying the set of pipeline statistics that <b>can</b> be counted by an active query in the primary command buffer when this secondary command buffer is executed. If this value includes a given bit, then this command buffer <b>can</b> be executed whether the primary command buffer has a pipeline statistics query active that includes this bit or not. If this value excludes a given bit, then the active pipeline statistics query <b>must</b> not be from a query pool that counts that statistic.</li>
  * </ul>
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct VkCommandBufferInheritanceInfo {
  *     VkStructureType sType;
- *     void const * pNext;
+ *     const void * pNext;
  *     VkRenderPass renderPass;
  *     uint32_t subpass;
  *     VkFramebuffer framebuffer;
  *     VkBool32 occlusionQueryEnable;
  *     VkQueryControlFlags queryFlags;
  *     VkQueryPipelineStatisticFlags pipelineStatistics;
- * }</code></pre>
+ * }</pre></code>
  */
 public class VkCommandBufferInheritanceInfo extends Struct implements NativeResource {
 
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */
@@ -135,7 +134,7 @@ public class VkCommandBufferInheritanceInfo extends Struct implements NativeReso
     @NativeType("VkStructureType")
     public int sType() { return nsType(address()); }
     /** Returns the value of the {@code pNext} field. */
-    @NativeType("void const *")
+    @NativeType("const void *")
     public long pNext() { return npNext(address()); }
     /** Returns the value of the {@code renderPass} field. */
     @NativeType("VkRenderPass")
@@ -159,7 +158,7 @@ public class VkCommandBufferInheritanceInfo extends Struct implements NativeReso
     /** Sets the specified value to the {@code sType} field. */
     public VkCommandBufferInheritanceInfo sType(@NativeType("VkStructureType") int value) { nsType(address(), value); return this; }
     /** Sets the specified value to the {@code pNext} field. */
-    public VkCommandBufferInheritanceInfo pNext(@NativeType("void const *") long value) { npNext(address(), value); return this; }
+    public VkCommandBufferInheritanceInfo pNext(@NativeType("const void *") long value) { npNext(address(), value); return this; }
     /** Sets the specified value to the {@code renderPass} field. */
     public VkCommandBufferInheritanceInfo renderPass(@NativeType("VkRenderPass") long value) { nrenderPass(address(), value); return this; }
     /** Sets the specified value to the {@code subpass} field. */
@@ -433,7 +432,7 @@ public class VkCommandBufferInheritanceInfo extends Struct implements NativeReso
         @NativeType("VkStructureType")
         public int sType() { return VkCommandBufferInheritanceInfo.nsType(address()); }
         /** Returns the value of the {@code pNext} field. */
-        @NativeType("void const *")
+        @NativeType("const void *")
         public long pNext() { return VkCommandBufferInheritanceInfo.npNext(address()); }
         /** Returns the value of the {@code renderPass} field. */
         @NativeType("VkRenderPass")
@@ -457,7 +456,7 @@ public class VkCommandBufferInheritanceInfo extends Struct implements NativeReso
         /** Sets the specified value to the {@code sType} field. */
         public VkCommandBufferInheritanceInfo.Buffer sType(@NativeType("VkStructureType") int value) { VkCommandBufferInheritanceInfo.nsType(address(), value); return this; }
         /** Sets the specified value to the {@code pNext} field. */
-        public VkCommandBufferInheritanceInfo.Buffer pNext(@NativeType("void const *") long value) { VkCommandBufferInheritanceInfo.npNext(address(), value); return this; }
+        public VkCommandBufferInheritanceInfo.Buffer pNext(@NativeType("const void *") long value) { VkCommandBufferInheritanceInfo.npNext(address(), value); return this; }
         /** Sets the specified value to the {@code renderPass} field. */
         public VkCommandBufferInheritanceInfo.Buffer renderPass(@NativeType("VkRenderPass") long value) { VkCommandBufferInheritanceInfo.nrenderPass(address(), value); return this; }
         /** Sets the specified value to the {@code subpass} field. */

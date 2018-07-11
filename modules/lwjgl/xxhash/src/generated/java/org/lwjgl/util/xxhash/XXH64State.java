@@ -21,7 +21,7 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct XXH64_state_t {
  *     long long total_len;
  *     long long v1;
@@ -31,7 +31,7 @@ import static org.lwjgl.system.MemoryStack.*;
  *     long long mem64[4];
  *     unsigned memsize;
  *     unsigned reserved[2];
- * }</code></pre>
+ * }</pre></code>
  */
 @NativeType("struct XXH64_state_t")
 public class XXH64State extends Struct implements NativeResource {
@@ -39,7 +39,6 @@ public class XXH64State extends Struct implements NativeResource {
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */
@@ -337,7 +336,8 @@ public class XXH64State extends Struct implements NativeResource {
     public static LongBuffer nmem64(long struct) { return memLongBuffer(struct + XXH64State.MEM64, 4); }
     /** Unsafe version of {@link #mem64(int) mem64}. */
     public static long nmem64(long struct, int index) {
-        return memGetLong(struct + XXH64State.MEM64 + check(index, 4) * 8);
+        if (CHECKS) { check(index, 4); }
+        return memGetLong(struct + XXH64State.MEM64 + index * 8);
     }
     /** Unsafe version of {@link #memsize}. */
     public static int nmemsize(long struct) { return memGetInt(struct + XXH64State.MEMSIZE); }
@@ -345,7 +345,8 @@ public class XXH64State extends Struct implements NativeResource {
     public static IntBuffer nreserved(long struct) { return memIntBuffer(struct + XXH64State.RESERVED, 2); }
     /** Unsafe version of {@link #reserved(int) reserved}. */
     public static int nreserved(long struct, int index) {
-        return memGetInt(struct + XXH64State.RESERVED + check(index, 2) * 4);
+        if (CHECKS) { check(index, 2); }
+        return memGetInt(struct + XXH64State.RESERVED + index * 4);
     }
 
     /** Unsafe version of {@link #total_len(long) total_len}. */
@@ -365,7 +366,8 @@ public class XXH64State extends Struct implements NativeResource {
     }
     /** Unsafe version of {@link #mem64(int, long) mem64}. */
     public static void nmem64(long struct, int index, long value) {
-        memPutLong(struct + XXH64State.MEM64 + check(index, 4) * 8, value);
+        if (CHECKS) { check(index, 4); }
+        memPutLong(struct + XXH64State.MEM64 + index * 8, value);
     }
     /** Unsafe version of {@link #memsize(int) memsize}. */
     public static void nmemsize(long struct, int value) { memPutInt(struct + XXH64State.MEMSIZE, value); }
@@ -376,7 +378,8 @@ public class XXH64State extends Struct implements NativeResource {
     }
     /** Unsafe version of {@link #reserved(int, int) reserved}. */
     public static void nreserved(long struct, int index, int value) {
-        memPutInt(struct + XXH64State.RESERVED + check(index, 2) * 4, value);
+        if (CHECKS) { check(index, 2); }
+        memPutInt(struct + XXH64State.RESERVED + index * 4, value);
     }
 
     // -----------------------------------

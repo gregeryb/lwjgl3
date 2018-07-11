@@ -27,11 +27,11 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct objc_method_description {
  *     SEL name;
  *     char * types;
- * }</code></pre>
+ * }</pre></code>
  */
 @NativeType("struct objc_method_description")
 public class ObjCMethodDescription extends Struct implements NativeResource {
@@ -39,7 +39,6 @@ public class ObjCMethodDescription extends Struct implements NativeResource {
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */

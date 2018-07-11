@@ -62,7 +62,7 @@ public class EXTDeviceEnumeration {
         return neglQueryDevicesEXT(remainingSafe(devices), memAddressSafe(devices), memAddress(num_devices)) != 0;
     }
 
-    /** Array version of: {@link #eglQueryDevicesEXT QueryDevicesEXT} */
+    /** register Array version of: {@link #eglQueryDevicesEXT QueryDevicesEXT} */
     @NativeType("EGLBoolean")
     public static boolean eglQueryDevicesEXT(@Nullable @NativeType("EGLDeviceEXT *") PointerBuffer devices, @NativeType("EGLint *") int[] num_devices) {
         long __functionAddress = EGL.getCapabilities().eglQueryDevicesEXT;

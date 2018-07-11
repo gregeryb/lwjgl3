@@ -65,7 +65,7 @@ public class KHRPartialUpdate {
         return neglSetDamageRegionKHR(dpy, surface, memAddressSafe(rects), remainingSafe(rects)) != 0;
     }
 
-    /** Array version of: {@link #eglSetDamageRegionKHR SetDamageRegionKHR} */
+    /** register Array version of: {@link #eglSetDamageRegionKHR SetDamageRegionKHR} */
     @NativeType("EGLBoolean")
     public static boolean eglSetDamageRegionKHR(@NativeType("EGLDisplay") long dpy, @NativeType("EGLSurface") long surface, @Nullable @NativeType("EGLint *") int[] rects) {
         long __functionAddress = EGL.getCapabilities().eglSetDamageRegionKHR;

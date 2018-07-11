@@ -16,18 +16,71 @@ import static org.lwjgl.system.MemoryUtil.*;
 import static org.lwjgl.system.MemoryStack.*;
 
 /**
- * See {@link VkImageViewUsageCreateInfo}.
+ * Specify the intended usage of an image view.
+ * 
+ * <h5>Description</h5>
+ * 
+ * <p>When this structure is chained to {@link VkImageViewCreateInfo} the {@code usage} field overrides the implicit {@code usage} parameter inherited from image creation time and its value is used instead for the purposes of determining the valid usage conditions of {@link VkImageViewCreateInfo}.</p>
+ * 
+ * <h5>Valid Usage</h5>
+ * 
+ * <ul>
+ * <li>{@code usage} <b>must</b> not include any set bits that were not set in the {@code usage} member of the {@link VkImageCreateInfo} structure used to create the image this image view is created from.</li>
+ * </ul>
+ * 
+ * <h5>Valid Usage (Implicit)</h5>
+ * 
+ * <ul>
+ * <li>{@code sType} <b>must</b> be {@link KHRMaintenance2#VK_STRUCTURE_TYPE_IMAGE_VIEW_USAGE_CREATE_INFO_KHR STRUCTURE_TYPE_IMAGE_VIEW_USAGE_CREATE_INFO_KHR}</li>
+ * <li>{@code pNext} <b>must</b> be {@code NULL}</li>
+ * <li>{@code usage} <b>must</b> be a valid combination of {@code VkImageUsageFlagBits} values</li>
+ * <li>{@code usage} <b>must</b> not be 0</li>
+ * </ul>
+ * 
+ * <h3>Member documentation</h3>
+ * 
+ * <ul>
+ * <li>{@code sType} &ndash; the type of this structure.</li>
+ * <li>{@code pNext} &ndash; {@code NULL} or a pointer to an extension-specific structure.</li>
+ * <li>{@code usage} &ndash; a bitmask describing the allowed usages of the image view. See {@code VkImageUsageFlagBits} for a description of the supported bits.</li>
+ * </ul>
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct VkImageViewUsageCreateInfoKHR {
  *     VkStructureType sType;
- *     void const * pNext;
+ *     const void * pNext;
  *     VkImageUsageFlags usage;
- * }</code></pre>
+ * }</pre></code>
  */
-public class VkImageViewUsageCreateInfoKHR extends VkImageViewUsageCreateInfo {
+public class VkImageViewUsageCreateInfoKHR extends Struct implements NativeResource {
+
+    /** The struct size in bytes. */
+    public static final int SIZEOF;
+
+    public static final int ALIGNOF;
+
+    /** The struct member offsets. */
+    public static final int
+        STYPE,
+        PNEXT,
+        USAGE;
+
+    static {
+        Layout layout = __struct(
+            __member(4),
+            __member(POINTER_SIZE),
+            __member(4)
+        );
+
+        SIZEOF = layout.getSize();
+        ALIGNOF = layout.getAlignment();
+
+        STYPE = layout.offsetof(0);
+        PNEXT = layout.offsetof(1);
+        USAGE = layout.offsetof(2);
+    }
 
     VkImageViewUsageCreateInfoKHR(long address, @Nullable ByteBuffer container) {
         super(address, container);
@@ -43,18 +96,27 @@ public class VkImageViewUsageCreateInfoKHR extends VkImageViewUsageCreateInfo {
         this(memAddress(container), __checkContainer(container, SIZEOF));
     }
 
-    /** Sets the specified value to the {@code sType} field. */
     @Override
+    public int sizeof() { return SIZEOF; }
+
+    /** Returns the value of the {@code sType} field. */
+    @NativeType("VkStructureType")
+    public int sType() { return nsType(address()); }
+    /** Returns the value of the {@code pNext} field. */
+    @NativeType("const void *")
+    public long pNext() { return npNext(address()); }
+    /** Returns the value of the {@code usage} field. */
+    @NativeType("VkImageUsageFlags")
+    public int usage() { return nusage(address()); }
+
+    /** Sets the specified value to the {@code sType} field. */
     public VkImageViewUsageCreateInfoKHR sType(@NativeType("VkStructureType") int value) { nsType(address(), value); return this; }
     /** Sets the specified value to the {@code pNext} field. */
-    @Override
-    public VkImageViewUsageCreateInfoKHR pNext(@NativeType("void const *") long value) { npNext(address(), value); return this; }
+    public VkImageViewUsageCreateInfoKHR pNext(@NativeType("const void *") long value) { npNext(address(), value); return this; }
     /** Sets the specified value to the {@code usage} field. */
-    @Override
     public VkImageViewUsageCreateInfoKHR usage(@NativeType("VkImageUsageFlags") int value) { nusage(address(), value); return this; }
 
     /** Initializes this struct with the specified values. */
-    @Override
     public VkImageViewUsageCreateInfoKHR set(
         int sType,
         long pNext,
@@ -220,8 +282,24 @@ public class VkImageViewUsageCreateInfoKHR extends VkImageViewUsageCreateInfo {
 
     // -----------------------------------
 
+    /** Unsafe version of {@link #sType}. */
+    public static int nsType(long struct) { return memGetInt(struct + VkImageViewUsageCreateInfoKHR.STYPE); }
+    /** Unsafe version of {@link #pNext}. */
+    public static long npNext(long struct) { return memGetAddress(struct + VkImageViewUsageCreateInfoKHR.PNEXT); }
+    /** Unsafe version of {@link #usage}. */
+    public static int nusage(long struct) { return memGetInt(struct + VkImageViewUsageCreateInfoKHR.USAGE); }
+
+    /** Unsafe version of {@link #sType(int) sType}. */
+    public static void nsType(long struct, int value) { memPutInt(struct + VkImageViewUsageCreateInfoKHR.STYPE, value); }
+    /** Unsafe version of {@link #pNext(long) pNext}. */
+    public static void npNext(long struct, long value) { memPutAddress(struct + VkImageViewUsageCreateInfoKHR.PNEXT, value); }
+    /** Unsafe version of {@link #usage(int) usage}. */
+    public static void nusage(long struct, int value) { memPutInt(struct + VkImageViewUsageCreateInfoKHR.USAGE, value); }
+
+    // -----------------------------------
+
     /** An array of {@link VkImageViewUsageCreateInfoKHR} structs. */
-    public static class Buffer extends VkImageViewUsageCreateInfo.Buffer {
+    public static class Buffer extends StructBuffer<VkImageViewUsageCreateInfoKHR, Buffer> implements NativeResource {
 
         /**
          * Creates a new {@link VkImageViewUsageCreateInfoKHR.Buffer} instance backed by the specified container.
@@ -233,7 +311,7 @@ public class VkImageViewUsageCreateInfoKHR extends VkImageViewUsageCreateInfo {
          * <p>The created buffer instance holds a strong reference to the container object.</p>
          */
         public Buffer(ByteBuffer container) {
-            super(container);
+            super(container, container.remaining() / SIZEOF);
         }
 
         public Buffer(long address, int cap) {
@@ -259,14 +337,26 @@ public class VkImageViewUsageCreateInfoKHR extends VkImageViewUsageCreateInfo {
             return new VkImageViewUsageCreateInfoKHR(address, container);
         }
 
-        /** Sets the specified value to the {@code sType} field. */
         @Override
+        public int sizeof() {
+            return SIZEOF;
+        }
+
+        /** Returns the value of the {@code sType} field. */
+        @NativeType("VkStructureType")
+        public int sType() { return VkImageViewUsageCreateInfoKHR.nsType(address()); }
+        /** Returns the value of the {@code pNext} field. */
+        @NativeType("const void *")
+        public long pNext() { return VkImageViewUsageCreateInfoKHR.npNext(address()); }
+        /** Returns the value of the {@code usage} field. */
+        @NativeType("VkImageUsageFlags")
+        public int usage() { return VkImageViewUsageCreateInfoKHR.nusage(address()); }
+
+        /** Sets the specified value to the {@code sType} field. */
         public VkImageViewUsageCreateInfoKHR.Buffer sType(@NativeType("VkStructureType") int value) { VkImageViewUsageCreateInfoKHR.nsType(address(), value); return this; }
         /** Sets the specified value to the {@code pNext} field. */
-        @Override
-        public VkImageViewUsageCreateInfoKHR.Buffer pNext(@NativeType("void const *") long value) { VkImageViewUsageCreateInfoKHR.npNext(address(), value); return this; }
+        public VkImageViewUsageCreateInfoKHR.Buffer pNext(@NativeType("const void *") long value) { VkImageViewUsageCreateInfoKHR.npNext(address(), value); return this; }
         /** Sets the specified value to the {@code usage} field. */
-        @Override
         public VkImageViewUsageCreateInfoKHR.Buffer usage(@NativeType("VkImageUsageFlags") int value) { VkImageViewUsageCreateInfoKHR.nusage(address(), value); return this; }
 
     }

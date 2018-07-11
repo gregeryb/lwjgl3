@@ -86,7 +86,7 @@ public class SOFTLoopback {
      *                   valid name returned by enumeration (and further must be a device capable of loopback rendering).
      */
     @NativeType("ALCdevice *")
-    public static long alcLoopbackOpenDeviceSOFT(@Nullable @NativeType("ALCchar const *") ByteBuffer deviceName) {
+    public static long alcLoopbackOpenDeviceSOFT(@Nullable @NativeType("const ALCchar *") ByteBuffer deviceName) {
         if (CHECKS) {
             checkNT1Safe(deviceName);
         }
@@ -110,7 +110,7 @@ public class SOFTLoopback {
      *                   valid name returned by enumeration (and further must be a device capable of loopback rendering).
      */
     @NativeType("ALCdevice *")
-    public static long alcLoopbackOpenDeviceSOFT(@Nullable @NativeType("ALCchar const *") CharSequence deviceName) {
+    public static long alcLoopbackOpenDeviceSOFT(@Nullable @NativeType("const ALCchar *") CharSequence deviceName) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
             ByteBuffer deviceNameEncoded = stack.UTF8Safe(deviceName);
@@ -207,7 +207,18 @@ public class SOFTLoopback {
         nalcRenderSamplesSOFT(device, memAddress(buffer), samples);
     }
 
-    /** Array version of: {@link #alcRenderSamplesSOFT RenderSamplesSOFT} */
+    /** register Array version of: {@link #alcRenderSamplesSOFT RenderSamplesSOFT} */
+    @NativeType("ALCvoid")
+    public static void alcRenderSamplesSOFT(@NativeType("ALCdevice *") long device, @NativeType("ALCvoid *") byte[] buffer, @NativeType("ALCsizei") int samples) {
+		long __functionAddress = ALC.getICD().alcRenderSamplesSOFT;
+        if (CHECKS) {
+            check(__functionAddress);
+            check(device);
+        }
+        invokePPV(__functionAddress, device, buffer, samples);
+    }
+
+    /** register Array version of: {@link #alcRenderSamplesSOFT RenderSamplesSOFT} */
     @NativeType("ALCvoid")
     public static void alcRenderSamplesSOFT(@NativeType("ALCdevice *") long device, @NativeType("ALCvoid *") short[] buffer, @NativeType("ALCsizei") int samples) {
 		long __functionAddress = ALC.getICD().alcRenderSamplesSOFT;
@@ -218,7 +229,7 @@ public class SOFTLoopback {
         invokePPV(__functionAddress, device, buffer, samples);
     }
 
-    /** Array version of: {@link #alcRenderSamplesSOFT RenderSamplesSOFT} */
+    /** register Array version of: {@link #alcRenderSamplesSOFT RenderSamplesSOFT} */
     @NativeType("ALCvoid")
     public static void alcRenderSamplesSOFT(@NativeType("ALCdevice *") long device, @NativeType("ALCvoid *") int[] buffer, @NativeType("ALCsizei") int samples) {
 		long __functionAddress = ALC.getICD().alcRenderSamplesSOFT;
@@ -229,7 +240,7 @@ public class SOFTLoopback {
         invokePPV(__functionAddress, device, buffer, samples);
     }
 
-    /** Array version of: {@link #alcRenderSamplesSOFT RenderSamplesSOFT} */
+    /** register Array version of: {@link #alcRenderSamplesSOFT RenderSamplesSOFT} */
     @NativeType("ALCvoid")
     public static void alcRenderSamplesSOFT(@NativeType("ALCdevice *") long device, @NativeType("ALCvoid *") float[] buffer, @NativeType("ALCsizei") int samples) {
 		long __functionAddress = ALC.getICD().alcRenderSamplesSOFT;

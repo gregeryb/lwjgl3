@@ -55,7 +55,7 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct aiNodeAnim {
  *     {@link AIString struct aiString} mNodeName;
  *     unsigned int mNumPositionKeys;
@@ -66,7 +66,7 @@ import static org.lwjgl.system.MemoryStack.*;
  *     {@link AIVectorKey struct aiVectorKey} * mScalingKeys;
  *     aiAnimBehaviour mPreState;
  *     aiAnimBehaviour mPostState;
- * }</code></pre>
+ * }</pre></code>
  */
 @NativeType("struct aiNodeAnim")
 public class AINodeAnim extends Struct implements NativeResource {
@@ -74,7 +74,6 @@ public class AINodeAnim extends Struct implements NativeResource {
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */
@@ -136,8 +135,6 @@ public class AINodeAnim extends Struct implements NativeResource {
     /** Returns a {@link AIString} view of the {@code mNodeName} field. */
     @NativeType("struct aiString")
     public AIString mNodeName() { return nmNodeName(address()); }
-    /** Passes the {@code mNodeName} field to the specified {@link java.util.function.Consumer Consumer}. */
-    public AINodeAnim mNodeName(java.util.function.Consumer<AIString> consumer) { consumer.accept(mNodeName()); return this; }
     /** Returns the value of the {@code mNumPositionKeys} field. */
     @NativeType("unsigned int")
     public int mNumPositionKeys() { return nmNumPositionKeys(address()); }
@@ -182,9 +179,9 @@ public class AINodeAnim extends Struct implements NativeResource {
     /** Initializes this struct with the specified values. */
     public AINodeAnim set(
         AIString mNodeName,
-        @Nullable AIVectorKey.Buffer mPositionKeys,
-        @Nullable AIQuatKey.Buffer mRotationKeys,
-        @Nullable AIVectorKey.Buffer mScalingKeys,
+        AIVectorKey.Buffer mPositionKeys,
+        AIQuatKey.Buffer mRotationKeys,
+        AIVectorKey.Buffer mScalingKeys,
         int mPreState,
         int mPostState
     ) {
@@ -467,8 +464,6 @@ public class AINodeAnim extends Struct implements NativeResource {
         /** Returns a {@link AIString} view of the {@code mNodeName} field. */
         @NativeType("struct aiString")
         public AIString mNodeName() { return AINodeAnim.nmNodeName(address()); }
-        /** Passes the {@code mNodeName} field to the specified {@link java.util.function.Consumer Consumer}. */
-        public AINodeAnim.Buffer mNodeName(java.util.function.Consumer<AIString> consumer) { consumer.accept(mNodeName()); return this; }
         /** Returns the value of the {@code mNumPositionKeys} field. */
         @NativeType("unsigned int")
         public int mNumPositionKeys() { return AINodeAnim.nmNumPositionKeys(address()); }

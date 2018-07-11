@@ -57,9 +57,9 @@ public class EXTDirectModeDisplay {
         throw new UnsupportedOperationException();
     }
 
-    static boolean checkCapsInstance(FunctionProvider provider, java.util.Map<String, Long> caps, java.util.Set<String> ext) {
-        return ext.contains("VK_EXT_direct_mode_display") && VK.checkExtension("VK_EXT_direct_mode_display",
-               VK.isSupported(provider, "vkReleaseDisplayEXT", caps)
+    static boolean isAvailable(VKCapabilitiesInstance caps) {
+        return checkFunctions(
+            caps.vkReleaseDisplayEXT
         );
     }
 
@@ -72,10 +72,10 @@ public class EXTDirectModeDisplay {
      * 
      * <p>To release a previously acquired display, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * VkResult vkReleaseDisplayEXT(
      *     VkPhysicalDevice                            physicalDevice,
-     *     VkDisplayKHR                                display);</code></pre>
+     *     VkDisplayKHR                                display);</pre></code>
      * 
      * <h5>Valid Usage (Implicit)</h5>
      * 

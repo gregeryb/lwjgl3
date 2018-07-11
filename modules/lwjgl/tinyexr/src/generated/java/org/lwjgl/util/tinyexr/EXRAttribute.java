@@ -19,21 +19,20 @@ import static org.lwjgl.system.MemoryStack.*;
 /**
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct EXRAttribute {
  *     char name[256];
  *     char type[256];
  *     unsigned char * value;
  *     int size;
  *     char[4];
- * }</code></pre>
+ * }</pre></code>
  */
 public class EXRAttribute extends Struct implements NativeResource {
 
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */
@@ -108,7 +107,7 @@ public class EXRAttribute extends Struct implements NativeResource {
     public EXRAttribute set(
         ByteBuffer name,
         ByteBuffer type,
-        @Nullable ByteBuffer value
+        ByteBuffer value
     ) {
         name(name);
         type(type);

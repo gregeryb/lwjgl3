@@ -19,10 +19,10 @@ import static org.lwjgl.system.MemoryStack.*;
 /**
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct HmdQuad_t {
  *     {@link HmdVector3 HmdVector3_t} vCorners[4];
- * }</code></pre>
+ * }</pre></code>
  */
 @NativeType("struct HmdQuad_t")
 public class HmdQuad extends Struct implements NativeResource {
@@ -30,7 +30,6 @@ public class HmdQuad extends Struct implements NativeResource {
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */
@@ -234,7 +233,8 @@ public class HmdQuad extends Struct implements NativeResource {
     public static HmdVector3.Buffer nvCorners(long struct) { return HmdVector3.create(struct + HmdQuad.VCORNERS, 4); }
     /** Unsafe version of {@link #vCorners(int) vCorners}. */
     public static HmdVector3 nvCorners(long struct, int index) {
-        return HmdVector3.create(struct + HmdQuad.VCORNERS + check(index, 4) * HmdVector3.SIZEOF);
+        if (CHECKS) { check(index, 4); }
+        return HmdVector3.create(struct + HmdQuad.VCORNERS + index * HmdVector3.SIZEOF);
     }
 
     /** Unsafe version of {@link #vCorners(HmdVector3.Buffer) vCorners}. */
@@ -244,7 +244,8 @@ public class HmdQuad extends Struct implements NativeResource {
     }
     /** Unsafe version of {@link #vCorners(int, HmdVector3) vCorners}. */
     public static void nvCorners(long struct, int index, HmdVector3 value) {
-        memCopy(value.address(), struct + HmdQuad.VCORNERS + check(index, 4) * HmdVector3.SIZEOF, HmdVector3.SIZEOF);
+        if (CHECKS) { check(index, 4); }
+        memCopy(value.address(), struct + HmdQuad.VCORNERS + index * HmdVector3.SIZEOF, HmdVector3.SIZEOF);
     }
 
     // -----------------------------------

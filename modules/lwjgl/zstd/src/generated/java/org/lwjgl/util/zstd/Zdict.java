@@ -55,10 +55,14 @@ public class Zdict {
      * <li>It's recommended that total size of all samples be about ~x100 times the target size of dictionary.</li>
      * </ul>
      *
+     * @param dictBuffer    
+     * @param samplesBuffer 
+     * @param samplesSizes  
+     *
      * @return size of dictionary stored into {@code dictBuffer} (&le; {@code dictBufferCapacity}) or an error code, which can be tested with {@link #ZDICT_isError isError}.
      */
     @NativeType("size_t")
-    public static long ZDICT_trainFromBuffer(@NativeType("void *") ByteBuffer dictBuffer, @NativeType("void const *") ByteBuffer samplesBuffer, @NativeType("size_t const *") PointerBuffer samplesSizes) {
+    public static long ZDICT_trainFromBuffer(@NativeType("void *") ByteBuffer dictBuffer, @NativeType("const void *") ByteBuffer samplesBuffer, @NativeType("const size_t *") PointerBuffer samplesSizes) {
         if (CHECKS) {
             if (DEBUG) {
                 check(samplesBuffer, getSamplesBufferSize(samplesSizes));
@@ -75,10 +79,12 @@ public class Zdict {
     /**
      * Extracts {@code dictID}.
      *
+     * @param dictBuffer 
+     *
      * @return zero if error (not a valid dictionary)
      */
     @NativeType("unsigned int")
-    public static int ZDICT_getDictID(@NativeType("void const *") ByteBuffer dictBuffer) {
+    public static int ZDICT_getDictID(@NativeType("const void *") ByteBuffer dictBuffer) {
         return nZDICT_getDictID(memAddress(dictBuffer), dictBuffer.remaining());
     }
 
@@ -96,7 +102,7 @@ public class Zdict {
     public static native long nZDICT_getErrorName(long errorCode);
 
     @Nullable
-    @NativeType("char const *")
+    @NativeType("const char *")
     public static String ZDICT_getErrorName(@NativeType("size_t") long errorCode) {
         long __result = nZDICT_getErrorName(errorCode);
         return memASCIISafe(__result);
@@ -126,10 +132,15 @@ public class Zdict {
      * <li>It's recommended that total size of all samples be about ~x100 times the target size of dictionary.</li>
      * </ul>
      *
+     * @param dictBuffer    
+     * @param samplesBuffer 
+     * @param samplesSizes  
+     * @param parameters    
+     *
      * @return size of dictionary stored into {@code dictBuffer} (&le; {@code dictBufferCapacity}) or an error code, which can be tested with {@link #ZDICT_isError isError}.
      */
     @NativeType("size_t")
-    public static long ZDICT_trainFromBuffer_cover(@NativeType("void *") ByteBuffer dictBuffer, @NativeType("void const *") ByteBuffer samplesBuffer, @NativeType("size_t const *") PointerBuffer samplesSizes, @NativeType("ZDICT_cover_params_t") ZDICTCoverParams parameters) {
+    public static long ZDICT_trainFromBuffer_cover(@NativeType("void *") ByteBuffer dictBuffer, @NativeType("const void *") ByteBuffer samplesBuffer, @NativeType("const size_t *") PointerBuffer samplesSizes, @NativeType("ZDICT_cover_params_t") ZDICTCoverParams parameters) {
         if (CHECKS) {
             if (DEBUG) {
                 check(samplesBuffer, getSamplesBufferSize(samplesSizes));
@@ -159,11 +170,16 @@ public class Zdict {
      * <p>Note: {@code ZDICT_optimizeTrainFromBuffer_cover()} requires about 8 bytes of memory for each input byte and additionally another 5 bytes of memory for
      * each byte of memory for each thread.</p>
      *
+     * @param dictBuffer    
+     * @param samplesBuffer 
+     * @param samplesSizes  
+     * @param parameters    
+     *
      * @return size of dictionary stored into {@code dictBuffer} (&le; {@code dictBufferCapacity}) or an error code, which can be tested with {@link #ZDICT_isError isError}. On success
      *         {@code *parameters} contains the parameters selected.
      */
     @NativeType("size_t")
-    public static long ZDICT_optimizeTrainFromBuffer_cover(@NativeType("void *") ByteBuffer dictBuffer, @NativeType("void const *") ByteBuffer samplesBuffer, @NativeType("size_t const *") PointerBuffer samplesSizes, @NativeType("ZDICT_cover_params_t *") ZDICTCoverParams parameters) {
+    public static long ZDICT_optimizeTrainFromBuffer_cover(@NativeType("void *") ByteBuffer dictBuffer, @NativeType("const void *") ByteBuffer samplesBuffer, @NativeType("const size_t *") PointerBuffer samplesSizes, @NativeType("ZDICT_cover_params_t *") ZDICTCoverParams parameters) {
         if (CHECKS) {
             if (DEBUG) {
                 check(samplesBuffer, getSamplesBufferSize(samplesSizes));
@@ -192,10 +208,16 @@ public class Zdict {
      * <li>{@code dictBuffer} and {@code dictContent} can overlap.</li>
      * </ul>
      *
+     * @param dictBuffer    
+     * @param dictContent   
+     * @param samplesBuffer 
+     * @param samplesSizes  
+     * @param parameters    
+     *
      * @return size of dictionary stored into {@code dictBuffer} (&le; {@code dictBufferCapacity}) or an error code, which can be tested with {@link #ZDICT_isError isError}.
      */
     @NativeType("size_t")
-    public static long ZDICT_finalizeDictionary(@NativeType("void *") ByteBuffer dictBuffer, @NativeType("void const *") ByteBuffer dictContent, @NativeType("void const *") ByteBuffer samplesBuffer, @NativeType("size_t const *") PointerBuffer samplesSizes, @NativeType("ZDICT_params_t") ZDICTParams parameters) {
+    public static long ZDICT_finalizeDictionary(@NativeType("void *") ByteBuffer dictBuffer, @NativeType("const void *") ByteBuffer dictContent, @NativeType("const void *") ByteBuffer samplesBuffer, @NativeType("const size_t *") PointerBuffer samplesSizes, @NativeType("ZDICT_params_t") ZDICTParams parameters) {
         if (CHECKS) {
             if (DEBUG) {
                 check(samplesBuffer, getSamplesBufferSize(samplesSizes));

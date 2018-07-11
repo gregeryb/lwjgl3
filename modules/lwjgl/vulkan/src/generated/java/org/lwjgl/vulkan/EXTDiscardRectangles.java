@@ -15,7 +15,7 @@ import static org.lwjgl.system.JNI.*;
  * 
  * <p>From zero to an implementation-dependent limit (specified by {@code maxDiscardRectangles}) number of discard rectangles can be operational at once. When one or more discard rectangles are active, rasterized fragments can either survive if the fragment is within any of the operational discard rectangles ({@link #VK_DISCARD_RECTANGLE_MODE_INCLUSIVE_EXT DISCARD_RECTANGLE_MODE_INCLUSIVE_EXT} mode) or be rejected if the fragment is within any of the operational discard rectangles ({@link #VK_DISCARD_RECTANGLE_MODE_EXCLUSIVE_EXT DISCARD_RECTANGLE_MODE_EXCLUSIVE_EXT} mode).</p>
  * 
- * <p>These discard rectangles operate orthogonally to the existing scissor test functionality. The discard rectangles can be different for each physical device in a device group by specifying the device mask and setting discard rectangle dynamic state.</p>
+ * <p>These discard rectangles operate orthogonally to the existing scissor test functionality. If the {@link KHXDeviceGroup VK_KHX_device_group} extension is enabled the discard rectangles can be different for each physical device in the device group by specifying the device mask and setting discard rectangle dynamic state.</p>
  * 
  * <dl>
  * <dt><b>Name String</b></dt>
@@ -33,15 +33,10 @@ import static org.lwjgl.system.JNI.*;
  * </ul></dd>
  * <dt><b>Contact</b></dt>
  * <dd><ul>
- * <li>Piers Daniell @pdaniell-nv</li>
+ * <li>Piers Daniell @pdaniell</li>
  * </ul></dd>
  * <dt><b>Last Modified Date</b></dt>
  * <dd>2016-12-22</dd>
- * <dt><b>Interactions and External Dependencies</b></dt>
- * <dd><ul>
- * <li>Interacts with VK_KHR_device_group</li>
- * <li>Interacts with Vulkan 1.1</li>
- * </ul></dd>
  * <dt><b>Contributors</b></dt>
  * <dd><ul>
  * <li>Daniel Koch, NVIDIA</li>
@@ -96,9 +91,9 @@ public class EXTDiscardRectangles {
         throw new UnsupportedOperationException();
     }
 
-    static boolean checkCapsDevice(FunctionProvider provider, java.util.Map<String, Long> caps, java.util.Set<String> ext) {
-        return ext.contains("VK_EXT_discard_rectangles") && VK.checkExtension("VK_EXT_discard_rectangles",
-               VK.isSupported(provider, "vkCmdSetDiscardRectangleEXT", caps)
+    static boolean isAvailable(VKCapabilitiesDevice caps) {
+        return checkFunctions(
+            caps.vkCmdSetDiscardRectangleEXT
         );
     }
 
@@ -124,12 +119,12 @@ public class EXTDiscardRectangles {
      * 
      * <p>If the pipeline state object was created with the {@link #VK_DYNAMIC_STATE_DISCARD_RECTANGLE_EXT DYNAMIC_STATE_DISCARD_RECTANGLE_EXT} dynamic state enabled, the discard rectangles are dynamically set and changed with the command:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * void vkCmdSetDiscardRectangleEXT(
      *     VkCommandBuffer                             commandBuffer,
      *     uint32_t                                    firstDiscardRectangle,
      *     uint32_t                                    discardRectangleCount,
-     *     const VkRect2D*                             pDiscardRectangles);</code></pre>
+     *     const VkRect2D*                             pDiscardRectangles);</pre></code>
      * 
      * <h5>Description</h5>
      * 
@@ -138,7 +133,7 @@ public class EXTDiscardRectangles {
      * <h5>Valid Usage</h5>
      * 
      * <ul>
-     * <li>The bound graphics pipeline <b>must</b> have been created with the {@link #VK_DYNAMIC_STATE_DISCARD_RECTANGLE_EXT DYNAMIC_STATE_DISCARD_RECTANGLE_EXT} dynamic state enabled</li>
+     * <li>The currently bound graphics pipeline <b>must</b> have been created with the {@link #VK_DYNAMIC_STATE_DISCARD_RECTANGLE_EXT DYNAMIC_STATE_DISCARD_RECTANGLE_EXT} dynamic state enabled</li>
      * <li>The sum of {@code firstDiscardRectangle} and {@code discardRectangleCount} <b>must</b> be less than or equal to {@link VkPhysicalDeviceDiscardRectanglePropertiesEXT}{@code ::maxDiscardRectangles}</li>
      * <li>The {@code x} and {@code y} member of {@code offset} in each {@link VkRect2D} element of {@code pDiscardRectangles} <b>must</b> be greater than or equal to 0</li>
      * <li>Evaluation of <code>(offset.x + extent.width)</code> in each {@link VkRect2D} element of {@code pDiscardRectangles} <b>must</b> not cause a signed integer addition overflow</li>
@@ -177,7 +172,7 @@ public class EXTDiscardRectangles {
      * @param firstDiscardRectangle the index of the first discard rectangle whose state is updated by the command.
      * @param pDiscardRectangles    a pointer to an array of {@link VkRect2D} structures specifying discard rectangles.
      */
-    public static void vkCmdSetDiscardRectangleEXT(VkCommandBuffer commandBuffer, @NativeType("uint32_t") int firstDiscardRectangle, @NativeType("VkRect2D const *") VkRect2D.Buffer pDiscardRectangles) {
+    public static void vkCmdSetDiscardRectangleEXT(VkCommandBuffer commandBuffer, @NativeType("uint32_t") int firstDiscardRectangle, @NativeType("const VkRect2D *") VkRect2D.Buffer pDiscardRectangles) {
         nvkCmdSetDiscardRectangleEXT(commandBuffer, firstDiscardRectangle, pDiscardRectangles.remaining(), pDiscardRectangles.address());
     }
 

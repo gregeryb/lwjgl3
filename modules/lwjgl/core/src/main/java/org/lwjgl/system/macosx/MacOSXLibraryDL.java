@@ -16,22 +16,17 @@ import static org.lwjgl.system.macosx.DynamicLinkLoader.*;
 public class MacOSXLibraryDL extends MacOSXLibrary {
 
     public MacOSXLibraryDL(String name) {
-        this(name, loadLibrary(name));
-    }
+        super(loadLibrary(name), name);
 
-    public MacOSXLibraryDL(String name, long handle) {
-        super(name, handle);
+        if (address() == NULL) {
+            throw new UnsatisfiedLinkError("Failed to dynamically load library: " + name + "(error = " + dlerror() + ")");
+        }
     }
 
     private static long loadLibrary(String name) {
-        long handle;
         try (MemoryStack stack = stackPush()) {
-            handle = dlopen(stack.ASCII(name), RTLD_LAZY | RTLD_LOCAL);
+            return dlopen(stack.ASCII(name), RTLD_LAZY | RTLD_GLOBAL);
         }
-        if (handle == NULL) {
-            throw new UnsatisfiedLinkError("Failed to dynamically load library: " + name + "(error = " + dlerror() + ")");
-        }
-        return handle;
     }
 
     @Override

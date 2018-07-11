@@ -96,7 +96,7 @@ public class WGLARBPbuffer {
      * @param attribList  a 0-terminated list of attributes {type, value} pairs containing integer attribute values
      */
     @NativeType("HPBUFFERARB")
-    public static long wglCreatePbufferARB(@NativeType("HDC") long hdc, int pixelFormat, int width, int height, @Nullable @NativeType("int const *") IntBuffer attribList) {
+    public static long wglCreatePbufferARB(@NativeType("HDC") long hdc, int pixelFormat, int width, int height, @Nullable @NativeType("const int *") IntBuffer attribList) {
         if (CHECKS) {
             checkNTSafe(attribList);
         }
@@ -185,9 +185,9 @@ public class WGLARBPbuffer {
         return nwglQueryPbufferARB(pbuffer, attribute, memAddress(value)) != 0;
     }
 
-    /** Array version of: {@link #wglCreatePbufferARB CreatePbufferARB} */
+    /** register Array version of: {@link #wglCreatePbufferARB CreatePbufferARB} */
     @NativeType("HPBUFFERARB")
-    public static long wglCreatePbufferARB(@NativeType("HDC") long hdc, int pixelFormat, int width, int height, @Nullable @NativeType("int const *") int[] attribList) {
+    public static long wglCreatePbufferARB(@NativeType("HDC") long hdc, int pixelFormat, int width, int height, @Nullable @NativeType("const int *") int[] attribList) {
         long __functionAddress = GL.getCapabilitiesWGL().wglCreatePbufferARB;
         if (CHECKS) {
             check(__functionAddress);
@@ -197,7 +197,7 @@ public class WGLARBPbuffer {
         return callPPP(__functionAddress, hdc, pixelFormat, width, height, attribList);
     }
 
-    /** Array version of: {@link #wglQueryPbufferARB QueryPbufferARB} */
+    /** register Array version of: {@link #wglQueryPbufferARB QueryPbufferARB} */
     @NativeType("BOOL")
     public static boolean wglQueryPbufferARB(@NativeType("HPBUFFERARB") long pbuffer, int attribute, @NativeType("int *") int[] value) {
         long __functionAddress = GL.getCapabilitiesWGL().wglQueryPbufferARB;

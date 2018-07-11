@@ -14,35 +14,35 @@ import static org.lwjgl.system.APIUtil.*;
 public final class ALCCapabilities {
 
 	public final long
-		alcOpenDevice,
-		alcCloseDevice,
-		alcCreateContext,
-		alcMakeContextCurrent,
-		alcProcessContext,
-		alcSuspendContext,
-		alcDestroyContext,
-		alcGetCurrentContext,
-		alcGetContextsDevice,
-		alcIsExtensionPresent,
-		alcGetProcAddress,
-		alcGetEnumValue,
-		alcGetError,
-		alcGetString,
-		alcGetIntegerv,
-		alcCaptureOpenDevice,
 		alcCaptureCloseDevice,
+		alcCaptureOpenDevice,
+		alcCaptureSamples,
 		alcCaptureStart,
 		alcCaptureStop,
-		alcCaptureSamples,
-		alcSetThreadContext,
-		alcGetThreadContext,
-		alcGetStringiSOFT,
-		alcResetDeviceSOFT,
-		alcLoopbackOpenDeviceSOFT,
-		alcIsRenderFormatSupportedSOFT,
-		alcRenderSamplesSOFT,
+		alcCloseDevice,
+		alcCreateContext,
+		alcDestroyContext,
 		alcDevicePauseSOFT,
-		alcDeviceResumeSOFT;
+		alcDeviceResumeSOFT,
+		alcGetContextsDevice,
+		alcGetCurrentContext,
+		alcGetEnumValue,
+		alcGetError,
+		alcGetIntegerv,
+		alcGetProcAddress,
+		alcGetString,
+		alcGetStringiSOFT,
+		alcGetThreadContext,
+		alcIsExtensionPresent,
+		alcIsRenderFormatSupportedSOFT,
+		alcLoopbackOpenDeviceSOFT,
+		alcMakeContextCurrent,
+		alcOpenDevice,
+		alcProcessContext,
+		alcRenderSamplesSOFT,
+		alcResetDeviceSOFT,
+		alcSetThreadContext,
+		alcSuspendContext;
 
     /** When true, {@link ALC10} is supported. */
 	public final boolean OpenALC10;
@@ -80,35 +80,35 @@ public final class ALCCapabilities {
 	public final boolean ALC_SOFT_pause_device;
 
 	ALCCapabilities(FunctionProviderLocal provider, long device, Set<String> ext) {
-		alcOpenDevice = provider.getFunctionAddress("alcOpenDevice");
-		alcCloseDevice = provider.getFunctionAddress("alcCloseDevice");
-		alcCreateContext = provider.getFunctionAddress("alcCreateContext");
-		alcMakeContextCurrent = provider.getFunctionAddress("alcMakeContextCurrent");
-		alcProcessContext = provider.getFunctionAddress("alcProcessContext");
-		alcSuspendContext = provider.getFunctionAddress("alcSuspendContext");
-		alcDestroyContext = provider.getFunctionAddress("alcDestroyContext");
-		alcGetCurrentContext = provider.getFunctionAddress("alcGetCurrentContext");
-		alcGetContextsDevice = provider.getFunctionAddress("alcGetContextsDevice");
-		alcIsExtensionPresent = provider.getFunctionAddress("alcIsExtensionPresent");
-		alcGetProcAddress = provider.getFunctionAddress("alcGetProcAddress");
-		alcGetEnumValue = provider.getFunctionAddress("alcGetEnumValue");
-		alcGetError = provider.getFunctionAddress("alcGetError");
-		alcGetString = provider.getFunctionAddress("alcGetString");
-		alcGetIntegerv = provider.getFunctionAddress("alcGetIntegerv");
-		alcCaptureOpenDevice = provider.getFunctionAddress("alcCaptureOpenDevice");
 		alcCaptureCloseDevice = provider.getFunctionAddress("alcCaptureCloseDevice");
+		alcCaptureOpenDevice = provider.getFunctionAddress("alcCaptureOpenDevice");
+		alcCaptureSamples = provider.getFunctionAddress("alcCaptureSamples");
 		alcCaptureStart = provider.getFunctionAddress("alcCaptureStart");
 		alcCaptureStop = provider.getFunctionAddress("alcCaptureStop");
-		alcCaptureSamples = provider.getFunctionAddress("alcCaptureSamples");
-		alcSetThreadContext = provider.getFunctionAddress(device, "alcSetThreadContext");
-		alcGetThreadContext = provider.getFunctionAddress(device, "alcGetThreadContext");
-		alcGetStringiSOFT = provider.getFunctionAddress(device, "alcGetStringiSOFT");
-		alcResetDeviceSOFT = provider.getFunctionAddress(device, "alcResetDeviceSOFT");
-		alcLoopbackOpenDeviceSOFT = provider.getFunctionAddress(device, "alcLoopbackOpenDeviceSOFT");
-		alcIsRenderFormatSupportedSOFT = provider.getFunctionAddress(device, "alcIsRenderFormatSupportedSOFT");
-		alcRenderSamplesSOFT = provider.getFunctionAddress(device, "alcRenderSamplesSOFT");
+		alcCloseDevice = provider.getFunctionAddress("alcCloseDevice");
+		alcCreateContext = provider.getFunctionAddress("alcCreateContext");
+		alcDestroyContext = provider.getFunctionAddress("alcDestroyContext");
 		alcDevicePauseSOFT = provider.getFunctionAddress(device, "alcDevicePauseSOFT");
 		alcDeviceResumeSOFT = provider.getFunctionAddress(device, "alcDeviceResumeSOFT");
+		alcGetContextsDevice = provider.getFunctionAddress("alcGetContextsDevice");
+		alcGetCurrentContext = provider.getFunctionAddress("alcGetCurrentContext");
+		alcGetEnumValue = provider.getFunctionAddress("alcGetEnumValue");
+		alcGetError = provider.getFunctionAddress("alcGetError");
+		alcGetIntegerv = provider.getFunctionAddress("alcGetIntegerv");
+		alcGetProcAddress = provider.getFunctionAddress("alcGetProcAddress");
+		alcGetString = provider.getFunctionAddress("alcGetString");
+		alcGetStringiSOFT = provider.getFunctionAddress(device, "alcGetStringiSOFT");
+		alcGetThreadContext = provider.getFunctionAddress(device, "alcGetThreadContext");
+		alcIsExtensionPresent = provider.getFunctionAddress("alcIsExtensionPresent");
+		alcIsRenderFormatSupportedSOFT = provider.getFunctionAddress(device, "alcIsRenderFormatSupportedSOFT");
+		alcLoopbackOpenDeviceSOFT = provider.getFunctionAddress(device, "alcLoopbackOpenDeviceSOFT");
+		alcMakeContextCurrent = provider.getFunctionAddress("alcMakeContextCurrent");
+		alcOpenDevice = provider.getFunctionAddress("alcOpenDevice");
+		alcProcessContext = provider.getFunctionAddress("alcProcessContext");
+		alcRenderSamplesSOFT = provider.getFunctionAddress(device, "alcRenderSamplesSOFT");
+		alcResetDeviceSOFT = provider.getFunctionAddress(device, "alcResetDeviceSOFT");
+		alcSetThreadContext = provider.getFunctionAddress(device, "alcSetThreadContext");
+		alcSuspendContext = provider.getFunctionAddress("alcSuspendContext");
 
 		OpenALC10 = ext.contains("OpenALC10") && checkExtension("OpenALC10", ALC10.isAvailable(this));
 		OpenALC11 = ext.contains("OpenALC11") && checkExtension("OpenALC11", ALC11.isAvailable(this));

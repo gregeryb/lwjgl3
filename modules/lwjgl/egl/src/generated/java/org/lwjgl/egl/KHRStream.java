@@ -89,7 +89,7 @@ public class KHRStream {
     }
 
     @NativeType("EGLStreamKHR")
-    public static long eglCreateStreamKHR(@NativeType("EGLDisplay") long dpy, @Nullable @NativeType("EGLint const *") IntBuffer attrib_list) {
+    public static long eglCreateStreamKHR(@NativeType("EGLDisplay") long dpy, @Nullable @NativeType("const EGLint *") IntBuffer attrib_list) {
         if (CHECKS) {
             checkNTSafe(attrib_list, EGL10.EGL_NONE);
         }
@@ -162,9 +162,9 @@ public class KHRStream {
         return neglQueryStreamu64KHR(dpy, stream, attribute, memAddress(value)) != 0;
     }
 
-    /** Array version of: {@link #eglCreateStreamKHR CreateStreamKHR} */
+    /** register Array version of: {@link #eglCreateStreamKHR CreateStreamKHR} */
     @NativeType("EGLStreamKHR")
-    public static long eglCreateStreamKHR(@NativeType("EGLDisplay") long dpy, @Nullable @NativeType("EGLint const *") int[] attrib_list) {
+    public static long eglCreateStreamKHR(@NativeType("EGLDisplay") long dpy, @Nullable @NativeType("const EGLint *") int[] attrib_list) {
         long __functionAddress = EGL.getCapabilities().eglCreateStreamKHR;
         if (CHECKS) {
             check(__functionAddress);
@@ -174,7 +174,7 @@ public class KHRStream {
         return callPPP(__functionAddress, dpy, attrib_list);
     }
 
-    /** Array version of: {@link #eglQueryStreamKHR QueryStreamKHR} */
+    /** register Array version of: {@link #eglQueryStreamKHR QueryStreamKHR} */
     @NativeType("EGLBoolean")
     public static boolean eglQueryStreamKHR(@NativeType("EGLDisplay") long dpy, @NativeType("EGLStreamKHR") long stream, @NativeType("EGLenum") int attribute, @NativeType("EGLint *") int[] value) {
         long __functionAddress = EGL.getCapabilities().eglQueryStreamKHR;
@@ -187,7 +187,7 @@ public class KHRStream {
         return callPPPI(__functionAddress, dpy, stream, attribute, value) != 0;
     }
 
-    /** Array version of: {@link #eglQueryStreamu64KHR QueryStreamu64KHR} */
+    /** register Array version of: {@link #eglQueryStreamu64KHR QueryStreamu64KHR} */
     @NativeType("EGLBoolean")
     public static boolean eglQueryStreamu64KHR(@NativeType("EGLDisplay") long dpy, @NativeType("EGLStreamKHR") long stream, @NativeType("EGLenum") int attribute, @NativeType("EGLuint64KHR *") long[] value) {
         long __functionAddress = EGL.getCapabilities().eglQueryStreamu64KHR;

@@ -19,12 +19,12 @@ import static org.lwjgl.system.MemoryUtil.*;
  * 
  * <h3>Type</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * void (*) (
  *     bgfx_callback_interface_t *_this,
  *     bgfx_fatal_t _code,
  *     char *_str
- * )</code></pre>
+ * )</pre></code>
  */
 public abstract class BGFXFatalCallback extends Callback implements BGFXFatalCallbackI {
 

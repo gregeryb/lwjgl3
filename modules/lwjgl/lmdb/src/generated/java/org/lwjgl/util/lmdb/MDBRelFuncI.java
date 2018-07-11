@@ -18,13 +18,13 @@ import static org.lwjgl.system.dyncall.DynCallback.*;
  * 
  * <h3>Type</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * void (*) (
  *     MDB_val *item,
  *     void *oldptr,
  *     void *newptr,
  *     void *relctx
- * )</code></pre>
+ * )</pre></code>
  */
 @FunctionalInterface
 @NativeType("MDB_rel_func *")

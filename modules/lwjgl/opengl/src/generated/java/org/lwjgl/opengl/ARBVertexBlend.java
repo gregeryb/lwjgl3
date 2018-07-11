@@ -321,7 +321,7 @@ public class ARBVertexBlend {
      */
     public static native void glVertexBlendARB(@NativeType("GLint") int count);
 
-    /** Array version of: {@link #glWeightfvARB WeightfvARB} */
+    /** register Array version of: {@link #glWeightfvARB WeightfvARB} */
     public static void glWeightfvARB(@NativeType("GLfloat *") float[] weights) {
         long __functionAddress = GL.getICD().glWeightfvARB;
         if (CHECKS) {
@@ -330,7 +330,7 @@ public class ARBVertexBlend {
         callPV(__functionAddress, weights.length, weights);
     }
 
-    /** Array version of: {@link #glWeightsvARB WeightsvARB} */
+    /** register Array version of: {@link #glWeightsvARB WeightsvARB} */
     public static void glWeightsvARB(@NativeType("GLshort *") short[] weights) {
         long __functionAddress = GL.getICD().glWeightsvARB;
         if (CHECKS) {
@@ -339,7 +339,7 @@ public class ARBVertexBlend {
         callPV(__functionAddress, weights.length, weights);
     }
 
-    /** Array version of: {@link #glWeightusvARB WeightusvARB} */
+    /** register Array version of: {@link #glWeightusvARB WeightusvARB} */
     public static void glWeightusvARB(@NativeType("GLushort *") short[] weights) {
         long __functionAddress = GL.getICD().glWeightusvARB;
         if (CHECKS) {
@@ -348,7 +348,7 @@ public class ARBVertexBlend {
         callPV(__functionAddress, weights.length, weights);
     }
 
-    /** Array version of: {@link #glWeightivARB WeightivARB} */
+    /** register Array version of: {@link #glWeightivARB WeightivARB} */
     public static void glWeightivARB(@NativeType("GLint *") int[] weights) {
         long __functionAddress = GL.getICD().glWeightivARB;
         if (CHECKS) {
@@ -357,7 +357,7 @@ public class ARBVertexBlend {
         callPV(__functionAddress, weights.length, weights);
     }
 
-    /** Array version of: {@link #glWeightuivARB WeightuivARB} */
+    /** register Array version of: {@link #glWeightuivARB WeightuivARB} */
     public static void glWeightuivARB(@NativeType("GLuint *") int[] weights) {
         long __functionAddress = GL.getICD().glWeightuivARB;
         if (CHECKS) {
@@ -366,7 +366,7 @@ public class ARBVertexBlend {
         callPV(__functionAddress, weights.length, weights);
     }
 
-    /** Array version of: {@link #glWeightdvARB WeightdvARB} */
+    /** register Array version of: {@link #glWeightdvARB WeightdvARB} */
     public static void glWeightdvARB(@NativeType("GLdouble *") double[] weights) {
         long __functionAddress = GL.getICD().glWeightdvARB;
         if (CHECKS) {
@@ -375,7 +375,16 @@ public class ARBVertexBlend {
         callPV(__functionAddress, weights.length, weights);
     }
 
-    /** Array version of: {@link #glWeightPointerARB WeightPointerARB} */
+    /** register Array version of: {@link #glWeightPointerARB WeightPointerARB} */
+    public static void glWeightPointerARB(@NativeType("GLint") int size, @NativeType("GLenum") int type, @NativeType("GLsizei") int stride, @NativeType("void *") byte[] pointer) {
+        long __functionAddress = GL.getICD().glWeightPointerARB;
+        if (CHECKS) {
+            check(__functionAddress);
+        }
+        callPV(__functionAddress, size, type, stride, pointer);
+    }
+
+    /** register Array version of: {@link #glWeightPointerARB WeightPointerARB} */
     public static void glWeightPointerARB(@NativeType("GLint") int size, @NativeType("GLenum") int type, @NativeType("GLsizei") int stride, @NativeType("void *") short[] pointer) {
         long __functionAddress = GL.getICD().glWeightPointerARB;
         if (CHECKS) {
@@ -384,7 +393,7 @@ public class ARBVertexBlend {
         callPV(__functionAddress, size, type, stride, pointer);
     }
 
-    /** Array version of: {@link #glWeightPointerARB WeightPointerARB} */
+    /** register Array version of: {@link #glWeightPointerARB WeightPointerARB} */
     public static void glWeightPointerARB(@NativeType("GLint") int size, @NativeType("GLenum") int type, @NativeType("GLsizei") int stride, @NativeType("void *") int[] pointer) {
         long __functionAddress = GL.getICD().glWeightPointerARB;
         if (CHECKS) {
@@ -393,7 +402,7 @@ public class ARBVertexBlend {
         callPV(__functionAddress, size, type, stride, pointer);
     }
 
-    /** Array version of: {@link #glWeightPointerARB WeightPointerARB} */
+    /** register Array version of: {@link #glWeightPointerARB WeightPointerARB} */
     public static void glWeightPointerARB(@NativeType("GLint") int size, @NativeType("GLenum") int type, @NativeType("GLsizei") int stride, @NativeType("void *") float[] pointer) {
         long __functionAddress = GL.getICD().glWeightPointerARB;
         if (CHECKS) {

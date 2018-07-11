@@ -131,7 +131,7 @@ public class EXTDeviceFission {
     }
 
     @NativeType("cl_int")
-    public static int clCreateSubDevicesEXT(@NativeType("cl_device_id") long in_device, @NativeType("cl_device_partition_property_ext const *") LongBuffer properties, @Nullable @NativeType("cl_device_id *") PointerBuffer out_devices, @Nullable @NativeType("cl_uint *") IntBuffer num_devices) {
+    public static int clCreateSubDevicesEXT(@NativeType("cl_device_id") long in_device, @NativeType("const cl_device_partition_property_ext *") LongBuffer properties, @Nullable @NativeType("cl_device_id *") PointerBuffer out_devices, @Nullable @NativeType("cl_uint *") IntBuffer num_devices) {
         if (CHECKS) {
             checkNT(properties);
             checkSafe(num_devices, 1);
@@ -139,9 +139,9 @@ public class EXTDeviceFission {
         return nclCreateSubDevicesEXT(in_device, memAddress(properties), remainingSafe(out_devices), memAddressSafe(out_devices), memAddressSafe(num_devices));
     }
 
-    /** Array version of: {@link #clCreateSubDevicesEXT CreateSubDevicesEXT} */
+    /** register Array version of: {@link #clCreateSubDevicesEXT CreateSubDevicesEXT} */
     @NativeType("cl_int")
-    public static int clCreateSubDevicesEXT(@NativeType("cl_device_id") long in_device, @NativeType("cl_device_partition_property_ext const *") long[] properties, @Nullable @NativeType("cl_device_id *") PointerBuffer out_devices, @Nullable @NativeType("cl_uint *") int[] num_devices) {
+    public static int clCreateSubDevicesEXT(@NativeType("cl_device_id") long in_device, @NativeType("const cl_device_partition_property_ext *") long[] properties, @Nullable @NativeType("cl_device_id *") PointerBuffer out_devices, @Nullable @NativeType("cl_uint *") int[] num_devices) {
         long __functionAddress = CL.getICD().clCreateSubDevicesEXT;
         if (CHECKS) {
             check(__functionAddress);

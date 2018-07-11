@@ -27,12 +27,12 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct RenderModel_TextureMap_t {
  *     uint16_t unWidth;
  *     uint16_t unHeight;
- *     uint8_t const * rubTextureMapData;
- * }</code></pre>
+ *     const uint8_t * rubTextureMapData;
+ * }</pre></code>
  */
 @NativeType("struct RenderModel_TextureMap_t")
 public class RenderModelTextureMap extends Struct implements NativeResource {
@@ -40,7 +40,6 @@ public class RenderModelTextureMap extends Struct implements NativeResource {
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */
@@ -92,7 +91,7 @@ public class RenderModelTextureMap extends Struct implements NativeResource {
      *
      * @param capacity the number of elements in the returned buffer
      */
-    @NativeType("uint8_t const *")
+    @NativeType("const uint8_t *")
     public ByteBuffer rubTextureMapData(int capacity) { return nrubTextureMapData(address(), capacity); }
 
     // -----------------------------------
@@ -300,7 +299,7 @@ public class RenderModelTextureMap extends Struct implements NativeResource {
          *
          * @param capacity the number of elements in the returned buffer
          */
-        @NativeType("uint8_t const *")
+        @NativeType("const uint8_t *")
         public ByteBuffer rubTextureMapData(int capacity) { return RenderModelTextureMap.nrubTextureMapData(address(), capacity); }
 
     }

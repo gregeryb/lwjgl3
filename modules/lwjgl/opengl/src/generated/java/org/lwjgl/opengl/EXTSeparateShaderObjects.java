@@ -31,11 +31,11 @@ import static org.lwjgl.system.MemoryUtil.*;
  * 
  * <p>This extension redefines the operation of glUseProgram(GLenum program) to be equivalent to:</p>
  * 
- * <pre><code>
+ * <code><pre>
  *  glUseShaderProgramEXT(GL_VERTEX_SHADER, program);
  * glUseShaderProgramEXT(GL_GEOMETRY_SHADER_EXT, program);
  * glUseShaderProgramEXT(GL_FRAGMENT_SHADER, program);
- * glActiveProgramEXT(program);</code></pre>
+ * glActiveProgramEXT(program);</pre></code>
  * 
  * <p>You can also call these commands separately to bind each respective domain. The GL_VERTEX_SHADER, GL_GEOMETRY_SHADER_EXT, and GL_FRAGMENT_SHADER tokens
  * refer to the conventional vertex, geometry, and fragment domains respectively. glActiveProgramEXT specifies the program that glUniform* commands will
@@ -80,7 +80,7 @@ public class EXTSeparateShaderObjects {
     public static native int nglCreateShaderProgramEXT(int type, long string);
 
     @NativeType("GLuint")
-    public static int glCreateShaderProgramEXT(@NativeType("GLenum") int type, @NativeType("GLchar const *") ByteBuffer string) {
+    public static int glCreateShaderProgramEXT(@NativeType("GLenum") int type, @NativeType("const GLchar *") ByteBuffer string) {
         if (CHECKS) {
             checkNT1(string);
         }
@@ -88,7 +88,7 @@ public class EXTSeparateShaderObjects {
     }
 
     @NativeType("GLuint")
-    public static int glCreateShaderProgramEXT(@NativeType("GLenum") int type, @NativeType("GLchar const *") CharSequence string) {
+    public static int glCreateShaderProgramEXT(@NativeType("GLenum") int type, @NativeType("const GLchar *") CharSequence string) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
             ByteBuffer stringEncoded = stack.UTF8(string);

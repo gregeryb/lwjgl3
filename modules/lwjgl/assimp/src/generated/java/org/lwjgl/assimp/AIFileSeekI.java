@@ -12,12 +12,12 @@ import static org.lwjgl.system.dyncall.DynCallback.*;
 /**
  * <h3>Type</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * aiReturn (*) (
  *     struct aiFile *pFile,
  *     size_t offset,
  *     aiOrigin origin
- * )</code></pre>
+ * )</pre></code>
  */
 @FunctionalInterface
 @NativeType("aiFileSeek")

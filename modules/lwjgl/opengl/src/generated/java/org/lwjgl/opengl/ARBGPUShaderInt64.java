@@ -87,7 +87,7 @@ public class ARBGPUShaderInt64 {
      * @param location the location of the uniform variable to be modified
      * @param value    a pointer to an array of {@code count} values that will be used to update the specified int64_t variable
      */
-    public static void glUniform1i64vARB(@NativeType("GLint") int location, @NativeType("GLint64 *") LongBuffer value) {
+    public static void glUniform1i64vARB(@NativeType("GLint") int location, @NativeType("const GLint64 *") LongBuffer value) {
         nglUniform1i64vARB(location, value.remaining(), memAddress(value));
     }
 
@@ -118,7 +118,7 @@ public class ARBGPUShaderInt64 {
      * @param location the location of the uniform variable to be modified
      * @param value    a pointer to an array of {@code count} values that will be used to update the specified int64_t variable
      */
-    public static void glProgramUniform1i64vARB(@NativeType("GLuint") int program, @NativeType("GLint") int location, @NativeType("GLint64 *") LongBuffer value) {
+    public static void glProgramUniform1i64vARB(@NativeType("GLuint") int program, @NativeType("GLint") int location, @NativeType("const GLint64 *") LongBuffer value) {
         nglProgramUniform1i64vARB(program, location, value.remaining(), memAddress(value));
     }
 
@@ -148,7 +148,7 @@ public class ARBGPUShaderInt64 {
      * @param location the location of the uniform variable to be modified
      * @param value    a pointer to an array of {@code count} values that will be used to update the specified i64vec2 variable
      */
-    public static void glUniform2i64vARB(@NativeType("GLint") int location, @NativeType("GLint64 *") LongBuffer value) {
+    public static void glUniform2i64vARB(@NativeType("GLint") int location, @NativeType("const GLint64 *") LongBuffer value) {
         nglUniform2i64vARB(location, value.remaining() >> 1, memAddress(value));
     }
 
@@ -180,7 +180,7 @@ public class ARBGPUShaderInt64 {
      * @param location the location of the uniform variable to be modified
      * @param value    a pointer to an array of {@code count} values that will be used to update the specified i64vec2 variable
      */
-    public static void glProgramUniform2i64vARB(@NativeType("GLuint") int program, @NativeType("GLint") int location, @NativeType("GLint64 *") LongBuffer value) {
+    public static void glProgramUniform2i64vARB(@NativeType("GLuint") int program, @NativeType("GLint") int location, @NativeType("const GLint64 *") LongBuffer value) {
         nglProgramUniform2i64vARB(program, location, value.remaining() >> 1, memAddress(value));
     }
 
@@ -211,7 +211,7 @@ public class ARBGPUShaderInt64 {
      * @param location the location of the uniform variable to be modified
      * @param value    a pointer to an array of {@code count} values that will be used to update the specified i64vec3 variable
      */
-    public static void glUniform3i64vARB(@NativeType("GLint") int location, @NativeType("GLint64 *") LongBuffer value) {
+    public static void glUniform3i64vARB(@NativeType("GLint") int location, @NativeType("const GLint64 *") LongBuffer value) {
         nglUniform3i64vARB(location, value.remaining() / 3, memAddress(value));
     }
 
@@ -244,7 +244,7 @@ public class ARBGPUShaderInt64 {
      * @param location the location of the uniform variable to be modified
      * @param value    a pointer to an array of {@code count} values that will be used to update the specified i64vec3 variable
      */
-    public static void glProgramUniform3i64vARB(@NativeType("GLuint") int program, @NativeType("GLint") int location, @NativeType("GLint64 *") LongBuffer value) {
+    public static void glProgramUniform3i64vARB(@NativeType("GLuint") int program, @NativeType("GLint") int location, @NativeType("const GLint64 *") LongBuffer value) {
         nglProgramUniform3i64vARB(program, location, value.remaining() / 3, memAddress(value));
     }
 
@@ -276,7 +276,7 @@ public class ARBGPUShaderInt64 {
      * @param location the location of the uniform variable to be modified
      * @param value    a pointer to an array of {@code count} values that will be used to update the specified i64vec4 variable
      */
-    public static void glUniform4i64vARB(@NativeType("GLint") int location, @NativeType("GLint64 *") LongBuffer value) {
+    public static void glUniform4i64vARB(@NativeType("GLint") int location, @NativeType("const GLint64 *") LongBuffer value) {
         nglUniform4i64vARB(location, value.remaining() >> 2, memAddress(value));
     }
 
@@ -310,7 +310,7 @@ public class ARBGPUShaderInt64 {
      * @param location the location of the uniform variable to be modified
      * @param value    a pointer to an array of {@code count} values that will be used to update the specified i64vec4 variable
      */
-    public static void glProgramUniform4i64vARB(@NativeType("GLuint") int program, @NativeType("GLint") int location, @NativeType("GLint64 *") LongBuffer value) {
+    public static void glProgramUniform4i64vARB(@NativeType("GLuint") int program, @NativeType("GLint") int location, @NativeType("const GLint64 *") LongBuffer value) {
         nglProgramUniform4i64vARB(program, location, value.remaining() >> 2, memAddress(value));
     }
 
@@ -339,7 +339,7 @@ public class ARBGPUShaderInt64 {
      * @param location the location of the uniform variable to be modified
      * @param value    a pointer to an array of {@code count} values that will be used to update the specified uint64_t variable
      */
-    public static void glUniform1ui64vARB(@NativeType("GLint") int location, @NativeType("GLuint64 const *") LongBuffer value) {
+    public static void glUniform1ui64vARB(@NativeType("GLint") int location, @NativeType("const GLuint64 *") LongBuffer value) {
         nglUniform1ui64vARB(location, value.remaining(), memAddress(value));
     }
 
@@ -370,7 +370,7 @@ public class ARBGPUShaderInt64 {
      * @param location the location of the uniform variable to be modified
      * @param value    a pointer to an array of {@code count} values that will be used to update the specified uint64_t variable
      */
-    public static void glProgramUniform1ui64vARB(@NativeType("GLuint") int program, @NativeType("GLint") int location, @NativeType("GLuint64 const *") LongBuffer value) {
+    public static void glProgramUniform1ui64vARB(@NativeType("GLuint") int program, @NativeType("GLint") int location, @NativeType("const GLuint64 *") LongBuffer value) {
         nglProgramUniform1ui64vARB(program, location, value.remaining(), memAddress(value));
     }
 
@@ -400,7 +400,7 @@ public class ARBGPUShaderInt64 {
      * @param location the location of the uniform variable to be modified
      * @param value    a pointer to an array of {@code count} values that will be used to update the specified u64vec2 variable
      */
-    public static void glUniform2ui64vARB(@NativeType("GLint") int location, @NativeType("GLuint64 const *") LongBuffer value) {
+    public static void glUniform2ui64vARB(@NativeType("GLint") int location, @NativeType("const GLuint64 *") LongBuffer value) {
         nglUniform2ui64vARB(location, value.remaining() >> 1, memAddress(value));
     }
 
@@ -432,7 +432,7 @@ public class ARBGPUShaderInt64 {
      * @param location the location of the uniform variable to be modified
      * @param value    a pointer to an array of {@code count} values that will be used to update the specified u64vec2 variable
      */
-    public static void glProgramUniform2ui64vARB(@NativeType("GLuint") int program, @NativeType("GLint") int location, @NativeType("GLuint64 const *") LongBuffer value) {
+    public static void glProgramUniform2ui64vARB(@NativeType("GLuint") int program, @NativeType("GLint") int location, @NativeType("const GLuint64 *") LongBuffer value) {
         nglProgramUniform2ui64vARB(program, location, value.remaining() >> 1, memAddress(value));
     }
 
@@ -463,7 +463,7 @@ public class ARBGPUShaderInt64 {
      * @param location the location of the uniform variable to be modified
      * @param value    a pointer to an array of {@code count} values that will be used to update the specified u64vec3 variable
      */
-    public static void glUniform3ui64vARB(@NativeType("GLint") int location, @NativeType("GLuint64 const *") LongBuffer value) {
+    public static void glUniform3ui64vARB(@NativeType("GLint") int location, @NativeType("const GLuint64 *") LongBuffer value) {
         nglUniform3ui64vARB(location, value.remaining() / 3, memAddress(value));
     }
 
@@ -496,7 +496,7 @@ public class ARBGPUShaderInt64 {
      * @param location the location of the uniform variable to be modified
      * @param value    a pointer to an array of {@code count} values that will be used to update the specified u64vec3 variable
      */
-    public static void glProgramUniform3ui64vARB(@NativeType("GLuint") int program, @NativeType("GLint") int location, @NativeType("GLuint64 const *") LongBuffer value) {
+    public static void glProgramUniform3ui64vARB(@NativeType("GLuint") int program, @NativeType("GLint") int location, @NativeType("const GLuint64 *") LongBuffer value) {
         nglProgramUniform3ui64vARB(program, location, value.remaining() / 3, memAddress(value));
     }
 
@@ -528,7 +528,7 @@ public class ARBGPUShaderInt64 {
      * @param location the location of the uniform variable to be modified
      * @param value    a pointer to an array of {@code count} values that will be used to update the specified u64vec4 variable
      */
-    public static void glUniform4ui64vARB(@NativeType("GLint") int location, @NativeType("GLuint64 const *") LongBuffer value) {
+    public static void glUniform4ui64vARB(@NativeType("GLint") int location, @NativeType("const GLuint64 *") LongBuffer value) {
         nglUniform4ui64vARB(location, value.remaining() >> 2, memAddress(value));
     }
 
@@ -562,7 +562,7 @@ public class ARBGPUShaderInt64 {
      * @param location the location of the uniform variable to be modified
      * @param value    a pointer to an array of {@code count} values that will be used to update the specified u64vec4 variable
      */
-    public static void glProgramUniform4ui64vARB(@NativeType("GLuint") int program, @NativeType("GLint") int location, @NativeType("GLuint64 const *") LongBuffer value) {
+    public static void glProgramUniform4ui64vARB(@NativeType("GLuint") int program, @NativeType("GLint") int location, @NativeType("const GLuint64 *") LongBuffer value) {
         nglProgramUniform4ui64vARB(program, location, value.remaining() >> 2, memAddress(value));
     }
 
@@ -716,8 +716,8 @@ public class ARBGPUShaderInt64 {
         }
     }
 
-    /** Array version of: {@link #glUniform1i64vARB Uniform1i64vARB} */
-    public static void glUniform1i64vARB(@NativeType("GLint") int location, @NativeType("GLint64 *") long[] value) {
+    /** register Array version of: {@link #glUniform1i64vARB Uniform1i64vARB} */
+    public static void glUniform1i64vARB(@NativeType("GLint") int location, @NativeType("const GLint64 *") long[] value) {
         long __functionAddress = GL.getICD().glUniform1i64vARB;
         if (CHECKS) {
             check(__functionAddress);
@@ -725,8 +725,8 @@ public class ARBGPUShaderInt64 {
         callPV(__functionAddress, location, value.length, value);
     }
 
-    /** Array version of: {@link #glProgramUniform1i64vARB ProgramUniform1i64vARB} */
-    public static void glProgramUniform1i64vARB(@NativeType("GLuint") int program, @NativeType("GLint") int location, @NativeType("GLint64 *") long[] value) {
+    /** register Array version of: {@link #glProgramUniform1i64vARB ProgramUniform1i64vARB} */
+    public static void glProgramUniform1i64vARB(@NativeType("GLuint") int program, @NativeType("GLint") int location, @NativeType("const GLint64 *") long[] value) {
         long __functionAddress = GL.getICD().glProgramUniform1i64vARB;
         if (CHECKS) {
             check(__functionAddress);
@@ -734,8 +734,8 @@ public class ARBGPUShaderInt64 {
         callPV(__functionAddress, program, location, value.length, value);
     }
 
-    /** Array version of: {@link #glUniform2i64vARB Uniform2i64vARB} */
-    public static void glUniform2i64vARB(@NativeType("GLint") int location, @NativeType("GLint64 *") long[] value) {
+    /** register Array version of: {@link #glUniform2i64vARB Uniform2i64vARB} */
+    public static void glUniform2i64vARB(@NativeType("GLint") int location, @NativeType("const GLint64 *") long[] value) {
         long __functionAddress = GL.getICD().glUniform2i64vARB;
         if (CHECKS) {
             check(__functionAddress);
@@ -743,8 +743,8 @@ public class ARBGPUShaderInt64 {
         callPV(__functionAddress, location, value.length >> 1, value);
     }
 
-    /** Array version of: {@link #glProgramUniform2i64vARB ProgramUniform2i64vARB} */
-    public static void glProgramUniform2i64vARB(@NativeType("GLuint") int program, @NativeType("GLint") int location, @NativeType("GLint64 *") long[] value) {
+    /** register Array version of: {@link #glProgramUniform2i64vARB ProgramUniform2i64vARB} */
+    public static void glProgramUniform2i64vARB(@NativeType("GLuint") int program, @NativeType("GLint") int location, @NativeType("const GLint64 *") long[] value) {
         long __functionAddress = GL.getICD().glProgramUniform2i64vARB;
         if (CHECKS) {
             check(__functionAddress);
@@ -752,8 +752,8 @@ public class ARBGPUShaderInt64 {
         callPV(__functionAddress, program, location, value.length >> 1, value);
     }
 
-    /** Array version of: {@link #glUniform3i64vARB Uniform3i64vARB} */
-    public static void glUniform3i64vARB(@NativeType("GLint") int location, @NativeType("GLint64 *") long[] value) {
+    /** register Array version of: {@link #glUniform3i64vARB Uniform3i64vARB} */
+    public static void glUniform3i64vARB(@NativeType("GLint") int location, @NativeType("const GLint64 *") long[] value) {
         long __functionAddress = GL.getICD().glUniform3i64vARB;
         if (CHECKS) {
             check(__functionAddress);
@@ -761,8 +761,8 @@ public class ARBGPUShaderInt64 {
         callPV(__functionAddress, location, value.length / 3, value);
     }
 
-    /** Array version of: {@link #glProgramUniform3i64vARB ProgramUniform3i64vARB} */
-    public static void glProgramUniform3i64vARB(@NativeType("GLuint") int program, @NativeType("GLint") int location, @NativeType("GLint64 *") long[] value) {
+    /** register Array version of: {@link #glProgramUniform3i64vARB ProgramUniform3i64vARB} */
+    public static void glProgramUniform3i64vARB(@NativeType("GLuint") int program, @NativeType("GLint") int location, @NativeType("const GLint64 *") long[] value) {
         long __functionAddress = GL.getICD().glProgramUniform3i64vARB;
         if (CHECKS) {
             check(__functionAddress);
@@ -770,8 +770,8 @@ public class ARBGPUShaderInt64 {
         callPV(__functionAddress, program, location, value.length / 3, value);
     }
 
-    /** Array version of: {@link #glUniform4i64vARB Uniform4i64vARB} */
-    public static void glUniform4i64vARB(@NativeType("GLint") int location, @NativeType("GLint64 *") long[] value) {
+    /** register Array version of: {@link #glUniform4i64vARB Uniform4i64vARB} */
+    public static void glUniform4i64vARB(@NativeType("GLint") int location, @NativeType("const GLint64 *") long[] value) {
         long __functionAddress = GL.getICD().glUniform4i64vARB;
         if (CHECKS) {
             check(__functionAddress);
@@ -779,8 +779,8 @@ public class ARBGPUShaderInt64 {
         callPV(__functionAddress, location, value.length >> 2, value);
     }
 
-    /** Array version of: {@link #glProgramUniform4i64vARB ProgramUniform4i64vARB} */
-    public static void glProgramUniform4i64vARB(@NativeType("GLuint") int program, @NativeType("GLint") int location, @NativeType("GLint64 *") long[] value) {
+    /** register Array version of: {@link #glProgramUniform4i64vARB ProgramUniform4i64vARB} */
+    public static void glProgramUniform4i64vARB(@NativeType("GLuint") int program, @NativeType("GLint") int location, @NativeType("const GLint64 *") long[] value) {
         long __functionAddress = GL.getICD().glProgramUniform4i64vARB;
         if (CHECKS) {
             check(__functionAddress);
@@ -788,8 +788,8 @@ public class ARBGPUShaderInt64 {
         callPV(__functionAddress, program, location, value.length >> 2, value);
     }
 
-    /** Array version of: {@link #glUniform1ui64vARB Uniform1ui64vARB} */
-    public static void glUniform1ui64vARB(@NativeType("GLint") int location, @NativeType("GLuint64 const *") long[] value) {
+    /** register Array version of: {@link #glUniform1ui64vARB Uniform1ui64vARB} */
+    public static void glUniform1ui64vARB(@NativeType("GLint") int location, @NativeType("const GLuint64 *") long[] value) {
         long __functionAddress = GL.getICD().glUniform1ui64vARB;
         if (CHECKS) {
             check(__functionAddress);
@@ -797,8 +797,8 @@ public class ARBGPUShaderInt64 {
         callPV(__functionAddress, location, value.length, value);
     }
 
-    /** Array version of: {@link #glProgramUniform1ui64vARB ProgramUniform1ui64vARB} */
-    public static void glProgramUniform1ui64vARB(@NativeType("GLuint") int program, @NativeType("GLint") int location, @NativeType("GLuint64 const *") long[] value) {
+    /** register Array version of: {@link #glProgramUniform1ui64vARB ProgramUniform1ui64vARB} */
+    public static void glProgramUniform1ui64vARB(@NativeType("GLuint") int program, @NativeType("GLint") int location, @NativeType("const GLuint64 *") long[] value) {
         long __functionAddress = GL.getICD().glProgramUniform1ui64vARB;
         if (CHECKS) {
             check(__functionAddress);
@@ -806,8 +806,8 @@ public class ARBGPUShaderInt64 {
         callPV(__functionAddress, program, location, value.length, value);
     }
 
-    /** Array version of: {@link #glUniform2ui64vARB Uniform2ui64vARB} */
-    public static void glUniform2ui64vARB(@NativeType("GLint") int location, @NativeType("GLuint64 const *") long[] value) {
+    /** register Array version of: {@link #glUniform2ui64vARB Uniform2ui64vARB} */
+    public static void glUniform2ui64vARB(@NativeType("GLint") int location, @NativeType("const GLuint64 *") long[] value) {
         long __functionAddress = GL.getICD().glUniform2ui64vARB;
         if (CHECKS) {
             check(__functionAddress);
@@ -815,8 +815,8 @@ public class ARBGPUShaderInt64 {
         callPV(__functionAddress, location, value.length >> 1, value);
     }
 
-    /** Array version of: {@link #glProgramUniform2ui64vARB ProgramUniform2ui64vARB} */
-    public static void glProgramUniform2ui64vARB(@NativeType("GLuint") int program, @NativeType("GLint") int location, @NativeType("GLuint64 const *") long[] value) {
+    /** register Array version of: {@link #glProgramUniform2ui64vARB ProgramUniform2ui64vARB} */
+    public static void glProgramUniform2ui64vARB(@NativeType("GLuint") int program, @NativeType("GLint") int location, @NativeType("const GLuint64 *") long[] value) {
         long __functionAddress = GL.getICD().glProgramUniform2ui64vARB;
         if (CHECKS) {
             check(__functionAddress);
@@ -824,8 +824,8 @@ public class ARBGPUShaderInt64 {
         callPV(__functionAddress, program, location, value.length >> 1, value);
     }
 
-    /** Array version of: {@link #glUniform3ui64vARB Uniform3ui64vARB} */
-    public static void glUniform3ui64vARB(@NativeType("GLint") int location, @NativeType("GLuint64 const *") long[] value) {
+    /** register Array version of: {@link #glUniform3ui64vARB Uniform3ui64vARB} */
+    public static void glUniform3ui64vARB(@NativeType("GLint") int location, @NativeType("const GLuint64 *") long[] value) {
         long __functionAddress = GL.getICD().glUniform3ui64vARB;
         if (CHECKS) {
             check(__functionAddress);
@@ -833,8 +833,8 @@ public class ARBGPUShaderInt64 {
         callPV(__functionAddress, location, value.length / 3, value);
     }
 
-    /** Array version of: {@link #glProgramUniform3ui64vARB ProgramUniform3ui64vARB} */
-    public static void glProgramUniform3ui64vARB(@NativeType("GLuint") int program, @NativeType("GLint") int location, @NativeType("GLuint64 const *") long[] value) {
+    /** register Array version of: {@link #glProgramUniform3ui64vARB ProgramUniform3ui64vARB} */
+    public static void glProgramUniform3ui64vARB(@NativeType("GLuint") int program, @NativeType("GLint") int location, @NativeType("const GLuint64 *") long[] value) {
         long __functionAddress = GL.getICD().glProgramUniform3ui64vARB;
         if (CHECKS) {
             check(__functionAddress);
@@ -842,8 +842,8 @@ public class ARBGPUShaderInt64 {
         callPV(__functionAddress, program, location, value.length / 3, value);
     }
 
-    /** Array version of: {@link #glUniform4ui64vARB Uniform4ui64vARB} */
-    public static void glUniform4ui64vARB(@NativeType("GLint") int location, @NativeType("GLuint64 const *") long[] value) {
+    /** register Array version of: {@link #glUniform4ui64vARB Uniform4ui64vARB} */
+    public static void glUniform4ui64vARB(@NativeType("GLint") int location, @NativeType("const GLuint64 *") long[] value) {
         long __functionAddress = GL.getICD().glUniform4ui64vARB;
         if (CHECKS) {
             check(__functionAddress);
@@ -851,8 +851,8 @@ public class ARBGPUShaderInt64 {
         callPV(__functionAddress, location, value.length >> 2, value);
     }
 
-    /** Array version of: {@link #glProgramUniform4ui64vARB ProgramUniform4ui64vARB} */
-    public static void glProgramUniform4ui64vARB(@NativeType("GLuint") int program, @NativeType("GLint") int location, @NativeType("GLuint64 const *") long[] value) {
+    /** register Array version of: {@link #glProgramUniform4ui64vARB ProgramUniform4ui64vARB} */
+    public static void glProgramUniform4ui64vARB(@NativeType("GLuint") int program, @NativeType("GLint") int location, @NativeType("const GLuint64 *") long[] value) {
         long __functionAddress = GL.getICD().glProgramUniform4ui64vARB;
         if (CHECKS) {
             check(__functionAddress);
@@ -860,7 +860,7 @@ public class ARBGPUShaderInt64 {
         callPV(__functionAddress, program, location, value.length >> 2, value);
     }
 
-    /** Array version of: {@link #glGetUniformi64vARB GetUniformi64vARB} */
+    /** register Array version of: {@link #glGetUniformi64vARB GetUniformi64vARB} */
     public static void glGetUniformi64vARB(@NativeType("GLuint") int program, @NativeType("GLint") int location, @NativeType("GLint64 *") long[] params) {
         long __functionAddress = GL.getICD().glGetUniformi64vARB;
         if (CHECKS) {
@@ -870,7 +870,7 @@ public class ARBGPUShaderInt64 {
         callPV(__functionAddress, program, location, params);
     }
 
-    /** Array version of: {@link #glGetUniformui64vARB GetUniformui64vARB} */
+    /** register Array version of: {@link #glGetUniformui64vARB GetUniformui64vARB} */
     public static void glGetUniformui64vARB(@NativeType("GLuint") int program, @NativeType("GLint") int location, @NativeType("GLuint64 *") long[] params) {
         long __functionAddress = GL.getICD().glGetUniformui64vARB;
         if (CHECKS) {
@@ -880,7 +880,7 @@ public class ARBGPUShaderInt64 {
         callPV(__functionAddress, program, location, params);
     }
 
-    /** Array version of: {@link #glGetnUniformi64vARB GetnUniformi64vARB} */
+    /** register Array version of: {@link #glGetnUniformi64vARB GetnUniformi64vARB} */
     public static void glGetnUniformi64vARB(@NativeType("GLuint") int program, @NativeType("GLint") int location, @NativeType("GLint64 *") long[] params) {
         long __functionAddress = GL.getICD().glGetnUniformi64vARB;
         if (CHECKS) {
@@ -889,7 +889,7 @@ public class ARBGPUShaderInt64 {
         callPV(__functionAddress, program, location, params.length, params);
     }
 
-    /** Array version of: {@link #glGetnUniformui64vARB GetnUniformui64vARB} */
+    /** register Array version of: {@link #glGetnUniformui64vARB GetnUniformui64vARB} */
     public static void glGetnUniformui64vARB(@NativeType("GLuint") int program, @NativeType("GLint") int location, @NativeType("GLuint64 *") long[] params) {
         long __functionAddress = GL.getICD().glGetnUniformui64vARB;
         if (CHECKS) {

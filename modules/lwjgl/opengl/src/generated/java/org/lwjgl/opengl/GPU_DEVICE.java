@@ -39,21 +39,20 @@ import org.lwjgl.system.windows.*;
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct GPU_DEVICE {
  *     DWORD cb;
  *     CHAR DeviceName[32];
  *     CHAR DeviceString[128];
  *     DWORD Flags;
  *     {@link RECT RECT} rcVirtualScreen;
- * }</code></pre>
+ * }</pre></code>
  */
 public class GPU_DEVICE extends Struct implements NativeResource {
 
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */
@@ -120,8 +119,6 @@ public class GPU_DEVICE extends Struct implements NativeResource {
     public int Flags() { return nFlags(address()); }
     /** Returns a {@link RECT} view of the {@code rcVirtualScreen} field. */
     public RECT rcVirtualScreen() { return nrcVirtualScreen(address()); }
-    /** Passes the {@code rcVirtualScreen} field to the specified {@link java.util.function.Consumer Consumer}. */
-    public GPU_DEVICE rcVirtualScreen(java.util.function.Consumer<RECT> consumer) { consumer.accept(rcVirtualScreen()); return this; }
 
     // -----------------------------------
 
@@ -345,8 +342,6 @@ public class GPU_DEVICE extends Struct implements NativeResource {
         public int Flags() { return GPU_DEVICE.nFlags(address()); }
         /** Returns a {@link RECT} view of the {@code rcVirtualScreen} field. */
         public RECT rcVirtualScreen() { return GPU_DEVICE.nrcVirtualScreen(address()); }
-        /** Passes the {@code rcVirtualScreen} field to the specified {@link java.util.function.Consumer Consumer}. */
-        public GPU_DEVICE.Buffer rcVirtualScreen(java.util.function.Consumer<RECT> consumer) { consumer.accept(rcVirtualScreen()); return this; }
 
     }
 

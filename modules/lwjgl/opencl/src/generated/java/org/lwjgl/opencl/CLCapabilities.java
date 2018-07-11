@@ -19,156 +19,156 @@ import java.util.Set;
 public class CLCapabilities {
 
     public final long
-        clGetPlatformIDs,
-        clGetPlatformInfo,
-        clGetDeviceIDs,
-        clGetDeviceInfo,
+        clBuildProgram,
+        clCloneKernel,
+        clCompileProgram,
+        clCreateAcceleratorINTEL,
+        clCreateBuffer,
+        clCreateCommandQueue,
+        clCreateCommandQueueWithProperties,
+        clCreateCommandQueueWithPropertiesAPPLE,
         clCreateContext,
         clCreateContextFromType,
-        clRetainContext,
-        clReleaseContext,
-        clGetContextInfo,
-        clCreateCommandQueue,
-        clRetainCommandQueue,
-        clReleaseCommandQueue,
-        clGetCommandQueueInfo,
-        clCreateBuffer,
-        clEnqueueReadBuffer,
-        clEnqueueWriteBuffer,
-        clEnqueueCopyBuffer,
-        clEnqueueMapBuffer,
-        clCreateImage2D,
-        clCreateImage3D,
-        clGetSupportedImageFormats,
-        clEnqueueReadImage,
-        clEnqueueWriteImage,
-        clEnqueueCopyImage,
-        clEnqueueCopyImageToBuffer,
-        clEnqueueCopyBufferToImage,
-        clEnqueueMapImage,
-        clGetImageInfo,
-        clRetainMemObject,
-        clReleaseMemObject,
-        clEnqueueUnmapMemObject,
-        clGetMemObjectInfo,
-        clCreateSampler,
-        clRetainSampler,
-        clReleaseSampler,
-        clGetSamplerInfo,
-        clCreateProgramWithSource,
-        clCreateProgramWithBinary,
-        clRetainProgram,
-        clReleaseProgram,
-        clBuildProgram,
-        clUnloadCompiler,
-        clGetProgramInfo,
-        clGetProgramBuildInfo,
-        clCreateKernel,
-        clCreateKernelsInProgram,
-        clRetainKernel,
-        clReleaseKernel,
-        clSetKernelArg,
-        clGetKernelInfo,
-        clGetKernelWorkGroupInfo,
-        clEnqueueNDRangeKernel,
-        clEnqueueTask,
-        clEnqueueNativeKernel,
-        clWaitForEvents,
-        clGetEventInfo,
-        clRetainEvent,
-        clReleaseEvent,
-        clEnqueueMarker,
-        clEnqueueBarrier,
-        clEnqueueWaitForEvents,
-        clGetEventProfilingInfo,
-        clFlush,
-        clFinish,
-        clGetExtensionFunctionAddress,
+        clCreateEventFromEGLSyncKHR,
+        clCreateEventFromGLsyncKHR,
+        clCreateFromEGLImageKHR,
         clCreateFromGLBuffer,
+        clCreateFromGLRenderbuffer,
+        clCreateFromGLTexture,
         clCreateFromGLTexture2D,
         clCreateFromGLTexture3D,
-        clCreateFromGLRenderbuffer,
-        clGetGLObjectInfo,
-        clGetGLTextureInfo,
-        clEnqueueAcquireGLObjects,
-        clEnqueueReleaseGLObjects,
-        clCreateSubBuffer,
-        clSetMemObjectDestructorCallback,
-        clEnqueueReadBufferRect,
-        clEnqueueWriteBufferRect,
-        clEnqueueCopyBufferRect,
-        clCreateUserEvent,
-        clSetUserEventStatus,
-        clSetEventCallback,
-        clGetExtensionFunctionAddressForPlatform,
-        clRetainDevice,
-        clReleaseDevice,
-        clCreateSubDevices,
+        clCreateFromVA_APIMediaSurfaceINTEL,
         clCreateImage,
+        clCreateImage2D,
+        clCreateImage3D,
+        clCreateKernel,
+        clCreateKernelsInProgram,
+        clCreatePipe,
+        clCreateProgramWithBinary,
         clCreateProgramWithBuiltInKernels,
-        clCompileProgram,
-        clLinkProgram,
-        clUnloadPlatformCompiler,
-        clGetKernelArgInfo,
+        clCreateProgramWithIL,
+        clCreateProgramWithSource,
+        clCreateSampler,
+        clCreateSamplerWithProperties,
+        clCreateSubBuffer,
+        clCreateSubDevices,
+        clCreateSubDevicesEXT,
+        clCreateUserEvent,
+        clEnqueueAcquireEGLObjectsKHR,
+        clEnqueueAcquireGLObjects,
+        clEnqueueAcquireVA_APIMediaSurfacesINTEL,
+        clEnqueueBarrier,
+        clEnqueueBarrierWithWaitList,
+        clEnqueueCopyBuffer,
+        clEnqueueCopyBufferRect,
+        clEnqueueCopyBufferToImage,
+        clEnqueueCopyImage,
+        clEnqueueCopyImageToBuffer,
         clEnqueueFillBuffer,
         clEnqueueFillImage,
-        clEnqueueMigrateMemObjects,
+        clEnqueueMakeBuffersResidentAMD,
+        clEnqueueMapBuffer,
+        clEnqueueMapImage,
+        clEnqueueMarker,
         clEnqueueMarkerWithWaitList,
-        clEnqueueBarrierWithWaitList,
-        clCreateFromGLTexture,
-        clCreateCommandQueueWithProperties,
-        clCreatePipe,
+        clEnqueueMigrateMemObjectEXT,
+        clEnqueueMigrateMemObjects,
+        clEnqueueNDRangeKernel,
+        clEnqueueNativeKernel,
+        clEnqueueReadBuffer,
+        clEnqueueReadBufferRect,
+        clEnqueueReadImage,
+        clEnqueueReleaseEGLObjectsKHR,
+        clEnqueueReleaseGLObjects,
+        clEnqueueReleaseVA_APIMediaSurfacesINTEL,
+        clEnqueueSVMFree,
+        clEnqueueSVMMap,
+        clEnqueueSVMMemFill,
+        clEnqueueSVMMemcpy,
+        clEnqueueSVMMigrateMem,
+        clEnqueueSVMUnmap,
+        clEnqueueTask,
+        clEnqueueUnmapMemObject,
+        clEnqueueWaitForEvents,
+        clEnqueueWaitSignalAMD,
+        clEnqueueWriteBuffer,
+        clEnqueueWriteBufferRect,
+        clEnqueueWriteImage,
+        clEnqueueWriteSignalAMD,
+        clFinish,
+        clFlush,
+        clGetAcceleratorInfoINTEL,
+        clGetCommandQueueInfo,
+        clGetContextInfo,
+        clGetDeviceAndHostTimer,
+        clGetDeviceIDs,
+        clGetDeviceIDsFromVA_APIMediaAdapterINTEL,
+        clGetDeviceImageInfoQCOM,
+        clGetDeviceInfo,
+        clGetEventInfo,
+        clGetEventProfilingInfo,
+        clGetExtensionFunctionAddress,
+        clGetExtensionFunctionAddressForPlatform,
+        clGetGLContextInfoAPPLE,
+        clGetGLContextInfoKHR,
+        clGetGLObjectInfo,
+        clGetGLTextureInfo,
+        clGetHostTimer,
+        clGetImageInfo,
+        clGetKernelArgInfo,
+        clGetKernelInfo,
+        clGetKernelSubGroupInfo,
+        clGetKernelSubGroupInfoKHR,
+        clGetKernelWorkGroupInfo,
+        clGetMemObjectInfo,
         clGetPipeInfo,
+        clGetPlatformIDs,
+        clGetPlatformInfo,
+        clGetProgramBuildInfo,
+        clGetProgramInfo,
+        clGetSamplerInfo,
+        clGetSupportedImageFormats,
+        clLinkProgram,
+        clLogMessagesToStderrAPPLE,
+        clLogMessagesToStdoutAPPLE,
+        clLogMessagesToSystemLogAPPLE,
+        clReleaseAcceleratorINTEL,
+        clReleaseCommandQueue,
+        clReleaseContext,
+        clReleaseDevice,
+        clReleaseDeviceEXT,
+        clReleaseEvent,
+        clReleaseKernel,
+        clReleaseMemObject,
+        clReleaseProgram,
+        clReleaseSampler,
+        clReportLiveObjectsAltera,
+        clRetainAcceleratorINTEL,
+        clRetainCommandQueue,
+        clRetainContext,
+        clRetainDevice,
+        clRetainDeviceEXT,
+        clRetainEvent,
+        clRetainKernel,
+        clRetainMemObject,
+        clRetainProgram,
+        clRetainSampler,
         clSVMAlloc,
         clSVMFree,
-        clEnqueueSVMFree,
-        clEnqueueSVMMemcpy,
-        clEnqueueSVMMemFill,
-        clEnqueueSVMMap,
-        clEnqueueSVMUnmap,
+        clSetDefaultDeviceCommandQueue,
+        clSetEventCallback,
+        clSetKernelArg,
         clSetKernelArgSVMPointer,
         clSetKernelExecInfo,
-        clCreateSamplerWithProperties,
-        clSetDefaultDeviceCommandQueue,
-        clGetDeviceAndHostTimer,
-        clGetHostTimer,
-        clCreateProgramWithIL,
-        clCloneKernel,
-        clGetKernelSubGroupInfo,
-        clEnqueueSVMMigrateMem,
+        clSetMemObjectDestructorCallback,
         clSetProgramReleaseCallback,
         clSetProgramSpecializationConstant,
-        clTrackLiveObjectsAltera,
-        clReportLiveObjectsAltera,
-        clEnqueueWaitSignalAMD,
-        clEnqueueWriteSignalAMD,
-        clEnqueueMakeBuffersResidentAMD,
-        clCreateCommandQueueWithPropertiesAPPLE,
-        clLogMessagesToSystemLogAPPLE,
-        clLogMessagesToStdoutAPPLE,
-        clLogMessagesToStderrAPPLE,
-        clGetGLContextInfoAPPLE,
-        clReleaseDeviceEXT,
-        clRetainDeviceEXT,
-        clCreateSubDevicesEXT,
-        clEnqueueMigrateMemObjectEXT,
-        clCreateAcceleratorINTEL,
-        clRetainAcceleratorINTEL,
-        clReleaseAcceleratorINTEL,
-        clGetAcceleratorInfoINTEL,
-        clGetKernelSubGroupInfoKHR,
-        clGetDeviceIDsFromVA_APIMediaAdapterINTEL,
-        clCreateFromVA_APIMediaSurfaceINTEL,
-        clEnqueueAcquireVA_APIMediaSurfacesINTEL,
-        clEnqueueReleaseVA_APIMediaSurfacesINTEL,
-        clCreateEventFromEGLSyncKHR,
-        clCreateFromEGLImageKHR,
-        clEnqueueAcquireEGLObjectsKHR,
-        clEnqueueReleaseEGLObjectsKHR,
-        clCreateEventFromGLsyncKHR,
-        clGetGLContextInfoKHR,
+        clSetUserEventStatus,
         clTerminateContextKHR,
-        clGetDeviceImageInfoQCOM;
+        clTrackLiveObjectsAltera,
+        clUnloadCompiler,
+        clUnloadPlatformCompiler,
+        clWaitForEvents;
 
     /** When true, {@link CL10} is supported. */
     public final boolean OpenCL10;
@@ -249,103 +249,103 @@ public class CLCapabilities {
      * 
      * <p>The directive when enabled adds the following built-in functions to the OpenCL language.</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * Note: typen denote opencl scalar type {n = 1} and vector types {n = 4, 8, 16}.
      * 
      * Build-in Function
      *   uint  amd_pack(float4 src)
      * Description
-     *   dst =   ((((uint)src.s0) &amp; 0xff)      )
-     *         + ((((uint)src.s1) &amp; 0xff) &lt;&lt;  8)
-     *         + ((((uint)src.s2) &amp; 0xff) &lt;&lt; 16)
-     *         + ((((uint)src.s3) &amp; 0xff) &lt;&lt; 24)
+     *   dst =   ((((uint)src.s0) & 0xff)      )
+     *         + ((((uint)src.s1) & 0xff) <<  8)
+     *         + ((((uint)src.s2) & 0xff) << 16)
+     *         + ((((uint)src.s3) & 0xff) << 24)
      * 
      * Build-in Function
      *   floatn  amd_unpack3(unitn src)
      * Description
-     *   dst.s0 = (float)((src.s0 &gt;&gt; 24) &amp; 0xff)
+     *   dst.s0 = (float)((src.s0 >> 24) & 0xff)
      *   similar operation applied to other components of the vectors
      * 
      * Build-in Function
      *   floatn   amd_unpack2 (unitn src)
      * Description
-     *   dst.s0 = (float)((src.s0 &gt;&gt; 16) &amp; 0xff)
+     *   dst.s0 = (float)((src.s0 >> 16) & 0xff)
      *   similar operation applied to other components of the vectors
      * 
      * Build-in Function
      *   floatn   amd_unpack1 (unitn src)
      * Description
-     *   dst.s0 = (float)((src.s0 &gt;&gt; 8) &amp; 0xff)
+     *   dst.s0 = (float)((src.s0 >> 8) & 0xff)
      *   similar operation applied to other components of the vectors
      * 
      * Build-in Function
      *   floatn   amd_unpack0 (unitn src)
      * Description
-     *   dst.s0 = (float)(src.s0 &amp; 0xff)
+     *   dst.s0 = (float)(src.s0 & 0xff)
      *   similar operation applied to other components of the vectors
      * 
      * Build-in Function
      *   uintn  amd_bitalign (uintn src0, uintn src1, uintn src2)
      * Description
-     *   dst.s0 =  (uint) (((((long)src0.s0) &lt;&lt; 32) | (long)src1.s0) &gt;&gt; (src2.s0 &amp; 31))
+     *   dst.s0 =  (uint) (((((long)src0.s0) << 32) | (long)src1.s0) >> (src2.s0 & 31))
      *   similar operation applied to other components of the vectors.
      * 
      * 
      * Build-in Function
      *   uintn  amd_bytealign (uintn src0, uintn src1, uintn src2)
      * Description
-     *   dst.s0 =  (uint) (((((long)src0.s0) &lt;&lt; 32) | (long)src1.s0) &gt;&gt; ((src2.s0 &amp; 3)*8))
+     *   dst.s0 =  (uint) (((((long)src0.s0) << 32) | (long)src1.s0) >> ((src2.s0 & 3)*8))
      *   similar operation applied to other components of the vectors
      * 
      * Build-in Function
      *   uintn  amd_lerp (uintn src0, uintn src1, uintn src2)
      * Description
-     *   dst.s0 = (((((src0.s0 &gt;&gt;  0) &amp; 0xff) + ((src1.s0 &gt;&gt;  0) &amp; 0xff) + ((src2.s0 &gt;&gt;  0) &amp; 1)) &gt;&gt; 1) &lt;&lt;  0) +
-     *            (((((src0.s0 &gt;&gt;  8) &amp; 0xff) + ((src1.s0 &gt;&gt;  8) &amp; 0xff) + ((src2.s0 &gt;&gt;  8) &amp; 1)) &gt;&gt; 1) &lt;&lt;  8) +
-     *            (((((src0.s0 &gt;&gt; 16) &amp; 0xff) + ((src1.s0 &gt;&gt; 16) &amp; 0xff) + ((src2.s0 &gt;&gt; 16) &amp; 1)) &gt;&gt; 1) &lt;&lt; 16) +
-     *            (((((src0.s0 &gt;&gt; 24) &amp; 0xff) + ((src1.s0 &gt;&gt; 24) &amp; 0xff) + ((src2.s0 &gt;&gt; 24) &amp; 1)) &gt;&gt; 1) &lt;&lt; 24);
+     *   dst.s0 = (((((src0.s0 >>  0) & 0xff) + ((src1.s0 >>  0) & 0xff) + ((src2.s0 >>  0) & 1)) >> 1) <<  0) +
+     *            (((((src0.s0 >>  8) & 0xff) + ((src1.s0 >>  8) & 0xff) + ((src2.s0 >>  8) & 1)) >> 1) <<  8) +
+     *            (((((src0.s0 >> 16) & 0xff) + ((src1.s0 >> 16) & 0xff) + ((src2.s0 >> 16) & 1)) >> 1) << 16) +
+     *            (((((src0.s0 >> 24) & 0xff) + ((src1.s0 >> 24) & 0xff) + ((src2.s0 >> 24) & 1)) >> 1) << 24);
      *   similar operation applied to other components of the vectors
      * 
      * Build-in Function
      *   uintn  amd_sad (uintn src0, uintn src1, uintn src2)
      * Description
      *   dst.s0 = src2.s0 +
-     *            abs(((src0.s0 &gt;&gt;  0) &amp; 0xff) - ((src1.s0 &gt;&gt;  0) &amp; 0xff)) +
-     *            abs(((src0.s0 &gt;&gt;  8) &amp; 0xff) - ((src1.s0 &gt;&gt;  8) &amp; 0xff)) +
-     *            abs(((src0.s0 &gt;&gt; 16) &amp; 0xff) - ((src1.s0 &gt;&gt; 16) &amp; 0xff)) +
-     *            abs(((src0.s0 &gt;&gt; 24) &amp; 0xff) - ((src1.s0 &gt;&gt; 24) &amp; 0xff));
+     *            abs(((src0.s0 >>  0) & 0xff) - ((src1.s0 >>  0) & 0xff)) +
+     *            abs(((src0.s0 >>  8) & 0xff) - ((src1.s0 >>  8) & 0xff)) +
+     *            abs(((src0.s0 >> 16) & 0xff) - ((src1.s0 >> 16) & 0xff)) +
+     *            abs(((src0.s0 >> 24) & 0xff) - ((src1.s0 >> 24) & 0xff));
      *   similar operation applied to other components of the vectors
      * 
      * Build-in Function
      *   uintn  amd_sadhi (uintn src0, uintn src1n, uintn src2)
      * Description
      *   dst.s0 = src2.s0 +
-     *            (abs(((src0.s0 &gt;&gt;  0) &amp; 0xff) - ((src1.s0 &gt;&gt;  0) &amp; 0xff)) &lt;&lt; 16) +
-     *            (abs(((src0.s0 &gt;&gt;  8) &amp; 0xff) - ((src1.s0 &gt;&gt;  8) &amp; 0xff)) &lt;&lt; 16) +
-     *            (abs(((src0.s0 &gt;&gt; 16) &amp; 0xff) - ((src1.s0 &gt;&gt; 16) &amp; 0xff)) &lt;&lt; 16) +
-     *            (abs(((src0.s0 &gt;&gt; 24) &amp; 0xff) - ((src1.s0 &gt;&gt; 24) &amp; 0xff)) &lt;&lt; 16);
+     *            (abs(((src0.s0 >>  0) & 0xff) - ((src1.s0 >>  0) & 0xff)) << 16) +
+     *            (abs(((src0.s0 >>  8) & 0xff) - ((src1.s0 >>  8) & 0xff)) << 16) +
+     *            (abs(((src0.s0 >> 16) & 0xff) - ((src1.s0 >> 16) & 0xff)) << 16) +
+     *            (abs(((src0.s0 >> 24) & 0xff) - ((src1.s0 >> 24) & 0xff)) << 16);
      *   similar operation applied to other components of the vectors
      * 
      * Build-in Function
      *   uint  amd_sad4(uint4 src0, uint4 src1, uint src2)
      * Description
      *   dst   = src2   +
-     *            abs(((src0.s0 &gt;&gt;  0) &amp; 0xff) - ((src1.s0 &gt;&gt;  0) &amp; 0xff)) +
-     *            abs(((src0.s0 &gt;&gt;  8) &amp; 0xff) - ((src1.s0 &gt;&gt;  8) &amp; 0xff)) +
-     *            abs(((src0.s0 &gt;&gt; 16) &amp; 0xff) - ((src1.s0 &gt;&gt; 16) &amp; 0xff)) +
-     *            abs(((src0.s0 &gt;&gt; 24) &amp; 0xff) - ((src1.s0 &gt;&gt; 24) &amp; 0xff)) +
-     *            abs(((src0.s1 &gt;&gt;  0) &amp; 0xff) - ((src1.s0 &gt;&gt;  0) &amp; 0xff)) +
-     *            abs(((src0.s1 &gt;&gt;  8) &amp; 0xff) - ((src1.s1 &gt;&gt;  8) &amp; 0xff)) +
-     *            abs(((src0.s1 &gt;&gt; 16) &amp; 0xff) - ((src1.s1 &gt;&gt; 16) &amp; 0xff)) +
-     *            abs(((src0.s1 &gt;&gt; 24) &amp; 0xff) - ((src1.s1 &gt;&gt; 24) &amp; 0xff)) +
-     *            abs(((src0.s2 &gt;&gt;  0) &amp; 0xff) - ((src1.s2 &gt;&gt;  0) &amp; 0xff)) +
-     *            abs(((src0.s2 &gt;&gt;  8) &amp; 0xff) - ((src1.s2 &gt;&gt;  8) &amp; 0xff)) +
-     *            abs(((src0.s2 &gt;&gt; 16) &amp; 0xff) - ((src1.s2 &gt;&gt; 16) &amp; 0xff)) +
-     *            abs(((src0.s2 &gt;&gt; 24) &amp; 0xff) - ((src1.s2 &gt;&gt; 24) &amp; 0xff)) +
-     *            abs(((src0.s3 &gt;&gt;  0) &amp; 0xff) - ((src1.s3 &gt;&gt;  0) &amp; 0xff)) +
-     *            abs(((src0.s3 &gt;&gt;  8) &amp; 0xff) - ((src1.s3 &gt;&gt;  8) &amp; 0xff)) +
-     *            abs(((src0.s3 &gt;&gt; 16) &amp; 0xff) - ((src1.s3 &gt;&gt; 16) &amp; 0xff)) +
-     *            abs(((src0.s3 &gt;&gt; 24) &amp; 0xff) - ((src1.s3 &gt;&gt; 24) &amp; 0xff));</code></pre>
+     *            abs(((src0.s0 >>  0) & 0xff) - ((src1.s0 >>  0) & 0xff)) +
+     *            abs(((src0.s0 >>  8) & 0xff) - ((src1.s0 >>  8) & 0xff)) +
+     *            abs(((src0.s0 >> 16) & 0xff) - ((src1.s0 >> 16) & 0xff)) +
+     *            abs(((src0.s0 >> 24) & 0xff) - ((src1.s0 >> 24) & 0xff)) +
+     *            abs(((src0.s1 >>  0) & 0xff) - ((src1.s0 >>  0) & 0xff)) +
+     *            abs(((src0.s1 >>  8) & 0xff) - ((src1.s1 >>  8) & 0xff)) +
+     *            abs(((src0.s1 >> 16) & 0xff) - ((src1.s1 >> 16) & 0xff)) +
+     *            abs(((src0.s1 >> 24) & 0xff) - ((src1.s1 >> 24) & 0xff)) +
+     *            abs(((src0.s2 >>  0) & 0xff) - ((src1.s2 >>  0) & 0xff)) +
+     *            abs(((src0.s2 >>  8) & 0xff) - ((src1.s2 >>  8) & 0xff)) +
+     *            abs(((src0.s2 >> 16) & 0xff) - ((src1.s2 >> 16) & 0xff)) +
+     *            abs(((src0.s2 >> 24) & 0xff) - ((src1.s2 >> 24) & 0xff)) +
+     *            abs(((src0.s3 >>  0) & 0xff) - ((src1.s3 >>  0) & 0xff)) +
+     *            abs(((src0.s3 >>  8) & 0xff) - ((src1.s3 >>  8) & 0xff)) +
+     *            abs(((src0.s3 >> 16) & 0xff) - ((src1.s3 >> 16) & 0xff)) +
+     *            abs(((src0.s3 >> 24) & 0xff) - ((src1.s3 >> 24) & 0xff));</pre></code>
      */
     public final boolean cl_amd_media_ops;
     /**
@@ -353,7 +353,7 @@ public class CLCapabilities {
      * 
      * <p>The directive when enabled adds the following built-in functions to the OpenCL language.</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * Note: typen denote open scalar type { n = 1 } and vector types { n = 2, 4, 8, 16 }.
      * 
      * Build-in Function
@@ -413,35 +413,35 @@ public class CLCapabilities {
      * Built-in Function:
      *   uintn amd_bfm (uintn src0, uintn src1)
      * Description
-     *   dst.s0 = ((1 &lt;&lt; (src0.s0 &amp; 0x1f)) - 1) &lt;&lt; (src1.s0 &amp; 0x1f);
+     *   dst.s0 = ((1 << (src0.s0 & 0x1f)) - 1) << (src1.s0 & 0x1f);
      *   similar operation applied to other components of the vectors
      * 
      * Built-in Function:
      *   uintn amd_bfe (uintn src0, uintn src1, uintn src2)
      * Description
-     *   NOTE: operator &gt;&gt; below represent logical right shift
-     *   offset = src1.s0 &amp; 31;
-     *   width = src2.s0 &amp; 31;
+     *   NOTE: operator >> below represent logical right shift
+     *   offset = src1.s0 & 31;
+     *   width = src2.s0 & 31;
      *   if width = 0
      *       dst.s0 = 0;
-     *   else if (offset + width) &lt; 32
-     *       dst.s0 = (src0.s0 &lt;&lt; (32 - offset - width)) &gt;&gt; (32 - width);
+     *   else if (offset + width) < 32
+     *       dst.s0 = (src0.s0 << (32 - offset - width)) >> (32 - width);
      *   else
-     *       dst.s0 = src0.s0 &gt;&gt; offset;
+     *       dst.s0 = src0.s0 >> offset;
      *   similar operation applied to other components of the vectors
      * 
      * Built-in Function:
      *    intn amd_bfe (intn src0, uintn src1, uintn src2)
      * Description
-     *   NOTE: operator &gt;&gt; below represent arithmetic right shift
-     *   offset = src1.s0 &amp; 31;
-     *   width = src2.s0 &amp; 31;
+     *   NOTE: operator >> below represent arithmetic right shift
+     *   offset = src1.s0 & 31;
+     *   width = src2.s0 & 31;
      *   if width = 0
      *       dst.s0 = 0;
-     *   else if (offset + width) &lt; 32
-     *       dst.s0 = src0.s0 &lt;&lt; (32-offset-width) &gt;&gt; 32-width;
+     *   else if (offset + width) < 32
+     *       dst.s0 = src0.s0 << (32-offset-width) >> 32-width;
      *   else
-     *       dst.s0 = src0.s0 &gt;&gt; offset;
+     *       dst.s0 = src0.s0 >> offset;
      *   similar operation applied to other components of the vectors
      * 
      * Built-in Function:
@@ -463,7 +463,7 @@ public class CLCapabilities {
      *    uintn amd_max3 (uintn src0, uintn src1, uintn src2)
      *    floatn amd_max3 (floatn src0, floatn src1, floattn src2)
      * Description
-     *    returns max of src0, src1, and src2</code></pre>
+     *    returns max of src0, src1, and src2</pre></code>
      */
     public final boolean cl_amd_media_ops2;
     /** When true, {@link AMDOfflineDevices} is supported. */
@@ -768,11 +768,11 @@ public class CLCapabilities {
      * <p>If this extension is enabled, the {@code __ROUNDING_MODE__} preprocessor symbol shall be defined to be one of the following according to the current
      * rounding mode:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * #define __ROUNDING_MODE__ rte
      * #define __ROUNDING_MODE__ rtz
      * #define __ROUNDING_MODE__ rtp
-     * #define __ROUNDING_MODE__ rtz</code></pre>
+     * #define __ROUNDING_MODE__ rtz</pre></code>
      * 
      * <p>The default rounding mode is round to nearest even. The built-in math functions, the common functions, and the geometric functions are implemented with
      * the round to nearest even rounding mode.</p>
@@ -799,9 +799,9 @@ public class CLCapabilities {
      * 
      * <p>This extension allows the programmer to pass options to the PTX assembler allowing greater control over code generation.</p>
      * 
-     * <pre><code>
-     * -cl-nv-maxrregcount &lt;N&gt;
-     *     Passed on to ptxas as --maxrregcount &lt;N&gt;
+     * <code><pre>
+     * -cl-nv-maxrregcount <N>
+     *     Passed on to ptxas as --maxrregcount <N>
      *         N is a positive integer.
      *     Specify the maximum number of registers that GPU functions can use.
      *     Until a function-specific limit, a higher value will generally increase
@@ -815,8 +815,8 @@ public class CLCapabilities {
      *     the specified value will be rounded to the next multiple of 4 registers
      *     until the GPU specific maximum of 128 registers.
      * 
-     * -cl-nv-opt-level &lt;N&gt;
-     *     Passed on to ptxas as --opt-level &lt;N&gt;
+     * -cl-nv-opt-level <N>
+     *     Passed on to ptxas as --opt-level <N>
      *         N is a positive integer, or 0 (no optimization).
      *     Specify optimization level.
      *     Default value:  3.
@@ -825,7 +825,7 @@ public class CLCapabilities {
      *     Passed on to ptxas as --verbose
      *     Enable verbose mode.
      *     Output will be reported in the build log (accessible through the
-     *     callback parameter to clBuildProgram).</code></pre>
+     *     callback parameter to clBuildProgram).</pre></code>
      */
     public final boolean cl_nv_compiler_options;
     /** When true, {@link NVDeviceAttributeQuery} is supported. */
@@ -861,470 +861,468 @@ public class CLCapabilities {
     public final boolean cl_nv_pragma_unroll;
     /** When true, {@link QCOMEXTHostPtr} is supported. */
     public final boolean cl_qcom_ext_host_ptr;
-    /** When true, {@link QCOMEXTHostPtrIOCoherent} is supported. */
-    public final boolean cl_qcom_ext_host_ptr_iocoherent;
 
     CLCapabilities(FunctionProvider provider, Set<String> ext) {
         this(ext,
-            provider.getFunctionAddress("clGetPlatformIDs"),
-            provider.getFunctionAddress("clGetPlatformInfo"),
-            provider.getFunctionAddress("clGetDeviceIDs"),
-            provider.getFunctionAddress("clGetDeviceInfo"),
+            provider.getFunctionAddress("clBuildProgram"),
+            provider.getFunctionAddress("clCloneKernel"),
+            provider.getFunctionAddress("clCompileProgram"),
+            provider.getFunctionAddress("clCreateAcceleratorINTEL"),
+            provider.getFunctionAddress("clCreateBuffer"),
+            provider.getFunctionAddress("clCreateCommandQueue"),
+            provider.getFunctionAddress("clCreateCommandQueueWithProperties"),
+            provider.getFunctionAddress("clCreateCommandQueueWithPropertiesAPPLE"),
             provider.getFunctionAddress("clCreateContext"),
             provider.getFunctionAddress("clCreateContextFromType"),
-            provider.getFunctionAddress("clRetainContext"),
-            provider.getFunctionAddress("clReleaseContext"),
-            provider.getFunctionAddress("clGetContextInfo"),
-            provider.getFunctionAddress("clCreateCommandQueue"),
-            provider.getFunctionAddress("clRetainCommandQueue"),
-            provider.getFunctionAddress("clReleaseCommandQueue"),
-            provider.getFunctionAddress("clGetCommandQueueInfo"),
-            provider.getFunctionAddress("clCreateBuffer"),
-            provider.getFunctionAddress("clEnqueueReadBuffer"),
-            provider.getFunctionAddress("clEnqueueWriteBuffer"),
-            provider.getFunctionAddress("clEnqueueCopyBuffer"),
-            provider.getFunctionAddress("clEnqueueMapBuffer"),
-            provider.getFunctionAddress("clCreateImage2D"),
-            provider.getFunctionAddress("clCreateImage3D"),
-            provider.getFunctionAddress("clGetSupportedImageFormats"),
-            provider.getFunctionAddress("clEnqueueReadImage"),
-            provider.getFunctionAddress("clEnqueueWriteImage"),
-            provider.getFunctionAddress("clEnqueueCopyImage"),
-            provider.getFunctionAddress("clEnqueueCopyImageToBuffer"),
-            provider.getFunctionAddress("clEnqueueCopyBufferToImage"),
-            provider.getFunctionAddress("clEnqueueMapImage"),
-            provider.getFunctionAddress("clGetImageInfo"),
-            provider.getFunctionAddress("clRetainMemObject"),
-            provider.getFunctionAddress("clReleaseMemObject"),
-            provider.getFunctionAddress("clEnqueueUnmapMemObject"),
-            provider.getFunctionAddress("clGetMemObjectInfo"),
-            provider.getFunctionAddress("clCreateSampler"),
-            provider.getFunctionAddress("clRetainSampler"),
-            provider.getFunctionAddress("clReleaseSampler"),
-            provider.getFunctionAddress("clGetSamplerInfo"),
-            provider.getFunctionAddress("clCreateProgramWithSource"),
-            provider.getFunctionAddress("clCreateProgramWithBinary"),
-            provider.getFunctionAddress("clRetainProgram"),
-            provider.getFunctionAddress("clReleaseProgram"),
-            provider.getFunctionAddress("clBuildProgram"),
-            provider.getFunctionAddress("clUnloadCompiler"),
-            provider.getFunctionAddress("clGetProgramInfo"),
-            provider.getFunctionAddress("clGetProgramBuildInfo"),
-            provider.getFunctionAddress("clCreateKernel"),
-            provider.getFunctionAddress("clCreateKernelsInProgram"),
-            provider.getFunctionAddress("clRetainKernel"),
-            provider.getFunctionAddress("clReleaseKernel"),
-            provider.getFunctionAddress("clSetKernelArg"),
-            provider.getFunctionAddress("clGetKernelInfo"),
-            provider.getFunctionAddress("clGetKernelWorkGroupInfo"),
-            provider.getFunctionAddress("clEnqueueNDRangeKernel"),
-            provider.getFunctionAddress("clEnqueueTask"),
-            provider.getFunctionAddress("clEnqueueNativeKernel"),
-            provider.getFunctionAddress("clWaitForEvents"),
-            provider.getFunctionAddress("clGetEventInfo"),
-            provider.getFunctionAddress("clRetainEvent"),
-            provider.getFunctionAddress("clReleaseEvent"),
-            provider.getFunctionAddress("clEnqueueMarker"),
-            provider.getFunctionAddress("clEnqueueBarrier"),
-            provider.getFunctionAddress("clEnqueueWaitForEvents"),
-            provider.getFunctionAddress("clGetEventProfilingInfo"),
-            provider.getFunctionAddress("clFlush"),
-            provider.getFunctionAddress("clFinish"),
-            provider.getFunctionAddress("clGetExtensionFunctionAddress"),
+            provider.getFunctionAddress("clCreateEventFromEGLSyncKHR"),
+            provider.getFunctionAddress("clCreateEventFromGLsyncKHR"),
+            provider.getFunctionAddress("clCreateFromEGLImageKHR"),
             provider.getFunctionAddress("clCreateFromGLBuffer"),
+            provider.getFunctionAddress("clCreateFromGLRenderbuffer"),
+            provider.getFunctionAddress("clCreateFromGLTexture"),
             provider.getFunctionAddress("clCreateFromGLTexture2D"),
             provider.getFunctionAddress("clCreateFromGLTexture3D"),
-            provider.getFunctionAddress("clCreateFromGLRenderbuffer"),
-            provider.getFunctionAddress("clGetGLObjectInfo"),
-            provider.getFunctionAddress("clGetGLTextureInfo"),
-            provider.getFunctionAddress("clEnqueueAcquireGLObjects"),
-            provider.getFunctionAddress("clEnqueueReleaseGLObjects"),
-            provider.getFunctionAddress("clCreateSubBuffer"),
-            provider.getFunctionAddress("clSetMemObjectDestructorCallback"),
-            provider.getFunctionAddress("clEnqueueReadBufferRect"),
-            provider.getFunctionAddress("clEnqueueWriteBufferRect"),
-            provider.getFunctionAddress("clEnqueueCopyBufferRect"),
-            provider.getFunctionAddress("clCreateUserEvent"),
-            provider.getFunctionAddress("clSetUserEventStatus"),
-            provider.getFunctionAddress("clSetEventCallback"),
-            provider.getFunctionAddress("clGetExtensionFunctionAddressForPlatform"),
-            provider.getFunctionAddress("clRetainDevice"),
-            provider.getFunctionAddress("clReleaseDevice"),
-            provider.getFunctionAddress("clCreateSubDevices"),
+            provider.getFunctionAddress("clCreateFromVA_APIMediaSurfaceINTEL"),
             provider.getFunctionAddress("clCreateImage"),
+            provider.getFunctionAddress("clCreateImage2D"),
+            provider.getFunctionAddress("clCreateImage3D"),
+            provider.getFunctionAddress("clCreateKernel"),
+            provider.getFunctionAddress("clCreateKernelsInProgram"),
+            provider.getFunctionAddress("clCreatePipe"),
+            provider.getFunctionAddress("clCreateProgramWithBinary"),
             provider.getFunctionAddress("clCreateProgramWithBuiltInKernels"),
-            provider.getFunctionAddress("clCompileProgram"),
-            provider.getFunctionAddress("clLinkProgram"),
-            provider.getFunctionAddress("clUnloadPlatformCompiler"),
-            provider.getFunctionAddress("clGetKernelArgInfo"),
+            provider.getFunctionAddress("clCreateProgramWithIL"),
+            provider.getFunctionAddress("clCreateProgramWithSource"),
+            provider.getFunctionAddress("clCreateSampler"),
+            provider.getFunctionAddress("clCreateSamplerWithProperties"),
+            provider.getFunctionAddress("clCreateSubBuffer"),
+            provider.getFunctionAddress("clCreateSubDevices"),
+            provider.getFunctionAddress("clCreateSubDevicesEXT"),
+            provider.getFunctionAddress("clCreateUserEvent"),
+            provider.getFunctionAddress("clEnqueueAcquireEGLObjectsKHR"),
+            provider.getFunctionAddress("clEnqueueAcquireGLObjects"),
+            provider.getFunctionAddress("clEnqueueAcquireVA_APIMediaSurfacesINTEL"),
+            provider.getFunctionAddress("clEnqueueBarrier"),
+            provider.getFunctionAddress("clEnqueueBarrierWithWaitList"),
+            provider.getFunctionAddress("clEnqueueCopyBuffer"),
+            provider.getFunctionAddress("clEnqueueCopyBufferRect"),
+            provider.getFunctionAddress("clEnqueueCopyBufferToImage"),
+            provider.getFunctionAddress("clEnqueueCopyImage"),
+            provider.getFunctionAddress("clEnqueueCopyImageToBuffer"),
             provider.getFunctionAddress("clEnqueueFillBuffer"),
             provider.getFunctionAddress("clEnqueueFillImage"),
-            provider.getFunctionAddress("clEnqueueMigrateMemObjects"),
+            provider.getFunctionAddress("clEnqueueMakeBuffersResidentAMD"),
+            provider.getFunctionAddress("clEnqueueMapBuffer"),
+            provider.getFunctionAddress("clEnqueueMapImage"),
+            provider.getFunctionAddress("clEnqueueMarker"),
             provider.getFunctionAddress("clEnqueueMarkerWithWaitList"),
-            provider.getFunctionAddress("clEnqueueBarrierWithWaitList"),
-            provider.getFunctionAddress("clCreateFromGLTexture"),
-            provider.getFunctionAddress("clCreateCommandQueueWithProperties"),
-            provider.getFunctionAddress("clCreatePipe"),
+            provider.getFunctionAddress("clEnqueueMigrateMemObjectEXT"),
+            provider.getFunctionAddress("clEnqueueMigrateMemObjects"),
+            provider.getFunctionAddress("clEnqueueNDRangeKernel"),
+            provider.getFunctionAddress("clEnqueueNativeKernel"),
+            provider.getFunctionAddress("clEnqueueReadBuffer"),
+            provider.getFunctionAddress("clEnqueueReadBufferRect"),
+            provider.getFunctionAddress("clEnqueueReadImage"),
+            provider.getFunctionAddress("clEnqueueReleaseEGLObjectsKHR"),
+            provider.getFunctionAddress("clEnqueueReleaseGLObjects"),
+            provider.getFunctionAddress("clEnqueueReleaseVA_APIMediaSurfacesINTEL"),
+            provider.getFunctionAddress("clEnqueueSVMFree"),
+            provider.getFunctionAddress("clEnqueueSVMMap"),
+            provider.getFunctionAddress("clEnqueueSVMMemFill"),
+            provider.getFunctionAddress("clEnqueueSVMMemcpy"),
+            provider.getFunctionAddress("clEnqueueSVMMigrateMem"),
+            provider.getFunctionAddress("clEnqueueSVMUnmap"),
+            provider.getFunctionAddress("clEnqueueTask"),
+            provider.getFunctionAddress("clEnqueueUnmapMemObject"),
+            provider.getFunctionAddress("clEnqueueWaitForEvents"),
+            provider.getFunctionAddress("clEnqueueWaitSignalAMD"),
+            provider.getFunctionAddress("clEnqueueWriteBuffer"),
+            provider.getFunctionAddress("clEnqueueWriteBufferRect"),
+            provider.getFunctionAddress("clEnqueueWriteImage"),
+            provider.getFunctionAddress("clEnqueueWriteSignalAMD"),
+            provider.getFunctionAddress("clFinish"),
+            provider.getFunctionAddress("clFlush"),
+            provider.getFunctionAddress("clGetAcceleratorInfoINTEL"),
+            provider.getFunctionAddress("clGetCommandQueueInfo"),
+            provider.getFunctionAddress("clGetContextInfo"),
+            provider.getFunctionAddress("clGetDeviceAndHostTimer"),
+            provider.getFunctionAddress("clGetDeviceIDs"),
+            provider.getFunctionAddress("clGetDeviceIDsFromVA_APIMediaAdapterINTEL"),
+            provider.getFunctionAddress("clGetDeviceImageInfoQCOM"),
+            provider.getFunctionAddress("clGetDeviceInfo"),
+            provider.getFunctionAddress("clGetEventInfo"),
+            provider.getFunctionAddress("clGetEventProfilingInfo"),
+            provider.getFunctionAddress("clGetExtensionFunctionAddress"),
+            provider.getFunctionAddress("clGetExtensionFunctionAddressForPlatform"),
+            provider.getFunctionAddress("clGetGLContextInfoAPPLE"),
+            provider.getFunctionAddress("clGetGLContextInfoKHR"),
+            provider.getFunctionAddress("clGetGLObjectInfo"),
+            provider.getFunctionAddress("clGetGLTextureInfo"),
+            provider.getFunctionAddress("clGetHostTimer"),
+            provider.getFunctionAddress("clGetImageInfo"),
+            provider.getFunctionAddress("clGetKernelArgInfo"),
+            provider.getFunctionAddress("clGetKernelInfo"),
+            provider.getFunctionAddress("clGetKernelSubGroupInfo"),
+            provider.getFunctionAddress("clGetKernelSubGroupInfoKHR"),
+            provider.getFunctionAddress("clGetKernelWorkGroupInfo"),
+            provider.getFunctionAddress("clGetMemObjectInfo"),
             provider.getFunctionAddress("clGetPipeInfo"),
+            provider.getFunctionAddress("clGetPlatformIDs"),
+            provider.getFunctionAddress("clGetPlatformInfo"),
+            provider.getFunctionAddress("clGetProgramBuildInfo"),
+            provider.getFunctionAddress("clGetProgramInfo"),
+            provider.getFunctionAddress("clGetSamplerInfo"),
+            provider.getFunctionAddress("clGetSupportedImageFormats"),
+            provider.getFunctionAddress("clLinkProgram"),
+            provider.getFunctionAddress("clLogMessagesToStderrAPPLE"),
+            provider.getFunctionAddress("clLogMessagesToStdoutAPPLE"),
+            provider.getFunctionAddress("clLogMessagesToSystemLogAPPLE"),
+            provider.getFunctionAddress("clReleaseAcceleratorINTEL"),
+            provider.getFunctionAddress("clReleaseCommandQueue"),
+            provider.getFunctionAddress("clReleaseContext"),
+            provider.getFunctionAddress("clReleaseDevice"),
+            provider.getFunctionAddress("clReleaseDeviceEXT"),
+            provider.getFunctionAddress("clReleaseEvent"),
+            provider.getFunctionAddress("clReleaseKernel"),
+            provider.getFunctionAddress("clReleaseMemObject"),
+            provider.getFunctionAddress("clReleaseProgram"),
+            provider.getFunctionAddress("clReleaseSampler"),
+            provider.getFunctionAddress("clReportLiveObjectsAltera"),
+            provider.getFunctionAddress("clRetainAcceleratorINTEL"),
+            provider.getFunctionAddress("clRetainCommandQueue"),
+            provider.getFunctionAddress("clRetainContext"),
+            provider.getFunctionAddress("clRetainDevice"),
+            provider.getFunctionAddress("clRetainDeviceEXT"),
+            provider.getFunctionAddress("clRetainEvent"),
+            provider.getFunctionAddress("clRetainKernel"),
+            provider.getFunctionAddress("clRetainMemObject"),
+            provider.getFunctionAddress("clRetainProgram"),
+            provider.getFunctionAddress("clRetainSampler"),
             provider.getFunctionAddress("clSVMAlloc"),
             provider.getFunctionAddress("clSVMFree"),
-            provider.getFunctionAddress("clEnqueueSVMFree"),
-            provider.getFunctionAddress("clEnqueueSVMMemcpy"),
-            provider.getFunctionAddress("clEnqueueSVMMemFill"),
-            provider.getFunctionAddress("clEnqueueSVMMap"),
-            provider.getFunctionAddress("clEnqueueSVMUnmap"),
+            provider.getFunctionAddress("clSetDefaultDeviceCommandQueue"),
+            provider.getFunctionAddress("clSetEventCallback"),
+            provider.getFunctionAddress("clSetKernelArg"),
             provider.getFunctionAddress("clSetKernelArgSVMPointer"),
             provider.getFunctionAddress("clSetKernelExecInfo"),
-            provider.getFunctionAddress("clCreateSamplerWithProperties"),
-            provider.getFunctionAddress("clSetDefaultDeviceCommandQueue"),
-            provider.getFunctionAddress("clGetDeviceAndHostTimer"),
-            provider.getFunctionAddress("clGetHostTimer"),
-            provider.getFunctionAddress("clCreateProgramWithIL"),
-            provider.getFunctionAddress("clCloneKernel"),
-            provider.getFunctionAddress("clGetKernelSubGroupInfo"),
-            provider.getFunctionAddress("clEnqueueSVMMigrateMem"),
+            provider.getFunctionAddress("clSetMemObjectDestructorCallback"),
             provider.getFunctionAddress("clSetProgramReleaseCallback"),
             provider.getFunctionAddress("clSetProgramSpecializationConstant"),
-            provider.getFunctionAddress("clTrackLiveObjectsAltera"),
-            provider.getFunctionAddress("clReportLiveObjectsAltera"),
-            provider.getFunctionAddress("clEnqueueWaitSignalAMD"),
-            provider.getFunctionAddress("clEnqueueWriteSignalAMD"),
-            provider.getFunctionAddress("clEnqueueMakeBuffersResidentAMD"),
-            provider.getFunctionAddress("clCreateCommandQueueWithPropertiesAPPLE"),
-            provider.getFunctionAddress("clLogMessagesToSystemLogAPPLE"),
-            provider.getFunctionAddress("clLogMessagesToStdoutAPPLE"),
-            provider.getFunctionAddress("clLogMessagesToStderrAPPLE"),
-            provider.getFunctionAddress("clGetGLContextInfoAPPLE"),
-            provider.getFunctionAddress("clReleaseDeviceEXT"),
-            provider.getFunctionAddress("clRetainDeviceEXT"),
-            provider.getFunctionAddress("clCreateSubDevicesEXT"),
-            provider.getFunctionAddress("clEnqueueMigrateMemObjectEXT"),
-            provider.getFunctionAddress("clCreateAcceleratorINTEL"),
-            provider.getFunctionAddress("clRetainAcceleratorINTEL"),
-            provider.getFunctionAddress("clReleaseAcceleratorINTEL"),
-            provider.getFunctionAddress("clGetAcceleratorInfoINTEL"),
-            provider.getFunctionAddress("clGetKernelSubGroupInfoKHR"),
-            provider.getFunctionAddress("clGetDeviceIDsFromVA_APIMediaAdapterINTEL"),
-            provider.getFunctionAddress("clCreateFromVA_APIMediaSurfaceINTEL"),
-            provider.getFunctionAddress("clEnqueueAcquireVA_APIMediaSurfacesINTEL"),
-            provider.getFunctionAddress("clEnqueueReleaseVA_APIMediaSurfacesINTEL"),
-            provider.getFunctionAddress("clCreateEventFromEGLSyncKHR"),
-            provider.getFunctionAddress("clCreateFromEGLImageKHR"),
-            provider.getFunctionAddress("clEnqueueAcquireEGLObjectsKHR"),
-            provider.getFunctionAddress("clEnqueueReleaseEGLObjectsKHR"),
-            provider.getFunctionAddress("clCreateEventFromGLsyncKHR"),
-            provider.getFunctionAddress("clGetGLContextInfoKHR"),
+            provider.getFunctionAddress("clSetUserEventStatus"),
             provider.getFunctionAddress("clTerminateContextKHR"),
-            provider.getFunctionAddress("clGetDeviceImageInfoQCOM")
+            provider.getFunctionAddress("clTrackLiveObjectsAltera"),
+            provider.getFunctionAddress("clUnloadCompiler"),
+            provider.getFunctionAddress("clUnloadPlatformCompiler"),
+            provider.getFunctionAddress("clWaitForEvents")
         );
     }
 
     CLCapabilities(CLCapabilities caps, Set<String> ext) {
         this(ext,
-            caps.clGetPlatformIDs,
-            caps.clGetPlatformInfo,
-            caps.clGetDeviceIDs,
-            caps.clGetDeviceInfo,
+            caps.clBuildProgram,
+            caps.clCloneKernel,
+            caps.clCompileProgram,
+            caps.clCreateAcceleratorINTEL,
+            caps.clCreateBuffer,
+            caps.clCreateCommandQueue,
+            caps.clCreateCommandQueueWithProperties,
+            caps.clCreateCommandQueueWithPropertiesAPPLE,
             caps.clCreateContext,
             caps.clCreateContextFromType,
-            caps.clRetainContext,
-            caps.clReleaseContext,
-            caps.clGetContextInfo,
-            caps.clCreateCommandQueue,
-            caps.clRetainCommandQueue,
-            caps.clReleaseCommandQueue,
-            caps.clGetCommandQueueInfo,
-            caps.clCreateBuffer,
-            caps.clEnqueueReadBuffer,
-            caps.clEnqueueWriteBuffer,
-            caps.clEnqueueCopyBuffer,
-            caps.clEnqueueMapBuffer,
-            caps.clCreateImage2D,
-            caps.clCreateImage3D,
-            caps.clGetSupportedImageFormats,
-            caps.clEnqueueReadImage,
-            caps.clEnqueueWriteImage,
-            caps.clEnqueueCopyImage,
-            caps.clEnqueueCopyImageToBuffer,
-            caps.clEnqueueCopyBufferToImage,
-            caps.clEnqueueMapImage,
-            caps.clGetImageInfo,
-            caps.clRetainMemObject,
-            caps.clReleaseMemObject,
-            caps.clEnqueueUnmapMemObject,
-            caps.clGetMemObjectInfo,
-            caps.clCreateSampler,
-            caps.clRetainSampler,
-            caps.clReleaseSampler,
-            caps.clGetSamplerInfo,
-            caps.clCreateProgramWithSource,
-            caps.clCreateProgramWithBinary,
-            caps.clRetainProgram,
-            caps.clReleaseProgram,
-            caps.clBuildProgram,
-            caps.clUnloadCompiler,
-            caps.clGetProgramInfo,
-            caps.clGetProgramBuildInfo,
-            caps.clCreateKernel,
-            caps.clCreateKernelsInProgram,
-            caps.clRetainKernel,
-            caps.clReleaseKernel,
-            caps.clSetKernelArg,
-            caps.clGetKernelInfo,
-            caps.clGetKernelWorkGroupInfo,
-            caps.clEnqueueNDRangeKernel,
-            caps.clEnqueueTask,
-            caps.clEnqueueNativeKernel,
-            caps.clWaitForEvents,
-            caps.clGetEventInfo,
-            caps.clRetainEvent,
-            caps.clReleaseEvent,
-            caps.clEnqueueMarker,
-            caps.clEnqueueBarrier,
-            caps.clEnqueueWaitForEvents,
-            caps.clGetEventProfilingInfo,
-            caps.clFlush,
-            caps.clFinish,
-            caps.clGetExtensionFunctionAddress,
+            caps.clCreateEventFromEGLSyncKHR,
+            caps.clCreateEventFromGLsyncKHR,
+            caps.clCreateFromEGLImageKHR,
             caps.clCreateFromGLBuffer,
+            caps.clCreateFromGLRenderbuffer,
+            caps.clCreateFromGLTexture,
             caps.clCreateFromGLTexture2D,
             caps.clCreateFromGLTexture3D,
-            caps.clCreateFromGLRenderbuffer,
-            caps.clGetGLObjectInfo,
-            caps.clGetGLTextureInfo,
-            caps.clEnqueueAcquireGLObjects,
-            caps.clEnqueueReleaseGLObjects,
-            caps.clCreateSubBuffer,
-            caps.clSetMemObjectDestructorCallback,
-            caps.clEnqueueReadBufferRect,
-            caps.clEnqueueWriteBufferRect,
-            caps.clEnqueueCopyBufferRect,
-            caps.clCreateUserEvent,
-            caps.clSetUserEventStatus,
-            caps.clSetEventCallback,
-            caps.clGetExtensionFunctionAddressForPlatform,
-            caps.clRetainDevice,
-            caps.clReleaseDevice,
-            caps.clCreateSubDevices,
+            caps.clCreateFromVA_APIMediaSurfaceINTEL,
             caps.clCreateImage,
+            caps.clCreateImage2D,
+            caps.clCreateImage3D,
+            caps.clCreateKernel,
+            caps.clCreateKernelsInProgram,
+            caps.clCreatePipe,
+            caps.clCreateProgramWithBinary,
             caps.clCreateProgramWithBuiltInKernels,
-            caps.clCompileProgram,
-            caps.clLinkProgram,
-            caps.clUnloadPlatformCompiler,
-            caps.clGetKernelArgInfo,
+            caps.clCreateProgramWithIL,
+            caps.clCreateProgramWithSource,
+            caps.clCreateSampler,
+            caps.clCreateSamplerWithProperties,
+            caps.clCreateSubBuffer,
+            caps.clCreateSubDevices,
+            caps.clCreateSubDevicesEXT,
+            caps.clCreateUserEvent,
+            caps.clEnqueueAcquireEGLObjectsKHR,
+            caps.clEnqueueAcquireGLObjects,
+            caps.clEnqueueAcquireVA_APIMediaSurfacesINTEL,
+            caps.clEnqueueBarrier,
+            caps.clEnqueueBarrierWithWaitList,
+            caps.clEnqueueCopyBuffer,
+            caps.clEnqueueCopyBufferRect,
+            caps.clEnqueueCopyBufferToImage,
+            caps.clEnqueueCopyImage,
+            caps.clEnqueueCopyImageToBuffer,
             caps.clEnqueueFillBuffer,
             caps.clEnqueueFillImage,
-            caps.clEnqueueMigrateMemObjects,
+            caps.clEnqueueMakeBuffersResidentAMD,
+            caps.clEnqueueMapBuffer,
+            caps.clEnqueueMapImage,
+            caps.clEnqueueMarker,
             caps.clEnqueueMarkerWithWaitList,
-            caps.clEnqueueBarrierWithWaitList,
-            caps.clCreateFromGLTexture,
-            caps.clCreateCommandQueueWithProperties,
-            caps.clCreatePipe,
+            caps.clEnqueueMigrateMemObjectEXT,
+            caps.clEnqueueMigrateMemObjects,
+            caps.clEnqueueNDRangeKernel,
+            caps.clEnqueueNativeKernel,
+            caps.clEnqueueReadBuffer,
+            caps.clEnqueueReadBufferRect,
+            caps.clEnqueueReadImage,
+            caps.clEnqueueReleaseEGLObjectsKHR,
+            caps.clEnqueueReleaseGLObjects,
+            caps.clEnqueueReleaseVA_APIMediaSurfacesINTEL,
+            caps.clEnqueueSVMFree,
+            caps.clEnqueueSVMMap,
+            caps.clEnqueueSVMMemFill,
+            caps.clEnqueueSVMMemcpy,
+            caps.clEnqueueSVMMigrateMem,
+            caps.clEnqueueSVMUnmap,
+            caps.clEnqueueTask,
+            caps.clEnqueueUnmapMemObject,
+            caps.clEnqueueWaitForEvents,
+            caps.clEnqueueWaitSignalAMD,
+            caps.clEnqueueWriteBuffer,
+            caps.clEnqueueWriteBufferRect,
+            caps.clEnqueueWriteImage,
+            caps.clEnqueueWriteSignalAMD,
+            caps.clFinish,
+            caps.clFlush,
+            caps.clGetAcceleratorInfoINTEL,
+            caps.clGetCommandQueueInfo,
+            caps.clGetContextInfo,
+            caps.clGetDeviceAndHostTimer,
+            caps.clGetDeviceIDs,
+            caps.clGetDeviceIDsFromVA_APIMediaAdapterINTEL,
+            caps.clGetDeviceImageInfoQCOM,
+            caps.clGetDeviceInfo,
+            caps.clGetEventInfo,
+            caps.clGetEventProfilingInfo,
+            caps.clGetExtensionFunctionAddress,
+            caps.clGetExtensionFunctionAddressForPlatform,
+            caps.clGetGLContextInfoAPPLE,
+            caps.clGetGLContextInfoKHR,
+            caps.clGetGLObjectInfo,
+            caps.clGetGLTextureInfo,
+            caps.clGetHostTimer,
+            caps.clGetImageInfo,
+            caps.clGetKernelArgInfo,
+            caps.clGetKernelInfo,
+            caps.clGetKernelSubGroupInfo,
+            caps.clGetKernelSubGroupInfoKHR,
+            caps.clGetKernelWorkGroupInfo,
+            caps.clGetMemObjectInfo,
             caps.clGetPipeInfo,
+            caps.clGetPlatformIDs,
+            caps.clGetPlatformInfo,
+            caps.clGetProgramBuildInfo,
+            caps.clGetProgramInfo,
+            caps.clGetSamplerInfo,
+            caps.clGetSupportedImageFormats,
+            caps.clLinkProgram,
+            caps.clLogMessagesToStderrAPPLE,
+            caps.clLogMessagesToStdoutAPPLE,
+            caps.clLogMessagesToSystemLogAPPLE,
+            caps.clReleaseAcceleratorINTEL,
+            caps.clReleaseCommandQueue,
+            caps.clReleaseContext,
+            caps.clReleaseDevice,
+            caps.clReleaseDeviceEXT,
+            caps.clReleaseEvent,
+            caps.clReleaseKernel,
+            caps.clReleaseMemObject,
+            caps.clReleaseProgram,
+            caps.clReleaseSampler,
+            caps.clReportLiveObjectsAltera,
+            caps.clRetainAcceleratorINTEL,
+            caps.clRetainCommandQueue,
+            caps.clRetainContext,
+            caps.clRetainDevice,
+            caps.clRetainDeviceEXT,
+            caps.clRetainEvent,
+            caps.clRetainKernel,
+            caps.clRetainMemObject,
+            caps.clRetainProgram,
+            caps.clRetainSampler,
             caps.clSVMAlloc,
             caps.clSVMFree,
-            caps.clEnqueueSVMFree,
-            caps.clEnqueueSVMMemcpy,
-            caps.clEnqueueSVMMemFill,
-            caps.clEnqueueSVMMap,
-            caps.clEnqueueSVMUnmap,
+            caps.clSetDefaultDeviceCommandQueue,
+            caps.clSetEventCallback,
+            caps.clSetKernelArg,
             caps.clSetKernelArgSVMPointer,
             caps.clSetKernelExecInfo,
-            caps.clCreateSamplerWithProperties,
-            caps.clSetDefaultDeviceCommandQueue,
-            caps.clGetDeviceAndHostTimer,
-            caps.clGetHostTimer,
-            caps.clCreateProgramWithIL,
-            caps.clCloneKernel,
-            caps.clGetKernelSubGroupInfo,
-            caps.clEnqueueSVMMigrateMem,
+            caps.clSetMemObjectDestructorCallback,
             caps.clSetProgramReleaseCallback,
             caps.clSetProgramSpecializationConstant,
-            caps.clTrackLiveObjectsAltera,
-            caps.clReportLiveObjectsAltera,
-            caps.clEnqueueWaitSignalAMD,
-            caps.clEnqueueWriteSignalAMD,
-            caps.clEnqueueMakeBuffersResidentAMD,
-            caps.clCreateCommandQueueWithPropertiesAPPLE,
-            caps.clLogMessagesToSystemLogAPPLE,
-            caps.clLogMessagesToStdoutAPPLE,
-            caps.clLogMessagesToStderrAPPLE,
-            caps.clGetGLContextInfoAPPLE,
-            caps.clReleaseDeviceEXT,
-            caps.clRetainDeviceEXT,
-            caps.clCreateSubDevicesEXT,
-            caps.clEnqueueMigrateMemObjectEXT,
-            caps.clCreateAcceleratorINTEL,
-            caps.clRetainAcceleratorINTEL,
-            caps.clReleaseAcceleratorINTEL,
-            caps.clGetAcceleratorInfoINTEL,
-            caps.clGetKernelSubGroupInfoKHR,
-            caps.clGetDeviceIDsFromVA_APIMediaAdapterINTEL,
-            caps.clCreateFromVA_APIMediaSurfaceINTEL,
-            caps.clEnqueueAcquireVA_APIMediaSurfacesINTEL,
-            caps.clEnqueueReleaseVA_APIMediaSurfacesINTEL,
-            caps.clCreateEventFromEGLSyncKHR,
-            caps.clCreateFromEGLImageKHR,
-            caps.clEnqueueAcquireEGLObjectsKHR,
-            caps.clEnqueueReleaseEGLObjectsKHR,
-            caps.clCreateEventFromGLsyncKHR,
-            caps.clGetGLContextInfoKHR,
+            caps.clSetUserEventStatus,
             caps.clTerminateContextKHR,
-            caps.clGetDeviceImageInfoQCOM
+            caps.clTrackLiveObjectsAltera,
+            caps.clUnloadCompiler,
+            caps.clUnloadPlatformCompiler,
+            caps.clWaitForEvents
         );
     }
 
     private CLCapabilities(Set<String> ext, long... functions) {
-        clGetPlatformIDs = functions[0];
-        clGetPlatformInfo = functions[1];
-        clGetDeviceIDs = functions[2];
-        clGetDeviceInfo = functions[3];
-        clCreateContext = functions[4];
-        clCreateContextFromType = functions[5];
-        clRetainContext = functions[6];
-        clReleaseContext = functions[7];
-        clGetContextInfo = functions[8];
-        clCreateCommandQueue = functions[9];
-        clRetainCommandQueue = functions[10];
-        clReleaseCommandQueue = functions[11];
-        clGetCommandQueueInfo = functions[12];
-        clCreateBuffer = functions[13];
-        clEnqueueReadBuffer = functions[14];
-        clEnqueueWriteBuffer = functions[15];
-        clEnqueueCopyBuffer = functions[16];
-        clEnqueueMapBuffer = functions[17];
-        clCreateImage2D = functions[18];
-        clCreateImage3D = functions[19];
-        clGetSupportedImageFormats = functions[20];
-        clEnqueueReadImage = functions[21];
-        clEnqueueWriteImage = functions[22];
-        clEnqueueCopyImage = functions[23];
-        clEnqueueCopyImageToBuffer = functions[24];
-        clEnqueueCopyBufferToImage = functions[25];
-        clEnqueueMapImage = functions[26];
-        clGetImageInfo = functions[27];
-        clRetainMemObject = functions[28];
-        clReleaseMemObject = functions[29];
-        clEnqueueUnmapMemObject = functions[30];
-        clGetMemObjectInfo = functions[31];
-        clCreateSampler = functions[32];
-        clRetainSampler = functions[33];
-        clReleaseSampler = functions[34];
-        clGetSamplerInfo = functions[35];
-        clCreateProgramWithSource = functions[36];
-        clCreateProgramWithBinary = functions[37];
-        clRetainProgram = functions[38];
-        clReleaseProgram = functions[39];
-        clBuildProgram = functions[40];
-        clUnloadCompiler = functions[41];
-        clGetProgramInfo = functions[42];
-        clGetProgramBuildInfo = functions[43];
-        clCreateKernel = functions[44];
-        clCreateKernelsInProgram = functions[45];
-        clRetainKernel = functions[46];
-        clReleaseKernel = functions[47];
-        clSetKernelArg = functions[48];
-        clGetKernelInfo = functions[49];
-        clGetKernelWorkGroupInfo = functions[50];
-        clEnqueueNDRangeKernel = functions[51];
-        clEnqueueTask = functions[52];
-        clEnqueueNativeKernel = functions[53];
-        clWaitForEvents = functions[54];
-        clGetEventInfo = functions[55];
-        clRetainEvent = functions[56];
-        clReleaseEvent = functions[57];
-        clEnqueueMarker = functions[58];
-        clEnqueueBarrier = functions[59];
-        clEnqueueWaitForEvents = functions[60];
-        clGetEventProfilingInfo = functions[61];
-        clFlush = functions[62];
-        clFinish = functions[63];
-        clGetExtensionFunctionAddress = functions[64];
-        clCreateFromGLBuffer = functions[65];
-        clCreateFromGLTexture2D = functions[66];
-        clCreateFromGLTexture3D = functions[67];
-        clCreateFromGLRenderbuffer = functions[68];
-        clGetGLObjectInfo = functions[69];
-        clGetGLTextureInfo = functions[70];
-        clEnqueueAcquireGLObjects = functions[71];
-        clEnqueueReleaseGLObjects = functions[72];
-        clCreateSubBuffer = functions[73];
-        clSetMemObjectDestructorCallback = functions[74];
-        clEnqueueReadBufferRect = functions[75];
-        clEnqueueWriteBufferRect = functions[76];
-        clEnqueueCopyBufferRect = functions[77];
-        clCreateUserEvent = functions[78];
-        clSetUserEventStatus = functions[79];
-        clSetEventCallback = functions[80];
-        clGetExtensionFunctionAddressForPlatform = functions[81];
-        clRetainDevice = functions[82];
-        clReleaseDevice = functions[83];
-        clCreateSubDevices = functions[84];
-        clCreateImage = functions[85];
-        clCreateProgramWithBuiltInKernels = functions[86];
-        clCompileProgram = functions[87];
-        clLinkProgram = functions[88];
-        clUnloadPlatformCompiler = functions[89];
-        clGetKernelArgInfo = functions[90];
-        clEnqueueFillBuffer = functions[91];
-        clEnqueueFillImage = functions[92];
-        clEnqueueMigrateMemObjects = functions[93];
-        clEnqueueMarkerWithWaitList = functions[94];
-        clEnqueueBarrierWithWaitList = functions[95];
-        clCreateFromGLTexture = functions[96];
-        clCreateCommandQueueWithProperties = functions[97];
-        clCreatePipe = functions[98];
-        clGetPipeInfo = functions[99];
-        clSVMAlloc = functions[100];
-        clSVMFree = functions[101];
-        clEnqueueSVMFree = functions[102];
-        clEnqueueSVMMemcpy = functions[103];
-        clEnqueueSVMMemFill = functions[104];
-        clEnqueueSVMMap = functions[105];
-        clEnqueueSVMUnmap = functions[106];
-        clSetKernelArgSVMPointer = functions[107];
-        clSetKernelExecInfo = functions[108];
-        clCreateSamplerWithProperties = functions[109];
-        clSetDefaultDeviceCommandQueue = functions[110];
-        clGetDeviceAndHostTimer = functions[111];
-        clGetHostTimer = functions[112];
-        clCreateProgramWithIL = functions[113];
-        clCloneKernel = functions[114];
-        clGetKernelSubGroupInfo = functions[115];
-        clEnqueueSVMMigrateMem = functions[116];
-        clSetProgramReleaseCallback = functions[117];
-        clSetProgramSpecializationConstant = functions[118];
-        clTrackLiveObjectsAltera = functions[119];
-        clReportLiveObjectsAltera = functions[120];
-        clEnqueueWaitSignalAMD = functions[121];
-        clEnqueueWriteSignalAMD = functions[122];
-        clEnqueueMakeBuffersResidentAMD = functions[123];
-        clCreateCommandQueueWithPropertiesAPPLE = functions[124];
-        clLogMessagesToSystemLogAPPLE = functions[125];
-        clLogMessagesToStdoutAPPLE = functions[126];
-        clLogMessagesToStderrAPPLE = functions[127];
-        clGetGLContextInfoAPPLE = functions[128];
-        clReleaseDeviceEXT = functions[129];
-        clRetainDeviceEXT = functions[130];
-        clCreateSubDevicesEXT = functions[131];
-        clEnqueueMigrateMemObjectEXT = functions[132];
-        clCreateAcceleratorINTEL = functions[133];
-        clRetainAcceleratorINTEL = functions[134];
-        clReleaseAcceleratorINTEL = functions[135];
-        clGetAcceleratorInfoINTEL = functions[136];
-        clGetKernelSubGroupInfoKHR = functions[137];
-        clGetDeviceIDsFromVA_APIMediaAdapterINTEL = functions[138];
-        clCreateFromVA_APIMediaSurfaceINTEL = functions[139];
-        clEnqueueAcquireVA_APIMediaSurfacesINTEL = functions[140];
-        clEnqueueReleaseVA_APIMediaSurfacesINTEL = functions[141];
-        clCreateEventFromEGLSyncKHR = functions[142];
-        clCreateFromEGLImageKHR = functions[143];
-        clEnqueueAcquireEGLObjectsKHR = functions[144];
-        clEnqueueReleaseEGLObjectsKHR = functions[145];
-        clCreateEventFromGLsyncKHR = functions[146];
-        clGetGLContextInfoKHR = functions[147];
-        clTerminateContextKHR = functions[148];
-        clGetDeviceImageInfoQCOM = functions[149];
+        clBuildProgram = functions[0];
+        clCloneKernel = functions[1];
+        clCompileProgram = functions[2];
+        clCreateAcceleratorINTEL = functions[3];
+        clCreateBuffer = functions[4];
+        clCreateCommandQueue = functions[5];
+        clCreateCommandQueueWithProperties = functions[6];
+        clCreateCommandQueueWithPropertiesAPPLE = functions[7];
+        clCreateContext = functions[8];
+        clCreateContextFromType = functions[9];
+        clCreateEventFromEGLSyncKHR = functions[10];
+        clCreateEventFromGLsyncKHR = functions[11];
+        clCreateFromEGLImageKHR = functions[12];
+        clCreateFromGLBuffer = functions[13];
+        clCreateFromGLRenderbuffer = functions[14];
+        clCreateFromGLTexture = functions[15];
+        clCreateFromGLTexture2D = functions[16];
+        clCreateFromGLTexture3D = functions[17];
+        clCreateFromVA_APIMediaSurfaceINTEL = functions[18];
+        clCreateImage = functions[19];
+        clCreateImage2D = functions[20];
+        clCreateImage3D = functions[21];
+        clCreateKernel = functions[22];
+        clCreateKernelsInProgram = functions[23];
+        clCreatePipe = functions[24];
+        clCreateProgramWithBinary = functions[25];
+        clCreateProgramWithBuiltInKernels = functions[26];
+        clCreateProgramWithIL = functions[27];
+        clCreateProgramWithSource = functions[28];
+        clCreateSampler = functions[29];
+        clCreateSamplerWithProperties = functions[30];
+        clCreateSubBuffer = functions[31];
+        clCreateSubDevices = functions[32];
+        clCreateSubDevicesEXT = functions[33];
+        clCreateUserEvent = functions[34];
+        clEnqueueAcquireEGLObjectsKHR = functions[35];
+        clEnqueueAcquireGLObjects = functions[36];
+        clEnqueueAcquireVA_APIMediaSurfacesINTEL = functions[37];
+        clEnqueueBarrier = functions[38];
+        clEnqueueBarrierWithWaitList = functions[39];
+        clEnqueueCopyBuffer = functions[40];
+        clEnqueueCopyBufferRect = functions[41];
+        clEnqueueCopyBufferToImage = functions[42];
+        clEnqueueCopyImage = functions[43];
+        clEnqueueCopyImageToBuffer = functions[44];
+        clEnqueueFillBuffer = functions[45];
+        clEnqueueFillImage = functions[46];
+        clEnqueueMakeBuffersResidentAMD = functions[47];
+        clEnqueueMapBuffer = functions[48];
+        clEnqueueMapImage = functions[49];
+        clEnqueueMarker = functions[50];
+        clEnqueueMarkerWithWaitList = functions[51];
+        clEnqueueMigrateMemObjectEXT = functions[52];
+        clEnqueueMigrateMemObjects = functions[53];
+        clEnqueueNDRangeKernel = functions[54];
+        clEnqueueNativeKernel = functions[55];
+        clEnqueueReadBuffer = functions[56];
+        clEnqueueReadBufferRect = functions[57];
+        clEnqueueReadImage = functions[58];
+        clEnqueueReleaseEGLObjectsKHR = functions[59];
+        clEnqueueReleaseGLObjects = functions[60];
+        clEnqueueReleaseVA_APIMediaSurfacesINTEL = functions[61];
+        clEnqueueSVMFree = functions[62];
+        clEnqueueSVMMap = functions[63];
+        clEnqueueSVMMemFill = functions[64];
+        clEnqueueSVMMemcpy = functions[65];
+        clEnqueueSVMMigrateMem = functions[66];
+        clEnqueueSVMUnmap = functions[67];
+        clEnqueueTask = functions[68];
+        clEnqueueUnmapMemObject = functions[69];
+        clEnqueueWaitForEvents = functions[70];
+        clEnqueueWaitSignalAMD = functions[71];
+        clEnqueueWriteBuffer = functions[72];
+        clEnqueueWriteBufferRect = functions[73];
+        clEnqueueWriteImage = functions[74];
+        clEnqueueWriteSignalAMD = functions[75];
+        clFinish = functions[76];
+        clFlush = functions[77];
+        clGetAcceleratorInfoINTEL = functions[78];
+        clGetCommandQueueInfo = functions[79];
+        clGetContextInfo = functions[80];
+        clGetDeviceAndHostTimer = functions[81];
+        clGetDeviceIDs = functions[82];
+        clGetDeviceIDsFromVA_APIMediaAdapterINTEL = functions[83];
+        clGetDeviceImageInfoQCOM = functions[84];
+        clGetDeviceInfo = functions[85];
+        clGetEventInfo = functions[86];
+        clGetEventProfilingInfo = functions[87];
+        clGetExtensionFunctionAddress = functions[88];
+        clGetExtensionFunctionAddressForPlatform = functions[89];
+        clGetGLContextInfoAPPLE = functions[90];
+        clGetGLContextInfoKHR = functions[91];
+        clGetGLObjectInfo = functions[92];
+        clGetGLTextureInfo = functions[93];
+        clGetHostTimer = functions[94];
+        clGetImageInfo = functions[95];
+        clGetKernelArgInfo = functions[96];
+        clGetKernelInfo = functions[97];
+        clGetKernelSubGroupInfo = functions[98];
+        clGetKernelSubGroupInfoKHR = functions[99];
+        clGetKernelWorkGroupInfo = functions[100];
+        clGetMemObjectInfo = functions[101];
+        clGetPipeInfo = functions[102];
+        clGetPlatformIDs = functions[103];
+        clGetPlatformInfo = functions[104];
+        clGetProgramBuildInfo = functions[105];
+        clGetProgramInfo = functions[106];
+        clGetSamplerInfo = functions[107];
+        clGetSupportedImageFormats = functions[108];
+        clLinkProgram = functions[109];
+        clLogMessagesToStderrAPPLE = functions[110];
+        clLogMessagesToStdoutAPPLE = functions[111];
+        clLogMessagesToSystemLogAPPLE = functions[112];
+        clReleaseAcceleratorINTEL = functions[113];
+        clReleaseCommandQueue = functions[114];
+        clReleaseContext = functions[115];
+        clReleaseDevice = functions[116];
+        clReleaseDeviceEXT = functions[117];
+        clReleaseEvent = functions[118];
+        clReleaseKernel = functions[119];
+        clReleaseMemObject = functions[120];
+        clReleaseProgram = functions[121];
+        clReleaseSampler = functions[122];
+        clReportLiveObjectsAltera = functions[123];
+        clRetainAcceleratorINTEL = functions[124];
+        clRetainCommandQueue = functions[125];
+        clRetainContext = functions[126];
+        clRetainDevice = functions[127];
+        clRetainDeviceEXT = functions[128];
+        clRetainEvent = functions[129];
+        clRetainKernel = functions[130];
+        clRetainMemObject = functions[131];
+        clRetainProgram = functions[132];
+        clRetainSampler = functions[133];
+        clSVMAlloc = functions[134];
+        clSVMFree = functions[135];
+        clSetDefaultDeviceCommandQueue = functions[136];
+        clSetEventCallback = functions[137];
+        clSetKernelArg = functions[138];
+        clSetKernelArgSVMPointer = functions[139];
+        clSetKernelExecInfo = functions[140];
+        clSetMemObjectDestructorCallback = functions[141];
+        clSetProgramReleaseCallback = functions[142];
+        clSetProgramSpecializationConstant = functions[143];
+        clSetUserEventStatus = functions[144];
+        clTerminateContextKHR = functions[145];
+        clTrackLiveObjectsAltera = functions[146];
+        clUnloadCompiler = functions[147];
+        clUnloadPlatformCompiler = functions[148];
+        clWaitForEvents = functions[149];
 
         OpenCL10 = ext.contains("OpenCL10") && CL.checkExtension("OpenCL10", CL10.isAvailable(this));
         OpenCL10GL = ext.contains("OpenCL10GL") && CL.checkExtension("OpenCL10GL", CL10GL.isAvailable(this));
@@ -1417,7 +1415,6 @@ public class CLCapabilities {
         cl_nv_device_attribute_query = ext.contains("cl_nv_device_attribute_query");
         cl_nv_pragma_unroll = ext.contains("cl_nv_pragma_unroll");
         cl_qcom_ext_host_ptr = ext.contains("cl_qcom_ext_host_ptr") && CL.checkExtension("cl_qcom_ext_host_ptr", QCOMEXTHostPtr.isAvailable(this));
-        cl_qcom_ext_host_ptr_iocoherent = ext.contains("cl_qcom_ext_host_ptr_iocoherent");
     }
 
 }

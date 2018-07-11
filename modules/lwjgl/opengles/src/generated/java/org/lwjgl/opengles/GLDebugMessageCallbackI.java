@@ -14,16 +14,16 @@ import static org.lwjgl.system.dyncall.DynCallback.*;
  * 
  * <h3>Type</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * void (*) (
  *     GLenum source,
  *     GLenum type,
  *     GLuint id,
  *     GLenum severity,
  *     GLsizei length,
- *     GLchar const *message,
- *     void const *userParam
- * )</code></pre>
+ *     const GLchar *message,
+ *     const void *userParam
+ * )</pre></code>
  */
 @FunctionalInterface
 @NativeType("GLDEBUGPROC")
@@ -58,6 +58,6 @@ public interface GLDebugMessageCallbackI extends CallbackI.V {
      * @param message   a pointer to the message string representation
      * @param userParam the user-specified value that was passed when calling {@link GLES32#glDebugMessageCallback DebugMessageCallback}
      */
-    void invoke(@NativeType("GLenum") int source, @NativeType("GLenum") int type, @NativeType("GLuint") int id, @NativeType("GLenum") int severity, @NativeType("GLsizei") int length, @NativeType("GLchar const *") long message, @NativeType("void const *") long userParam);
+    void invoke(@NativeType("GLenum") int source, @NativeType("GLenum") int type, @NativeType("GLuint") int id, @NativeType("GLenum") int severity, @NativeType("GLsizei") int length, @NativeType("const GLchar *") long message, @NativeType("const void *") long userParam);
 
 }

@@ -12,11 +12,11 @@ import static org.lwjgl.system.dyncall.DynCallback.*;
 /**
  * <h3>Type</h3>
  * 
- * <pre><code>
- * void * (*) (
- *     char const *text,
+ * <code><pre>
+ * void* (*) (
+ *     const char *text,
  *     void *context
- * )</code></pre>
+ * )</pre></code>
  */
 @FunctionalInterface
 @NativeType("rmtInputHandlerPtr")
@@ -35,6 +35,6 @@ public interface RMTInputHandlerI extends CallbackI.P {
         );
     }
 
-    @NativeType("void *") long invoke(@NativeType("char const *") long text, @NativeType("void *") long context);
+    @NativeType("void *") long invoke(@NativeType("const char *") long text, @NativeType("void *") long context);
 
 }

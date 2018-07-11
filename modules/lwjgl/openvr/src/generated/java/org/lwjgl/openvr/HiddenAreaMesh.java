@@ -23,11 +23,11 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct HiddenAreaMesh_t {
  *     {@link HmdVector2 HmdVector2_t} * pVertexData;
  *     uint32_t unTriangleCount;
- * }</code></pre>
+ * }</pre></code>
  */
 @NativeType("struct HiddenAreaMesh_t")
 public class HiddenAreaMesh extends Struct implements NativeResource {
@@ -35,7 +35,6 @@ public class HiddenAreaMesh extends Struct implements NativeResource {
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */

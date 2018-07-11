@@ -14,7 +14,7 @@ package org.lwjgl.vulkan;
  * 
  * <p>Geometry shaders provide the ability for applications to process each primitive sent through the graphics pipeline using a programmable shader. However, one common use case treats them largely as a "{@code passthrough}". In this use case, the bulk of the geometry shader code simply copies inputs from each vertex of the input primitive to corresponding outputs in the vertices of the output primitive. Such shaders might also compute values for additional built-in or user-defined per-primitive attributes (e.g., {@code Layer}) to be assigned to all the vertices of the output primitive.</p>
  * 
- * <p>This extension provides access to the {@code PassthroughNV} decoration under the {@code GeometryShaderPassthroughNV} capability. Adding this to a geometry shader input variable specifies that the values of this input are copied to the corresponding vertex of the output primitive.</p>
+ * <p>This extension provides access to the {@code PassthroughNV} decoration under the {@code GeometryShaderPassthroughNV} capability. Adding this to a geometry shader input variable indicates that the values of this input are copied to the corresponding vertex of the output primitive.</p>
  * 
  * <p>When using GLSL source-based shading languages, the {@code passthrough} layout qualifier from {@code GL_NV_geometry_shader_passthrough} maps to the {@code PassthroughNV} decoration. To use the {@code passthrough} layout, in GLSL the {@code GL_NV_geometry_shader_passthrough} extension must be enabled. Behaviour is described in the {@code GL_NV_geometry_shader_passthrough} extension specification.</p>
  * 
@@ -22,7 +22,7 @@ package org.lwjgl.vulkan;
  * 
  * <p>Consider the following simple geometry shader in unextended GLSL:</p>
  * 
- * <pre><code>
+ * <code><pre>
  * layout(triangles) in;
  * layout(triangle_strip) out;
  * layout(max_vertices=3) out;
@@ -39,20 +39,20 @@ package org.lwjgl.vulkan;
  * void main()
  * {
  *     int layer = compute_layer();
- *     for (int i = 0; i &lt; 3; i++) {
+ *     for (int i = 0; i < 3; i++) {
  *         gl_Position = gl_in[i].gl_Position;
  *         texcoord = v_in[i].texcoord;
  *         baseColor = v_in[i].baseColor;
  *         gl_Layer = layer;
  *         EmitVertex();
  *     }
- * }</code></pre>
+ * }</pre></code>
  * 
  * <p>In this shader, the inputs {@code gl_Position}, {@code Inputs.texcoord}, and {@code Inputs.baseColor} are simply copied from the input vertex to the corresponding output vertex. The only "{@code interesting}" work done by the geometry shader is computing and emitting a {@code gl_Layer} value for the primitive.</p>
  * 
  * <p>The following geometry shader, using this extension, is equivalent:</p>
  * 
- * <pre><code>
+ * <code><pre>
  * #extension GL_NV_geometry_shader_passthrough : require
  * 
  * layout(triangles) in;
@@ -76,7 +76,7 @@ package org.lwjgl.vulkan;
  *     // The shader simply computes and writes gl_Layer.  We don't
  *     // loop over three vertices or call EmitVertex().
  *     gl_Layer = compute_layer();
- * }</code></pre>
+ * }</pre></code>
  * 
  * <dl>
  * <dt><b>Name String</b></dt>

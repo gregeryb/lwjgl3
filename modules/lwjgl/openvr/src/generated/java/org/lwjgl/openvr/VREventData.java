@@ -16,7 +16,7 @@ import static org.lwjgl.system.MemoryUtil.*;
 /**
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * union VREvent_Data_t {
  *     {@link VREventReserved VREvent_Reserved_t} reserved;
  *     {@link VREventController VREvent_Controller_t} controller;
@@ -38,11 +38,7 @@ import static org.lwjgl.system.MemoryUtil.*;
  *     {@link VREventEditingCameraSurface VREvent_EditingCameraSurface_t} cameraSurface;
  *     {@link VREventMessageOverlay VREvent_MessageOverlay_t} messageOverlay;
  *     {@link VREventProperty VREvent_Property_t} property;
- *     {@link VREventDualAnalog VREvent_DualAnalog_t} dualAnalog;
- *     {@link VREventHapticVibration VREvent_HapticVibration_t} hapticVibration;
- *     {@link VREventWebConsole VREvent_WebConsole_t} webConsole;
- *     {@link VREventInputBindingLoad VREvent_InputBindingLoad_t} inputBinding;
- * }</code></pre>
+ * }</pre></code>
  */
 @NativeType("union VREvent_Data_t")
 public class VREventData extends Struct {
@@ -50,7 +46,6 @@ public class VREventData extends Struct {
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */
@@ -74,11 +69,7 @@ public class VREventData extends Struct {
         APPLICATIONLAUNCH,
         CAMERASURFACE,
         MESSAGEOVERLAY,
-        PROPERTY,
-        DUALANALOG,
-        HAPTICVIBRATION,
-        WEBCONSOLE,
-        INPUTBINDING;
+        PROPERTY;
 
     static {
         Layout layout = __union(
@@ -101,11 +92,7 @@ public class VREventData extends Struct {
             __member(VREventApplicationLaunch.SIZEOF, VREventApplicationLaunch.ALIGNOF),
             __member(VREventEditingCameraSurface.SIZEOF, VREventEditingCameraSurface.ALIGNOF),
             __member(VREventMessageOverlay.SIZEOF, VREventMessageOverlay.ALIGNOF),
-            __member(VREventProperty.SIZEOF, VREventProperty.ALIGNOF),
-            __member(VREventDualAnalog.SIZEOF, VREventDualAnalog.ALIGNOF),
-            __member(VREventHapticVibration.SIZEOF, VREventHapticVibration.ALIGNOF),
-            __member(VREventWebConsole.SIZEOF, VREventWebConsole.ALIGNOF),
-            __member(VREventInputBindingLoad.SIZEOF, VREventInputBindingLoad.ALIGNOF)
+            __member(VREventProperty.SIZEOF, VREventProperty.ALIGNOF)
         );
 
         SIZEOF = layout.getSize();
@@ -131,10 +118,6 @@ public class VREventData extends Struct {
         CAMERASURFACE = layout.offsetof(17);
         MESSAGEOVERLAY = layout.offsetof(18);
         PROPERTY = layout.offsetof(19);
-        DUALANALOG = layout.offsetof(20);
-        HAPTICVIBRATION = layout.offsetof(21);
-        WEBCONSOLE = layout.offsetof(22);
-        INPUTBINDING = layout.offsetof(23);
     }
 
     VREventData(long address, @Nullable ByteBuffer container) {
@@ -214,18 +197,6 @@ public class VREventData extends Struct {
     /** Returns a {@link VREventProperty} view of the {@code property} field. */
     @NativeType("VREvent_Property_t")
     public VREventProperty property() { return nproperty(address()); }
-    /** Returns a {@link VREventDualAnalog} view of the {@code dualAnalog} field. */
-    @NativeType("VREvent_DualAnalog_t")
-    public VREventDualAnalog dualAnalog() { return ndualAnalog(address()); }
-    /** Returns a {@link VREventHapticVibration} view of the {@code hapticVibration} field. */
-    @NativeType("VREvent_HapticVibration_t")
-    public VREventHapticVibration hapticVibration() { return nhapticVibration(address()); }
-    /** Returns a {@link VREventWebConsole} view of the {@code webConsole} field. */
-    @NativeType("VREvent_WebConsole_t")
-    public VREventWebConsole webConsole() { return nwebConsole(address()); }
-    /** Returns a {@link VREventInputBindingLoad} view of the {@code inputBinding} field. */
-    @NativeType("VREvent_InputBindingLoad_t")
-    public VREventInputBindingLoad inputBinding() { return ninputBinding(address()); }
 
     // -----------------------------------
 
@@ -298,14 +269,6 @@ public class VREventData extends Struct {
     public static VREventMessageOverlay nmessageOverlay(long struct) { return VREventMessageOverlay.create(struct + VREventData.MESSAGEOVERLAY); }
     /** Unsafe version of {@link #property}. */
     public static VREventProperty nproperty(long struct) { return VREventProperty.create(struct + VREventData.PROPERTY); }
-    /** Unsafe version of {@link #dualAnalog}. */
-    public static VREventDualAnalog ndualAnalog(long struct) { return VREventDualAnalog.create(struct + VREventData.DUALANALOG); }
-    /** Unsafe version of {@link #hapticVibration}. */
-    public static VREventHapticVibration nhapticVibration(long struct) { return VREventHapticVibration.create(struct + VREventData.HAPTICVIBRATION); }
-    /** Unsafe version of {@link #webConsole}. */
-    public static VREventWebConsole nwebConsole(long struct) { return VREventWebConsole.create(struct + VREventData.WEBCONSOLE); }
-    /** Unsafe version of {@link #inputBinding}. */
-    public static VREventInputBindingLoad ninputBinding(long struct) { return VREventInputBindingLoad.create(struct + VREventData.INPUTBINDING); }
 
     // -----------------------------------
 
@@ -413,18 +376,6 @@ public class VREventData extends Struct {
         /** Returns a {@link VREventProperty} view of the {@code property} field. */
         @NativeType("VREvent_Property_t")
         public VREventProperty property() { return VREventData.nproperty(address()); }
-        /** Returns a {@link VREventDualAnalog} view of the {@code dualAnalog} field. */
-        @NativeType("VREvent_DualAnalog_t")
-        public VREventDualAnalog dualAnalog() { return VREventData.ndualAnalog(address()); }
-        /** Returns a {@link VREventHapticVibration} view of the {@code hapticVibration} field. */
-        @NativeType("VREvent_HapticVibration_t")
-        public VREventHapticVibration hapticVibration() { return VREventData.nhapticVibration(address()); }
-        /** Returns a {@link VREventWebConsole} view of the {@code webConsole} field. */
-        @NativeType("VREvent_WebConsole_t")
-        public VREventWebConsole webConsole() { return VREventData.nwebConsole(address()); }
-        /** Returns a {@link VREventInputBindingLoad} view of the {@code inputBinding} field. */
-        @NativeType("VREvent_InputBindingLoad_t")
-        public VREventInputBindingLoad inputBinding() { return VREventData.ninputBinding(address()); }
 
     }
 

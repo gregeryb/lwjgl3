@@ -17,11 +17,11 @@ import static org.lwjgl.system.MemoryUtil.*;
 /**
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct nk_config_stack_button_behavior {
  *     int head;
  *     {@link NkConfigStackButtonBehaviorElement struct nk_config_stack_button_behavior_element} elements[8];
- * }</code></pre>
+ * }</pre></code>
  */
 @NativeType("struct nk_config_stack_button_behavior")
 class NkConfigStackButtonBehavior extends Struct {
@@ -29,7 +29,6 @@ class NkConfigStackButtonBehavior extends Struct {
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */
@@ -113,7 +112,8 @@ class NkConfigStackButtonBehavior extends Struct {
     public static NkConfigStackButtonBehaviorElement.Buffer nelements(long struct) { return NkConfigStackButtonBehaviorElement.create(struct + NkConfigStackButtonBehavior.ELEMENTS, 8); }
     /** Unsafe version of {@link #elements(int) elements}. */
     public static NkConfigStackButtonBehaviorElement nelements(long struct, int index) {
-        return NkConfigStackButtonBehaviorElement.create(struct + NkConfigStackButtonBehavior.ELEMENTS + check(index, 8) * NkConfigStackButtonBehaviorElement.SIZEOF);
+        if (CHECKS) { check(index, 8); }
+        return NkConfigStackButtonBehaviorElement.create(struct + NkConfigStackButtonBehavior.ELEMENTS + index * NkConfigStackButtonBehaviorElement.SIZEOF);
     }
 
     // -----------------------------------

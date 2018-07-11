@@ -48,10 +48,13 @@ public class VRScreenshots {
      * applications can call this to initate a screenshot outside of user control. The destination file names do not need an extension, will be replaced with
      * the correct one for the format which is currently .png.</p>
      *
-     * @param type one of:<br><table><tr><td>{@link VR#EVRScreenshotType_VRScreenshotType_None}</td></tr><tr><td>{@link VR#EVRScreenshotType_VRScreenshotType_Mono}</td></tr><tr><td>{@link VR#EVRScreenshotType_VRScreenshotType_Stereo}</td></tr><tr><td>{@link VR#EVRScreenshotType_VRScreenshotType_Cubemap}</td></tr><tr><td>{@link VR#EVRScreenshotType_VRScreenshotType_MonoPanorama}</td></tr><tr><td>{@link VR#EVRScreenshotType_VRScreenshotType_StereoPanorama}</td></tr></table>
+     * @param pOutScreenshotHandle 
+     * @param type                 one of:<br><table><tr><td>{@link VR#EVRScreenshotType_VRScreenshotType_None}</td></tr><tr><td>{@link VR#EVRScreenshotType_VRScreenshotType_Mono}</td></tr><tr><td>{@link VR#EVRScreenshotType_VRScreenshotType_Stereo}</td></tr><tr><td>{@link VR#EVRScreenshotType_VRScreenshotType_Cubemap}</td></tr><tr><td>{@link VR#EVRScreenshotType_VRScreenshotType_MonoPanorama}</td></tr><tr><td>{@link VR#EVRScreenshotType_VRScreenshotType_StereoPanorama}</td></tr></table>
+     * @param pchPreviewFilename   
+     * @param pchVRFilename        
      */
     @NativeType("EVRScreenshotError")
-    public static int VRScreenshots_RequestScreenshot(@NativeType("ScreenshotHandle_t *") IntBuffer pOutScreenshotHandle, @NativeType("EVRScreenshotType") int type, @NativeType("char const *") ByteBuffer pchPreviewFilename, @NativeType("char const *") ByteBuffer pchVRFilename) {
+    public static int VRScreenshots_RequestScreenshot(@NativeType("ScreenshotHandle_t *") IntBuffer pOutScreenshotHandle, @NativeType("EVRScreenshotType") int type, @NativeType("const char *") ByteBuffer pchPreviewFilename, @NativeType("const char *") ByteBuffer pchVRFilename) {
         if (CHECKS) {
             check(pOutScreenshotHandle, 1);
             checkNT1(pchPreviewFilename);
@@ -74,10 +77,13 @@ public class VRScreenshots {
      * applications can call this to initate a screenshot outside of user control. The destination file names do not need an extension, will be replaced with
      * the correct one for the format which is currently .png.</p>
      *
-     * @param type one of:<br><table><tr><td>{@link VR#EVRScreenshotType_VRScreenshotType_None}</td></tr><tr><td>{@link VR#EVRScreenshotType_VRScreenshotType_Mono}</td></tr><tr><td>{@link VR#EVRScreenshotType_VRScreenshotType_Stereo}</td></tr><tr><td>{@link VR#EVRScreenshotType_VRScreenshotType_Cubemap}</td></tr><tr><td>{@link VR#EVRScreenshotType_VRScreenshotType_MonoPanorama}</td></tr><tr><td>{@link VR#EVRScreenshotType_VRScreenshotType_StereoPanorama}</td></tr></table>
+     * @param pOutScreenshotHandle 
+     * @param type                 one of:<br><table><tr><td>{@link VR#EVRScreenshotType_VRScreenshotType_None}</td></tr><tr><td>{@link VR#EVRScreenshotType_VRScreenshotType_Mono}</td></tr><tr><td>{@link VR#EVRScreenshotType_VRScreenshotType_Stereo}</td></tr><tr><td>{@link VR#EVRScreenshotType_VRScreenshotType_Cubemap}</td></tr><tr><td>{@link VR#EVRScreenshotType_VRScreenshotType_MonoPanorama}</td></tr><tr><td>{@link VR#EVRScreenshotType_VRScreenshotType_StereoPanorama}</td></tr></table>
+     * @param pchPreviewFilename   
+     * @param pchVRFilename        
      */
     @NativeType("EVRScreenshotError")
-    public static int VRScreenshots_RequestScreenshot(@NativeType("ScreenshotHandle_t *") IntBuffer pOutScreenshotHandle, @NativeType("EVRScreenshotType") int type, @NativeType("char const *") CharSequence pchPreviewFilename, @NativeType("char const *") CharSequence pchVRFilename) {
+    public static int VRScreenshots_RequestScreenshot(@NativeType("ScreenshotHandle_t *") IntBuffer pOutScreenshotHandle, @NativeType("EVRScreenshotType") int type, @NativeType("const char *") CharSequence pchPreviewFilename, @NativeType("const char *") CharSequence pchVRFilename) {
         if (CHECKS) {
             check(pOutScreenshotHandle, 1);
         }
@@ -107,9 +113,11 @@ public class VRScreenshots {
      * will only support {@link VR#EVRScreenshotType_VRScreenshotType_Stereo} screenshots that will be captured without notification to the running app.
      * 
      * <p>Once hooked your application will receive a {@link VR#EVREventType_VREvent_RequestScreenshot} event when the user presses the buttons to take a screenshot.</p>
+     *
+     * @param pSupportedTypes 
      */
     @NativeType("EVRScreenshotError")
-    public static int VRScreenshots_HookScreenshot(@NativeType("EVRScreenshotType const *") IntBuffer pSupportedTypes) {
+    public static int VRScreenshots_HookScreenshot(@NativeType("const EVRScreenshotType *") IntBuffer pSupportedTypes) {
         return nVRScreenshots_HookScreenshot(memAddress(pSupportedTypes), pSupportedTypes.remaining());
     }
 
@@ -124,7 +132,12 @@ public class VRScreenshots {
         return callPI(__functionAddress, screenshotHandle, pError);
     }
 
-    /** When your application receives a {@link VR#EVREventType_VREvent_RequestScreenshot} event, call these functions to get the details of the screenshot request. */
+    /**
+     * When your application receives a {@link VR#EVREventType_VREvent_RequestScreenshot} event, call these functions to get the details of the screenshot request.
+     *
+     * @param screenshotHandle 
+     * @param pError           
+     */
     @NativeType("EVRScreenshotType")
     public static int VRScreenshots_GetScreenshotPropertyType(@NativeType("ScreenshotHandle_t") int screenshotHandle, @NativeType("EVRScreenshotError *") IntBuffer pError) {
         if (CHECKS) {
@@ -147,7 +160,10 @@ public class VRScreenshots {
     /**
      * Get the filename for the preview or vr image (see {@code EScreenshotPropertyFilenames}).
      *
-     * @param filenameType one of:<br><table><tr><td>{@link VR#EVRScreenshotPropertyFilenames_VRScreenshotPropertyFilenames_Preview}</td></tr><tr><td>{@link VR#EVRScreenshotPropertyFilenames_VRScreenshotPropertyFilenames_VR}</td></tr></table>
+     * @param screenshotHandle 
+     * @param filenameType     one of:<br><table><tr><td>{@link VR#EVRScreenshotPropertyFilenames_VRScreenshotPropertyFilenames_Preview}</td></tr><tr><td>{@link VR#EVRScreenshotPropertyFilenames_VRScreenshotPropertyFilenames_VR}</td></tr></table>
+     * @param pchFilename      
+     * @param pError           
      *
      * @return the size of the string
      */
@@ -162,7 +178,10 @@ public class VRScreenshots {
     /**
      * Get the filename for the preview or vr image (see {@code EScreenshotPropertyFilenames}).
      *
-     * @param filenameType one of:<br><table><tr><td>{@link VR#EVRScreenshotPropertyFilenames_VRScreenshotPropertyFilenames_Preview}</td></tr><tr><td>{@link VR#EVRScreenshotPropertyFilenames_VRScreenshotPropertyFilenames_VR}</td></tr></table>
+     * @param screenshotHandle 
+     * @param filenameType     one of:<br><table><tr><td>{@link VR#EVRScreenshotPropertyFilenames_VRScreenshotPropertyFilenames_Preview}</td></tr><tr><td>{@link VR#EVRScreenshotPropertyFilenames_VRScreenshotPropertyFilenames_VR}</td></tr></table>
+     * @param cchFilename      
+     * @param pError           
      *
      * @return the size of the string
      */
@@ -186,6 +205,9 @@ public class VRScreenshots {
     /**
      * Call this if the application is taking the screen shot will take more than a few ms processing. This will result in an overlay being presented that
      * shows a completion bar.
+     *
+     * @param screenshotHandle 
+     * @param flProgress       
      */
     @NativeType("EVRScreenshotError")
     public static int VRScreenshots_UpdateScreenshotProgress(@NativeType("ScreenshotHandle_t") int screenshotHandle, float flProgress) {
@@ -212,9 +234,13 @@ public class VRScreenshots {
      * textures of the running application and write them into the preview image and a side-by-side file for the VR image.
      * 
      * <p>This is similiar to request screenshot, but doesn't ever talk to the application, just takes the shot and submits.</p>
+     *
+     * @param pOutScreenshotHandle 
+     * @param pchPreviewFilename   
+     * @param pchVRFilename        
      */
     @NativeType("EVRScreenshotError")
-    public static int VRScreenshots_TakeStereoScreenshot(@NativeType("ScreenshotHandle_t *") IntBuffer pOutScreenshotHandle, @NativeType("char const *") ByteBuffer pchPreviewFilename, @NativeType("char const *") ByteBuffer pchVRFilename) {
+    public static int VRScreenshots_TakeStereoScreenshot(@NativeType("ScreenshotHandle_t *") IntBuffer pOutScreenshotHandle, @NativeType("const char *") ByteBuffer pchPreviewFilename, @NativeType("const char *") ByteBuffer pchVRFilename) {
         if (CHECKS) {
             check(pOutScreenshotHandle, 1);
             checkNT1(pchPreviewFilename);
@@ -228,9 +254,13 @@ public class VRScreenshots {
      * textures of the running application and write them into the preview image and a side-by-side file for the VR image.
      * 
      * <p>This is similiar to request screenshot, but doesn't ever talk to the application, just takes the shot and submits.</p>
+     *
+     * @param pOutScreenshotHandle 
+     * @param pchPreviewFilename   
+     * @param pchVRFilename        
      */
     @NativeType("EVRScreenshotError")
-    public static int VRScreenshots_TakeStereoScreenshot(@NativeType("ScreenshotHandle_t *") IntBuffer pOutScreenshotHandle, @NativeType("char const *") CharSequence pchPreviewFilename, @NativeType("char const *") CharSequence pchVRFilename) {
+    public static int VRScreenshots_TakeStereoScreenshot(@NativeType("ScreenshotHandle_t *") IntBuffer pOutScreenshotHandle, @NativeType("const char *") CharSequence pchPreviewFilename, @NativeType("const char *") CharSequence pchVRFilename) {
         if (CHECKS) {
             check(pOutScreenshotHandle, 1);
         }
@@ -267,10 +297,13 @@ public class VRScreenshots {
      * <p>{@code screenshotHandle} can be {@link VR#k_unScreenshotHandleInvalid} if this was a new shot taking by the app to be saved and not initiated by a user
      * (achievement earned or something).</p>
      *
-     * @param type one of:<br><table><tr><td>{@link VR#EVRScreenshotType_VRScreenshotType_None}</td></tr><tr><td>{@link VR#EVRScreenshotType_VRScreenshotType_Mono}</td></tr><tr><td>{@link VR#EVRScreenshotType_VRScreenshotType_Stereo}</td></tr><tr><td>{@link VR#EVRScreenshotType_VRScreenshotType_Cubemap}</td></tr><tr><td>{@link VR#EVRScreenshotType_VRScreenshotType_MonoPanorama}</td></tr><tr><td>{@link VR#EVRScreenshotType_VRScreenshotType_StereoPanorama}</td></tr></table>
+     * @param screenshotHandle         
+     * @param type                     one of:<br><table><tr><td>{@link VR#EVRScreenshotType_VRScreenshotType_None}</td></tr><tr><td>{@link VR#EVRScreenshotType_VRScreenshotType_Mono}</td></tr><tr><td>{@link VR#EVRScreenshotType_VRScreenshotType_Stereo}</td></tr><tr><td>{@link VR#EVRScreenshotType_VRScreenshotType_Cubemap}</td></tr><tr><td>{@link VR#EVRScreenshotType_VRScreenshotType_MonoPanorama}</td></tr><tr><td>{@link VR#EVRScreenshotType_VRScreenshotType_StereoPanorama}</td></tr></table>
+     * @param pchSourcePreviewFilename 
+     * @param pchSourceVRFilename      
      */
     @NativeType("EVRScreenshotError")
-    public static int VRScreenshots_SubmitScreenshot(@NativeType("ScreenshotHandle_t") int screenshotHandle, @NativeType("EVRScreenshotType") int type, @NativeType("char const *") ByteBuffer pchSourcePreviewFilename, @NativeType("char const *") ByteBuffer pchSourceVRFilename) {
+    public static int VRScreenshots_SubmitScreenshot(@NativeType("ScreenshotHandle_t") int screenshotHandle, @NativeType("EVRScreenshotType") int type, @NativeType("const char *") ByteBuffer pchSourcePreviewFilename, @NativeType("const char *") ByteBuffer pchSourceVRFilename) {
         if (CHECKS) {
             checkNT1(pchSourcePreviewFilename);
             checkNT1(pchSourceVRFilename);
@@ -290,10 +323,13 @@ public class VRScreenshots {
      * <p>{@code screenshotHandle} can be {@link VR#k_unScreenshotHandleInvalid} if this was a new shot taking by the app to be saved and not initiated by a user
      * (achievement earned or something).</p>
      *
-     * @param type one of:<br><table><tr><td>{@link VR#EVRScreenshotType_VRScreenshotType_None}</td></tr><tr><td>{@link VR#EVRScreenshotType_VRScreenshotType_Mono}</td></tr><tr><td>{@link VR#EVRScreenshotType_VRScreenshotType_Stereo}</td></tr><tr><td>{@link VR#EVRScreenshotType_VRScreenshotType_Cubemap}</td></tr><tr><td>{@link VR#EVRScreenshotType_VRScreenshotType_MonoPanorama}</td></tr><tr><td>{@link VR#EVRScreenshotType_VRScreenshotType_StereoPanorama}</td></tr></table>
+     * @param screenshotHandle         
+     * @param type                     one of:<br><table><tr><td>{@link VR#EVRScreenshotType_VRScreenshotType_None}</td></tr><tr><td>{@link VR#EVRScreenshotType_VRScreenshotType_Mono}</td></tr><tr><td>{@link VR#EVRScreenshotType_VRScreenshotType_Stereo}</td></tr><tr><td>{@link VR#EVRScreenshotType_VRScreenshotType_Cubemap}</td></tr><tr><td>{@link VR#EVRScreenshotType_VRScreenshotType_MonoPanorama}</td></tr><tr><td>{@link VR#EVRScreenshotType_VRScreenshotType_StereoPanorama}</td></tr></table>
+     * @param pchSourcePreviewFilename 
+     * @param pchSourceVRFilename      
      */
     @NativeType("EVRScreenshotError")
-    public static int VRScreenshots_SubmitScreenshot(@NativeType("ScreenshotHandle_t") int screenshotHandle, @NativeType("EVRScreenshotType") int type, @NativeType("char const *") CharSequence pchSourcePreviewFilename, @NativeType("char const *") CharSequence pchSourceVRFilename) {
+    public static int VRScreenshots_SubmitScreenshot(@NativeType("ScreenshotHandle_t") int screenshotHandle, @NativeType("EVRScreenshotType") int type, @NativeType("const char *") CharSequence pchSourcePreviewFilename, @NativeType("const char *") CharSequence pchSourceVRFilename) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
             ByteBuffer pchSourcePreviewFilenameEncoded = stack.ASCII(pchSourcePreviewFilename);

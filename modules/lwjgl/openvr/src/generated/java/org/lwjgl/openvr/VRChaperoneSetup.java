@@ -71,6 +71,9 @@ public class VRChaperoneSetup {
     /**
      * Returns the width and depth of the Play Area (formerly named Soft Bounds) in X and Z from the working copy. Tracking space center (0,0,0) is the center
      * of the Play Area.
+     *
+     * @param pSizeX 
+     * @param pSizeZ 
      */
     @NativeType("bool")
     public static boolean VRChaperoneSetup_GetWorkingPlayAreaSize(@NativeType("float *") FloatBuffer pSizeX, @NativeType("float *") FloatBuffer pSizeZ) {
@@ -97,6 +100,8 @@ public class VRChaperoneSetup {
      * 
      * <p>Corners are in clockwise order. Tracking space center (0,0,0) is the center of the Play Area. It's a rectangle. 2 sides are parallel to the X axis and
      * 2 sides are parallel to the Z axis. Height of every corner is 0Y (on the floor).</p>
+     *
+     * @param rect 
      */
     @NativeType("bool")
     public static boolean VRChaperoneSetup_GetWorkingPlayAreaRect(@NativeType("HmdQuad_t *") HmdQuad rect) {
@@ -114,7 +119,12 @@ public class VRChaperoneSetup {
         return callPPZ(__functionAddress, pQuadsBuffer, punQuadsCount);
     }
 
-    /** Returns the number of Quads if the buffer points to null. Otherwise it returns Quads into the buffer up to the max specified from the working copy. */
+    /**
+     * Returns the number of Quads if the buffer points to null. Otherwise it returns Quads into the buffer up to the max specified from the working copy.
+     *
+     * @param pQuadsBuffer  
+     * @param punQuadsCount 
+     */
     @NativeType("bool")
     public static boolean VRChaperoneSetup_GetWorkingCollisionBoundsInfo(@Nullable @NativeType("HmdQuad_t *") HmdQuad.Buffer pQuadsBuffer, @NativeType("uint32_t *") IntBuffer punQuadsCount) {
         if (CHECKS) {
@@ -135,7 +145,12 @@ public class VRChaperoneSetup {
         return callPPZ(__functionAddress, pQuadsBuffer, punQuadsCount);
     }
 
-    /** Returns the number of Quads if the buffer points to null. Otherwise it returns Quads into the buffer up to the max specified. */
+    /**
+     * Returns the number of Quads if the buffer points to null. Otherwise it returns Quads into the buffer up to the max specified.
+     *
+     * @param pQuadsBuffer  
+     * @param punQuadsCount 
+     */
     @NativeType("bool")
     public static boolean VRChaperoneSetup_GetLiveCollisionBoundsInfo(@Nullable @NativeType("HmdQuad_t *") HmdQuad.Buffer pQuadsBuffer, @NativeType("uint32_t *") IntBuffer punQuadsCount) {
         if (CHECKS) {
@@ -156,7 +171,11 @@ public class VRChaperoneSetup {
         return callPZ(__functionAddress, pmatSeatedZeroPoseToRawTrackingPose);
     }
 
-    /** Returns the preferred seated position from the working copy. */
+    /**
+     * Returns the preferred seated position from the working copy.
+     *
+     * @param pmatSeatedZeroPoseToRawTrackingPose 
+     */
     @NativeType("bool")
     public static boolean VRChaperoneSetup_GetWorkingSeatedZeroPoseToRawTrackingPose(@NativeType("HmdMatrix34_t *") HmdMatrix34 pmatSeatedZeroPoseToRawTrackingPose) {
         return nVRChaperoneSetup_GetWorkingSeatedZeroPoseToRawTrackingPose(pmatSeatedZeroPoseToRawTrackingPose.address());
@@ -173,7 +192,11 @@ public class VRChaperoneSetup {
         return callPZ(__functionAddress, pmatStandingZeroPoseToRawTrackingPose);
     }
 
-    /** Returns the standing origin from the working copy. */
+    /**
+     * Returns the standing origin from the working copy.
+     *
+     * @param pmatStandingZeroPoseToRawTrackingPose 
+     */
     @NativeType("bool")
     public static boolean VRChaperoneSetup_GetWorkingStandingZeroPoseToRawTrackingPose(@NativeType("HmdMatrix34_t *") HmdMatrix34 pmatStandingZeroPoseToRawTrackingPose) {
         return nVRChaperoneSetup_GetWorkingStandingZeroPoseToRawTrackingPose(pmatStandingZeroPoseToRawTrackingPose.address());
@@ -181,7 +204,12 @@ public class VRChaperoneSetup {
 
     // --- [ VRChaperoneSetup_SetWorkingPlayAreaSize ] ---
 
-    /** Sets the Play Area in the working copy. */
+    /**
+     * Sets the Play Area in the working copy.
+     *
+     * @param sizeX 
+     * @param sizeZ 
+     */
     public static void VRChaperoneSetup_SetWorkingPlayAreaSize(float sizeX, float sizeZ) {
         long __functionAddress = OpenVR.VRChaperoneSetup.SetWorkingPlayAreaSize;
         if (CHECKS) {
@@ -201,7 +229,11 @@ public class VRChaperoneSetup {
         callPV(__functionAddress, pQuadsBuffer, unQuadsCount);
     }
 
-    /** Sets the Collision Bounds in the working copy. */
+    /**
+     * Sets the Collision Bounds in the working copy.
+     *
+     * @param pQuadsBuffer 
+     */
     public static void VRChaperoneSetup_SetWorkingCollisionBoundsInfo(@NativeType("HmdQuad_t *") HmdQuad.Buffer pQuadsBuffer) {
         nVRChaperoneSetup_SetWorkingCollisionBoundsInfo(pQuadsBuffer.address(), pQuadsBuffer.remaining());
     }
@@ -217,8 +249,12 @@ public class VRChaperoneSetup {
         callPV(__functionAddress, pMatSeatedZeroPoseToRawTrackingPose);
     }
 
-    /** Sets the preferred seated position in the working copy. */
-    public static void VRChaperoneSetup_SetWorkingSeatedZeroPoseToRawTrackingPose(@NativeType("HmdMatrix34_t const *") HmdMatrix34 pMatSeatedZeroPoseToRawTrackingPose) {
+    /**
+     * Sets the preferred seated position in the working copy.
+     *
+     * @param pMatSeatedZeroPoseToRawTrackingPose 
+     */
+    public static void VRChaperoneSetup_SetWorkingSeatedZeroPoseToRawTrackingPose(@NativeType("const HmdMatrix34_t *") HmdMatrix34 pMatSeatedZeroPoseToRawTrackingPose) {
         nVRChaperoneSetup_SetWorkingSeatedZeroPoseToRawTrackingPose(pMatSeatedZeroPoseToRawTrackingPose.address());
     }
 
@@ -233,8 +269,12 @@ public class VRChaperoneSetup {
         callPV(__functionAddress, pMatStandingZeroPoseToRawTrackingPose);
     }
 
-    /** Sets the preferred standing position in the working copy. */
-    public static void VRChaperoneSetup_SetWorkingStandingZeroPoseToRawTrackingPose(@NativeType("HmdMatrix34_t const *") HmdMatrix34 pMatStandingZeroPoseToRawTrackingPose) {
+    /**
+     * Sets the preferred standing position in the working copy.
+     *
+     * @param pMatStandingZeroPoseToRawTrackingPose 
+     */
+    public static void VRChaperoneSetup_SetWorkingStandingZeroPoseToRawTrackingPose(@NativeType("const HmdMatrix34_t *") HmdMatrix34 pMatStandingZeroPoseToRawTrackingPose) {
         nVRChaperoneSetup_SetWorkingStandingZeroPoseToRawTrackingPose(pMatStandingZeroPoseToRawTrackingPose.address());
     }
 
@@ -264,7 +304,11 @@ public class VRChaperoneSetup {
         return callPZ(__functionAddress, pmatSeatedZeroPoseToRawTrackingPose);
     }
 
-    /** Returns the preferred seated position. */
+    /**
+     * Returns the preferred seated position.
+     *
+     * @param pmatSeatedZeroPoseToRawTrackingPose 
+     */
     @NativeType("bool")
     public static boolean VRChaperoneSetup_GetLiveSeatedZeroPoseToRawTrackingPose(@NativeType("HmdMatrix34_t *") HmdMatrix34 pmatSeatedZeroPoseToRawTrackingPose) {
         return nVRChaperoneSetup_GetLiveSeatedZeroPoseToRawTrackingPose(pmatSeatedZeroPoseToRawTrackingPose.address());
@@ -367,7 +411,7 @@ public class VRChaperoneSetup {
     }
 
     @NativeType("bool")
-    public static boolean VRChaperoneSetup_ImportFromBufferToWorking(@NativeType("char const *") ByteBuffer pBuffer, @NativeType("uint32_t") int nImportFlags) {
+    public static boolean VRChaperoneSetup_ImportFromBufferToWorking(@NativeType("const char *") ByteBuffer pBuffer, @NativeType("uint32_t") int nImportFlags) {
         return nVRChaperoneSetup_ImportFromBufferToWorking(memAddress(pBuffer), nImportFlags);
     }
 

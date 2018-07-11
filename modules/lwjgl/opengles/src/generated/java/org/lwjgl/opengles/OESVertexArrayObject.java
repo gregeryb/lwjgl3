@@ -46,11 +46,11 @@ public class OESVertexArrayObject {
 
     public static native void nglDeleteVertexArraysOES(int n, long arrays);
 
-    public static void glDeleteVertexArraysOES(@NativeType("GLuint const *") IntBuffer arrays) {
+    public static void glDeleteVertexArraysOES(@NativeType("const GLuint *") IntBuffer arrays) {
         nglDeleteVertexArraysOES(arrays.remaining(), memAddress(arrays));
     }
 
-    public static void glDeleteVertexArraysOES(@NativeType("GLuint const *") int array) {
+    public static void glDeleteVertexArraysOES(@NativeType("const GLuint *") int array) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
             IntBuffer arrays = stack.ints(array);
@@ -88,8 +88,8 @@ public class OESVertexArrayObject {
     @NativeType("GLboolean")
     public static native boolean glIsVertexArrayOES(@NativeType("GLuint") int array);
 
-    /** Array version of: {@link #glDeleteVertexArraysOES DeleteVertexArraysOES} */
-    public static void glDeleteVertexArraysOES(@NativeType("GLuint const *") int[] arrays) {
+    /** register Array version of: {@link #glDeleteVertexArraysOES DeleteVertexArraysOES} */
+    public static void glDeleteVertexArraysOES(@NativeType("const GLuint *") int[] arrays) {
         long __functionAddress = GLES.getICD().glDeleteVertexArraysOES;
         if (CHECKS) {
             check(__functionAddress);
@@ -97,7 +97,7 @@ public class OESVertexArrayObject {
         callPV(__functionAddress, arrays.length, arrays);
     }
 
-    /** Array version of: {@link #glGenVertexArraysOES GenVertexArraysOES} */
+    /** register Array version of: {@link #glGenVertexArraysOES GenVertexArraysOES} */
     public static void glGenVertexArraysOES(@NativeType("GLuint *") int[] arrays) {
         long __functionAddress = GLES.getICD().glGenVertexArraysOES;
         if (CHECKS) {

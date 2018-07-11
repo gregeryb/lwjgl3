@@ -16,7 +16,7 @@ import static org.lwjgl.system.MemoryUtil.*;
 /**
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct nk_command_buffer {
  *     {@link NkBuffer struct nk_buffer} * base;
  *     {@link NkRect struct nk_rect} clip;
@@ -25,7 +25,7 @@ import static org.lwjgl.system.MemoryUtil.*;
  *     nk_size begin;
  *     nk_size end;
  *     nk_size last;
- * }</code></pre>
+ * }</pre></code>
  */
 @NativeType("struct nk_command_buffer")
 public class NkCommandBuffer extends Struct {
@@ -33,7 +33,6 @@ public class NkCommandBuffer extends Struct {
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */
@@ -93,15 +92,11 @@ public class NkCommandBuffer extends Struct {
     /** Returns a {@link NkRect} view of the {@code clip} field. */
     @NativeType("struct nk_rect")
     public NkRect clip() { return nclip(address()); }
-    /** Passes the {@code clip} field to the specified {@link java.util.function.Consumer Consumer}. */
-    public NkCommandBuffer clip(java.util.function.Consumer<NkRect> consumer) { consumer.accept(clip()); return this; }
     /** Returns the value of the {@code use_clipping} field. */
     public int use_clipping() { return nuse_clipping(address()); }
     /** Returns a {@link NkHandle} view of the {@code userdata} field. */
     @NativeType("nk_handle")
     public NkHandle userdata() { return nuserdata(address()); }
-    /** Passes the {@code userdata} field to the specified {@link java.util.function.Consumer Consumer}. */
-    public NkCommandBuffer userdata(java.util.function.Consumer<NkHandle> consumer) { consumer.accept(userdata()); return this; }
     /** Returns the value of the {@code begin} field. */
     @NativeType("nk_size")
     public long begin() { return nbegin(address()); }
@@ -211,15 +206,11 @@ public class NkCommandBuffer extends Struct {
         /** Returns a {@link NkRect} view of the {@code clip} field. */
         @NativeType("struct nk_rect")
         public NkRect clip() { return NkCommandBuffer.nclip(address()); }
-        /** Passes the {@code clip} field to the specified {@link java.util.function.Consumer Consumer}. */
-        public NkCommandBuffer.Buffer clip(java.util.function.Consumer<NkRect> consumer) { consumer.accept(clip()); return this; }
         /** Returns the value of the {@code use_clipping} field. */
         public int use_clipping() { return NkCommandBuffer.nuse_clipping(address()); }
         /** Returns a {@link NkHandle} view of the {@code userdata} field. */
         @NativeType("nk_handle")
         public NkHandle userdata() { return NkCommandBuffer.nuserdata(address()); }
-        /** Passes the {@code userdata} field to the specified {@link java.util.function.Consumer Consumer}. */
-        public NkCommandBuffer.Buffer userdata(java.util.function.Consumer<NkHandle> consumer) { consumer.accept(userdata()); return this; }
         /** Returns the value of the {@code begin} field. */
         @NativeType("nk_size")
         public long begin() { return NkCommandBuffer.nbegin(address()); }

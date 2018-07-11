@@ -44,19 +44,19 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct aiImporterDesc {
- *     char const * mName;
- *     char const * mAuthor;
- *     char const * mMaintainer;
- *     char const * mComments;
+ *     const char * mName;
+ *     const char * mAuthor;
+ *     const char * mMaintainer;
+ *     const char * mComments;
  *     unsigned int mFlags;
  *     unsigned int mMinMajor;
  *     unsigned int mMinMinor;
  *     unsigned int mMaxMajor;
  *     unsigned int mMaxMinor;
- *     char const * mFileExtensions;
- * }</code></pre>
+ *     const char * mFileExtensions;
+ * }</pre></code>
  */
 @NativeType("struct aiImporterDesc")
 public class AIImporterDesc extends Struct implements NativeResource {
@@ -64,7 +64,6 @@ public class AIImporterDesc extends Struct implements NativeResource {
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */
@@ -127,28 +126,28 @@ public class AIImporterDesc extends Struct implements NativeResource {
     public int sizeof() { return SIZEOF; }
 
     /** Returns a {@link ByteBuffer} view of the null-terminated string pointed to by the {@code mName} field. */
-    @NativeType("char const *")
+    @NativeType("const char *")
     public ByteBuffer mName() { return nmName(address()); }
     /** Decodes the null-terminated string pointed to by the {@code mName} field. */
-    @NativeType("char const *")
+    @NativeType("const char *")
     public String mNameString() { return nmNameString(address()); }
     /** Returns a {@link ByteBuffer} view of the null-terminated string pointed to by the {@code mAuthor} field. */
-    @NativeType("char const *")
+    @NativeType("const char *")
     public ByteBuffer mAuthor() { return nmAuthor(address()); }
     /** Decodes the null-terminated string pointed to by the {@code mAuthor} field. */
-    @NativeType("char const *")
+    @NativeType("const char *")
     public String mAuthorString() { return nmAuthorString(address()); }
     /** Returns a {@link ByteBuffer} view of the null-terminated string pointed to by the {@code mMaintainer} field. */
-    @NativeType("char const *")
+    @NativeType("const char *")
     public ByteBuffer mMaintainer() { return nmMaintainer(address()); }
     /** Decodes the null-terminated string pointed to by the {@code mMaintainer} field. */
-    @NativeType("char const *")
+    @NativeType("const char *")
     public String mMaintainerString() { return nmMaintainerString(address()); }
     /** Returns a {@link ByteBuffer} view of the null-terminated string pointed to by the {@code mComments} field. */
-    @NativeType("char const *")
+    @NativeType("const char *")
     public ByteBuffer mComments() { return nmComments(address()); }
     /** Decodes the null-terminated string pointed to by the {@code mComments} field. */
-    @NativeType("char const *")
+    @NativeType("const char *")
     public String mCommentsString() { return nmCommentsString(address()); }
     /** Returns the value of the {@code mFlags} field. */
     @NativeType("unsigned int")
@@ -166,20 +165,20 @@ public class AIImporterDesc extends Struct implements NativeResource {
     @NativeType("unsigned int")
     public int mMaxMinor() { return nmMaxMinor(address()); }
     /** Returns a {@link ByteBuffer} view of the null-terminated string pointed to by the {@code mFileExtensions} field. */
-    @NativeType("char const *")
+    @NativeType("const char *")
     public ByteBuffer mFileExtensions() { return nmFileExtensions(address()); }
     /** Decodes the null-terminated string pointed to by the {@code mFileExtensions} field. */
-    @NativeType("char const *")
+    @NativeType("const char *")
     public String mFileExtensionsString() { return nmFileExtensionsString(address()); }
 
     /** Sets the address of the specified encoded string to the {@code mName} field. */
-    public AIImporterDesc mName(@NativeType("char const *") ByteBuffer value) { nmName(address(), value); return this; }
+    public AIImporterDesc mName(@NativeType("const char *") ByteBuffer value) { nmName(address(), value); return this; }
     /** Sets the address of the specified encoded string to the {@code mAuthor} field. */
-    public AIImporterDesc mAuthor(@NativeType("char const *") ByteBuffer value) { nmAuthor(address(), value); return this; }
+    public AIImporterDesc mAuthor(@NativeType("const char *") ByteBuffer value) { nmAuthor(address(), value); return this; }
     /** Sets the address of the specified encoded string to the {@code mMaintainer} field. */
-    public AIImporterDesc mMaintainer(@NativeType("char const *") ByteBuffer value) { nmMaintainer(address(), value); return this; }
+    public AIImporterDesc mMaintainer(@NativeType("const char *") ByteBuffer value) { nmMaintainer(address(), value); return this; }
     /** Sets the address of the specified encoded string to the {@code mComments} field. */
-    public AIImporterDesc mComments(@NativeType("char const *") ByteBuffer value) { nmComments(address(), value); return this; }
+    public AIImporterDesc mComments(@NativeType("const char *") ByteBuffer value) { nmComments(address(), value); return this; }
     /** Sets the specified value to the {@code mFlags} field. */
     public AIImporterDesc mFlags(@NativeType("unsigned int") int value) { nmFlags(address(), value); return this; }
     /** Sets the specified value to the {@code mMinMajor} field. */
@@ -191,7 +190,7 @@ public class AIImporterDesc extends Struct implements NativeResource {
     /** Sets the specified value to the {@code mMaxMinor} field. */
     public AIImporterDesc mMaxMinor(@NativeType("unsigned int") int value) { nmMaxMinor(address(), value); return this; }
     /** Sets the address of the specified encoded string to the {@code mFileExtensions} field. */
-    public AIImporterDesc mFileExtensions(@NativeType("char const *") ByteBuffer value) { nmFileExtensions(address(), value); return this; }
+    public AIImporterDesc mFileExtensions(@NativeType("const char *") ByteBuffer value) { nmFileExtensions(address(), value); return this; }
 
     /** Initializes this struct with the specified values. */
     public AIImporterDesc set(
@@ -512,28 +511,28 @@ public class AIImporterDesc extends Struct implements NativeResource {
         }
 
         /** Returns a {@link ByteBuffer} view of the null-terminated string pointed to by the {@code mName} field. */
-        @NativeType("char const *")
+        @NativeType("const char *")
         public ByteBuffer mName() { return AIImporterDesc.nmName(address()); }
         /** Decodes the null-terminated string pointed to by the {@code mName} field. */
-        @NativeType("char const *")
+        @NativeType("const char *")
         public String mNameString() { return AIImporterDesc.nmNameString(address()); }
         /** Returns a {@link ByteBuffer} view of the null-terminated string pointed to by the {@code mAuthor} field. */
-        @NativeType("char const *")
+        @NativeType("const char *")
         public ByteBuffer mAuthor() { return AIImporterDesc.nmAuthor(address()); }
         /** Decodes the null-terminated string pointed to by the {@code mAuthor} field. */
-        @NativeType("char const *")
+        @NativeType("const char *")
         public String mAuthorString() { return AIImporterDesc.nmAuthorString(address()); }
         /** Returns a {@link ByteBuffer} view of the null-terminated string pointed to by the {@code mMaintainer} field. */
-        @NativeType("char const *")
+        @NativeType("const char *")
         public ByteBuffer mMaintainer() { return AIImporterDesc.nmMaintainer(address()); }
         /** Decodes the null-terminated string pointed to by the {@code mMaintainer} field. */
-        @NativeType("char const *")
+        @NativeType("const char *")
         public String mMaintainerString() { return AIImporterDesc.nmMaintainerString(address()); }
         /** Returns a {@link ByteBuffer} view of the null-terminated string pointed to by the {@code mComments} field. */
-        @NativeType("char const *")
+        @NativeType("const char *")
         public ByteBuffer mComments() { return AIImporterDesc.nmComments(address()); }
         /** Decodes the null-terminated string pointed to by the {@code mComments} field. */
-        @NativeType("char const *")
+        @NativeType("const char *")
         public String mCommentsString() { return AIImporterDesc.nmCommentsString(address()); }
         /** Returns the value of the {@code mFlags} field. */
         @NativeType("unsigned int")
@@ -551,20 +550,20 @@ public class AIImporterDesc extends Struct implements NativeResource {
         @NativeType("unsigned int")
         public int mMaxMinor() { return AIImporterDesc.nmMaxMinor(address()); }
         /** Returns a {@link ByteBuffer} view of the null-terminated string pointed to by the {@code mFileExtensions} field. */
-        @NativeType("char const *")
+        @NativeType("const char *")
         public ByteBuffer mFileExtensions() { return AIImporterDesc.nmFileExtensions(address()); }
         /** Decodes the null-terminated string pointed to by the {@code mFileExtensions} field. */
-        @NativeType("char const *")
+        @NativeType("const char *")
         public String mFileExtensionsString() { return AIImporterDesc.nmFileExtensionsString(address()); }
 
         /** Sets the address of the specified encoded string to the {@code mName} field. */
-        public AIImporterDesc.Buffer mName(@NativeType("char const *") ByteBuffer value) { AIImporterDesc.nmName(address(), value); return this; }
+        public AIImporterDesc.Buffer mName(@NativeType("const char *") ByteBuffer value) { AIImporterDesc.nmName(address(), value); return this; }
         /** Sets the address of the specified encoded string to the {@code mAuthor} field. */
-        public AIImporterDesc.Buffer mAuthor(@NativeType("char const *") ByteBuffer value) { AIImporterDesc.nmAuthor(address(), value); return this; }
+        public AIImporterDesc.Buffer mAuthor(@NativeType("const char *") ByteBuffer value) { AIImporterDesc.nmAuthor(address(), value); return this; }
         /** Sets the address of the specified encoded string to the {@code mMaintainer} field. */
-        public AIImporterDesc.Buffer mMaintainer(@NativeType("char const *") ByteBuffer value) { AIImporterDesc.nmMaintainer(address(), value); return this; }
+        public AIImporterDesc.Buffer mMaintainer(@NativeType("const char *") ByteBuffer value) { AIImporterDesc.nmMaintainer(address(), value); return this; }
         /** Sets the address of the specified encoded string to the {@code mComments} field. */
-        public AIImporterDesc.Buffer mComments(@NativeType("char const *") ByteBuffer value) { AIImporterDesc.nmComments(address(), value); return this; }
+        public AIImporterDesc.Buffer mComments(@NativeType("const char *") ByteBuffer value) { AIImporterDesc.nmComments(address(), value); return this; }
         /** Sets the specified value to the {@code mFlags} field. */
         public AIImporterDesc.Buffer mFlags(@NativeType("unsigned int") int value) { AIImporterDesc.nmFlags(address(), value); return this; }
         /** Sets the specified value to the {@code mMinMajor} field. */
@@ -576,7 +575,7 @@ public class AIImporterDesc extends Struct implements NativeResource {
         /** Sets the specified value to the {@code mMaxMinor} field. */
         public AIImporterDesc.Buffer mMaxMinor(@NativeType("unsigned int") int value) { AIImporterDesc.nmMaxMinor(address(), value); return this; }
         /** Sets the address of the specified encoded string to the {@code mFileExtensions} field. */
-        public AIImporterDesc.Buffer mFileExtensions(@NativeType("char const *") ByteBuffer value) { AIImporterDesc.nmFileExtensions(address(), value); return this; }
+        public AIImporterDesc.Buffer mFileExtensions(@NativeType("const char *") ByteBuffer value) { AIImporterDesc.nmFileExtensions(address(), value); return this; }
 
     }
 

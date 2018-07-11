@@ -9,7 +9,7 @@ import java.util.regex.*;
 public enum Platform {
 
     LINUX("Linux") {
-        private final Pattern SO = Pattern.compile("(?:^|/)lib\\w+[.]so(?:[.]\\d+)*$");
+        private final Pattern SO = Pattern.compile("(?:^|/)lib\\w+[.]so(?:[.]\\d+){0,3}$");
 
         @Override
         String mapLibraryName(String name) {
@@ -20,8 +20,8 @@ public enum Platform {
             return System.mapLibraryName(name);
         }
     },
-    MACOSX("macOS") {
-        private final Pattern DYLIB = Pattern.compile("(?:^|/)lib\\w+(?:[.]\\d+)*[.]dylib$");
+    MACOSX("Mac OS X") {
+        private final Pattern DYLIB = Pattern.compile("(?:^|/)lib\\w+[.]dylib$");
 
         @Override
         String mapLibraryName(String name) {

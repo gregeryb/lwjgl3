@@ -48,19 +48,18 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct VkSparseImageMemoryBindInfo {
  *     VkImage image;
  *     uint32_t bindCount;
- *     {@link VkSparseImageMemoryBind VkSparseImageMemoryBind const} * pBinds;
- * }</code></pre>
+ *     const {@link VkSparseImageMemoryBind VkSparseImageMemoryBind} * pBinds;
+ * }</pre></code>
  */
 public class VkSparseImageMemoryBindInfo extends Struct implements NativeResource {
 
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */
@@ -108,13 +107,13 @@ public class VkSparseImageMemoryBindInfo extends Struct implements NativeResourc
     @NativeType("uint32_t")
     public int bindCount() { return nbindCount(address()); }
     /** Returns a {@link VkSparseImageMemoryBind.Buffer} view of the struct array pointed to by the {@code pBinds} field. */
-    @NativeType("VkSparseImageMemoryBind const *")
+    @NativeType("const VkSparseImageMemoryBind *")
     public VkSparseImageMemoryBind.Buffer pBinds() { return npBinds(address()); }
 
     /** Sets the specified value to the {@code image} field. */
     public VkSparseImageMemoryBindInfo image(@NativeType("VkImage") long value) { nimage(address(), value); return this; }
     /** Sets the address of the specified {@link VkSparseImageMemoryBind.Buffer} to the {@code pBinds} field. */
-    public VkSparseImageMemoryBindInfo pBinds(@NativeType("VkSparseImageMemoryBind const *") VkSparseImageMemoryBind.Buffer value) { npBinds(address(), value); return this; }
+    public VkSparseImageMemoryBindInfo pBinds(@NativeType("const VkSparseImageMemoryBind *") VkSparseImageMemoryBind.Buffer value) { npBinds(address(), value); return this; }
 
     /** Initializes this struct with the specified values. */
     public VkSparseImageMemoryBindInfo set(
@@ -368,13 +367,13 @@ public class VkSparseImageMemoryBindInfo extends Struct implements NativeResourc
         @NativeType("uint32_t")
         public int bindCount() { return VkSparseImageMemoryBindInfo.nbindCount(address()); }
         /** Returns a {@link VkSparseImageMemoryBind.Buffer} view of the struct array pointed to by the {@code pBinds} field. */
-        @NativeType("VkSparseImageMemoryBind const *")
+        @NativeType("const VkSparseImageMemoryBind *")
         public VkSparseImageMemoryBind.Buffer pBinds() { return VkSparseImageMemoryBindInfo.npBinds(address()); }
 
         /** Sets the specified value to the {@code image} field. */
         public VkSparseImageMemoryBindInfo.Buffer image(@NativeType("VkImage") long value) { VkSparseImageMemoryBindInfo.nimage(address(), value); return this; }
         /** Sets the address of the specified {@link VkSparseImageMemoryBind.Buffer} to the {@code pBinds} field. */
-        public VkSparseImageMemoryBindInfo.Buffer pBinds(@NativeType("VkSparseImageMemoryBind const *") VkSparseImageMemoryBind.Buffer value) { VkSparseImageMemoryBindInfo.npBinds(address(), value); return this; }
+        public VkSparseImageMemoryBindInfo.Buffer pBinds(@NativeType("const VkSparseImageMemoryBind *") VkSparseImageMemoryBind.Buffer value) { VkSparseImageMemoryBindInfo.npBinds(address(), value); return this; }
 
     }
 

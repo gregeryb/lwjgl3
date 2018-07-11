@@ -26,7 +26,11 @@ import static org.lwjgl.opencl.InfoUtil.*;
 import static org.lwjgl.opencl.KHRGLSharing.*;
 import static org.lwjgl.opengl.ARBCLEvent.*;
 import static org.lwjgl.opengl.CGL.*;
-import static org.lwjgl.opengl.GL30C.*;
+import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL15.*;
+import static org.lwjgl.opengl.GL20.*;
+import static org.lwjgl.opengl.GL30.*;
+import static org.lwjgl.opengl.GL32.*;
 import static org.lwjgl.opengl.WGL.*;
 import static org.lwjgl.system.MemoryStack.*;
 import static org.lwjgl.system.MemoryUtil.*;
@@ -555,8 +559,6 @@ public class Mandelbrot {
         if (debugProc != null) {
             debugProc.free();
         }
-
-        GL.setCapabilities(null);
     }
 
     private void display() {
@@ -653,8 +655,8 @@ public class Mandelbrot {
 
         if (!syncGLtoCL) {
             if (glFenceFromCLEvent != NULL) {
-                GL32.glWaitSync(glFenceFromCLEvent, 0, 0);
-                GL32.glDeleteSync(glFenceFromCLEvent);
+                glWaitSync(glFenceFromCLEvent, 0, 0);
+                glDeleteSync(glFenceFromCLEvent);
                 glFenceFromCLEvent = NULL;
             }
 

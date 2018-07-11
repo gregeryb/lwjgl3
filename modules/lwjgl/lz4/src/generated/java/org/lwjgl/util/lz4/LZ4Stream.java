@@ -19,19 +19,18 @@ import static org.lwjgl.util.lz4.LZ4.LZ4_STREAMSIZE_U64;
 /**
  * <h3>Layout</h3>
  * 
- * <pre><code>
- * union LZ4_stream_t {
+ * <code><pre>
+ * union LZ4_stream_u {
  *     unsigned long long table[LZ4_STREAMSIZE_U64];
- *     {@link LZ4StreamInternal struct LZ4_stream_t_internal} internal_donotuse;
- * }</code></pre>
+ *     {@link LZ4StreamInternal LZ4_stream_t_internal} internal_donotuse;
+ * }</pre></code>
  */
-@NativeType("union LZ4_stream_t")
+@NativeType("union LZ4_stream_u")
 public class LZ4Stream extends Struct {
 
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */
@@ -76,7 +75,7 @@ public class LZ4Stream extends Struct {
     @NativeType("unsigned long long")
     public long table(int index) { return ntable(address(), index); }
     /** Returns a {@link LZ4StreamInternal} view of the {@code internal_donotuse} field. */
-    @NativeType("struct LZ4_stream_t_internal")
+    @NativeType("LZ4_stream_t_internal")
     public LZ4StreamInternal internal_donotuse() { return ninternal_donotuse(address()); }
 
     // -----------------------------------
@@ -114,7 +113,8 @@ public class LZ4Stream extends Struct {
     public static LongBuffer ntable(long struct) { return memLongBuffer(struct + LZ4Stream.TABLE, LZ4_STREAMSIZE_U64); }
     /** Unsafe version of {@link #table(int) table}. */
     public static long ntable(long struct, int index) {
-        return memGetLong(struct + LZ4Stream.TABLE + check(index, LZ4_STREAMSIZE_U64) * 8);
+        if (CHECKS) { check(index, LZ4_STREAMSIZE_U64); }
+        return memGetLong(struct + LZ4Stream.TABLE + index * 8);
     }
     /** Unsafe version of {@link #internal_donotuse}. */
     public static LZ4StreamInternal ninternal_donotuse(long struct) { return LZ4StreamInternal.create(struct + LZ4Stream.INTERNAL_DONOTUSE); }
@@ -172,7 +172,7 @@ public class LZ4Stream extends Struct {
         @NativeType("unsigned long long")
         public long table(int index) { return LZ4Stream.ntable(address(), index); }
         /** Returns a {@link LZ4StreamInternal} view of the {@code internal_donotuse} field. */
-        @NativeType("struct LZ4_stream_t_internal")
+        @NativeType("LZ4_stream_t_internal")
         public LZ4StreamInternal internal_donotuse() { return LZ4Stream.ninternal_donotuse(address()); }
 
     }

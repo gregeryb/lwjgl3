@@ -115,7 +115,7 @@ public class ARBShadingLanguageInclude {
      * @param name   the name associated with the string
      * @param string an arbitrary string of characters
      */
-    public static void glNamedStringARB(@NativeType("GLenum") int type, @NativeType("GLchar const *") ByteBuffer name, @NativeType("GLchar const *") ByteBuffer string) {
+    public static void glNamedStringARB(@NativeType("GLenum") int type, @NativeType("const GLchar *") ByteBuffer name, @NativeType("const GLchar *") ByteBuffer string) {
         nglNamedStringARB(type, name.remaining(), memAddress(name), string.remaining(), memAddress(string));
     }
 
@@ -129,7 +129,7 @@ public class ARBShadingLanguageInclude {
      * @param name   the name associated with the string
      * @param string an arbitrary string of characters
      */
-    public static void glNamedStringARB(@NativeType("GLenum") int type, @NativeType("GLchar const *") CharSequence name, @NativeType("GLchar const *") CharSequence string) {
+    public static void glNamedStringARB(@NativeType("GLenum") int type, @NativeType("const GLchar *") CharSequence name, @NativeType("const GLchar *") CharSequence string) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
             ByteBuffer nameEncoded = stack.ASCII(name, false);
@@ -154,7 +154,7 @@ public class ARBShadingLanguageInclude {
      *
      * @param name the name associated with the string
      */
-    public static void glDeleteNamedStringARB(@NativeType("GLchar const *") ByteBuffer name) {
+    public static void glDeleteNamedStringARB(@NativeType("const GLchar *") ByteBuffer name) {
         nglDeleteNamedStringARB(name.remaining(), memAddress(name));
     }
 
@@ -163,7 +163,7 @@ public class ARBShadingLanguageInclude {
      *
      * @param name the name associated with the string
      */
-    public static void glDeleteNamedStringARB(@NativeType("GLchar const *") CharSequence name) {
+    public static void glDeleteNamedStringARB(@NativeType("const GLchar *") CharSequence name) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
             ByteBuffer nameEncoded = stack.ASCII(name, false);
@@ -189,7 +189,7 @@ public class ARBShadingLanguageInclude {
      * @param length an array {@code count} values with the number of characters in each string (the string length). If an element in {@code length} is negative, its
      *               accompanying string is null-terminated. If {@code length} is {@code NULL}, all strings in the {@code path} argument are considered null-terminated.
      */
-    public static void glCompileShaderIncludeARB(@NativeType("GLuint") int shader, @NativeType("GLchar const * const *") PointerBuffer path, @Nullable @NativeType("GLint const *") IntBuffer length) {
+    public static void glCompileShaderIncludeARB(@NativeType("GLuint") int shader, @NativeType("const GLchar * const *") PointerBuffer path, @Nullable @NativeType("const GLint *") IntBuffer length) {
         if (CHECKS) {
             checkSafe(length, path.remaining());
         }
@@ -212,7 +212,7 @@ public class ARBShadingLanguageInclude {
      * @param name the name associated with the string
      */
     @NativeType("GLboolean")
-    public static boolean glIsNamedStringARB(@NativeType("GLchar const *") ByteBuffer name) {
+    public static boolean glIsNamedStringARB(@NativeType("const GLchar *") ByteBuffer name) {
         return nglIsNamedStringARB(name.remaining(), memAddress(name));
     }
 
@@ -223,7 +223,7 @@ public class ARBShadingLanguageInclude {
      * @param name the name associated with the string
      */
     @NativeType("GLboolean")
-    public static boolean glIsNamedStringARB(@NativeType("GLchar const *") CharSequence name) {
+    public static boolean glIsNamedStringARB(@NativeType("const GLchar *") CharSequence name) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
             ByteBuffer nameEncoded = stack.ASCII(name, false);
@@ -251,7 +251,7 @@ public class ARBShadingLanguageInclude {
      *                  returned.
      * @param string    a buffer in which to place the returned string
      */
-    public static void glGetNamedStringARB(@NativeType("GLchar const *") ByteBuffer name, @Nullable @NativeType("GLint *") IntBuffer stringlen, @NativeType("GLchar *") ByteBuffer string) {
+    public static void glGetNamedStringARB(@NativeType("const GLchar *") ByteBuffer name, @Nullable @NativeType("GLint *") IntBuffer stringlen, @NativeType("GLchar *") ByteBuffer string) {
         if (CHECKS) {
             checkSafe(stringlen, 1);
         }
@@ -266,7 +266,7 @@ public class ARBShadingLanguageInclude {
      *                  returned.
      * @param string    a buffer in which to place the returned string
      */
-    public static void glGetNamedStringARB(@NativeType("GLchar const *") CharSequence name, @Nullable @NativeType("GLint *") IntBuffer stringlen, @NativeType("GLchar *") ByteBuffer string) {
+    public static void glGetNamedStringARB(@NativeType("const GLchar *") CharSequence name, @Nullable @NativeType("GLint *") IntBuffer stringlen, @NativeType("GLchar *") ByteBuffer string) {
         if (CHECKS) {
             checkSafe(stringlen, 1);
         }
@@ -286,7 +286,7 @@ public class ARBShadingLanguageInclude {
      * @param bufSize the maximum number of characters that may be written into {@code string}, including the null terminator
      */
     @NativeType("void")
-    public static String glGetNamedStringARB(@NativeType("GLchar const *") CharSequence name, @NativeType("GLsizei") int bufSize) {
+    public static String glGetNamedStringARB(@NativeType("const GLchar *") CharSequence name, @NativeType("GLsizei") int bufSize) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
             ByteBuffer nameEncoded = stack.ASCII(name, false);
@@ -305,7 +305,7 @@ public class ARBShadingLanguageInclude {
      * @param name the name associated with the string
      */
     @NativeType("void")
-    public static String glGetNamedStringARB(@NativeType("GLchar const *") CharSequence name) {
+    public static String glGetNamedStringARB(@NativeType("const GLchar *") CharSequence name) {
         return glGetNamedStringARB(name, glGetNamedStringiARB(name, GL_NAMED_STRING_LENGTH_ARB));
     }
 
@@ -325,7 +325,7 @@ public class ARBShadingLanguageInclude {
      * @param pname  the parameter to query. One of:<br><table><tr><td>{@link #GL_NAMED_STRING_LENGTH_ARB NAMED_STRING_LENGTH_ARB}</td><td>{@link #GL_NAMED_STRING_TYPE_ARB NAMED_STRING_TYPE_ARB}</td></tr></table>
      * @param params a buffer in which to place the returned value
      */
-    public static void glGetNamedStringivARB(@NativeType("GLchar const *") ByteBuffer name, @NativeType("GLenum") int pname, @NativeType("GLint *") IntBuffer params) {
+    public static void glGetNamedStringivARB(@NativeType("const GLchar *") ByteBuffer name, @NativeType("GLenum") int pname, @NativeType("GLint *") IntBuffer params) {
         if (CHECKS) {
             check(params, 1);
         }
@@ -339,7 +339,7 @@ public class ARBShadingLanguageInclude {
      * @param pname  the parameter to query. One of:<br><table><tr><td>{@link #GL_NAMED_STRING_LENGTH_ARB NAMED_STRING_LENGTH_ARB}</td><td>{@link #GL_NAMED_STRING_TYPE_ARB NAMED_STRING_TYPE_ARB}</td></tr></table>
      * @param params a buffer in which to place the returned value
      */
-    public static void glGetNamedStringivARB(@NativeType("GLchar const *") CharSequence name, @NativeType("GLenum") int pname, @NativeType("GLint *") IntBuffer params) {
+    public static void glGetNamedStringivARB(@NativeType("const GLchar *") CharSequence name, @NativeType("GLenum") int pname, @NativeType("GLint *") IntBuffer params) {
         if (CHECKS) {
             check(params, 1);
         }
@@ -359,7 +359,7 @@ public class ARBShadingLanguageInclude {
      * @param pname the parameter to query. One of:<br><table><tr><td>{@link #GL_NAMED_STRING_LENGTH_ARB NAMED_STRING_LENGTH_ARB}</td><td>{@link #GL_NAMED_STRING_TYPE_ARB NAMED_STRING_TYPE_ARB}</td></tr></table>
      */
     @NativeType("void")
-    public static int glGetNamedStringiARB(@NativeType("GLchar const *") CharSequence name, @NativeType("GLenum") int pname) {
+    public static int glGetNamedStringiARB(@NativeType("const GLchar *") CharSequence name, @NativeType("GLenum") int pname) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
             ByteBuffer nameEncoded = stack.ASCII(name, false);
@@ -371,8 +371,8 @@ public class ARBShadingLanguageInclude {
         }
     }
 
-    /** Array version of: {@link #glCompileShaderIncludeARB CompileShaderIncludeARB} */
-    public static void glCompileShaderIncludeARB(@NativeType("GLuint") int shader, @NativeType("GLchar const * const *") PointerBuffer path, @Nullable @NativeType("GLint const *") int[] length) {
+    /** register Array version of: {@link #glCompileShaderIncludeARB CompileShaderIncludeARB} */
+    public static void glCompileShaderIncludeARB(@NativeType("GLuint") int shader, @NativeType("const GLchar * const *") PointerBuffer path, @Nullable @NativeType("const GLint *") int[] length) {
         long __functionAddress = GL.getICD().glCompileShaderIncludeARB;
         if (CHECKS) {
             check(__functionAddress);
@@ -381,8 +381,8 @@ public class ARBShadingLanguageInclude {
         callPPV(__functionAddress, shader, path.remaining(), memAddress(path), length);
     }
 
-    /** Array version of: {@link #glGetNamedStringARB GetNamedStringARB} */
-    public static void glGetNamedStringARB(@NativeType("GLchar const *") ByteBuffer name, @Nullable @NativeType("GLint *") int[] stringlen, @NativeType("GLchar *") ByteBuffer string) {
+    /** register Array version of: {@link #glGetNamedStringARB GetNamedStringARB} */
+    public static void glGetNamedStringARB(@NativeType("const GLchar *") ByteBuffer name, @Nullable @NativeType("GLint *") int[] stringlen, @NativeType("GLchar *") ByteBuffer string) {
         long __functionAddress = GL.getICD().glGetNamedStringARB;
         if (CHECKS) {
             check(__functionAddress);
@@ -391,8 +391,8 @@ public class ARBShadingLanguageInclude {
         callPPPV(__functionAddress, name.remaining(), memAddress(name), string.remaining(), stringlen, memAddress(string));
     }
 
-    /** Array version of: {@link #glGetNamedStringARB GetNamedStringARB} */
-    public static void glGetNamedStringARB(@NativeType("GLchar const *") CharSequence name, @Nullable @NativeType("GLint *") int[] stringlen, @NativeType("GLchar *") ByteBuffer string) {
+    /** register Array version of: {@link #glGetNamedStringARB GetNamedStringARB} */
+    public static void glGetNamedStringARB(@NativeType("const GLchar *") CharSequence name, @Nullable @NativeType("GLint *") int[] stringlen, @NativeType("GLchar *") ByteBuffer string) {
         long __functionAddress = GL.getICD().glGetNamedStringARB;
         if (CHECKS) {
             check(__functionAddress);
@@ -407,8 +407,8 @@ public class ARBShadingLanguageInclude {
         }
     }
 
-    /** Array version of: {@link #glGetNamedStringivARB GetNamedStringivARB} */
-    public static void glGetNamedStringivARB(@NativeType("GLchar const *") ByteBuffer name, @NativeType("GLenum") int pname, @NativeType("GLint *") int[] params) {
+    /** register Array version of: {@link #glGetNamedStringivARB GetNamedStringivARB} */
+    public static void glGetNamedStringivARB(@NativeType("const GLchar *") ByteBuffer name, @NativeType("GLenum") int pname, @NativeType("GLint *") int[] params) {
         long __functionAddress = GL.getICD().glGetNamedStringivARB;
         if (CHECKS) {
             check(__functionAddress);
@@ -417,8 +417,8 @@ public class ARBShadingLanguageInclude {
         callPPV(__functionAddress, name.remaining(), memAddress(name), pname, params);
     }
 
-    /** Array version of: {@link #glGetNamedStringivARB GetNamedStringivARB} */
-    public static void glGetNamedStringivARB(@NativeType("GLchar const *") CharSequence name, @NativeType("GLenum") int pname, @NativeType("GLint *") int[] params) {
+    /** register Array version of: {@link #glGetNamedStringivARB GetNamedStringivARB} */
+    public static void glGetNamedStringivARB(@NativeType("const GLchar *") CharSequence name, @NativeType("GLenum") int pname, @NativeType("GLint *") int[] params) {
         long __functionAddress = GL.getICD().glGetNamedStringivARB;
         if (CHECKS) {
             check(__functionAddress);

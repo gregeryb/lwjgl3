@@ -42,7 +42,8 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <ul>
  * <li>{@code sType} <b>must</b> be {@link EXTExternalMemoryHost#VK_STRUCTURE_TYPE_IMPORT_MEMORY_HOST_POINTER_INFO_EXT STRUCTURE_TYPE_IMPORT_MEMORY_HOST_POINTER_INFO_EXT}</li>
- * <li>{@code handleType} <b>must</b> be a valid {@code VkExternalMemoryHandleTypeFlagBits} value</li>
+ * <li>{@code pNext} <b>must</b> be {@code NULL}</li>
+ * <li>{@code handleType} <b>must</b> be a valid {@code VkExternalMemoryHandleTypeFlagBitsKHR} value</li>
  * </ul>
  * 
  * <h3>Member documentation</h3>
@@ -56,20 +57,19 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct VkImportMemoryHostPointerInfoEXT {
  *     VkStructureType sType;
- *     void const * pNext;
- *     VkExternalMemoryHandleTypeFlagBits handleType;
+ *     const void * pNext;
+ *     VkExternalMemoryHandleTypeFlagBitsKHR handleType;
  *     void * pHostPointer;
- * }</code></pre>
+ * }</pre></code>
  */
 public class VkImportMemoryHostPointerInfoEXT extends Struct implements NativeResource {
 
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */
@@ -117,10 +117,10 @@ public class VkImportMemoryHostPointerInfoEXT extends Struct implements NativeRe
     @NativeType("VkStructureType")
     public int sType() { return nsType(address()); }
     /** Returns the value of the {@code pNext} field. */
-    @NativeType("void const *")
+    @NativeType("const void *")
     public long pNext() { return npNext(address()); }
     /** Returns the value of the {@code handleType} field. */
-    @NativeType("VkExternalMemoryHandleTypeFlagBits")
+    @NativeType("VkExternalMemoryHandleTypeFlagBitsKHR")
     public int handleType() { return nhandleType(address()); }
     /** Returns the value of the {@code pHostPointer} field. */
     @NativeType("void *")
@@ -129,9 +129,9 @@ public class VkImportMemoryHostPointerInfoEXT extends Struct implements NativeRe
     /** Sets the specified value to the {@code sType} field. */
     public VkImportMemoryHostPointerInfoEXT sType(@NativeType("VkStructureType") int value) { nsType(address(), value); return this; }
     /** Sets the specified value to the {@code pNext} field. */
-    public VkImportMemoryHostPointerInfoEXT pNext(@NativeType("void const *") long value) { npNext(address(), value); return this; }
+    public VkImportMemoryHostPointerInfoEXT pNext(@NativeType("const void *") long value) { npNext(address(), value); return this; }
     /** Sets the specified value to the {@code handleType} field. */
-    public VkImportMemoryHostPointerInfoEXT handleType(@NativeType("VkExternalMemoryHandleTypeFlagBits") int value) { nhandleType(address(), value); return this; }
+    public VkImportMemoryHostPointerInfoEXT handleType(@NativeType("VkExternalMemoryHandleTypeFlagBitsKHR") int value) { nhandleType(address(), value); return this; }
     /** Sets the specified value to the {@code pHostPointer} field. */
     public VkImportMemoryHostPointerInfoEXT pHostPointer(@NativeType("void *") long value) { npHostPointer(address(), value); return this; }
 
@@ -371,10 +371,10 @@ public class VkImportMemoryHostPointerInfoEXT extends Struct implements NativeRe
         @NativeType("VkStructureType")
         public int sType() { return VkImportMemoryHostPointerInfoEXT.nsType(address()); }
         /** Returns the value of the {@code pNext} field. */
-        @NativeType("void const *")
+        @NativeType("const void *")
         public long pNext() { return VkImportMemoryHostPointerInfoEXT.npNext(address()); }
         /** Returns the value of the {@code handleType} field. */
-        @NativeType("VkExternalMemoryHandleTypeFlagBits")
+        @NativeType("VkExternalMemoryHandleTypeFlagBitsKHR")
         public int handleType() { return VkImportMemoryHostPointerInfoEXT.nhandleType(address()); }
         /** Returns the value of the {@code pHostPointer} field. */
         @NativeType("void *")
@@ -383,9 +383,9 @@ public class VkImportMemoryHostPointerInfoEXT extends Struct implements NativeRe
         /** Sets the specified value to the {@code sType} field. */
         public VkImportMemoryHostPointerInfoEXT.Buffer sType(@NativeType("VkStructureType") int value) { VkImportMemoryHostPointerInfoEXT.nsType(address(), value); return this; }
         /** Sets the specified value to the {@code pNext} field. */
-        public VkImportMemoryHostPointerInfoEXT.Buffer pNext(@NativeType("void const *") long value) { VkImportMemoryHostPointerInfoEXT.npNext(address(), value); return this; }
+        public VkImportMemoryHostPointerInfoEXT.Buffer pNext(@NativeType("const void *") long value) { VkImportMemoryHostPointerInfoEXT.npNext(address(), value); return this; }
         /** Sets the specified value to the {@code handleType} field. */
-        public VkImportMemoryHostPointerInfoEXT.Buffer handleType(@NativeType("VkExternalMemoryHandleTypeFlagBits") int value) { VkImportMemoryHostPointerInfoEXT.nhandleType(address(), value); return this; }
+        public VkImportMemoryHostPointerInfoEXT.Buffer handleType(@NativeType("VkExternalMemoryHandleTypeFlagBitsKHR") int value) { VkImportMemoryHostPointerInfoEXT.nhandleType(address(), value); return this; }
         /** Sets the specified value to the {@code pHostPointer} field. */
         public VkImportMemoryHostPointerInfoEXT.Buffer pHostPointer(@NativeType("void *") long value) { VkImportMemoryHostPointerInfoEXT.npHostPointer(address(), value); return this; }
 

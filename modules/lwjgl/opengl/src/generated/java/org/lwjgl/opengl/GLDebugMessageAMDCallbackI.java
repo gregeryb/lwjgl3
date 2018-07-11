@@ -14,15 +14,15 @@ import static org.lwjgl.system.dyncall.DynCallback.*;
  * 
  * <h3>Type</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * void (*) (
  *     GLuint id,
  *     GLenum category,
  *     GLenum severity,
  *     GLsizei length,
- *     GLchar const *message,
+ *     const GLchar *message,
  *     void *userParam
- * )</code></pre>
+ * )</pre></code>
  */
 @FunctionalInterface
 @NativeType("GLDEBUGPROCAMD")
@@ -55,6 +55,6 @@ public interface GLDebugMessageAMDCallbackI extends CallbackI.V {
      * @param message   a pointer to the message string representation
      * @param userParam the user-specified value that was passed when calling {@link AMDDebugOutput#glDebugMessageCallbackAMD DebugMessageCallbackAMD}
      */
-    void invoke(@NativeType("GLuint") int id, @NativeType("GLenum") int category, @NativeType("GLenum") int severity, @NativeType("GLsizei") int length, @NativeType("GLchar const *") long message, @NativeType("void *") long userParam);
+    void invoke(@NativeType("GLuint") int id, @NativeType("GLenum") int category, @NativeType("GLenum") int severity, @NativeType("GLsizei") int length, @NativeType("const GLchar *") long message, @NativeType("void *") long userParam);
 
 }

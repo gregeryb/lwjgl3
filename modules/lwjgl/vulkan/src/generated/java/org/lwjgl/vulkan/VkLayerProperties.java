@@ -31,20 +31,19 @@ import static org.lwjgl.vulkan.VK10.*;
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct VkLayerProperties {
  *     char layerName[VK_MAX_EXTENSION_NAME_SIZE];
  *     uint32_t specVersion;
  *     uint32_t implementationVersion;
  *     char description[VK_MAX_DESCRIPTION_SIZE];
- * }</code></pre>
+ * }</pre></code>
  */
 public class VkLayerProperties extends Struct implements NativeResource {
 
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */

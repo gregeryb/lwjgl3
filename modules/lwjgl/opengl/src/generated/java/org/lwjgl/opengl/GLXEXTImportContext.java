@@ -86,7 +86,7 @@ public class GLXEXTImportContext {
      * @param context the context
      */
     @NativeType("GLXContextID")
-    public static long glXGetContextIDEXT(@NativeType("GLXContext const") long context) {
+    public static long glXGetContextIDEXT(@NativeType("const GLXContext") long context) {
         long __functionAddress = GL.getCapabilitiesGLXClient().glXGetContextIDEXT;
         if (CHECKS) {
             check(__functionAddress);
@@ -131,7 +131,7 @@ public class GLXEXTImportContext {
         callPPV(__functionAddress, display, context);
     }
 
-    /** Array version of: {@link #glXQueryContextInfoEXT QueryContextInfoEXT} */
+    /** register Array version of: {@link #glXQueryContextInfoEXT QueryContextInfoEXT} */
     public static int glXQueryContextInfoEXT(@NativeType("Display *") long display, @NativeType("GLXContext") long context, int attribute, @NativeType("int *") int[] value) {
         long __functionAddress = GL.getCapabilitiesGLXClient().glXQueryContextInfoEXT;
         if (CHECKS) {

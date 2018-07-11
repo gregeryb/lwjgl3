@@ -22,7 +22,6 @@ import static org.lwjgl.system.MemoryUtil.*;
  * <li>{@code maxDrawCalls} &ndash; maximum number of draw calls</li>
  * <li>{@code maxBlits} &ndash; maximum number of blit calls</li>
  * <li>{@code maxTextureSize} &ndash; maximum texture size</li>
- * <li>{@code maxTextureLayers} &ndash; maximum texture layers</li>
  * <li>{@code maxViews} &ndash; maximum number of views</li>
  * <li>{@code maxFrameBuffers} &ndash; maximum number of frame buffer handles</li>
  * <li>{@code maxFBAttachments} &ndash; maximum number of frame buffer attachments</li>
@@ -39,18 +38,15 @@ import static org.lwjgl.system.MemoryUtil.*;
  * <li>{@code maxUniforms} &ndash; maximum number of uniform handles</li>
  * <li>{@code maxOcclusionQueries} &ndash; maximum number of occlusion query handles</li>
  * <li>{@code maxEncoders} &ndash; maximum number of encoder threads</li>
- * <li>{@code transientVbSize} &ndash; amount of transient vertex buffer used</li>
- * <li>{@code transientIbSize} &ndash; amount of transient index buffer used</li>
  * </ul>
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct bgfx_caps_limits_t {
  *     uint32_t maxDrawCalls;
  *     uint32_t maxBlits;
  *     uint32_t maxTextureSize;
- *     uint32_t maxTextureLayers;
  *     uint32_t maxViews;
  *     uint32_t maxFrameBuffers;
  *     uint32_t maxFBAttachments;
@@ -67,9 +63,7 @@ import static org.lwjgl.system.MemoryUtil.*;
  *     uint32_t maxUniforms;
  *     uint32_t maxOcclusionQueries;
  *     uint32_t maxEncoders;
- *     uint32_t transientVbSize;
- *     uint32_t transientIbSize;
- * }</code></pre>
+ * }</pre></code>
  */
 @NativeType("struct bgfx_caps_limits_t")
 public class BGFXCapsLimits extends Struct {
@@ -77,7 +71,6 @@ public class BGFXCapsLimits extends Struct {
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */
@@ -85,7 +78,6 @@ public class BGFXCapsLimits extends Struct {
         MAXDRAWCALLS,
         MAXBLITS,
         MAXTEXTURESIZE,
-        MAXTEXTURELAYERS,
         MAXVIEWS,
         MAXFRAMEBUFFERS,
         MAXFBATTACHMENTS,
@@ -101,15 +93,10 @@ public class BGFXCapsLimits extends Struct {
         MAXDYNAMICVERTEXBUFFERS,
         MAXUNIFORMS,
         MAXOCCLUSIONQUERIES,
-        MAXENCODERS,
-        TRANSIENTVBSIZE,
-        TRANSIENTIBSIZE;
+        MAXENCODERS;
 
     static {
         Layout layout = __struct(
-            __member(4),
-            __member(4),
-            __member(4),
             __member(4),
             __member(4),
             __member(4),
@@ -137,25 +124,22 @@ public class BGFXCapsLimits extends Struct {
         MAXDRAWCALLS = layout.offsetof(0);
         MAXBLITS = layout.offsetof(1);
         MAXTEXTURESIZE = layout.offsetof(2);
-        MAXTEXTURELAYERS = layout.offsetof(3);
-        MAXVIEWS = layout.offsetof(4);
-        MAXFRAMEBUFFERS = layout.offsetof(5);
-        MAXFBATTACHMENTS = layout.offsetof(6);
-        MAXPROGRAMS = layout.offsetof(7);
-        MAXSHADERS = layout.offsetof(8);
-        MAXTEXTURES = layout.offsetof(9);
-        MAXTEXTURESAMPLERS = layout.offsetof(10);
-        MAXVERTEXDECLS = layout.offsetof(11);
-        MAXVERTEXSTREAMS = layout.offsetof(12);
-        MAXINDEXBUFFERS = layout.offsetof(13);
-        MAXVERTEXBUFFERS = layout.offsetof(14);
-        MAXDYNAMICINDEXBUFFERS = layout.offsetof(15);
-        MAXDYNAMICVERTEXBUFFERS = layout.offsetof(16);
-        MAXUNIFORMS = layout.offsetof(17);
-        MAXOCCLUSIONQUERIES = layout.offsetof(18);
-        MAXENCODERS = layout.offsetof(19);
-        TRANSIENTVBSIZE = layout.offsetof(20);
-        TRANSIENTIBSIZE = layout.offsetof(21);
+        MAXVIEWS = layout.offsetof(3);
+        MAXFRAMEBUFFERS = layout.offsetof(4);
+        MAXFBATTACHMENTS = layout.offsetof(5);
+        MAXPROGRAMS = layout.offsetof(6);
+        MAXSHADERS = layout.offsetof(7);
+        MAXTEXTURES = layout.offsetof(8);
+        MAXTEXTURESAMPLERS = layout.offsetof(9);
+        MAXVERTEXDECLS = layout.offsetof(10);
+        MAXVERTEXSTREAMS = layout.offsetof(11);
+        MAXINDEXBUFFERS = layout.offsetof(12);
+        MAXVERTEXBUFFERS = layout.offsetof(13);
+        MAXDYNAMICINDEXBUFFERS = layout.offsetof(14);
+        MAXDYNAMICVERTEXBUFFERS = layout.offsetof(15);
+        MAXUNIFORMS = layout.offsetof(16);
+        MAXOCCLUSIONQUERIES = layout.offsetof(17);
+        MAXENCODERS = layout.offsetof(18);
     }
 
     BGFXCapsLimits(long address, @Nullable ByteBuffer container) {
@@ -184,9 +168,6 @@ public class BGFXCapsLimits extends Struct {
     /** Returns the value of the {@code maxTextureSize} field. */
     @NativeType("uint32_t")
     public int maxTextureSize() { return nmaxTextureSize(address()); }
-    /** Returns the value of the {@code maxTextureLayers} field. */
-    @NativeType("uint32_t")
-    public int maxTextureLayers() { return nmaxTextureLayers(address()); }
     /** Returns the value of the {@code maxViews} field. */
     @NativeType("uint32_t")
     public int maxViews() { return nmaxViews(address()); }
@@ -235,12 +216,6 @@ public class BGFXCapsLimits extends Struct {
     /** Returns the value of the {@code maxEncoders} field. */
     @NativeType("uint32_t")
     public int maxEncoders() { return nmaxEncoders(address()); }
-    /** Returns the value of the {@code transientVbSize} field. */
-    @NativeType("uint32_t")
-    public int transientVbSize() { return ntransientVbSize(address()); }
-    /** Returns the value of the {@code transientIbSize} field. */
-    @NativeType("uint32_t")
-    public int transientIbSize() { return ntransientIbSize(address()); }
 
     // -----------------------------------
 
@@ -279,8 +254,6 @@ public class BGFXCapsLimits extends Struct {
     public static int nmaxBlits(long struct) { return memGetInt(struct + BGFXCapsLimits.MAXBLITS); }
     /** Unsafe version of {@link #maxTextureSize}. */
     public static int nmaxTextureSize(long struct) { return memGetInt(struct + BGFXCapsLimits.MAXTEXTURESIZE); }
-    /** Unsafe version of {@link #maxTextureLayers}. */
-    public static int nmaxTextureLayers(long struct) { return memGetInt(struct + BGFXCapsLimits.MAXTEXTURELAYERS); }
     /** Unsafe version of {@link #maxViews}. */
     public static int nmaxViews(long struct) { return memGetInt(struct + BGFXCapsLimits.MAXVIEWS); }
     /** Unsafe version of {@link #maxFrameBuffers}. */
@@ -313,10 +286,6 @@ public class BGFXCapsLimits extends Struct {
     public static int nmaxOcclusionQueries(long struct) { return memGetInt(struct + BGFXCapsLimits.MAXOCCLUSIONQUERIES); }
     /** Unsafe version of {@link #maxEncoders}. */
     public static int nmaxEncoders(long struct) { return memGetInt(struct + BGFXCapsLimits.MAXENCODERS); }
-    /** Unsafe version of {@link #transientVbSize}. */
-    public static int ntransientVbSize(long struct) { return memGetInt(struct + BGFXCapsLimits.TRANSIENTVBSIZE); }
-    /** Unsafe version of {@link #transientIbSize}. */
-    public static int ntransientIbSize(long struct) { return memGetInt(struct + BGFXCapsLimits.TRANSIENTIBSIZE); }
 
     // -----------------------------------
 
@@ -373,9 +342,6 @@ public class BGFXCapsLimits extends Struct {
         /** Returns the value of the {@code maxTextureSize} field. */
         @NativeType("uint32_t")
         public int maxTextureSize() { return BGFXCapsLimits.nmaxTextureSize(address()); }
-        /** Returns the value of the {@code maxTextureLayers} field. */
-        @NativeType("uint32_t")
-        public int maxTextureLayers() { return BGFXCapsLimits.nmaxTextureLayers(address()); }
         /** Returns the value of the {@code maxViews} field. */
         @NativeType("uint32_t")
         public int maxViews() { return BGFXCapsLimits.nmaxViews(address()); }
@@ -424,12 +390,6 @@ public class BGFXCapsLimits extends Struct {
         /** Returns the value of the {@code maxEncoders} field. */
         @NativeType("uint32_t")
         public int maxEncoders() { return BGFXCapsLimits.nmaxEncoders(address()); }
-        /** Returns the value of the {@code transientVbSize} field. */
-        @NativeType("uint32_t")
-        public int transientVbSize() { return BGFXCapsLimits.ntransientVbSize(address()); }
-        /** Returns the value of the {@code transientIbSize} field. */
-        @NativeType("uint32_t")
-        public int transientIbSize() { return BGFXCapsLimits.ntransientIbSize(address()); }
 
     }
 

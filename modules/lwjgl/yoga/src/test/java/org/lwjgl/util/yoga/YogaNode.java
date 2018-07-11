@@ -4,115 +4,23 @@
  */
 package org.lwjgl.util.yoga;
 
-import javax.annotation.*;
-import java.util.*;
-
-import static org.lwjgl.system.Checks.*;
-import static org.lwjgl.system.MemoryUtil.*;
-import static org.lwjgl.system.jni.JNINativeInterface.*;
 import static org.lwjgl.util.yoga.Yoga.*;
 
 class YogaNode {
 
     final long node;
 
-    private final long weakGlobalRef;
-
-    private final List<YogaNode> children;
-
-    @Nullable
-    private YogaNode owner;
-
     YogaNode() {
-        this(YGNodeNew());
+        node = YGNodeNew();
     }
 
     YogaNode(YogaConfig config) {
-        this(YGNodeNewWithConfig(config.handle));
-    }
-
-    private YogaNode(long node) {
-        this.node = check(node);
-        this.weakGlobalRef = NewWeakGlobalRef(this);
-        YGNodeSetContext(node, weakGlobalRef);
-        children = new ArrayList<>();
-    }
-
-    public static YogaNode create(long node) {
-        return memGlobalRefToObject(YGNodeGetContext(node));
-    }
-
-    @Override
-    public YogaNode clone() {
-        YogaNode clone = new YogaNode(YGNodeClone(node));
-        clone.children.addAll(children);
-        return clone;
-    }
-
-    public YogaNode clone(long owner) {
-        YogaNode clone = clone();
-        clone.owner = create(owner);
-        return clone;
-    }
-
-    public YogaNode cloneWithNewChildren() {
-        YogaNode clone = new YogaNode(YGNodeClone(this.node));
-        YGNodeRemoveAllChildren(clone.node);
-        return clone;
+        node = YGNodeNewWithConfig(config.handle);
     }
 
     @Override
     protected void finalize() throws Throwable {
-        DeleteWeakGlobalRef(weakGlobalRef);
         YGNodeFree(node);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        YogaNode yogaNode = (YogaNode)o;
-        return node == yogaNode.node;
-    }
-
-    @Override
-    public int hashCode() {
-        return Long.hashCode(node);
-    }
-
-    void addChildAt(YogaNode child, int index) {
-        YGNodeInsertChild(node, child.node, index);
-        children.add(index, child);
-        child.owner = this;
-    }
-
-    public void addSharedChildAt(YogaNode child, int index) {
-        YGNodeInsertSharedChild(node, child.node, index);
-        children.add(index, child);
-        child.owner = null;
-    }
-
-    public YogaNode getChildAt(int index) {
-        return create(YGNodeGetChild(node, index));
-    }
-
-    public void removeChildAt(int index) {
-        YGNodeRemoveChild(node, YGNodeGetChild(node, index));
-        children.remove(index).owner = null;
-    }
-
-    int getChildCount() {
-        return YGNodeGetChildCount(node);
-    }
-
-    @Nullable
-    public YogaNode getOwner() {
-        long owner = YGNodeGetOwner(node);
-        return owner == NULL ? null : create(owner);
     }
 
     void setAlignContent(YogaAlign alignContent) {
@@ -219,6 +127,10 @@ class YogaNode {
         YGNodeStyleSetPositionPercent(node, edge.value, position);
     }
 
+    void addChildAt(YogaNode child, int index) {
+        YGNodeInsertChild(node, child.node, index);
+    }
+
     void setFlexDirection(YogaFlexDirection direction) {
         YGNodeStyleSetFlexDirection(node, direction.value);
     }
@@ -271,14 +183,6 @@ class YogaNode {
         return YGNodeLayoutGetHeight(node);
     }
 
-    YGValue getWidth(YGValue __result) {
-        return YGNodeStyleGetWidth(node, __result);
-    }
-
-    YGValue getHeight(YGValue __result) {
-        return YGNodeStyleGetHeight(node, __result);
-    }
-
     YGValue getMaxHeight(YGValue __result) {
         return YGNodeStyleGetMaxHeight(node, __result);
     }
@@ -317,10 +221,6 @@ class YogaNode {
 
     YGValue getPosition(YogaEdge edge, YGValue __result) {
         return YGNodeStyleGetPosition(node, edge.value, __result);
-    }
-
-    public boolean getDoesLegacyStretchFlagAffectsLayout() {
-        return YGNodeLayoutGetDidLegacyStretchFlagAffectLayout(node);
     }
 
     static final class YogaConstants {

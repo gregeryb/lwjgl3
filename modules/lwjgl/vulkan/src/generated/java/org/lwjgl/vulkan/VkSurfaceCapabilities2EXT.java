@@ -45,7 +45,7 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct VkSurfaceCapabilities2EXT {
  *     VkStructureType sType;
  *     void * pNext;
@@ -60,14 +60,13 @@ import static org.lwjgl.system.MemoryStack.*;
  *     VkCompositeAlphaFlagsKHR supportedCompositeAlpha;
  *     VkImageUsageFlags supportedUsageFlags;
  *     VkSurfaceCounterFlagsEXT supportedSurfaceCounters;
- * }</code></pre>
+ * }</pre></code>
  */
 public class VkSurfaceCapabilities2EXT extends Struct implements NativeResource {
 
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */
@@ -152,16 +151,10 @@ public class VkSurfaceCapabilities2EXT extends Struct implements NativeResource 
     public int maxImageCount() { return nmaxImageCount(address()); }
     /** Returns a {@link VkExtent2D} view of the {@code currentExtent} field. */
     public VkExtent2D currentExtent() { return ncurrentExtent(address()); }
-    /** Passes the {@code currentExtent} field to the specified {@link java.util.function.Consumer Consumer}. */
-    public VkSurfaceCapabilities2EXT currentExtent(java.util.function.Consumer<VkExtent2D> consumer) { consumer.accept(currentExtent()); return this; }
     /** Returns a {@link VkExtent2D} view of the {@code minImageExtent} field. */
     public VkExtent2D minImageExtent() { return nminImageExtent(address()); }
-    /** Passes the {@code minImageExtent} field to the specified {@link java.util.function.Consumer Consumer}. */
-    public VkSurfaceCapabilities2EXT minImageExtent(java.util.function.Consumer<VkExtent2D> consumer) { consumer.accept(minImageExtent()); return this; }
     /** Returns a {@link VkExtent2D} view of the {@code maxImageExtent} field. */
     public VkExtent2D maxImageExtent() { return nmaxImageExtent(address()); }
-    /** Passes the {@code maxImageExtent} field to the specified {@link java.util.function.Consumer Consumer}. */
-    public VkSurfaceCapabilities2EXT maxImageExtent(java.util.function.Consumer<VkExtent2D> consumer) { consumer.accept(maxImageExtent()); return this; }
     /** Returns the value of the {@code maxImageArrayLayers} field. */
     @NativeType("uint32_t")
     public int maxImageArrayLayers() { return nmaxImageArrayLayers(address()); }
@@ -180,34 +173,6 @@ public class VkSurfaceCapabilities2EXT extends Struct implements NativeResource 
     /** Returns the value of the {@code supportedSurfaceCounters} field. */
     @NativeType("VkSurfaceCounterFlagsEXT")
     public int supportedSurfaceCounters() { return nsupportedSurfaceCounters(address()); }
-
-    /** Sets the specified value to the {@code sType} field. */
-    public VkSurfaceCapabilities2EXT sType(@NativeType("VkStructureType") int value) { nsType(address(), value); return this; }
-    /** Sets the specified value to the {@code pNext} field. */
-    public VkSurfaceCapabilities2EXT pNext(@NativeType("void *") long value) { npNext(address(), value); return this; }
-
-    /** Initializes this struct with the specified values. */
-    public VkSurfaceCapabilities2EXT set(
-        int sType,
-        long pNext
-    ) {
-        sType(sType);
-        pNext(pNext);
-
-        return this;
-    }
-
-    /**
-     * Copies the specified struct data to this struct.
-     *
-     * @param src the source struct
-     *
-     * @return this struct
-     */
-    public VkSurfaceCapabilities2EXT set(VkSurfaceCapabilities2EXT src) {
-        memCopy(src.address(), address(), SIZEOF);
-        return this;
-    }
 
     // -----------------------------------
 
@@ -377,11 +342,6 @@ public class VkSurfaceCapabilities2EXT extends Struct implements NativeResource 
     /** Unsafe version of {@link #supportedSurfaceCounters}. */
     public static int nsupportedSurfaceCounters(long struct) { return memGetInt(struct + VkSurfaceCapabilities2EXT.SUPPORTEDSURFACECOUNTERS); }
 
-    /** Unsafe version of {@link #sType(int) sType}. */
-    public static void nsType(long struct, int value) { memPutInt(struct + VkSurfaceCapabilities2EXT.STYPE, value); }
-    /** Unsafe version of {@link #pNext(long) pNext}. */
-    public static void npNext(long struct, long value) { memPutAddress(struct + VkSurfaceCapabilities2EXT.PNEXT, value); }
-
     // -----------------------------------
 
     /** An array of {@link VkSurfaceCapabilities2EXT} structs. */
@@ -442,16 +402,10 @@ public class VkSurfaceCapabilities2EXT extends Struct implements NativeResource 
         public int maxImageCount() { return VkSurfaceCapabilities2EXT.nmaxImageCount(address()); }
         /** Returns a {@link VkExtent2D} view of the {@code currentExtent} field. */
         public VkExtent2D currentExtent() { return VkSurfaceCapabilities2EXT.ncurrentExtent(address()); }
-        /** Passes the {@code currentExtent} field to the specified {@link java.util.function.Consumer Consumer}. */
-        public VkSurfaceCapabilities2EXT.Buffer currentExtent(java.util.function.Consumer<VkExtent2D> consumer) { consumer.accept(currentExtent()); return this; }
         /** Returns a {@link VkExtent2D} view of the {@code minImageExtent} field. */
         public VkExtent2D minImageExtent() { return VkSurfaceCapabilities2EXT.nminImageExtent(address()); }
-        /** Passes the {@code minImageExtent} field to the specified {@link java.util.function.Consumer Consumer}. */
-        public VkSurfaceCapabilities2EXT.Buffer minImageExtent(java.util.function.Consumer<VkExtent2D> consumer) { consumer.accept(minImageExtent()); return this; }
         /** Returns a {@link VkExtent2D} view of the {@code maxImageExtent} field. */
         public VkExtent2D maxImageExtent() { return VkSurfaceCapabilities2EXT.nmaxImageExtent(address()); }
-        /** Passes the {@code maxImageExtent} field to the specified {@link java.util.function.Consumer Consumer}. */
-        public VkSurfaceCapabilities2EXT.Buffer maxImageExtent(java.util.function.Consumer<VkExtent2D> consumer) { consumer.accept(maxImageExtent()); return this; }
         /** Returns the value of the {@code maxImageArrayLayers} field. */
         @NativeType("uint32_t")
         public int maxImageArrayLayers() { return VkSurfaceCapabilities2EXT.nmaxImageArrayLayers(address()); }
@@ -470,11 +424,6 @@ public class VkSurfaceCapabilities2EXT extends Struct implements NativeResource 
         /** Returns the value of the {@code supportedSurfaceCounters} field. */
         @NativeType("VkSurfaceCounterFlagsEXT")
         public int supportedSurfaceCounters() { return VkSurfaceCapabilities2EXT.nsupportedSurfaceCounters(address()); }
-
-        /** Sets the specified value to the {@code sType} field. */
-        public VkSurfaceCapabilities2EXT.Buffer sType(@NativeType("VkStructureType") int value) { VkSurfaceCapabilities2EXT.nsType(address(), value); return this; }
-        /** Sets the specified value to the {@code pNext} field. */
-        public VkSurfaceCapabilities2EXT.Buffer pNext(@NativeType("void *") long value) { VkSurfaceCapabilities2EXT.npNext(address(), value); return this; }
 
     }
 

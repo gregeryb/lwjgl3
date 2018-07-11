@@ -32,7 +32,7 @@ import static org.lwjgl.system.MemoryUtil.*;
  * </ul></dd>
  * <dt><b>Contact</b></dt>
  * <dd><ul>
- * <li>Jesse Hall @critsec</li>
+ * <li>Jesse Hall @jessehall</li>
  * </ul></dd>
  * <dt><b>Last Modified Date</b></dt>
  * <dd>2017-05-08</dd>
@@ -74,10 +74,9 @@ public class KHRExternalFenceFd {
         throw new UnsupportedOperationException();
     }
 
-    static boolean checkCapsDevice(FunctionProvider provider, java.util.Map<String, Long> caps, java.util.Set<String> ext) {
-        return ext.contains("VK_KHR_external_fence_fd") && VK.checkExtension("VK_KHR_external_fence_fd",
-               VK.isSupported(provider, "vkImportFenceFdKHR", caps)
-            && VK.isSupported(provider, "vkGetFenceFdKHR", caps)
+    static boolean isAvailable(VKCapabilitiesDevice caps) {
+        return checkFunctions(
+            caps.vkImportFenceFdKHR, caps.vkGetFenceFdKHR
         );
     }
 
@@ -99,10 +98,10 @@ public class KHRExternalFenceFd {
      * 
      * <p>To import a fence payload from a POSIX file descriptor, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * VkResult vkImportFenceFdKHR(
      *     VkDevice                                    device,
-     *     const VkImportFenceFdInfoKHR*               pImportFenceFdInfo);</code></pre>
+     *     const VkImportFenceFdInfoKHR*               pImportFenceFdInfo);</pre></code>
      * 
      * <h5>Description</h5>
      * 
@@ -133,7 +132,7 @@ public class KHRExternalFenceFd {
      * <dt>On failure, this command returns</dt>
      * <dd><ul>
      * <li>{@link VK10#VK_ERROR_OUT_OF_HOST_MEMORY ERROR_OUT_OF_HOST_MEMORY}</li>
-     * <li>{@link VK11#VK_ERROR_INVALID_EXTERNAL_HANDLE ERROR_INVALID_EXTERNAL_HANDLE}</li>
+     * <li>{@link KHRExternalMemory#VK_ERROR_INVALID_EXTERNAL_HANDLE_KHR ERROR_INVALID_EXTERNAL_HANDLE_KHR}</li>
      * </ul></dd>
      * </dl>
      * 
@@ -145,7 +144,7 @@ public class KHRExternalFenceFd {
      * @param pImportFenceFdInfo points to a {@link VkImportFenceFdInfoKHR} structure specifying the fence and import parameters.
      */
     @NativeType("VkResult")
-    public static int vkImportFenceFdKHR(VkDevice device, @NativeType("VkImportFenceFdInfoKHR const *") VkImportFenceFdInfoKHR pImportFenceFdInfo) {
+    public static int vkImportFenceFdKHR(VkDevice device, @NativeType("const VkImportFenceFdInfoKHR *") VkImportFenceFdInfoKHR pImportFenceFdInfo) {
         return nvkImportFenceFdKHR(device, pImportFenceFdInfo.address());
     }
 
@@ -167,11 +166,11 @@ public class KHRExternalFenceFd {
      * 
      * <p>To export a POSIX file descriptor representing the payload of a fence, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * VkResult vkGetFenceFdKHR(
      *     VkDevice                                    device,
      *     const VkFenceGetFdInfoKHR*                  pGetFdInfo,
-     *     int*                                        pFd);</code></pre>
+     *     int*                                        pFd);</pre></code>
      * 
      * <h5>Description</h5>
      * 
@@ -182,7 +181,7 @@ public class KHRExternalFenceFd {
      * <p>Ownership can be released in many ways. For example, the application can call fname:close() on the file descriptor, or transfer ownership back to Vulkan by using the file descriptor to import a fence payload.</p>
      * </div>
      * 
-     * <p>If {@code pGetFdInfo}{@code ::handleType} is {@link VK11#VK_EXTERNAL_FENCE_HANDLE_TYPE_SYNC_FD_BIT EXTERNAL_FENCE_HANDLE_TYPE_SYNC_FD_BIT} and the fence is signaled at the time {@code vkGetFenceFdKHR} is called, {@code pFd} <b>may</b> return the value {@code -1} instead of a valid file descriptor.</p>
+     * <p>If {@code pGetFdInfo}{@code ::handleType} is {@link KHRExternalFenceCapabilities#VK_EXTERNAL_FENCE_HANDLE_TYPE_SYNC_FD_BIT_KHR EXTERNAL_FENCE_HANDLE_TYPE_SYNC_FD_BIT_KHR} and the fence is signaled at the time {@code vkGetFenceFdKHR} is called, {@code pFd} <b>may</b> return the value {@code -1} instead of a valid file descriptor.</p>
      * 
      * <p>Where supported by the operating system, the implementation <b>must</b> set the file descriptor to be closed automatically when an fname:execve system call is made.</p>
      * 
@@ -219,16 +218,16 @@ public class KHRExternalFenceFd {
      * @param pFd        will return the file descriptor representing the fence payload.
      */
     @NativeType("VkResult")
-    public static int vkGetFenceFdKHR(VkDevice device, @NativeType("VkFenceGetFdInfoKHR const *") VkFenceGetFdInfoKHR pGetFdInfo, @NativeType("int *") IntBuffer pFd) {
+    public static int vkGetFenceFdKHR(VkDevice device, @NativeType("const VkFenceGetFdInfoKHR *") VkFenceGetFdInfoKHR pGetFdInfo, @NativeType("int *") IntBuffer pFd) {
         if (CHECKS) {
             check(pFd, 1);
         }
         return nvkGetFenceFdKHR(device, pGetFdInfo.address(), memAddress(pFd));
     }
 
-    /** Array version of: {@link #vkGetFenceFdKHR GetFenceFdKHR} */
+    /** register Array version of: {@link #vkGetFenceFdKHR GetFenceFdKHR} */
     @NativeType("VkResult")
-    public static int vkGetFenceFdKHR(VkDevice device, @NativeType("VkFenceGetFdInfoKHR const *") VkFenceGetFdInfoKHR pGetFdInfo, @NativeType("int *") int[] pFd) {
+    public static int vkGetFenceFdKHR(VkDevice device, @NativeType("const VkFenceGetFdInfoKHR *") VkFenceGetFdInfoKHR pGetFdInfo, @NativeType("int *") int[] pFd) {
         long __functionAddress = device.getCapabilities().vkGetFenceFdKHR;
         if (CHECKS) {
             check(__functionAddress);

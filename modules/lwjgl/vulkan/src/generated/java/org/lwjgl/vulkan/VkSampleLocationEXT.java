@@ -22,7 +22,7 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <p>The domain space of the sample location coordinates has an upper-left origin within the pixel in framebuffer space.</p>
  * 
- * <p>The values specified in a {@link VkSampleLocationEXT} structure are always clamped to the implementation-dependent sample location coordinate range <code>[sampleLocationCoordinateRange[0],sampleLocationCoordinateRange[1]]</code> that <b>can</b> be queried by chaining the {@link VkPhysicalDeviceSampleLocationsPropertiesEXT} structure to the {@code pNext} chain of {@link VkPhysicalDeviceProperties2}.</p>
+ * <p>The values specified in a {@link VkSampleLocationEXT} structure are always clamped to the implementation-dependent sample location coordinate range <code>[sampleLocationCoordinateRange[0],sampleLocationCoordinateRange[1]]</code> that <b>can</b> be queried by chaining the {@link VkPhysicalDeviceSampleLocationsPropertiesEXT} structure to the {@code pNext} chain of {@link VkPhysicalDeviceProperties2KHR}.</p>
  * 
  * <h5>See Also</h5>
  * 
@@ -37,18 +37,17 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct VkSampleLocationEXT {
  *     float x;
  *     float y;
- * }</code></pre>
+ * }</pre></code>
  */
 public class VkSampleLocationEXT extends Struct implements NativeResource {
 
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */

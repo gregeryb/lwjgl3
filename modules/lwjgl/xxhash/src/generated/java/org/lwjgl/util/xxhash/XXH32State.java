@@ -21,7 +21,7 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct XXH32_state_t {
  *     unsigned total_len_32;
  *     unsigned large_len;
@@ -32,7 +32,7 @@ import static org.lwjgl.system.MemoryStack.*;
  *     unsigned mem32[4];
  *     unsigned memsize;
  *     unsigned reserved;
- * }</code></pre>
+ * }</pre></code>
  */
 @NativeType("struct XXH32_state_t")
 public class XXH32State extends Struct implements NativeResource {
@@ -40,7 +40,6 @@ public class XXH32State extends Struct implements NativeResource {
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */
@@ -345,7 +344,8 @@ public class XXH32State extends Struct implements NativeResource {
     public static IntBuffer nmem32(long struct) { return memIntBuffer(struct + XXH32State.MEM32, 4); }
     /** Unsafe version of {@link #mem32(int) mem32}. */
     public static int nmem32(long struct, int index) {
-        return memGetInt(struct + XXH32State.MEM32 + check(index, 4) * 4);
+        if (CHECKS) { check(index, 4); }
+        return memGetInt(struct + XXH32State.MEM32 + index * 4);
     }
     /** Unsafe version of {@link #memsize}. */
     public static int nmemsize(long struct) { return memGetInt(struct + XXH32State.MEMSIZE); }
@@ -371,7 +371,8 @@ public class XXH32State extends Struct implements NativeResource {
     }
     /** Unsafe version of {@link #mem32(int, int) mem32}. */
     public static void nmem32(long struct, int index, int value) {
-        memPutInt(struct + XXH32State.MEM32 + check(index, 4) * 4, value);
+        if (CHECKS) { check(index, 4); }
+        memPutInt(struct + XXH32State.MEM32 + index * 4, value);
     }
     /** Unsafe version of {@link #memsize(int) memsize}. */
     public static void nmemsize(long struct, int value) { memPutInt(struct + XXH32State.MEMSIZE, value); }

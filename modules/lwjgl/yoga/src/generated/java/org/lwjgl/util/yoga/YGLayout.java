@@ -17,7 +17,7 @@ import static org.lwjgl.system.MemoryUtil.*;
 /**
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct YGLayout {
  *     float positions[4];
  *     float dimensions[2];
@@ -26,24 +26,23 @@ import static org.lwjgl.system.MemoryUtil.*;
  *     float padding[6];
  *     YGDirection direction;
  *     uint32_t computedFlexBasisGeneration;
- *     {@link YGFloatOptional YGFloatOptional} computedFlexBasis;
+ *     float computedFlexBasis;
  *     bool hadOverflow;
  *     uint32_t generationCount;
- *     YGDirection lastOwnerDirection;
+ *     YGDirection lastParentDirection;
  *     uint32_t nextCachedMeasurementsIndex;
  *     {@link YGCachedMeasurement YGCachedMeasurement} cachedMeasurements[16];
  *     float measuredDimensions[2];
  *     {@link YGCachedMeasurement YGCachedMeasurement} cachedLayout;
  *     bool didUseLegacyFlag;
  *     bool doesLegacyStretchFlagAffectsLayout;
- * }</code></pre>
+ * }</pre></code>
  */
 public class YGLayout extends Struct {
 
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */
@@ -58,7 +57,7 @@ public class YGLayout extends Struct {
         COMPUTEDFLEXBASIS,
         HADOVERFLOW,
         GENERATIONCOUNT,
-        LASTOWNERDIRECTION,
+        LASTPARENTDIRECTION,
         NEXTCACHEDMEASUREMENTSINDEX,
         CACHEDMEASUREMENTS,
         MEASUREDDIMENSIONS,
@@ -75,7 +74,7 @@ public class YGLayout extends Struct {
             __array(4, 6),
             __member(4),
             __member(4),
-            __member(YGFloatOptional.SIZEOF, YGFloatOptional.ALIGNOF),
+            __member(4),
             __member(1),
             __member(4),
             __member(4),
@@ -100,7 +99,7 @@ public class YGLayout extends Struct {
         COMPUTEDFLEXBASIS = layout.offsetof(7);
         HADOVERFLOW = layout.offsetof(8);
         GENERATIONCOUNT = layout.offsetof(9);
-        LASTOWNERDIRECTION = layout.offsetof(10);
+        LASTPARENTDIRECTION = layout.offsetof(10);
         NEXTCACHEDMEASUREMENTSINDEX = layout.offsetof(11);
         CACHEDMEASUREMENTS = layout.offsetof(12);
         MEASUREDDIMENSIONS = layout.offsetof(13);
@@ -157,17 +156,17 @@ public class YGLayout extends Struct {
     /** Returns the value of the {@code computedFlexBasisGeneration} field. */
     @NativeType("uint32_t")
     public int computedFlexBasisGeneration() { return ncomputedFlexBasisGeneration(address()); }
-    /** Returns a {@link YGFloatOptional} view of the {@code computedFlexBasis} field. */
-    public YGFloatOptional computedFlexBasis() { return ncomputedFlexBasis(address()); }
+    /** Returns the value of the {@code computedFlexBasis} field. */
+    public float computedFlexBasis() { return ncomputedFlexBasis(address()); }
     /** Returns the value of the {@code hadOverflow} field. */
     @NativeType("bool")
     public boolean hadOverflow() { return nhadOverflow(address()); }
     /** Returns the value of the {@code generationCount} field. */
     @NativeType("uint32_t")
     public int generationCount() { return ngenerationCount(address()); }
-    /** Returns the value of the {@code lastOwnerDirection} field. */
+    /** Returns the value of the {@code lastParentDirection} field. */
     @NativeType("YGDirection")
-    public int lastOwnerDirection() { return nlastOwnerDirection(address()); }
+    public int lastParentDirection() { return nlastParentDirection(address()); }
     /** Returns the value of the {@code nextCachedMeasurementsIndex} field. */
     @NativeType("uint32_t")
     public int nextCachedMeasurementsIndex() { return nnextCachedMeasurementsIndex(address()); }
@@ -225,57 +224,64 @@ public class YGLayout extends Struct {
     public static FloatBuffer npositions(long struct) { return memFloatBuffer(struct + YGLayout.POSITIONS, 4); }
     /** Unsafe version of {@link #positions(int) positions}. */
     public static float npositions(long struct, int index) {
-        return memGetFloat(struct + YGLayout.POSITIONS + check(index, 4) * 4);
+        if (CHECKS) { check(index, 4); }
+        return memGetFloat(struct + YGLayout.POSITIONS + index * 4);
     }
     /** Unsafe version of {@link #dimensions}. */
     public static FloatBuffer ndimensions(long struct) { return memFloatBuffer(struct + YGLayout.DIMENSIONS, 2); }
     /** Unsafe version of {@link #dimensions(int) dimensions}. */
     public static float ndimensions(long struct, int index) {
-        return memGetFloat(struct + YGLayout.DIMENSIONS + check(index, 2) * 4);
+        if (CHECKS) { check(index, 2); }
+        return memGetFloat(struct + YGLayout.DIMENSIONS + index * 4);
     }
     /** Unsafe version of {@link #margin}. */
     public static FloatBuffer nmargin(long struct) { return memFloatBuffer(struct + YGLayout.MARGIN, 6); }
     /** Unsafe version of {@link #margin(int) margin}. */
     public static float nmargin(long struct, int index) {
-        return memGetFloat(struct + YGLayout.MARGIN + check(index, 6) * 4);
+        if (CHECKS) { check(index, 6); }
+        return memGetFloat(struct + YGLayout.MARGIN + index * 4);
     }
     /** Unsafe version of {@link #border}. */
     public static FloatBuffer nborder(long struct) { return memFloatBuffer(struct + YGLayout.BORDER, 6); }
     /** Unsafe version of {@link #border(int) border}. */
     public static float nborder(long struct, int index) {
-        return memGetFloat(struct + YGLayout.BORDER + check(index, 6) * 4);
+        if (CHECKS) { check(index, 6); }
+        return memGetFloat(struct + YGLayout.BORDER + index * 4);
     }
     /** Unsafe version of {@link #padding}. */
     public static FloatBuffer npadding(long struct) { return memFloatBuffer(struct + YGLayout.PADDING, 6); }
     /** Unsafe version of {@link #padding(int) padding}. */
     public static float npadding(long struct, int index) {
-        return memGetFloat(struct + YGLayout.PADDING + check(index, 6) * 4);
+        if (CHECKS) { check(index, 6); }
+        return memGetFloat(struct + YGLayout.PADDING + index * 4);
     }
     /** Unsafe version of {@link #direction}. */
     public static int ndirection(long struct) { return memGetInt(struct + YGLayout.DIRECTION); }
     /** Unsafe version of {@link #computedFlexBasisGeneration}. */
     public static int ncomputedFlexBasisGeneration(long struct) { return memGetInt(struct + YGLayout.COMPUTEDFLEXBASISGENERATION); }
     /** Unsafe version of {@link #computedFlexBasis}. */
-    public static YGFloatOptional ncomputedFlexBasis(long struct) { return YGFloatOptional.create(struct + YGLayout.COMPUTEDFLEXBASIS); }
+    public static float ncomputedFlexBasis(long struct) { return memGetFloat(struct + YGLayout.COMPUTEDFLEXBASIS); }
     /** Unsafe version of {@link #hadOverflow}. */
     public static boolean nhadOverflow(long struct) { return memGetByte(struct + YGLayout.HADOVERFLOW) != 0; }
     /** Unsafe version of {@link #generationCount}. */
     public static int ngenerationCount(long struct) { return memGetInt(struct + YGLayout.GENERATIONCOUNT); }
-    /** Unsafe version of {@link #lastOwnerDirection}. */
-    public static int nlastOwnerDirection(long struct) { return memGetInt(struct + YGLayout.LASTOWNERDIRECTION); }
+    /** Unsafe version of {@link #lastParentDirection}. */
+    public static int nlastParentDirection(long struct) { return memGetInt(struct + YGLayout.LASTPARENTDIRECTION); }
     /** Unsafe version of {@link #nextCachedMeasurementsIndex}. */
     public static int nnextCachedMeasurementsIndex(long struct) { return memGetInt(struct + YGLayout.NEXTCACHEDMEASUREMENTSINDEX); }
     /** Unsafe version of {@link #cachedMeasurements}. */
     public static YGCachedMeasurement.Buffer ncachedMeasurements(long struct) { return YGCachedMeasurement.create(struct + YGLayout.CACHEDMEASUREMENTS, 16); }
     /** Unsafe version of {@link #cachedMeasurements(int) cachedMeasurements}. */
     public static YGCachedMeasurement ncachedMeasurements(long struct, int index) {
-        return YGCachedMeasurement.create(struct + YGLayout.CACHEDMEASUREMENTS + check(index, 16) * YGCachedMeasurement.SIZEOF);
+        if (CHECKS) { check(index, 16); }
+        return YGCachedMeasurement.create(struct + YGLayout.CACHEDMEASUREMENTS + index * YGCachedMeasurement.SIZEOF);
     }
     /** Unsafe version of {@link #measuredDimensions}. */
     public static FloatBuffer nmeasuredDimensions(long struct) { return memFloatBuffer(struct + YGLayout.MEASUREDDIMENSIONS, 2); }
     /** Unsafe version of {@link #measuredDimensions(int) measuredDimensions}. */
     public static float nmeasuredDimensions(long struct, int index) {
-        return memGetFloat(struct + YGLayout.MEASUREDDIMENSIONS + check(index, 2) * 4);
+        if (CHECKS) { check(index, 2); }
+        return memGetFloat(struct + YGLayout.MEASUREDDIMENSIONS + index * 4);
     }
     /** Unsafe version of {@link #cachedLayout}. */
     public static YGCachedMeasurement ncachedLayout(long struct) { return YGCachedMeasurement.create(struct + YGLayout.CACHEDLAYOUT); }
@@ -361,17 +367,17 @@ public class YGLayout extends Struct {
         /** Returns the value of the {@code computedFlexBasisGeneration} field. */
         @NativeType("uint32_t")
         public int computedFlexBasisGeneration() { return YGLayout.ncomputedFlexBasisGeneration(address()); }
-        /** Returns a {@link YGFloatOptional} view of the {@code computedFlexBasis} field. */
-        public YGFloatOptional computedFlexBasis() { return YGLayout.ncomputedFlexBasis(address()); }
+        /** Returns the value of the {@code computedFlexBasis} field. */
+        public float computedFlexBasis() { return YGLayout.ncomputedFlexBasis(address()); }
         /** Returns the value of the {@code hadOverflow} field. */
         @NativeType("bool")
         public boolean hadOverflow() { return YGLayout.nhadOverflow(address()); }
         /** Returns the value of the {@code generationCount} field. */
         @NativeType("uint32_t")
         public int generationCount() { return YGLayout.ngenerationCount(address()); }
-        /** Returns the value of the {@code lastOwnerDirection} field. */
+        /** Returns the value of the {@code lastParentDirection} field. */
         @NativeType("YGDirection")
-        public int lastOwnerDirection() { return YGLayout.nlastOwnerDirection(address()); }
+        public int lastParentDirection() { return YGLayout.nlastParentDirection(address()); }
         /** Returns the value of the {@code nextCachedMeasurementsIndex} field. */
         @NativeType("uint32_t")
         public int nextCachedMeasurementsIndex() { return YGLayout.nnextCachedMeasurementsIndex(address()); }

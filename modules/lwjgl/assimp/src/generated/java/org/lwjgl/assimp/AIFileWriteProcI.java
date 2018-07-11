@@ -12,13 +12,13 @@ import static org.lwjgl.system.dyncall.DynCallback.*;
 /**
  * <h3>Type</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * size_t (*) (
  *     struct aiFile *pFile,
- *     char const *pBuffer,
+ *     const char *pBuffer,
  *     size_t memB,
  *     size_t count
- * )</code></pre>
+ * )</pre></code>
  */
 @FunctionalInterface
 @NativeType("aiFileWriteProc")
@@ -47,6 +47,6 @@ public interface AIFileWriteProcI extends CallbackI.P {
      * @param memB    Size of the individual element to be written
      * @param count   Number of elements to be written
      */
-    @NativeType("size_t") long invoke(@NativeType("struct aiFile *") long pFile, @NativeType("char const *") long pBuffer, @NativeType("size_t") long memB, @NativeType("size_t") long count);
+    @NativeType("size_t") long invoke(@NativeType("struct aiFile *") long pFile, @NativeType("const char *") long pBuffer, @NativeType("size_t") long memB, @NativeType("size_t") long count);
 
 }

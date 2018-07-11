@@ -16,18 +16,64 @@ import static org.lwjgl.system.MemoryUtil.*;
 import static org.lwjgl.system.MemoryStack.*;
 
 /**
- * See {@link VkPipelineTessellationDomainOriginStateCreateInfo}.
+ * Structure specifying the orientation of the tessellation domain.
+ * 
+ * <h5>Description</h5>
+ * 
+ * <p>If the {@link VkPipelineTessellationDomainOriginStateCreateInfoKHR} structure is included in the {@code pNext} chain of {@link VkPipelineTessellationStateCreateInfo}, it controls the origin of the tessellation domain. If this structure is not present, it is as if {@code domainOrigin} were {@link KHRMaintenance2#VK_TESSELLATION_DOMAIN_ORIGIN_UPPER_LEFT_KHR TESSELLATION_DOMAIN_ORIGIN_UPPER_LEFT_KHR}.</p>
+ * 
+ * <h5>Valid Usage (Implicit)</h5>
+ * 
+ * <ul>
+ * <li>{@code sType} <b>must</b> be {@link KHRMaintenance2#VK_STRUCTURE_TYPE_PIPELINE_TESSELLATION_DOMAIN_ORIGIN_STATE_CREATE_INFO_KHR STRUCTURE_TYPE_PIPELINE_TESSELLATION_DOMAIN_ORIGIN_STATE_CREATE_INFO_KHR}</li>
+ * <li>{@code pNext} <b>must</b> be {@code NULL}</li>
+ * <li>{@code domainOrigin} <b>must</b> be a valid {@code VkTessellationDomainOriginKHR} value</li>
+ * </ul>
+ * 
+ * <h3>Member documentation</h3>
+ * 
+ * <ul>
+ * <li>{@code sType} &ndash; the type of this structure.</li>
+ * <li>{@code pNext} &ndash; {@code NULL} or a pointer to an extension-specific structure.</li>
+ * <li>{@code domainOrigin} &ndash; controls the origin of the tessellation domain space, and is of type {@code VkTessellationDomainOriginKHR}.</li>
+ * </ul>
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct VkPipelineTessellationDomainOriginStateCreateInfoKHR {
  *     VkStructureType sType;
- *     void const * pNext;
- *     VkTessellationDomainOrigin domainOrigin;
- * }</code></pre>
+ *     const void * pNext;
+ *     VkTessellationDomainOriginKHR domainOrigin;
+ * }</pre></code>
  */
-public class VkPipelineTessellationDomainOriginStateCreateInfoKHR extends VkPipelineTessellationDomainOriginStateCreateInfo {
+public class VkPipelineTessellationDomainOriginStateCreateInfoKHR extends Struct implements NativeResource {
+
+    /** The struct size in bytes. */
+    public static final int SIZEOF;
+
+    public static final int ALIGNOF;
+
+    /** The struct member offsets. */
+    public static final int
+        STYPE,
+        PNEXT,
+        DOMAINORIGIN;
+
+    static {
+        Layout layout = __struct(
+            __member(4),
+            __member(POINTER_SIZE),
+            __member(4)
+        );
+
+        SIZEOF = layout.getSize();
+        ALIGNOF = layout.getAlignment();
+
+        STYPE = layout.offsetof(0);
+        PNEXT = layout.offsetof(1);
+        DOMAINORIGIN = layout.offsetof(2);
+    }
 
     VkPipelineTessellationDomainOriginStateCreateInfoKHR(long address, @Nullable ByteBuffer container) {
         super(address, container);
@@ -43,18 +89,27 @@ public class VkPipelineTessellationDomainOriginStateCreateInfoKHR extends VkPipe
         this(memAddress(container), __checkContainer(container, SIZEOF));
     }
 
-    /** Sets the specified value to the {@code sType} field. */
     @Override
+    public int sizeof() { return SIZEOF; }
+
+    /** Returns the value of the {@code sType} field. */
+    @NativeType("VkStructureType")
+    public int sType() { return nsType(address()); }
+    /** Returns the value of the {@code pNext} field. */
+    @NativeType("const void *")
+    public long pNext() { return npNext(address()); }
+    /** Returns the value of the {@code domainOrigin} field. */
+    @NativeType("VkTessellationDomainOriginKHR")
+    public int domainOrigin() { return ndomainOrigin(address()); }
+
+    /** Sets the specified value to the {@code sType} field. */
     public VkPipelineTessellationDomainOriginStateCreateInfoKHR sType(@NativeType("VkStructureType") int value) { nsType(address(), value); return this; }
     /** Sets the specified value to the {@code pNext} field. */
-    @Override
-    public VkPipelineTessellationDomainOriginStateCreateInfoKHR pNext(@NativeType("void const *") long value) { npNext(address(), value); return this; }
+    public VkPipelineTessellationDomainOriginStateCreateInfoKHR pNext(@NativeType("const void *") long value) { npNext(address(), value); return this; }
     /** Sets the specified value to the {@code domainOrigin} field. */
-    @Override
-    public VkPipelineTessellationDomainOriginStateCreateInfoKHR domainOrigin(@NativeType("VkTessellationDomainOrigin") int value) { ndomainOrigin(address(), value); return this; }
+    public VkPipelineTessellationDomainOriginStateCreateInfoKHR domainOrigin(@NativeType("VkTessellationDomainOriginKHR") int value) { ndomainOrigin(address(), value); return this; }
 
     /** Initializes this struct with the specified values. */
-    @Override
     public VkPipelineTessellationDomainOriginStateCreateInfoKHR set(
         int sType,
         long pNext,
@@ -220,8 +275,24 @@ public class VkPipelineTessellationDomainOriginStateCreateInfoKHR extends VkPipe
 
     // -----------------------------------
 
+    /** Unsafe version of {@link #sType}. */
+    public static int nsType(long struct) { return memGetInt(struct + VkPipelineTessellationDomainOriginStateCreateInfoKHR.STYPE); }
+    /** Unsafe version of {@link #pNext}. */
+    public static long npNext(long struct) { return memGetAddress(struct + VkPipelineTessellationDomainOriginStateCreateInfoKHR.PNEXT); }
+    /** Unsafe version of {@link #domainOrigin}. */
+    public static int ndomainOrigin(long struct) { return memGetInt(struct + VkPipelineTessellationDomainOriginStateCreateInfoKHR.DOMAINORIGIN); }
+
+    /** Unsafe version of {@link #sType(int) sType}. */
+    public static void nsType(long struct, int value) { memPutInt(struct + VkPipelineTessellationDomainOriginStateCreateInfoKHR.STYPE, value); }
+    /** Unsafe version of {@link #pNext(long) pNext}. */
+    public static void npNext(long struct, long value) { memPutAddress(struct + VkPipelineTessellationDomainOriginStateCreateInfoKHR.PNEXT, value); }
+    /** Unsafe version of {@link #domainOrigin(int) domainOrigin}. */
+    public static void ndomainOrigin(long struct, int value) { memPutInt(struct + VkPipelineTessellationDomainOriginStateCreateInfoKHR.DOMAINORIGIN, value); }
+
+    // -----------------------------------
+
     /** An array of {@link VkPipelineTessellationDomainOriginStateCreateInfoKHR} structs. */
-    public static class Buffer extends VkPipelineTessellationDomainOriginStateCreateInfo.Buffer {
+    public static class Buffer extends StructBuffer<VkPipelineTessellationDomainOriginStateCreateInfoKHR, Buffer> implements NativeResource {
 
         /**
          * Creates a new {@link VkPipelineTessellationDomainOriginStateCreateInfoKHR.Buffer} instance backed by the specified container.
@@ -233,7 +304,7 @@ public class VkPipelineTessellationDomainOriginStateCreateInfoKHR extends VkPipe
          * <p>The created buffer instance holds a strong reference to the container object.</p>
          */
         public Buffer(ByteBuffer container) {
-            super(container);
+            super(container, container.remaining() / SIZEOF);
         }
 
         public Buffer(long address, int cap) {
@@ -259,15 +330,27 @@ public class VkPipelineTessellationDomainOriginStateCreateInfoKHR extends VkPipe
             return new VkPipelineTessellationDomainOriginStateCreateInfoKHR(address, container);
         }
 
-        /** Sets the specified value to the {@code sType} field. */
         @Override
+        public int sizeof() {
+            return SIZEOF;
+        }
+
+        /** Returns the value of the {@code sType} field. */
+        @NativeType("VkStructureType")
+        public int sType() { return VkPipelineTessellationDomainOriginStateCreateInfoKHR.nsType(address()); }
+        /** Returns the value of the {@code pNext} field. */
+        @NativeType("const void *")
+        public long pNext() { return VkPipelineTessellationDomainOriginStateCreateInfoKHR.npNext(address()); }
+        /** Returns the value of the {@code domainOrigin} field. */
+        @NativeType("VkTessellationDomainOriginKHR")
+        public int domainOrigin() { return VkPipelineTessellationDomainOriginStateCreateInfoKHR.ndomainOrigin(address()); }
+
+        /** Sets the specified value to the {@code sType} field. */
         public VkPipelineTessellationDomainOriginStateCreateInfoKHR.Buffer sType(@NativeType("VkStructureType") int value) { VkPipelineTessellationDomainOriginStateCreateInfoKHR.nsType(address(), value); return this; }
         /** Sets the specified value to the {@code pNext} field. */
-        @Override
-        public VkPipelineTessellationDomainOriginStateCreateInfoKHR.Buffer pNext(@NativeType("void const *") long value) { VkPipelineTessellationDomainOriginStateCreateInfoKHR.npNext(address(), value); return this; }
+        public VkPipelineTessellationDomainOriginStateCreateInfoKHR.Buffer pNext(@NativeType("const void *") long value) { VkPipelineTessellationDomainOriginStateCreateInfoKHR.npNext(address(), value); return this; }
         /** Sets the specified value to the {@code domainOrigin} field. */
-        @Override
-        public VkPipelineTessellationDomainOriginStateCreateInfoKHR.Buffer domainOrigin(@NativeType("VkTessellationDomainOrigin") int value) { VkPipelineTessellationDomainOriginStateCreateInfoKHR.ndomainOrigin(address(), value); return this; }
+        public VkPipelineTessellationDomainOriginStateCreateInfoKHR.Buffer domainOrigin(@NativeType("VkTessellationDomainOriginKHR") int value) { VkPipelineTessellationDomainOriginStateCreateInfoKHR.ndomainOrigin(address(), value); return this; }
 
     }
 

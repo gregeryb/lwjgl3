@@ -28,7 +28,7 @@ import static org.lwjgl.system.MemoryUtil.*;
  * 
  * <p>This example extracts the register usage of a fragment shader within a particular graphics pipeline:</p>
  * 
- * <pre><code>
+ * <code><pre>
  * extern VkDevice device;
  * extern VkPipeline gfxPipeline;
  * 
@@ -43,22 +43,22 @@ import static org.lwjgl.system.MemoryUtil.*;
  *     gfxPipeline,
  *     VK_SHADER_STAGE_FRAGMENT_BIT,
  *     VK_SHADER_INFO_TYPE_STATISTICS_AMD,
- *     &amp;dataSize,
- *     &amp;statistics) == VK_SUCCESS)
+ *     &dataSize,
+ *     &statistics) == VK_SUCCESS)
  * {
  *     printf("VGPR usage: %d\n", statistics.resourceUsage.numUsedVgprs);
  *     printf("SGPR usage: %d\n", statistics.resourceUsage.numUsedSgprs);
- * }</code></pre>
+ * }</pre></code>
  * 
  * <p>The following example continues the previous example by subsequently attempting to query and print shader disassembly about the fragment shader:</p>
  * 
- * <pre><code>
+ * <code><pre>
  * // Query disassembly size (if available)
  * if (pfnGetShaderInfoAMD(device,
  *     gfxPipeline,
  *     VK_SHADER_STAGE_FRAGMENT_BIT,
  *     VK_SHADER_INFO_TYPE_DISASSEMBLY_AMD,
- *     &amp;dataSize,
+ *     &dataSize,
  *     nullptr) == VK_SUCCESS)
  * {
  *     printf("Fragment shader disassembly:\n");
@@ -70,14 +70,14 @@ import static org.lwjgl.system.MemoryUtil.*;
  *         gfxPipeline,
  *         VK_SHADER_STAGE_FRAGMENT_BIT,
  *         VK_SHADER_INFO_TYPE_DISASSEMBLY_AMD,
- *         &amp;dataSize,
+ *         &dataSize,
  *         disassembly) == VK_SUCCESS)
  *     {
  *         printf((char*)disassembly);
  *     }
  * 
  *     free(disassembly);
- * }</code></pre>
+ * }</pre></code>
  * 
  * <dl>
  * <dt><b>Name String</b></dt>
@@ -94,7 +94,7 @@ import static org.lwjgl.system.MemoryUtil.*;
  * </ul></dd>
  * <dt><b>Contact</b></dt>
  * <dd><ul>
- * <li>Jaakko Konttinen @jaakkoamd</li>
+ * <li>Jaakko Konttinen @jaakko</li>
  * </ul></dd>
  * <dt><b>Last Modified Date</b></dt>
  * <dd>2017-10-09</dd>
@@ -134,9 +134,9 @@ public class AMDShaderInfo {
         throw new UnsupportedOperationException();
     }
 
-    static boolean checkCapsDevice(FunctionProvider provider, java.util.Map<String, Long> caps, java.util.Set<String> ext) {
-        return ext.contains("VK_AMD_shader_info") && VK.checkExtension("VK_AMD_shader_info",
-               VK.isSupported(provider, "vkGetShaderInfoAMD", caps)
+    static boolean isAvailable(VKCapabilitiesDevice caps) {
+        return checkFunctions(
+            caps.vkGetShaderInfoAMD
         );
     }
 
@@ -162,14 +162,14 @@ public class AMDShaderInfo {
      * 
      * <p>Information about a particular shader that has been compiled as part of a pipeline object can be extracted by calling:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * VkResult vkGetShaderInfoAMD(
      *     VkDevice                                    device,
      *     VkPipeline                                  pipeline,
      *     VkShaderStageFlagBits                       shaderStage,
      *     VkShaderInfoTypeAMD                         infoType,
      *     size_t*                                     pInfoSize,
-     *     void*                                       pInfo);</code></pre>
+     *     void*                                       pInfo);</pre></code>
      * 
      * <h5>Description</h5>
      * 

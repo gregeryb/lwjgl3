@@ -70,7 +70,7 @@ public class KHREGLEvent {
         return nclCreateEventFromEGLSyncKHR(context, sync, display, memAddressSafe(errcode_ret));
     }
 
-    /** Array version of: {@link #clCreateEventFromEGLSyncKHR CreateEventFromEGLSyncKHR} */
+    /** register Array version of: {@link #clCreateEventFromEGLSyncKHR CreateEventFromEGLSyncKHR} */
     @NativeType("cl_event")
     public static long clCreateEventFromEGLSyncKHR(@NativeType("cl_context") long context, @NativeType("CLeglSyncKHR") long sync, @NativeType("CLeglDisplayKHR") long display, @Nullable @NativeType("cl_int *") int[] errcode_ret) {
         long __functionAddress = CL.getICD().clCreateEventFromEGLSyncKHR;

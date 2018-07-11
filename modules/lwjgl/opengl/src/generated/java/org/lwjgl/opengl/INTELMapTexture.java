@@ -155,7 +155,7 @@ public class INTELMapTexture {
         return apiGetMappedBuffer(old_buffer, __result, (int)length);
     }
 
-    /** Array version of: {@link #glMapTexture2DINTEL MapTexture2DINTEL} */
+    /** register Array version of: {@link #glMapTexture2DINTEL MapTexture2DINTEL} */
     @Nullable
     @NativeType("void *")
     public static ByteBuffer glMapTexture2DINTEL(@NativeType("GLuint") int texture, @NativeType("GLint") int level, @NativeType("GLbitfield") int access, @NativeType("GLint *") int[] stride, @NativeType("GLenum *") int[] layout) {
@@ -169,7 +169,7 @@ public class INTELMapTexture {
         return memByteBufferSafe(__result, getStride(stride) * GLChecks.getTexLevelParameteri(texture, GL11.GL_TEXTURE_2D, level, GL11.GL_TEXTURE_HEIGHT));
     }
 
-    /** Array version of: {@link #glMapTexture2DINTEL MapTexture2DINTEL} */
+    /** register Array version of: {@link #glMapTexture2DINTEL MapTexture2DINTEL} */
     @Nullable
     @NativeType("void *")
     public static ByteBuffer glMapTexture2DINTEL(@NativeType("GLuint") int texture, @NativeType("GLint") int level, @NativeType("GLbitfield") int access, @NativeType("GLint *") int[] stride, @NativeType("GLenum *") int[] layout, @Nullable ByteBuffer old_buffer) {
@@ -184,7 +184,7 @@ public class INTELMapTexture {
         return apiGetMappedBuffer(old_buffer, __result, length);
     }
 
-    /** Array version of: {@link #glMapTexture2DINTEL MapTexture2DINTEL} */
+    /** register Array version of: {@link #glMapTexture2DINTEL MapTexture2DINTEL} */
     @Nullable
     @NativeType("void *")
     public static ByteBuffer glMapTexture2DINTEL(@NativeType("GLuint") int texture, @NativeType("GLint") int level, @NativeType("GLbitfield") int access, @NativeType("GLint *") int[] stride, @NativeType("GLenum *") int[] layout, long length, @Nullable ByteBuffer old_buffer) {

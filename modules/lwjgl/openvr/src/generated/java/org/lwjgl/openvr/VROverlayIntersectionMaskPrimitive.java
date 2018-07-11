@@ -18,11 +18,11 @@ import static org.lwjgl.system.MemoryStack.*;
 /**
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct VROverlayIntersectionMaskPrimitive_t {
  *     EVROverlayIntersectionMaskPrimitiveType m_nPrimitiveType;
  *     {@link VROverlayIntersectionMaskPrimitiveData VROverlayIntersectionMaskPrimitive_Data_t} m_Primitive;
- * }</code></pre>
+ * }</pre></code>
  */
 @NativeType("struct VROverlayIntersectionMaskPrimitive_t")
 public class VROverlayIntersectionMaskPrimitive extends Struct implements NativeResource {
@@ -30,7 +30,6 @@ public class VROverlayIntersectionMaskPrimitive extends Struct implements Native
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */
@@ -74,8 +73,6 @@ public class VROverlayIntersectionMaskPrimitive extends Struct implements Native
     /** Returns a {@link VROverlayIntersectionMaskPrimitiveData} view of the {@code m_Primitive} field. */
     @NativeType("VROverlayIntersectionMaskPrimitive_Data_t")
     public VROverlayIntersectionMaskPrimitiveData m_Primitive() { return nm_Primitive(address()); }
-    /** Passes the {@code m_Primitive} field to the specified {@link java.util.function.Consumer Consumer}. */
-    public VROverlayIntersectionMaskPrimitive m_Primitive(java.util.function.Consumer<VROverlayIntersectionMaskPrimitiveData> consumer) { consumer.accept(m_Primitive()); return this; }
 
     /** Sets the specified value to the {@code m_nPrimitiveType} field. */
     public VROverlayIntersectionMaskPrimitive m_nPrimitiveType(@NativeType("EVROverlayIntersectionMaskPrimitiveType") int value) { nm_nPrimitiveType(address(), value); return this; }
@@ -308,8 +305,6 @@ public class VROverlayIntersectionMaskPrimitive extends Struct implements Native
         /** Returns a {@link VROverlayIntersectionMaskPrimitiveData} view of the {@code m_Primitive} field. */
         @NativeType("VROverlayIntersectionMaskPrimitive_Data_t")
         public VROverlayIntersectionMaskPrimitiveData m_Primitive() { return VROverlayIntersectionMaskPrimitive.nm_Primitive(address()); }
-        /** Passes the {@code m_Primitive} field to the specified {@link java.util.function.Consumer Consumer}. */
-        public VROverlayIntersectionMaskPrimitive.Buffer m_Primitive(java.util.function.Consumer<VROverlayIntersectionMaskPrimitiveData> consumer) { consumer.accept(m_Primitive()); return this; }
 
         /** Sets the specified value to the {@code m_nPrimitiveType} field. */
         public VROverlayIntersectionMaskPrimitive.Buffer m_nPrimitiveType(@NativeType("EVROverlayIntersectionMaskPrimitiveType") int value) { VROverlayIntersectionMaskPrimitive.nm_nPrimitiveType(address(), value); return this; }

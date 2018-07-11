@@ -6,7 +6,6 @@ package org.lwjgl.system.macosx;
 
 import org.lwjgl.system.*;
 
-import javax.annotation.*;
 import java.nio.*;
 
 import static org.lwjgl.system.Checks.*;
@@ -18,7 +17,7 @@ import static org.lwjgl.system.macosx.CoreFoundation.*;
 public class MacOSXLibraryBundle extends MacOSXLibrary {
 
     public MacOSXLibraryBundle(String name, long bundleRef) {
-        super(name, bundleRef);
+        super(bundleRef, name);
     }
 
     public static MacOSXLibraryBundle getWithIdentifier(String bundleID) {
@@ -61,11 +60,6 @@ public class MacOSXLibraryBundle extends MacOSXLibrary {
                 CFRelease(filePath);
             }
         }
-    }
-
-    @Nullable
-    @Override public String getPath() {
-        return null;
     }
 
     @Override

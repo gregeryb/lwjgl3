@@ -14,12 +14,12 @@ import static org.lwjgl.system.MemoryUtil.*;
 /**
  * <h3>Type</h3>
  * 
- * <pre><code>
- * struct aiFile * (*) (
+ * <code><pre>
+ * struct aiFile* (*) (
  *     struct aiFileIO *pFileIO,
- *     char const *fileName,
- *     char const *openMode
- * )</code></pre>
+ *     const char *fileName,
+ *     const char *openMode
+ * )</pre></code>
  */
 public abstract class AIFileOpenProc extends Callback implements AIFileOpenProcI {
 

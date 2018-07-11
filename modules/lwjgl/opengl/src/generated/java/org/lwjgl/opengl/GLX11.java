@@ -14,7 +14,7 @@ import static org.lwjgl.system.JNI.*;
 import static org.lwjgl.system.MemoryUtil.*;
 
 /** Native bindings to GLX 1.1. */
-public class GLX11 extends GLX {
+public class GLX11 {
 
     /** Names for attributes to {@link #glXGetClientString GetClientString}. */
     public static final int
@@ -51,7 +51,7 @@ public class GLX11 extends GLX {
      * @param screen  the screen number
      */
     @Nullable
-    @NativeType("char const *")
+    @NativeType("const char *")
     public static String glXQueryExtensionsString(@NativeType("Display *") long display, int screen) {
         long __result = nglXQueryExtensionsString(display, screen);
         return memASCIISafe(__result);
@@ -76,7 +76,7 @@ public class GLX11 extends GLX {
      * @param name    the string to query
      */
     @Nullable
-    @NativeType("char const *")
+    @NativeType("const char *")
     public static String glXGetClientString(@NativeType("Display *") long display, int name) {
         long __result = nglXGetClientString(display, name);
         return memASCIISafe(__result);
@@ -102,7 +102,7 @@ public class GLX11 extends GLX {
      * @param name    the string to query
      */
     @Nullable
-    @NativeType("char const *")
+    @NativeType("const char *")
     public static String glXQueryServerString(@NativeType("Display *") long display, int screen, int name) {
         long __result = nglXQueryServerString(display, screen, name);
         return memASCIISafe(__result);

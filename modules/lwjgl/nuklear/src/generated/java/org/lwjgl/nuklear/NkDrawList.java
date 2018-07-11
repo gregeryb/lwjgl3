@@ -19,7 +19,7 @@ import static org.lwjgl.system.MemoryStack.*;
 /**
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct nk_draw_list {
  *     {@link NkRect struct nk_rect} clip_rect;
  *     {@link NkVec2 struct nk_vec2} circle_vtx[12];
@@ -36,7 +36,7 @@ import static org.lwjgl.system.MemoryStack.*;
  *     enum nk_anti_aliasing line_AA;
  *     enum nk_anti_aliasing shape_AA;
  *     {@link NkHandle nk_handle} userdata;
- * }</code></pre>
+ * }</pre></code>
  */
 @NativeType("struct nk_draw_list")
 public class NkDrawList extends Struct implements NativeResource {
@@ -44,7 +44,6 @@ public class NkDrawList extends Struct implements NativeResource {
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */
@@ -124,8 +123,6 @@ public class NkDrawList extends Struct implements NativeResource {
     /** Returns a {@link NkRect} view of the {@code clip_rect} field. */
     @NativeType("struct nk_rect")
     public NkRect clip_rect() { return nclip_rect(address()); }
-    /** Passes the {@code clip_rect} field to the specified {@link java.util.function.Consumer Consumer}. */
-    public NkDrawList clip_rect(java.util.function.Consumer<NkRect> consumer) { consumer.accept(clip_rect()); return this; }
     /** Returns a {@link NkVec2}.Buffer view of the {@code circle_vtx} field. */
     @NativeType("struct nk_vec2[12]")
     public NkVec2.Buffer circle_vtx() { return ncircle_vtx(address()); }
@@ -135,8 +132,6 @@ public class NkDrawList extends Struct implements NativeResource {
     /** Returns a {@link NkConvertConfig} view of the {@code config} field. */
     @NativeType("struct nk_convert_config")
     public NkConvertConfig config() { return nconfig(address()); }
-    /** Passes the {@code config} field to the specified {@link java.util.function.Consumer Consumer}. */
-    public NkDrawList config(java.util.function.Consumer<NkConvertConfig> consumer) { consumer.accept(config()); return this; }
     /** Returns a {@link NkBuffer} view of the struct pointed to by the {@code buffer} field. */
     @Nullable
     @NativeType("struct nk_buffer *")
@@ -176,8 +171,6 @@ public class NkDrawList extends Struct implements NativeResource {
     /** Returns a {@link NkHandle} view of the {@code userdata} field. */
     @NativeType("nk_handle")
     public NkHandle userdata() { return nuserdata(address()); }
-    /** Passes the {@code userdata} field to the specified {@link java.util.function.Consumer Consumer}. */
-    public NkDrawList userdata(java.util.function.Consumer<NkHandle> consumer) { consumer.accept(userdata()); return this; }
 
     // -----------------------------------
 
@@ -326,7 +319,8 @@ public class NkDrawList extends Struct implements NativeResource {
     public static NkVec2.Buffer ncircle_vtx(long struct) { return NkVec2.create(struct + NkDrawList.CIRCLE_VTX, 12); }
     /** Unsafe version of {@link #circle_vtx(int) circle_vtx}. */
     public static NkVec2 ncircle_vtx(long struct, int index) {
-        return NkVec2.create(struct + NkDrawList.CIRCLE_VTX + check(index, 12) * NkVec2.SIZEOF);
+        if (CHECKS) { check(index, 12); }
+        return NkVec2.create(struct + NkDrawList.CIRCLE_VTX + index * NkVec2.SIZEOF);
     }
     /** Unsafe version of {@link #config}. */
     public static NkConvertConfig nconfig(long struct) { return NkConvertConfig.create(struct + NkDrawList.CONFIG); }
@@ -404,8 +398,6 @@ public class NkDrawList extends Struct implements NativeResource {
         /** Returns a {@link NkRect} view of the {@code clip_rect} field. */
         @NativeType("struct nk_rect")
         public NkRect clip_rect() { return NkDrawList.nclip_rect(address()); }
-        /** Passes the {@code clip_rect} field to the specified {@link java.util.function.Consumer Consumer}. */
-        public NkDrawList.Buffer clip_rect(java.util.function.Consumer<NkRect> consumer) { consumer.accept(clip_rect()); return this; }
         /** Returns a {@link NkVec2}.Buffer view of the {@code circle_vtx} field. */
         @NativeType("struct nk_vec2[12]")
         public NkVec2.Buffer circle_vtx() { return NkDrawList.ncircle_vtx(address()); }
@@ -415,8 +407,6 @@ public class NkDrawList extends Struct implements NativeResource {
         /** Returns a {@link NkConvertConfig} view of the {@code config} field. */
         @NativeType("struct nk_convert_config")
         public NkConvertConfig config() { return NkDrawList.nconfig(address()); }
-        /** Passes the {@code config} field to the specified {@link java.util.function.Consumer Consumer}. */
-        public NkDrawList.Buffer config(java.util.function.Consumer<NkConvertConfig> consumer) { consumer.accept(config()); return this; }
         /** Returns a {@link NkBuffer} view of the struct pointed to by the {@code buffer} field. */
         @Nullable
         @NativeType("struct nk_buffer *")
@@ -456,8 +446,6 @@ public class NkDrawList extends Struct implements NativeResource {
         /** Returns a {@link NkHandle} view of the {@code userdata} field. */
         @NativeType("nk_handle")
         public NkHandle userdata() { return NkDrawList.nuserdata(address()); }
-        /** Passes the {@code userdata} field to the specified {@link java.util.function.Consumer Consumer}. */
-        public NkDrawList.Buffer userdata(java.util.function.Consumer<NkHandle> consumer) { consumer.accept(userdata()); return this; }
 
     }
 

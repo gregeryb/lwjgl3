@@ -72,7 +72,7 @@ public class QCOMExtendedGet2 {
         nglExtGetProgramBinarySourceQCOM(program, shadertype, memAddress(source), memAddressSafe(length));
     }
 
-    /** Array version of: {@link #glExtGetShadersQCOM ExtGetShadersQCOM} */
+    /** register Array version of: {@link #glExtGetShadersQCOM ExtGetShadersQCOM} */
     public static void glExtGetShadersQCOM(@Nullable @NativeType("GLuint *") int[] shaders, @Nullable @NativeType("GLint *") int[] numShaders) {
         long __functionAddress = GLES.getICD().glExtGetShadersQCOM;
         if (CHECKS) {
@@ -82,7 +82,7 @@ public class QCOMExtendedGet2 {
         callPPV(__functionAddress, shaders, lengthSafe(shaders), numShaders);
     }
 
-    /** Array version of: {@link #glExtGetProgramsQCOM ExtGetProgramsQCOM} */
+    /** register Array version of: {@link #glExtGetProgramsQCOM ExtGetProgramsQCOM} */
     public static void glExtGetProgramsQCOM(@Nullable @NativeType("GLuint *") int[] programs, @Nullable @NativeType("GLint *") int[] numPrograms) {
         long __functionAddress = GLES.getICD().glExtGetProgramsQCOM;
         if (CHECKS) {
@@ -92,7 +92,7 @@ public class QCOMExtendedGet2 {
         callPPV(__functionAddress, programs, lengthSafe(programs), numPrograms);
     }
 
-    /** Array version of: {@link #glExtGetProgramBinarySourceQCOM ExtGetProgramBinarySourceQCOM} */
+    /** register Array version of: {@link #glExtGetProgramBinarySourceQCOM ExtGetProgramBinarySourceQCOM} */
     public static void glExtGetProgramBinarySourceQCOM(@NativeType("GLuint") int program, @NativeType("GLenum") int shadertype, @NativeType("GLchar *") ByteBuffer source, @Nullable @NativeType("GLint *") int[] length) {
         long __functionAddress = GLES.getICD().glExtGetProgramBinarySourceQCOM;
         if (CHECKS) {

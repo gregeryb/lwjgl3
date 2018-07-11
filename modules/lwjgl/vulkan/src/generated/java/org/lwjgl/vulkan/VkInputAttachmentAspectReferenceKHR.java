@@ -16,18 +16,70 @@ import static org.lwjgl.system.MemoryUtil.*;
 import static org.lwjgl.system.MemoryStack.*;
 
 /**
- * See {@link VkInputAttachmentAspectReference}.
+ * Structure specifying a subpass/input attachment pair and an aspect mask that <b>can</b> be read.
+ * 
+ * <h5>Valid Usage</h5>
+ * 
+ * <ul>
+ * <li>There <b>must</b> be an input attachment at {@code pCreateInfo}{@code ::pSubpasses}[{@code subpass}].{@code pInputAttachments}[{@code inputAttachment}].</li>
+ * <li>The specified input attachment <b>must</b> have more than one aspect mask.</li>
+ * <li>{@code aspectMask} <b>must</b> be a subset of the aspect masks in the specified input attachment.</li>
+ * </ul>
+ * 
+ * <h5>Valid Usage (Implicit)</h5>
+ * 
+ * <ul>
+ * <li>{@code aspectMask} <b>must</b> be a valid combination of {@code VkImageAspectFlagBits} values</li>
+ * <li>{@code aspectMask} <b>must</b> not be 0</li>
+ * </ul>
+ * 
+ * <h5>See Also</h5>
+ * 
+ * <p>{@link VkRenderPassInputAttachmentAspectCreateInfoKHR}</p>
+ * 
+ * <h3>Member documentation</h3>
+ * 
+ * <ul>
+ * <li>{@code subpass} &ndash; an index into the {@code pSubpasses} array of the parent {@link VkRenderPassCreateInfo} structure.</li>
+ * <li>{@code aspectMask} &ndash; a mask of which aspect(s) <b>can</b> be accessed within the specified subpass.</li>
+ * </ul>
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct VkInputAttachmentAspectReferenceKHR {
  *     uint32_t subpass;
  *     uint32_t inputAttachmentIndex;
  *     VkImageAspectFlags aspectMask;
- * }</code></pre>
+ * }</pre></code>
  */
-public class VkInputAttachmentAspectReferenceKHR extends VkInputAttachmentAspectReference {
+public class VkInputAttachmentAspectReferenceKHR extends Struct implements NativeResource {
+
+    /** The struct size in bytes. */
+    public static final int SIZEOF;
+
+    public static final int ALIGNOF;
+
+    /** The struct member offsets. */
+    public static final int
+        SUBPASS,
+        INPUTATTACHMENTINDEX,
+        ASPECTMASK;
+
+    static {
+        Layout layout = __struct(
+            __member(4),
+            __member(4),
+            __member(4)
+        );
+
+        SIZEOF = layout.getSize();
+        ALIGNOF = layout.getAlignment();
+
+        SUBPASS = layout.offsetof(0);
+        INPUTATTACHMENTINDEX = layout.offsetof(1);
+        ASPECTMASK = layout.offsetof(2);
+    }
 
     VkInputAttachmentAspectReferenceKHR(long address, @Nullable ByteBuffer container) {
         super(address, container);
@@ -43,18 +95,27 @@ public class VkInputAttachmentAspectReferenceKHR extends VkInputAttachmentAspect
         this(memAddress(container), __checkContainer(container, SIZEOF));
     }
 
-    /** Sets the specified value to the {@code subpass} field. */
     @Override
+    public int sizeof() { return SIZEOF; }
+
+    /** Returns the value of the {@code subpass} field. */
+    @NativeType("uint32_t")
+    public int subpass() { return nsubpass(address()); }
+    /** Returns the value of the {@code inputAttachmentIndex} field. */
+    @NativeType("uint32_t")
+    public int inputAttachmentIndex() { return ninputAttachmentIndex(address()); }
+    /** Returns the value of the {@code aspectMask} field. */
+    @NativeType("VkImageAspectFlags")
+    public int aspectMask() { return naspectMask(address()); }
+
+    /** Sets the specified value to the {@code subpass} field. */
     public VkInputAttachmentAspectReferenceKHR subpass(@NativeType("uint32_t") int value) { nsubpass(address(), value); return this; }
     /** Sets the specified value to the {@code inputAttachmentIndex} field. */
-    @Override
     public VkInputAttachmentAspectReferenceKHR inputAttachmentIndex(@NativeType("uint32_t") int value) { ninputAttachmentIndex(address(), value); return this; }
     /** Sets the specified value to the {@code aspectMask} field. */
-    @Override
     public VkInputAttachmentAspectReferenceKHR aspectMask(@NativeType("VkImageAspectFlags") int value) { naspectMask(address(), value); return this; }
 
     /** Initializes this struct with the specified values. */
-    @Override
     public VkInputAttachmentAspectReferenceKHR set(
         int subpass,
         int inputAttachmentIndex,
@@ -220,8 +281,24 @@ public class VkInputAttachmentAspectReferenceKHR extends VkInputAttachmentAspect
 
     // -----------------------------------
 
+    /** Unsafe version of {@link #subpass}. */
+    public static int nsubpass(long struct) { return memGetInt(struct + VkInputAttachmentAspectReferenceKHR.SUBPASS); }
+    /** Unsafe version of {@link #inputAttachmentIndex}. */
+    public static int ninputAttachmentIndex(long struct) { return memGetInt(struct + VkInputAttachmentAspectReferenceKHR.INPUTATTACHMENTINDEX); }
+    /** Unsafe version of {@link #aspectMask}. */
+    public static int naspectMask(long struct) { return memGetInt(struct + VkInputAttachmentAspectReferenceKHR.ASPECTMASK); }
+
+    /** Unsafe version of {@link #subpass(int) subpass}. */
+    public static void nsubpass(long struct, int value) { memPutInt(struct + VkInputAttachmentAspectReferenceKHR.SUBPASS, value); }
+    /** Unsafe version of {@link #inputAttachmentIndex(int) inputAttachmentIndex}. */
+    public static void ninputAttachmentIndex(long struct, int value) { memPutInt(struct + VkInputAttachmentAspectReferenceKHR.INPUTATTACHMENTINDEX, value); }
+    /** Unsafe version of {@link #aspectMask(int) aspectMask}. */
+    public static void naspectMask(long struct, int value) { memPutInt(struct + VkInputAttachmentAspectReferenceKHR.ASPECTMASK, value); }
+
+    // -----------------------------------
+
     /** An array of {@link VkInputAttachmentAspectReferenceKHR} structs. */
-    public static class Buffer extends VkInputAttachmentAspectReference.Buffer {
+    public static class Buffer extends StructBuffer<VkInputAttachmentAspectReferenceKHR, Buffer> implements NativeResource {
 
         /**
          * Creates a new {@link VkInputAttachmentAspectReferenceKHR.Buffer} instance backed by the specified container.
@@ -233,7 +310,7 @@ public class VkInputAttachmentAspectReferenceKHR extends VkInputAttachmentAspect
          * <p>The created buffer instance holds a strong reference to the container object.</p>
          */
         public Buffer(ByteBuffer container) {
-            super(container);
+            super(container, container.remaining() / SIZEOF);
         }
 
         public Buffer(long address, int cap) {
@@ -259,14 +336,26 @@ public class VkInputAttachmentAspectReferenceKHR extends VkInputAttachmentAspect
             return new VkInputAttachmentAspectReferenceKHR(address, container);
         }
 
-        /** Sets the specified value to the {@code subpass} field. */
         @Override
+        public int sizeof() {
+            return SIZEOF;
+        }
+
+        /** Returns the value of the {@code subpass} field. */
+        @NativeType("uint32_t")
+        public int subpass() { return VkInputAttachmentAspectReferenceKHR.nsubpass(address()); }
+        /** Returns the value of the {@code inputAttachmentIndex} field. */
+        @NativeType("uint32_t")
+        public int inputAttachmentIndex() { return VkInputAttachmentAspectReferenceKHR.ninputAttachmentIndex(address()); }
+        /** Returns the value of the {@code aspectMask} field. */
+        @NativeType("VkImageAspectFlags")
+        public int aspectMask() { return VkInputAttachmentAspectReferenceKHR.naspectMask(address()); }
+
+        /** Sets the specified value to the {@code subpass} field. */
         public VkInputAttachmentAspectReferenceKHR.Buffer subpass(@NativeType("uint32_t") int value) { VkInputAttachmentAspectReferenceKHR.nsubpass(address(), value); return this; }
         /** Sets the specified value to the {@code inputAttachmentIndex} field. */
-        @Override
         public VkInputAttachmentAspectReferenceKHR.Buffer inputAttachmentIndex(@NativeType("uint32_t") int value) { VkInputAttachmentAspectReferenceKHR.ninputAttachmentIndex(address(), value); return this; }
         /** Sets the specified value to the {@code aspectMask} field. */
-        @Override
         public VkInputAttachmentAspectReferenceKHR.Buffer aspectMask(@NativeType("VkImageAspectFlags") int value) { VkInputAttachmentAspectReferenceKHR.naspectMask(address(), value); return this; }
 
     }

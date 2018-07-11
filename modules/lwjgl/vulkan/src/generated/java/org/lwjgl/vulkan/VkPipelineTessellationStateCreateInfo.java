@@ -28,7 +28,7 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <ul>
  * <li>{@code sType} <b>must</b> be {@link VK10#VK_STRUCTURE_TYPE_PIPELINE_TESSELLATION_STATE_CREATE_INFO STRUCTURE_TYPE_PIPELINE_TESSELLATION_STATE_CREATE_INFO}</li>
- * <li>{@code pNext} <b>must</b> be {@code NULL} or a pointer to a valid instance of {@link VkPipelineTessellationDomainOriginStateCreateInfo}</li>
+ * <li>{@code pNext} <b>must</b> be {@code NULL} or a pointer to a valid instance of {@link VkPipelineTessellationDomainOriginStateCreateInfoKHR}</li>
  * <li>{@code flags} <b>must</b> be 0</li>
  * </ul>
  * 
@@ -47,20 +47,19 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct VkPipelineTessellationStateCreateInfo {
  *     VkStructureType sType;
- *     void const * pNext;
+ *     const void * pNext;
  *     VkPipelineTessellationStateCreateFlags flags;
  *     uint32_t patchControlPoints;
- * }</code></pre>
+ * }</pre></code>
  */
 public class VkPipelineTessellationStateCreateInfo extends Struct implements NativeResource {
 
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */
@@ -108,7 +107,7 @@ public class VkPipelineTessellationStateCreateInfo extends Struct implements Nat
     @NativeType("VkStructureType")
     public int sType() { return nsType(address()); }
     /** Returns the value of the {@code pNext} field. */
-    @NativeType("void const *")
+    @NativeType("const void *")
     public long pNext() { return npNext(address()); }
     /** Returns the value of the {@code flags} field. */
     @NativeType("VkPipelineTessellationStateCreateFlags")
@@ -120,7 +119,7 @@ public class VkPipelineTessellationStateCreateInfo extends Struct implements Nat
     /** Sets the specified value to the {@code sType} field. */
     public VkPipelineTessellationStateCreateInfo sType(@NativeType("VkStructureType") int value) { nsType(address(), value); return this; }
     /** Sets the specified value to the {@code pNext} field. */
-    public VkPipelineTessellationStateCreateInfo pNext(@NativeType("void const *") long value) { npNext(address(), value); return this; }
+    public VkPipelineTessellationStateCreateInfo pNext(@NativeType("const void *") long value) { npNext(address(), value); return this; }
     /** Sets the specified value to the {@code flags} field. */
     public VkPipelineTessellationStateCreateInfo flags(@NativeType("VkPipelineTessellationStateCreateFlags") int value) { nflags(address(), value); return this; }
     /** Sets the specified value to the {@code patchControlPoints} field. */
@@ -362,7 +361,7 @@ public class VkPipelineTessellationStateCreateInfo extends Struct implements Nat
         @NativeType("VkStructureType")
         public int sType() { return VkPipelineTessellationStateCreateInfo.nsType(address()); }
         /** Returns the value of the {@code pNext} field. */
-        @NativeType("void const *")
+        @NativeType("const void *")
         public long pNext() { return VkPipelineTessellationStateCreateInfo.npNext(address()); }
         /** Returns the value of the {@code flags} field. */
         @NativeType("VkPipelineTessellationStateCreateFlags")
@@ -374,7 +373,7 @@ public class VkPipelineTessellationStateCreateInfo extends Struct implements Nat
         /** Sets the specified value to the {@code sType} field. */
         public VkPipelineTessellationStateCreateInfo.Buffer sType(@NativeType("VkStructureType") int value) { VkPipelineTessellationStateCreateInfo.nsType(address(), value); return this; }
         /** Sets the specified value to the {@code pNext} field. */
-        public VkPipelineTessellationStateCreateInfo.Buffer pNext(@NativeType("void const *") long value) { VkPipelineTessellationStateCreateInfo.npNext(address(), value); return this; }
+        public VkPipelineTessellationStateCreateInfo.Buffer pNext(@NativeType("const void *") long value) { VkPipelineTessellationStateCreateInfo.npNext(address(), value); return this; }
         /** Sets the specified value to the {@code flags} field. */
         public VkPipelineTessellationStateCreateInfo.Buffer flags(@NativeType("VkPipelineTessellationStateCreateFlags") int value) { VkPipelineTessellationStateCreateInfo.nflags(address(), value); return this; }
         /** Sets the specified value to the {@code patchControlPoints} field. */

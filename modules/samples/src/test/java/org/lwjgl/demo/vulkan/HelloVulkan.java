@@ -367,19 +367,16 @@ public final class HelloVulkan {
 
                     requiredLayers = demo_check_layers(
                         stack, availableLayers,
-                        "VK_LAYER_LUNARG_standard_validation"/*,
-                        "VK_LAYER_LUNARG_assistant_layer"*/
+                        "VK_LAYER_LUNARG_standard_validation"
                     );
                     if (requiredLayers == null) // use alternative set of validation layers
                     {
                         requiredLayers = demo_check_layers(
                             stack, availableLayers,
-                            "VK_LAYER_GOOGLE_threading",
-                            "VK_LAYER_LUNARG_parameter_validation",
-                            "VK_LAYER_LUNARG_object_tracker",
-                            "VK_LAYER_LUNARG_core_validation",
-                            "VK_LAYER_GOOGLE_unique_objects"/*,
-                            "VK_LAYER_LUNARG_assistant_layer"*/
+                            "VK_LAYER_GOOGLE_threading", "VK_LAYER_LUNARG_parameter_validation",
+                            "VK_LAYER_LUNARG_object_tracker", "VK_LAYER_LUNARG_image",
+                            "VK_LAYER_LUNARG_core_validation", "VK_LAYER_LUNARG_swapchain",
+                            "VK_LAYER_GOOGLE_unique_objects"
                         );
                     }
                 }
@@ -423,7 +420,7 @@ public final class HelloVulkan {
                 .applicationVersion(0)
                 .pEngineName(APP_SHORT_NAME)
                 .engineVersion(0)
-                .apiVersion(VK.getInstanceVersionSupported());
+                .apiVersion(VK_API_VERSION_1_0);
 
             extension_names.flip();
             VkInstanceCreateInfo inst_info = VkInstanceCreateInfo.mallocStack(stack)
@@ -707,13 +704,14 @@ public final class HelloVulkan {
                 .newLayout(new_image_layout)
                 .srcQueueFamilyIndex(0)
                 .dstQueueFamilyIndex(0)
-                .image(image)
-                .subresourceRange(it -> it
-                    .aspectMask(aspectMask)
-                    .baseMipLevel(0)
-                    .levelCount(1)
-                    .baseArrayLayer(0)
-                    .layerCount(1));
+                .image(image);
+
+            image_memory_barrier.subresourceRange()
+                .aspectMask(aspectMask)
+                .baseMipLevel(0)
+                .levelCount(1)
+                .baseArrayLayer(0)
+                .layerCount(1);
 
             switch (new_image_layout) {
                 case VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL:
@@ -849,18 +847,20 @@ public final class HelloVulkan {
                     .flags(0)
                     .image(buffers[i].image)
                     .viewType(VK_IMAGE_VIEW_TYPE_2D)
-                    .format(format)
-                    .components(it -> it
-                        .r(VK_COMPONENT_SWIZZLE_R)
-                        .g(VK_COMPONENT_SWIZZLE_G)
-                        .b(VK_COMPONENT_SWIZZLE_B)
-                        .a(VK_COMPONENT_SWIZZLE_A))
-                    .subresourceRange(it -> it
-                        .aspectMask(VK_IMAGE_ASPECT_COLOR_BIT)
-                        .baseMipLevel(0)
-                        .levelCount(1)
-                        .baseArrayLayer(0)
-                        .layerCount(1));
+                    .format(format);
+
+                color_attachment_view.components()
+                    .r(VK_COMPONENT_SWIZZLE_R)
+                    .g(VK_COMPONENT_SWIZZLE_G)
+                    .b(VK_COMPONENT_SWIZZLE_B)
+                    .a(VK_COMPONENT_SWIZZLE_A);
+
+                color_attachment_view.subresourceRange()
+                    .aspectMask(VK_IMAGE_ASPECT_COLOR_BIT)
+                    .baseMipLevel(0)
+                    .levelCount(1)
+                    .baseArrayLayer(0)
+                    .layerCount(1);
 
                 check(vkCreateImageView(device, color_attachment_view, null, lp));
                 buffers[i].view = lp.get(0);
@@ -903,15 +903,15 @@ public final class HelloVulkan {
                 .pNext(NULL)
                 .imageType(VK_IMAGE_TYPE_2D)
                 .format(depth.format)
-                .extent(it -> it
-                    .width(width)
-                    .height(height)
-                    .depth(1))
                 .mipLevels(1)
                 .arrayLayers(1)
                 .samples(VK_SAMPLE_COUNT_1_BIT)
                 .tiling(VK_IMAGE_TILING_OPTIMAL)
                 .usage(VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT);
+            image.extent()
+                .width(width)
+                .height(height)
+                .depth(1);
 
             /* create image */
             check(vkCreateImage(device, image, null, lp));
@@ -951,13 +951,13 @@ public final class HelloVulkan {
                 .flags(0)
                 .image(depth.image)
                 .viewType(VK_IMAGE_VIEW_TYPE_2D)
-                .format(depth.format)
-                .subresourceRange(it -> it
-                    .aspectMask(VK_IMAGE_ASPECT_DEPTH_BIT)
-                    .baseMipLevel(0)
-                    .levelCount(1)
-                    .baseArrayLayer(0)
-                    .layerCount(1));
+                .format(depth.format);
+            view.subresourceRange()
+                .aspectMask(VK_IMAGE_ASPECT_DEPTH_BIT)
+                .baseMipLevel(0)
+                .levelCount(1)
+                .baseArrayLayer(0)
+                .layerCount(1);
 
             check(vkCreateImageView(device, view, null, lp));
             depth.view = lp.get(0);
@@ -996,10 +996,6 @@ public final class HelloVulkan {
                 .pNext(NULL)
                 .imageType(VK_IMAGE_TYPE_2D)
                 .format(tex_format)
-                .extent(it -> it
-                    .width(tex_width)
-                    .height(tex_height)
-                    .depth(1))
                 .mipLevels(1)
                 .arrayLayers(1)
                 .samples(VK_SAMPLE_COUNT_1_BIT)
@@ -1007,6 +1003,10 @@ public final class HelloVulkan {
                 .usage(usage)
                 .flags(0)
                 .initialLayout(VK_IMAGE_LAYOUT_PREINITIALIZED);
+            image_create_info.extent()
+                .width(tex_width)
+                .height(tex_height)
+                .depth(1);
 
             check(vkCreateImage(device, image_create_info, null, lp));
             tex_obj.image = lp.get(0);
@@ -1126,29 +1126,29 @@ public final class HelloVulkan {
                         VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
                         0);
 
-                    VkImageCopy.Buffer copy_region = VkImageCopy.mallocStack(1, stack)
-                        .srcSubresource(it -> it
-                            .aspectMask(VK_IMAGE_ASPECT_COLOR_BIT)
-                            .mipLevel(0)
-                            .baseArrayLayer(0)
-                            .layerCount(1))
-                        .srcOffset(it -> it
-                            .x(0)
-                            .y(0)
-                            .z(0))
-                        .dstSubresource(it -> it
-                            .aspectMask(VK_IMAGE_ASPECT_COLOR_BIT)
-                            .mipLevel(0)
-                            .baseArrayLayer(0)
-                            .layerCount(1))
-                        .dstOffset(it -> it
-                            .x(0)
-                            .y(0)
-                            .z(0))
-                        .extent(it -> it
-                            .width(staging_texture.tex_width)
-                            .height(staging_texture.tex_height)
-                            .depth(1));
+                    VkImageCopy.Buffer copy_region = VkImageCopy.mallocStack(1, stack);
+                    copy_region.srcSubresource()
+                        .aspectMask(VK_IMAGE_ASPECT_COLOR_BIT)
+                        .mipLevel(0)
+                        .baseArrayLayer(0)
+                        .layerCount(1);
+                    copy_region.srcOffset()
+                        .x(0)
+                        .y(0)
+                        .z(0);
+                    copy_region.dstSubresource()
+                        .aspectMask(VK_IMAGE_ASPECT_COLOR_BIT)
+                        .mipLevel(0)
+                        .baseArrayLayer(0)
+                        .layerCount(1);
+                    copy_region.dstOffset()
+                        .x(0)
+                        .y(0)
+                        .z(0);
+                    copy_region.extent()
+                        .width(staging_texture.tex_width)
+                        .height(staging_texture.tex_height)
+                        .depth(1);
 
                     vkCmdCopyImage(
                         setup_cmd, staging_texture.image,
@@ -1198,18 +1198,18 @@ public final class HelloVulkan {
                     .image(VK_NULL_HANDLE)
                     .viewType(VK_IMAGE_VIEW_TYPE_2D)
                     .format(tex_format)
-                    .flags(0)
-                    .components(it -> it
-                        .r(VK_COMPONENT_SWIZZLE_R)
-                        .g(VK_COMPONENT_SWIZZLE_G)
-                        .b(VK_COMPONENT_SWIZZLE_B)
-                        .a(VK_COMPONENT_SWIZZLE_A))
-                    .subresourceRange(it -> it
-                        .aspectMask(VK_IMAGE_ASPECT_COLOR_BIT)
-                        .baseMipLevel(0)
-                        .levelCount(1)
-                        .baseArrayLayer(0)
-                        .layerCount(1));
+                    .flags(0);
+                view.components()
+                    .r(VK_COMPONENT_SWIZZLE_R)
+                    .g(VK_COMPONENT_SWIZZLE_G)
+                    .b(VK_COMPONENT_SWIZZLE_B)
+                    .a(VK_COMPONENT_SWIZZLE_A);
+                view.subresourceRange()
+                    .aspectMask(VK_IMAGE_ASPECT_COLOR_BIT)
+                    .baseMipLevel(0)
+                    .levelCount(1)
+                    .baseArrayLayer(0)
+                    .layerCount(1);
 
                 /* create image view */
                 view.image(textures[i].image);
@@ -1419,11 +1419,11 @@ public final class HelloVulkan {
                 .depthWriteEnable(true)
                 .depthCompareOp(VK_COMPARE_OP_LESS_OR_EQUAL)
                 .depthBoundsTestEnable(false)
-                .stencilTestEnable(false)
-                .back(it -> it
-                    .failOp(VK_STENCIL_OP_KEEP)
-                    .passOp(VK_STENCIL_OP_KEEP)
-                    .compareOp(VK_COMPARE_OP_ALWAYS));
+                .stencilTestEnable(false);
+            ds.back()
+                .failOp(VK_STENCIL_OP_KEEP)
+                .passOp(VK_STENCIL_OP_KEEP)
+                .compareOp(VK_COMPARE_OP_ALWAYS);
             ds.front(ds.back());
 
             pipeline
@@ -1623,14 +1623,13 @@ public final class HelloVulkan {
                 .pNext(NULL)
                 .renderPass(render_pass)
                 .framebuffer(framebuffers.get(current_buffer))
-                .renderArea(ra -> ra
-                    .offset(it -> it
-                        .x(0)
-                        .y(0))
-                    .extent(it -> it
-                        .width(width)
-                        .height(height)))
                 .pClearValues(clear_values);
+            rp_begin.renderArea().offset()
+                .x(0)
+                .y(0);
+            rp_begin.renderArea().extent()
+                .width(width)
+                .height(height);
 
             // We can use LAYOUT_UNDEFINED as a wildcard here because we don't care what
             // happens to the previous contents of the image
@@ -1644,12 +1643,7 @@ public final class HelloVulkan {
                 .srcQueueFamilyIndex(VK_QUEUE_FAMILY_IGNORED)
                 .dstQueueFamilyIndex(VK_QUEUE_FAMILY_IGNORED)
                 .image(buffers[current_buffer].image)
-                .subresourceRange(it -> it
-                    .aspectMask(VK_IMAGE_ASPECT_COLOR_BIT)
-                    .baseMipLevel(0)
-                    .levelCount(1)
-                    .baseArrayLayer(0)
-                    .layerCount(1));
+                .subresourceRange(VkImageSubresourceRange.mallocStack(stack).set(VK_IMAGE_ASPECT_COLOR_BIT, 0, 1, 0, 1));
 
             vkCmdPipelineBarrier(draw_cmd, VK_PIPELINE_STAGE_ALL_COMMANDS_BIT, VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, 0, null, null, image_memory_barrier);
             vkCmdBeginRenderPass(draw_cmd, rp_begin, VK_SUBPASS_CONTENTS_INLINE);
@@ -1666,13 +1660,13 @@ public final class HelloVulkan {
                 .maxDepth(1.0f);
             vkCmdSetViewport(draw_cmd, 0, viewport);
 
-            VkRect2D.Buffer scissor = VkRect2D.callocStack(1, stack)
-                .extent(it -> it
-                    .width(width)
-                    .height(height))
-                .offset(it -> it
-                    .x(0)
-                    .y(0));
+            VkRect2D.Buffer scissor = VkRect2D.callocStack(1, stack);
+            scissor.extent()
+                .width(width)
+                .height(height);
+            scissor.offset()
+                .x(0)
+                .y(0);
             vkCmdSetScissor(draw_cmd, 0, scissor);
 
             lp.put(0, 0);
@@ -1691,13 +1685,14 @@ public final class HelloVulkan {
                 .newLayout(VK_IMAGE_LAYOUT_PRESENT_SRC_KHR)
                 .srcQueueFamilyIndex(VK_QUEUE_FAMILY_IGNORED)
                 .dstQueueFamilyIndex(VK_QUEUE_FAMILY_IGNORED)
-                .image(buffers[current_buffer].image)
-                .subresourceRange(it -> it
-                    .aspectMask(VK_IMAGE_ASPECT_COLOR_BIT)
-                    .baseMipLevel(0)
-                    .levelCount(1)
-                    .baseArrayLayer(0)
-                    .layerCount(1));
+                .image(buffers[current_buffer].image);
+
+            prePresentBarrier.subresourceRange()
+                .aspectMask(VK_IMAGE_ASPECT_COLOR_BIT)
+                .baseMipLevel(0)
+                .levelCount(1)
+                .baseArrayLayer(0)
+                .layerCount(1);
 
             vkCmdPipelineBarrier(draw_cmd, VK_PIPELINE_STAGE_ALL_COMMANDS_BIT, VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, 0, null, null, prePresentBarrier);
 
@@ -1800,7 +1795,6 @@ public final class HelloVulkan {
 
         if (setup_cmd != null) {
             vkFreeCommandBuffers(device, cmd_pool, setup_cmd);
-            setup_cmd = null;
         }
         vkFreeCommandBuffers(device, cmd_pool, draw_cmd);
         vkDestroyCommandPool(device, cmd_pool, null);
@@ -1873,7 +1867,6 @@ public final class HelloVulkan {
 
         if (setup_cmd != null) {
             vkFreeCommandBuffers(device, cmd_pool, setup_cmd);
-            setup_cmd = null;
         }
         vkFreeCommandBuffers(device, cmd_pool, draw_cmd);
         vkDestroyCommandPool(device, cmd_pool, null);

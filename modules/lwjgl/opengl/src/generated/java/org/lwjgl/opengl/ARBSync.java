@@ -12,6 +12,9 @@ import java.nio.*;
 import org.lwjgl.system.*;
 
 import static org.lwjgl.system.Checks.*;
+import static org.lwjgl.system.JNI.*;
+import static org.lwjgl.system.MemoryStack.*;
+import static org.lwjgl.system.MemoryUtil.*;
 
 /**
  * Native bindings to the <a target="_blank" href="https://www.khronos.org/registry/OpenGL/extensions/ARB/ARB_sync.txt">ARB_sync</a> extension.
@@ -57,7 +60,7 @@ public class ARBSync {
     public static final int GL_SYNC_FLUSH_COMMANDS_BIT = 0x1;
 
     /** Accepted in the {@code timeout} parameter of WaitSync. */
-    public static final long GL_TIMEOUT_IGNORED = 0xFFFFFFFFFFFFFFFFL;
+    public static final long GL_TIMEOUT_IGNORED = 0xFFFFFFFFFFFFFFFFl;
 
     /** Returned by ClientWaitSync. */
     public static final int
@@ -83,21 +86,17 @@ public class ARBSync {
     /**
      * Creates a new sync object and inserts it into the GL command stream.
      *
-     * @param condition the condition that must be met to set the sync object's state to signaled. Must be:<br><table><tr><td>{@link GL32C#GL_SYNC_GPU_COMMANDS_COMPLETE SYNC_GPU_COMMANDS_COMPLETE}</td></tr></table>
+     * @param condition the condition that must be met to set the sync object's state to signaled. Must be:<br><table><tr><td>{@link GL32#GL_SYNC_GPU_COMMANDS_COMPLETE SYNC_GPU_COMMANDS_COMPLETE}</td></tr></table>
      * @param flags     a bitwise combination of flags controlling the behavior of the sync object. No flags are presently defined for this operation and {@code flags} must
      *                  be zero.
      */
     @NativeType("GLsync")
-    public static long glFenceSync(@NativeType("GLenum") int condition, @NativeType("GLbitfield") int flags) {
-        return GL32C.glFenceSync(condition, flags);
-    }
+    public static native long glFenceSync(@NativeType("GLenum") int condition, @NativeType("GLbitfield") int flags);
 
     // --- [ glIsSync ] ---
 
     /** Unsafe version of: {@link #glIsSync IsSync} */
-    public static boolean nglIsSync(long sync) {
-        return GL32C.nglIsSync(sync);
-    }
+    public static native boolean nglIsSync(long sync);
 
     /**
      * Determines if a name corresponds to a sync object.
@@ -106,15 +105,16 @@ public class ARBSync {
      */
     @NativeType("GLboolean")
     public static boolean glIsSync(@NativeType("GLsync") long sync) {
-        return GL32C.glIsSync(sync);
+        if (CHECKS) {
+            check(sync);
+        }
+        return nglIsSync(sync);
     }
 
     // --- [ glDeleteSync ] ---
 
     /** Unsafe version of: {@link #glDeleteSync DeleteSync} */
-    public static void nglDeleteSync(long sync) {
-        GL32C.nglDeleteSync(sync);
-    }
+    public static native void nglDeleteSync(long sync);
 
     /**
      * Deletes a sync object.
@@ -122,15 +122,16 @@ public class ARBSync {
      * @param sync the sync object to be deleted
      */
     public static void glDeleteSync(@NativeType("GLsync") long sync) {
-        GL32C.glDeleteSync(sync);
+        if (CHECKS) {
+            check(sync);
+        }
+        nglDeleteSync(sync);
     }
 
     // --- [ glClientWaitSync ] ---
 
     /** Unsafe version of: {@link #glClientWaitSync ClientWaitSync} */
-    public static int nglClientWaitSync(long sync, int flags, long timeout) {
-        return GL32C.nglClientWaitSync(sync, flags, timeout);
-    }
+    public static native int nglClientWaitSync(long sync, int flags, long timeout);
 
     /**
      * Causes the client to block and wait for a sync object to become signaled. If {@code sync} is signaled when {@code glClientWaitSync} is called,
@@ -139,51 +140,53 @@ public class ARBSync {
      * <p>The return value is one of four status values:</p>
      * 
      * <ul>
-     * <li>{@link GL32C#GL_ALREADY_SIGNALED ALREADY_SIGNALED} indicates that sync was signaled at the time that glClientWaitSync was called.</li>
-     * <li>{@link GL32C#GL_TIMEOUT_EXPIRED TIMEOUT_EXPIRED} indicates that at least timeout nanoseconds passed and sync did not become signaled.</li>
-     * <li>{@link GL32C#GL_CONDITION_SATISFIED CONDITION_SATISFIED} indicates that sync was signaled before the timeout expired.</li>
-     * <li>{@link GL32C#GL_WAIT_FAILED WAIT_FAILED} indicates that an error occurred. Additionally, an OpenGL error will be generated.</li>
+     * <li>{@link GL32#GL_ALREADY_SIGNALED ALREADY_SIGNALED} indicates that sync was signaled at the time that glClientWaitSync was called.</li>
+     * <li>{@link GL32#GL_TIMEOUT_EXPIRED TIMEOUT_EXPIRED} indicates that at least timeout nanoseconds passed and sync did not become signaled.</li>
+     * <li>{@link GL32#GL_CONDITION_SATISFIED CONDITION_SATISFIED} indicates that sync was signaled before the timeout expired.</li>
+     * <li>{@link GL32#GL_WAIT_FAILED WAIT_FAILED} indicates that an error occurred. Additionally, an OpenGL error will be generated.</li>
      * </ul>
      *
      * @param sync    the sync object whose status to wait on
-     * @param flags   a bitfield controlling the command flushing behavior. One or more of:<br><table><tr><td>0</td><td>{@link GL32C#GL_SYNC_FLUSH_COMMANDS_BIT SYNC_FLUSH_COMMANDS_BIT}</td></tr></table>
+     * @param flags   a bitfield controlling the command flushing behavior. One or more of:<br><table><tr><td>0</td><td>{@link GL32#GL_SYNC_FLUSH_COMMANDS_BIT SYNC_FLUSH_COMMANDS_BIT}</td></tr></table>
      * @param timeout the timeout, specified in nanoseconds, for which the implementation should wait for {@code sync} to become signaled
      */
     @NativeType("GLenum")
     public static int glClientWaitSync(@NativeType("GLsync") long sync, @NativeType("GLbitfield") int flags, @NativeType("GLuint64") long timeout) {
-        return GL32C.glClientWaitSync(sync, flags, timeout);
+        if (CHECKS) {
+            check(sync);
+        }
+        return nglClientWaitSync(sync, flags, timeout);
     }
 
     // --- [ glWaitSync ] ---
 
     /** Unsafe version of: {@link #glWaitSync WaitSync} */
-    public static void nglWaitSync(long sync, int flags, long timeout) {
-        GL32C.nglWaitSync(sync, flags, timeout);
-    }
+    public static native void nglWaitSync(long sync, int flags, long timeout);
 
     /**
      * Causes the GL server to block and wait for a sync object to become signaled.
      * 
      * <p>{@code glWaitSync} will always wait no longer than an implementation-dependent timeout. The duration of this timeout in nanoseconds may be queried by
-     * with {@link GL32C#GL_MAX_SERVER_WAIT_TIMEOUT MAX_SERVER_WAIT_TIMEOUT}. There is currently no way to determine whether glWaitSync unblocked because the timeout expired or because the
+     * with {@link GL32#GL_MAX_SERVER_WAIT_TIMEOUT MAX_SERVER_WAIT_TIMEOUT}. There is currently no way to determine whether glWaitSync unblocked because the timeout expired or because the
      * sync object being waited on was signaled.</p>
      * 
      * <p>If an error occurs, {@code glWaitSync} does not cause the GL server to block.</p>
      *
      * @param sync    the sync object whose status to wait on
      * @param flags   a bitfield controlling the command flushing behavior. Must be:<br><table><tr><td>0</td></tr></table>
-     * @param timeout the timeout that the server should wait before continuing. Must be:<br><table><tr><td>{@link GL32C#GL_TIMEOUT_IGNORED TIMEOUT_IGNORED}</td></tr></table>
+     * @param timeout the timeout that the server should wait before continuing. Must be:<br><table><tr><td>{@link GL32#GL_TIMEOUT_IGNORED TIMEOUT_IGNORED}</td></tr></table>
      */
     public static void glWaitSync(@NativeType("GLsync") long sync, @NativeType("GLbitfield") int flags, @NativeType("GLuint64") long timeout) {
-        GL32C.glWaitSync(sync, flags, timeout);
+        if (CHECKS) {
+            check(sync);
+        }
+        nglWaitSync(sync, flags, timeout);
     }
 
     // --- [ glGetInteger64v ] ---
 
     /** Unsafe version of: {@link #glGetInteger64v GetInteger64v} */
-    public static void nglGetInteger64v(int pname, long params) {
-        GL32C.nglGetInteger64v(pname, params);
-    }
+    public static native void nglGetInteger64v(int pname, long params);
 
     /**
      * Returns the 64bit integer value or values of a selected parameter.
@@ -192,7 +195,10 @@ public class ARBSync {
      * @param params the value or values of the specified parameter
      */
     public static void glGetInteger64v(@NativeType("GLenum") int pname, @NativeType("GLint64 *") LongBuffer params) {
-        GL32C.glGetInteger64v(pname, params);
+        if (CHECKS) {
+            check(params, 1);
+        }
+        nglGetInteger64v(pname, memAddress(params));
     }
 
     /**
@@ -202,7 +208,14 @@ public class ARBSync {
      */
     @NativeType("void")
     public static long glGetInteger64(@NativeType("GLenum") int pname) {
-        return GL32C.glGetInteger64(pname);
+        MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
+        try {
+            LongBuffer params = stack.callocLong(1);
+            nglGetInteger64v(pname, memAddress(params));
+            return params.get(0);
+        } finally {
+            stack.setPointer(stackPointer);
+        }
     }
 
     // --- [ glGetSynciv ] ---
@@ -212,42 +225,66 @@ public class ARBSync {
      *
      * @param bufSize the size of the buffer whose address is given in {@code values}
      */
-    public static void nglGetSynciv(long sync, int pname, int bufSize, long length, long values) {
-        GL32C.nglGetSynciv(sync, pname, bufSize, length, values);
-    }
+    public static native void nglGetSynciv(long sync, int pname, int bufSize, long length, long values);
 
     /**
      * Queries the properties of a sync object.
      *
      * @param sync   the sync object whose properties to query
-     * @param pname  the parameter whose value to retrieve from the sync object specified in {@code sync}. One of:<br><table><tr><td>{@link GL32C#GL_OBJECT_TYPE OBJECT_TYPE}</td><td>{@link GL32C#GL_SYNC_CONDITION SYNC_CONDITION}</td><td>{@link GL32C#GL_SYNC_STATUS SYNC_STATUS}</td><td>{@link GL32C#GL_SYNC_FLAGS SYNC_FLAGS}</td></tr></table>
+     * @param pname  the parameter whose value to retrieve from the sync object specified in {@code sync}. One of:<br><table><tr><td>{@link GL32#GL_OBJECT_TYPE OBJECT_TYPE}</td><td>{@link GL32#GL_SYNC_CONDITION SYNC_CONDITION}</td><td>{@link GL32#GL_SYNC_STATUS SYNC_STATUS}</td><td>{@link GL32#GL_SYNC_FLAGS SYNC_FLAGS}</td></tr></table>
      * @param length the address of an variable to receive the number of integers placed in {@code values}
      * @param values the address of an array to receive the values of the queried parameter
      */
     public static void glGetSynciv(@NativeType("GLsync") long sync, @NativeType("GLenum") int pname, @Nullable @NativeType("GLsizei *") IntBuffer length, @NativeType("GLint *") IntBuffer values) {
-        GL32C.glGetSynciv(sync, pname, length, values);
+        if (CHECKS) {
+            check(sync);
+            checkSafe(length, 1);
+        }
+        nglGetSynciv(sync, pname, values.remaining(), memAddressSafe(length), memAddress(values));
     }
 
     /**
      * Queries the properties of a sync object.
      *
      * @param sync   the sync object whose properties to query
-     * @param pname  the parameter whose value to retrieve from the sync object specified in {@code sync}. One of:<br><table><tr><td>{@link GL32C#GL_OBJECT_TYPE OBJECT_TYPE}</td><td>{@link GL32C#GL_SYNC_CONDITION SYNC_CONDITION}</td><td>{@link GL32C#GL_SYNC_STATUS SYNC_STATUS}</td><td>{@link GL32C#GL_SYNC_FLAGS SYNC_FLAGS}</td></tr></table>
+     * @param pname  the parameter whose value to retrieve from the sync object specified in {@code sync}. One of:<br><table><tr><td>{@link GL32#GL_OBJECT_TYPE OBJECT_TYPE}</td><td>{@link GL32#GL_SYNC_CONDITION SYNC_CONDITION}</td><td>{@link GL32#GL_SYNC_STATUS SYNC_STATUS}</td><td>{@link GL32#GL_SYNC_FLAGS SYNC_FLAGS}</td></tr></table>
      * @param length the address of an variable to receive the number of integers placed in {@code values}
      */
     @NativeType("void")
     public static int glGetSynci(@NativeType("GLsync") long sync, @NativeType("GLenum") int pname, @Nullable @NativeType("GLsizei *") IntBuffer length) {
-        return GL32C.glGetSynci(sync, pname, length);
+        if (CHECKS) {
+            check(sync);
+            checkSafe(length, 1);
+        }
+        MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
+        try {
+            IntBuffer values = stack.callocInt(1);
+            nglGetSynciv(sync, pname, 1, memAddressSafe(length), memAddress(values));
+            return values.get(0);
+        } finally {
+            stack.setPointer(stackPointer);
+        }
     }
 
-    /** Array version of: {@link #glGetInteger64v GetInteger64v} */
+    /** register Array version of: {@link #glGetInteger64v GetInteger64v} */
     public static void glGetInteger64v(@NativeType("GLenum") int pname, @NativeType("GLint64 *") long[] params) {
-        GL32C.glGetInteger64v(pname, params);
+        long __functionAddress = GL.getICD().glGetInteger64v;
+        if (CHECKS) {
+            check(__functionAddress);
+            check(params, 1);
+        }
+        callPV(__functionAddress, pname, params);
     }
 
-    /** Array version of: {@link #glGetSynciv GetSynciv} */
+    /** register Array version of: {@link #glGetSynciv GetSynciv} */
     public static void glGetSynciv(@NativeType("GLsync") long sync, @NativeType("GLenum") int pname, @Nullable @NativeType("GLsizei *") int[] length, @NativeType("GLint *") int[] values) {
-        GL32C.glGetSynciv(sync, pname, length, values);
+        long __functionAddress = GL.getICD().glGetSynciv;
+        if (CHECKS) {
+            check(__functionAddress);
+            check(sync);
+            checkSafe(length, 1);
+        }
+        callPPPV(__functionAddress, sync, pname, values.length, length, values);
     }
 
 }

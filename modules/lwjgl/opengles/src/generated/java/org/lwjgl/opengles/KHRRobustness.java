@@ -323,7 +323,16 @@ public class KHRRobustness {
         }
     }
 
-    /** Array version of: {@link #glReadnPixelsKHR ReadnPixelsKHR} */
+    /** register Array version of: {@link #glReadnPixelsKHR ReadnPixelsKHR} */
+    public static void glReadnPixelsKHR(@NativeType("GLint") int x, @NativeType("GLint") int y, @NativeType("GLsizei") int width, @NativeType("GLsizei") int height, @NativeType("GLenum") int format, @NativeType("GLenum") int type, @NativeType("void *") byte[] pixels) {
+        long __functionAddress = GLES.getICD().glReadnPixelsKHR;
+        if (CHECKS) {
+            check(__functionAddress);
+        }
+        callPV(__functionAddress, x, y, width, height, format, type, pixels.length << 0, pixels);
+    }
+
+    /** register Array version of: {@link #glReadnPixelsKHR ReadnPixelsKHR} */
     public static void glReadnPixelsKHR(@NativeType("GLint") int x, @NativeType("GLint") int y, @NativeType("GLsizei") int width, @NativeType("GLsizei") int height, @NativeType("GLenum") int format, @NativeType("GLenum") int type, @NativeType("void *") short[] pixels) {
         long __functionAddress = GLES.getICD().glReadnPixelsKHR;
         if (CHECKS) {
@@ -332,7 +341,7 @@ public class KHRRobustness {
         callPV(__functionAddress, x, y, width, height, format, type, pixels.length << 1, pixels);
     }
 
-    /** Array version of: {@link #glReadnPixelsKHR ReadnPixelsKHR} */
+    /** register Array version of: {@link #glReadnPixelsKHR ReadnPixelsKHR} */
     public static void glReadnPixelsKHR(@NativeType("GLint") int x, @NativeType("GLint") int y, @NativeType("GLsizei") int width, @NativeType("GLsizei") int height, @NativeType("GLenum") int format, @NativeType("GLenum") int type, @NativeType("void *") int[] pixels) {
         long __functionAddress = GLES.getICD().glReadnPixelsKHR;
         if (CHECKS) {
@@ -341,7 +350,7 @@ public class KHRRobustness {
         callPV(__functionAddress, x, y, width, height, format, type, pixels.length << 2, pixels);
     }
 
-    /** Array version of: {@link #glReadnPixelsKHR ReadnPixelsKHR} */
+    /** register Array version of: {@link #glReadnPixelsKHR ReadnPixelsKHR} */
     public static void glReadnPixelsKHR(@NativeType("GLint") int x, @NativeType("GLint") int y, @NativeType("GLsizei") int width, @NativeType("GLsizei") int height, @NativeType("GLenum") int format, @NativeType("GLenum") int type, @NativeType("void *") float[] pixels) {
         long __functionAddress = GLES.getICD().glReadnPixelsKHR;
         if (CHECKS) {
@@ -350,7 +359,7 @@ public class KHRRobustness {
         callPV(__functionAddress, x, y, width, height, format, type, pixels.length << 2, pixels);
     }
 
-    /** Array version of: {@link #glGetnUniformfvKHR GetnUniformfvKHR} */
+    /** register Array version of: {@link #glGetnUniformfvKHR GetnUniformfvKHR} */
     public static void glGetnUniformfvKHR(@NativeType("GLuint") int program, @NativeType("GLint") int location, @NativeType("GLfloat *") float[] params) {
         long __functionAddress = GLES.getICD().glGetnUniformfvKHR;
         if (CHECKS) {
@@ -359,7 +368,7 @@ public class KHRRobustness {
         callPV(__functionAddress, program, location, params.length, params);
     }
 
-    /** Array version of: {@link #glGetnUniformivKHR GetnUniformivKHR} */
+    /** register Array version of: {@link #glGetnUniformivKHR GetnUniformivKHR} */
     public static void glGetnUniformivKHR(@NativeType("GLuint") int program, @NativeType("GLint") int location, @NativeType("GLfloat *") float[] params) {
         long __functionAddress = GLES.getICD().glGetnUniformivKHR;
         if (CHECKS) {
@@ -368,7 +377,7 @@ public class KHRRobustness {
         callPV(__functionAddress, program, location, params.length, params);
     }
 
-    /** Array version of: {@link #glGetnUniformuivKHR GetnUniformuivKHR} */
+    /** register Array version of: {@link #glGetnUniformuivKHR GetnUniformuivKHR} */
     public static void glGetnUniformuivKHR(@NativeType("GLuint") int program, @NativeType("GLint") int location, @NativeType("GLfloat *") float[] params) {
         long __functionAddress = GLES.getICD().glGetnUniformuivKHR;
         if (CHECKS) {

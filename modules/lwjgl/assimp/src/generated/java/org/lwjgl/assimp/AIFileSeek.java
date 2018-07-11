@@ -14,12 +14,12 @@ import static org.lwjgl.system.MemoryUtil.*;
 /**
  * <h3>Type</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * aiReturn (*) (
  *     struct aiFile *pFile,
  *     size_t offset,
  *     aiOrigin origin
- * )</code></pre>
+ * )</pre></code>
  */
 public abstract class AIFileSeek extends Callback implements AIFileSeekI {
 

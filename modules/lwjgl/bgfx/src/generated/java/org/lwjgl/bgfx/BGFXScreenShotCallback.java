@@ -16,17 +16,17 @@ import static org.lwjgl.system.MemoryUtil.*;
  * 
  * <h3>Type</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * void (*) (
  *     bgfx_callback_interface_t *_this,
- *     char const *_filePath,
+ *     const char *_filePath,
  *     uint32_t _width,
  *     uint32_t _height,
  *     uint32_t _pitch,
- *     void const *_data,
+ *     const void *_data,
  *     uint32_t _size,
  *     bool _yflip
- * )</code></pre>
+ * )</pre></code>
  */
 public abstract class BGFXScreenShotCallback extends Callback implements BGFXScreenShotCallbackI {
 

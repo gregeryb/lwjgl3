@@ -6,7 +6,7 @@ This build includes the following changes:
 
 #### Bindings
 
-- bgfx: Updated to API version 60 (up from 55)
+- bgfx: Updated to API version 59 (up from 55)
 - glfw: Updated to pre-release 3.3.0 version (up from 3.3.0 pre-release):
     * Support for lock key modifiers (`GLFW_LOCK_KEY_MODS` input mode, `GLFW_MOD_CAPS_LOCK`, `GLFW_MOD_NUM_LOCK`)
     * Support for string window hints (`glfwWindowHintString`, `GLFW_COCOA_FRAME_NAME`, `GLFW_X11_CLASS_NAME`, `GLFW_X11_INSTANCE_NAME`)
@@ -28,7 +28,7 @@ This build includes the following changes:
 - Vulkan: Updated to 1.0.68 (up from 1.0.65)
 - xxhash: Updated to 0.6.4 (up from 0.6.3)
 - Zstd: Updated to 1.3.4 (up from 1.3.2)
-- Yoga: Updated to 1.7.1 (up from 1.7.0)
+- Yoga: Updated to 1.9.0 (up from 1.7.0)
 
 #### Improvements
 

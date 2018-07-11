@@ -68,7 +68,7 @@ public class KHRGLEvent {
         return nclCreateEventFromGLsyncKHR(context, sync, memAddressSafe(errcode_ret));
     }
 
-    /** Array version of: {@link #clCreateEventFromGLsyncKHR CreateEventFromGLsyncKHR} */
+    /** register Array version of: {@link #clCreateEventFromGLsyncKHR CreateEventFromGLsyncKHR} */
     @NativeType("cl_event")
     public static long clCreateEventFromGLsyncKHR(@NativeType("cl_context") long context, @NativeType("GLsync") long sync, @Nullable @NativeType("cl_int *") int[] errcode_ret) {
         long __functionAddress = CL.getICD().clCreateEventFromGLsyncKHR;

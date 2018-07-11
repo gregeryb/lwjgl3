@@ -27,11 +27,11 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct aiQuatKey {
  *     double mTime;
  *     {@link AIQuaternion struct aiQuaternion} mValue;
- * }</code></pre>
+ * }</pre></code>
  */
 @NativeType("struct aiQuatKey")
 public class AIQuatKey extends Struct implements NativeResource {
@@ -39,7 +39,6 @@ public class AIQuatKey extends Struct implements NativeResource {
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */
@@ -82,8 +81,6 @@ public class AIQuatKey extends Struct implements NativeResource {
     /** Returns a {@link AIQuaternion} view of the {@code mValue} field. */
     @NativeType("struct aiQuaternion")
     public AIQuaternion mValue() { return nmValue(address()); }
-    /** Passes the {@code mValue} field to the specified {@link java.util.function.Consumer Consumer}. */
-    public AIQuatKey mValue(java.util.function.Consumer<AIQuaternion> consumer) { consumer.accept(mValue()); return this; }
 
     /** Sets the specified value to the {@code mTime} field. */
     public AIQuatKey mTime(double value) { nmTime(address(), value); return this; }
@@ -315,8 +312,6 @@ public class AIQuatKey extends Struct implements NativeResource {
         /** Returns a {@link AIQuaternion} view of the {@code mValue} field. */
         @NativeType("struct aiQuaternion")
         public AIQuaternion mValue() { return AIQuatKey.nmValue(address()); }
-        /** Passes the {@code mValue} field to the specified {@link java.util.function.Consumer Consumer}. */
-        public AIQuatKey.Buffer mValue(java.util.function.Consumer<AIQuaternion> consumer) { consumer.accept(mValue()); return this; }
 
         /** Sets the specified value to the {@code mTime} field. */
         public AIQuatKey.Buffer mTime(double value) { AIQuatKey.nmTime(address(), value); return this; }

@@ -14,16 +14,16 @@ import static org.lwjgl.system.dyncall.DynCallback.*;
  * 
  * <h3>Type</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * void (*) (
  *     bgfx_callback_interface_t *_this,
  *     uint64_t _id,
- *     void const *_data,
+ *     const void *_data,
  *     uint32_t _size
- * )</code></pre>
+ * )</pre></code>
  */
 @FunctionalInterface
-@NativeType("void (*) (bgfx_callback_interface_t *, uint64_t, void const *, uint32_t)")
+@NativeType("void (*) (bgfx_callback_interface_t *, uint64_t, const void *, uint32_t)")
 public interface BGFXCacheWriteCallbackI extends CallbackI.V {
 
     String SIGNATURE = "(plpi)v";
@@ -49,6 +49,6 @@ public interface BGFXCacheWriteCallbackI extends CallbackI.V {
      * @param _data data to write
      * @param _size size of data to write
      */
-    void invoke(@NativeType("bgfx_callback_interface_t *") long _this, @NativeType("uint64_t") long _id, @NativeType("void const *") long _data, @NativeType("uint32_t") int _size);
+    void invoke(@NativeType("bgfx_callback_interface_t *") long _this, @NativeType("uint64_t") long _id, @NativeType("const void *") long _data, @NativeType("uint32_t") int _size);
 
 }

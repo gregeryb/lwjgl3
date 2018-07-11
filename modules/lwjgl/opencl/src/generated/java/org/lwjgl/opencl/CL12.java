@@ -19,7 +19,7 @@ import static org.lwjgl.system.MemoryStack.*;
 import static org.lwjgl.system.MemoryUtil.*;
 
 /** The core OpenCL 1.2 functionality. */
-public class CL12 extends CL11 {
+public class CL12 {
 
     /** Error Codes. */
     public static final int
@@ -225,6 +225,8 @@ public class CL12 extends CL11 {
     }
 
     /**
+     * <p><a target="_blank" href="https://www.khronos.org/registry/OpenCL/sdk/2.1/docs/man/xhtml/clGetExtensionFunctionAddressForPlatform.html">Reference Page</a></p>
+     * 
      * Returns the address of the extension function named by {@code funcname} for a given {@code platform}. The pointer returned should be cast to a function
      * pointer type matching the extension function's definition defined in the appropriate extension specification and header file. A return value of {@code NULL}
      * indicates that the specified function does not exist for the implementation or platform is not a valid platform. A non-{@code NULL} return value for
@@ -238,11 +240,9 @@ public class CL12 extends CL11 {
      *
      * @param platform the platform to query
      * @param funcname the extension function name
-     * 
-     * @see <a target="_blank" href="https://www.khronos.org/registry/OpenCL/sdk/2.1/docs/man/xhtml/clGetExtensionFunctionAddressForPlatform.html">Reference Page</a>
      */
     @NativeType("void *")
-    public static long clGetExtensionFunctionAddressForPlatform(@NativeType("cl_platform_id") long platform, @NativeType("cl_char const *") ByteBuffer funcname) {
+    public static long clGetExtensionFunctionAddressForPlatform(@NativeType("cl_platform_id") long platform, @NativeType("const cl_char *") ByteBuffer funcname) {
         if (CHECKS) {
             checkNT1(funcname);
         }
@@ -250,6 +250,8 @@ public class CL12 extends CL11 {
     }
 
     /**
+     * <p><a target="_blank" href="https://www.khronos.org/registry/OpenCL/sdk/2.1/docs/man/xhtml/clGetExtensionFunctionAddressForPlatform.html">Reference Page</a></p>
+     * 
      * Returns the address of the extension function named by {@code funcname} for a given {@code platform}. The pointer returned should be cast to a function
      * pointer type matching the extension function's definition defined in the appropriate extension specification and header file. A return value of {@code NULL}
      * indicates that the specified function does not exist for the implementation or platform is not a valid platform. A non-{@code NULL} return value for
@@ -263,11 +265,9 @@ public class CL12 extends CL11 {
      *
      * @param platform the platform to query
      * @param funcname the extension function name
-     * 
-     * @see <a target="_blank" href="https://www.khronos.org/registry/OpenCL/sdk/2.1/docs/man/xhtml/clGetExtensionFunctionAddressForPlatform.html">Reference Page</a>
      */
     @NativeType("void *")
-    public static long clGetExtensionFunctionAddressForPlatform(@NativeType("cl_platform_id") long platform, @NativeType("cl_char const *") CharSequence funcname) {
+    public static long clGetExtensionFunctionAddressForPlatform(@NativeType("cl_platform_id") long platform, @NativeType("const cl_char *") CharSequence funcname) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
             ByteBuffer funcnameEncoded = stack.ASCII(funcname);
@@ -280,6 +280,8 @@ public class CL12 extends CL11 {
     // --- [ clRetainDevice ] ---
 
     /**
+     * <p><a target="_blank" href="https://www.khronos.org/registry/OpenCL/sdk/2.1/docs/man/xhtml/clRetainDevice.html">Reference Page</a></p>
+     * 
      * Increments the device reference count if {@code device} is a valid sub-device created by a call to {@link #clCreateSubDevices CreateSubDevices}. If {@code device} is a
      * root level device i.e. a {@code cl_device_id} returned by {@link CL10#clGetDeviceIDs GetDeviceIDs}, the device reference count remains unchanged.
      *
@@ -292,8 +294,6 @@ public class CL12 extends CL11 {
      *         <li>{@link CL10#CL_OUT_OF_RESOURCES OUT_OF_RESOURCES} if there is a failure to allocate resources required by the OpenCL implementation on the device.</li>
      *         <li>{@link CL10#CL_OUT_OF_HOST_MEMORY OUT_OF_HOST_MEMORY} if there is a failure to allocate resources required by the OpenCL implementation on the host.</li>
      *         </ul>
-     * 
-     * @see <a target="_blank" href="https://www.khronos.org/registry/OpenCL/sdk/2.1/docs/man/xhtml/clRetainDevice.html">Reference Page</a>
      */
     @NativeType("cl_int")
     public static int clRetainDevice(@NativeType("cl_device_id") long device) {
@@ -308,6 +308,8 @@ public class CL12 extends CL11 {
     // --- [ clReleaseDevice ] ---
 
     /**
+     * <p><a target="_blank" href="https://www.khronos.org/registry/OpenCL/sdk/2.1/docs/man/xhtml/clReleaseDevice.html">Reference Page</a></p>
+     * 
      * Decrements the device reference count if {@code device} is a valid sub-device created by a call to {@link #clCreateSubDevices CreateSubDevices}. If {@code device} is a
      * root level device i.e. a {@code cl_device_id} returned by {@link CL10#clGetDeviceIDs GetDeviceIDs}, the device reference count remains unchanged.
      * 
@@ -323,8 +325,6 @@ public class CL12 extends CL11 {
      *         <li>{@link CL10#CL_OUT_OF_RESOURCES OUT_OF_RESOURCES} if there is a failure to allocate resources required by the OpenCL implementation on the device.</li>
      *         <li>{@link CL10#CL_OUT_OF_HOST_MEMORY OUT_OF_HOST_MEMORY} if there is a failure to allocate resources required by the OpenCL implementation on the host.</li>
      *         </ul>
-     * 
-     * @see <a target="_blank" href="https://www.khronos.org/registry/OpenCL/sdk/2.1/docs/man/xhtml/clReleaseDevice.html">Reference Page</a>
      */
     @NativeType("cl_int")
     public static int clReleaseDevice(@NativeType("cl_device_id") long device) {
@@ -353,6 +353,8 @@ public class CL12 extends CL11 {
     }
 
     /**
+     * <p><a target="_blank" href="https://www.khronos.org/registry/OpenCL/sdk/2.1/docs/man/xhtml/clCreateSubDevices.html">Reference Page</a></p>
+     * 
      * Creates an array of sub-devices that each reference a non-intersecting set of compute units within {@code in_device}, according to a partition scheme
      * given by {@code properties}. The output sub-devices may be used in every way that the root (or parent) device can be used, including creating contexts,
      * building programs, further calls to {@code clCreateSubDevices} and creating command-queues. When a command-queue is created against a sub-device, the
@@ -395,11 +397,9 @@ public class CL12 extends CL11 {
      *         <li>{@link CL10#CL_OUT_OF_RESOURCES OUT_OF_RESOURCES} if there is a failure to allocate resources required by the OpenCL implementation on the device.</li>
      *         <li>{@link CL10#CL_OUT_OF_HOST_MEMORY OUT_OF_HOST_MEMORY} if there is a failure to allocate resources required by the OpenCL implementation on the host.</li>
      *         </ul>
-     * 
-     * @see <a target="_blank" href="https://www.khronos.org/registry/OpenCL/sdk/2.1/docs/man/xhtml/clCreateSubDevices.html">Reference Page</a>
      */
     @NativeType("cl_int")
-    public static int clCreateSubDevices(@NativeType("cl_device_id") long in_device, @NativeType("cl_device_partition_property const *") PointerBuffer properties, @Nullable @NativeType("cl_device_id *") PointerBuffer out_devices, @Nullable @NativeType("cl_uint *") IntBuffer num_devices_ret) {
+    public static int clCreateSubDevices(@NativeType("cl_device_id") long in_device, @NativeType("const cl_device_partition_property *") PointerBuffer properties, @Nullable @NativeType("cl_device_id *") PointerBuffer out_devices, @Nullable @NativeType("cl_uint *") IntBuffer num_devices_ret) {
         if (CHECKS) {
             checkNT(properties);
             checkSafe(num_devices_ret, 1);
@@ -420,6 +420,8 @@ public class CL12 extends CL11 {
     }
 
     /**
+     * <p><a target="_blank" href="https://www.khronos.org/registry/OpenCL/sdk/2.1/docs/man/xhtml/clCreateImage.html">Reference Page</a></p>
+     * 
      * Creates a 1D image, 1D image buffer, 1D image array, 2D image, 2D image array or 3D image object.
      * 
      * <p>For a 3D image or 2D image array, the image data specified by {@code host_ptr} is stored as a linear sequence of adjacent 2D image slices or 2D images
@@ -449,7 +451,7 @@ public class CL12 extends CL11 {
      * @param host_ptr     a pointer to the image data that may already be allocated by the application. Refer to table below for a description of how large the buffer that
      *                     {@code host_ptr} points to must be.
      *                     
-     *                     <table class=striped>
+     *                     <table class=lwjgl>
      *                     <tr><th>ImageType</th><th>Size of buffer that {@code host_ptr} points to</th></tr>
      *                     <tr><td>{@link #CL_MEM_OBJECT_IMAGE1D MEM_OBJECT_IMAGE1D}</td><td>&#x2265; {@code image_row_pitch}</td></tr>
      *                     <tr><td>{@link #CL_MEM_OBJECT_IMAGE1D_BUFFER MEM_OBJECT_IMAGE1D_BUFFER}</td><td>&#x2265; {@code image_row_pitch}</td></tr>
@@ -487,11 +489,9 @@ public class CL12 extends CL11 {
      *         <li>{@link CL10#CL_OUT_OF_RESOURCES OUT_OF_RESOURCES} if there is a failure to allocate resources required by the OpenCL implementation on the device.</li>
      *         <li>{@link CL10#CL_OUT_OF_HOST_MEMORY OUT_OF_HOST_MEMORY} if there is a failure to allocate resources required by the OpenCL implementation on the host.</li>
      *         </ul>
-     * 
-     * @see <a target="_blank" href="https://www.khronos.org/registry/OpenCL/sdk/2.1/docs/man/xhtml/clCreateImage.html">Reference Page</a>
      */
     @NativeType("cl_mem")
-    public static long clCreateImage(@NativeType("cl_context") long context, @NativeType("cl_mem_flags") long flags, @NativeType("cl_image_format const *") CLImageFormat image_format, @NativeType("cl_image_desc const *") CLImageDesc image_desc, @Nullable @NativeType("void *") ByteBuffer host_ptr, @Nullable @NativeType("cl_int *") IntBuffer errcode_ret) {
+    public static long clCreateImage(@NativeType("cl_context") long context, @NativeType("cl_mem_flags") long flags, @NativeType("const cl_image_format *") CLImageFormat image_format, @NativeType("const cl_image_desc *") CLImageDesc image_desc, @Nullable @NativeType("void *") ByteBuffer host_ptr, @Nullable @NativeType("cl_int *") IntBuffer errcode_ret) {
         if (CHECKS) {
             checkSafe(errcode_ret, 1);
         }
@@ -499,6 +499,8 @@ public class CL12 extends CL11 {
     }
 
     /**
+     * <p><a target="_blank" href="https://www.khronos.org/registry/OpenCL/sdk/2.1/docs/man/xhtml/clCreateImage.html">Reference Page</a></p>
+     * 
      * Creates a 1D image, 1D image buffer, 1D image array, 2D image, 2D image array or 3D image object.
      * 
      * <p>For a 3D image or 2D image array, the image data specified by {@code host_ptr} is stored as a linear sequence of adjacent 2D image slices or 2D images
@@ -528,7 +530,7 @@ public class CL12 extends CL11 {
      * @param host_ptr     a pointer to the image data that may already be allocated by the application. Refer to table below for a description of how large the buffer that
      *                     {@code host_ptr} points to must be.
      *                     
-     *                     <table class=striped>
+     *                     <table class=lwjgl>
      *                     <tr><th>ImageType</th><th>Size of buffer that {@code host_ptr} points to</th></tr>
      *                     <tr><td>{@link #CL_MEM_OBJECT_IMAGE1D MEM_OBJECT_IMAGE1D}</td><td>&#x2265; {@code image_row_pitch}</td></tr>
      *                     <tr><td>{@link #CL_MEM_OBJECT_IMAGE1D_BUFFER MEM_OBJECT_IMAGE1D_BUFFER}</td><td>&#x2265; {@code image_row_pitch}</td></tr>
@@ -566,11 +568,9 @@ public class CL12 extends CL11 {
      *         <li>{@link CL10#CL_OUT_OF_RESOURCES OUT_OF_RESOURCES} if there is a failure to allocate resources required by the OpenCL implementation on the device.</li>
      *         <li>{@link CL10#CL_OUT_OF_HOST_MEMORY OUT_OF_HOST_MEMORY} if there is a failure to allocate resources required by the OpenCL implementation on the host.</li>
      *         </ul>
-     * 
-     * @see <a target="_blank" href="https://www.khronos.org/registry/OpenCL/sdk/2.1/docs/man/xhtml/clCreateImage.html">Reference Page</a>
      */
     @NativeType("cl_mem")
-    public static long clCreateImage(@NativeType("cl_context") long context, @NativeType("cl_mem_flags") long flags, @NativeType("cl_image_format const *") CLImageFormat image_format, @NativeType("cl_image_desc const *") CLImageDesc image_desc, @Nullable @NativeType("void *") ShortBuffer host_ptr, @Nullable @NativeType("cl_int *") IntBuffer errcode_ret) {
+    public static long clCreateImage(@NativeType("cl_context") long context, @NativeType("cl_mem_flags") long flags, @NativeType("const cl_image_format *") CLImageFormat image_format, @NativeType("const cl_image_desc *") CLImageDesc image_desc, @Nullable @NativeType("void *") ShortBuffer host_ptr, @Nullable @NativeType("cl_int *") IntBuffer errcode_ret) {
         if (CHECKS) {
             checkSafe(errcode_ret, 1);
         }
@@ -578,6 +578,8 @@ public class CL12 extends CL11 {
     }
 
     /**
+     * <p><a target="_blank" href="https://www.khronos.org/registry/OpenCL/sdk/2.1/docs/man/xhtml/clCreateImage.html">Reference Page</a></p>
+     * 
      * Creates a 1D image, 1D image buffer, 1D image array, 2D image, 2D image array or 3D image object.
      * 
      * <p>For a 3D image or 2D image array, the image data specified by {@code host_ptr} is stored as a linear sequence of adjacent 2D image slices or 2D images
@@ -607,7 +609,7 @@ public class CL12 extends CL11 {
      * @param host_ptr     a pointer to the image data that may already be allocated by the application. Refer to table below for a description of how large the buffer that
      *                     {@code host_ptr} points to must be.
      *                     
-     *                     <table class=striped>
+     *                     <table class=lwjgl>
      *                     <tr><th>ImageType</th><th>Size of buffer that {@code host_ptr} points to</th></tr>
      *                     <tr><td>{@link #CL_MEM_OBJECT_IMAGE1D MEM_OBJECT_IMAGE1D}</td><td>&#x2265; {@code image_row_pitch}</td></tr>
      *                     <tr><td>{@link #CL_MEM_OBJECT_IMAGE1D_BUFFER MEM_OBJECT_IMAGE1D_BUFFER}</td><td>&#x2265; {@code image_row_pitch}</td></tr>
@@ -645,11 +647,9 @@ public class CL12 extends CL11 {
      *         <li>{@link CL10#CL_OUT_OF_RESOURCES OUT_OF_RESOURCES} if there is a failure to allocate resources required by the OpenCL implementation on the device.</li>
      *         <li>{@link CL10#CL_OUT_OF_HOST_MEMORY OUT_OF_HOST_MEMORY} if there is a failure to allocate resources required by the OpenCL implementation on the host.</li>
      *         </ul>
-     * 
-     * @see <a target="_blank" href="https://www.khronos.org/registry/OpenCL/sdk/2.1/docs/man/xhtml/clCreateImage.html">Reference Page</a>
      */
     @NativeType("cl_mem")
-    public static long clCreateImage(@NativeType("cl_context") long context, @NativeType("cl_mem_flags") long flags, @NativeType("cl_image_format const *") CLImageFormat image_format, @NativeType("cl_image_desc const *") CLImageDesc image_desc, @Nullable @NativeType("void *") IntBuffer host_ptr, @Nullable @NativeType("cl_int *") IntBuffer errcode_ret) {
+    public static long clCreateImage(@NativeType("cl_context") long context, @NativeType("cl_mem_flags") long flags, @NativeType("const cl_image_format *") CLImageFormat image_format, @NativeType("const cl_image_desc *") CLImageDesc image_desc, @Nullable @NativeType("void *") IntBuffer host_ptr, @Nullable @NativeType("cl_int *") IntBuffer errcode_ret) {
         if (CHECKS) {
             checkSafe(errcode_ret, 1);
         }
@@ -657,6 +657,8 @@ public class CL12 extends CL11 {
     }
 
     /**
+     * <p><a target="_blank" href="https://www.khronos.org/registry/OpenCL/sdk/2.1/docs/man/xhtml/clCreateImage.html">Reference Page</a></p>
+     * 
      * Creates a 1D image, 1D image buffer, 1D image array, 2D image, 2D image array or 3D image object.
      * 
      * <p>For a 3D image or 2D image array, the image data specified by {@code host_ptr} is stored as a linear sequence of adjacent 2D image slices or 2D images
@@ -686,7 +688,7 @@ public class CL12 extends CL11 {
      * @param host_ptr     a pointer to the image data that may already be allocated by the application. Refer to table below for a description of how large the buffer that
      *                     {@code host_ptr} points to must be.
      *                     
-     *                     <table class=striped>
+     *                     <table class=lwjgl>
      *                     <tr><th>ImageType</th><th>Size of buffer that {@code host_ptr} points to</th></tr>
      *                     <tr><td>{@link #CL_MEM_OBJECT_IMAGE1D MEM_OBJECT_IMAGE1D}</td><td>&#x2265; {@code image_row_pitch}</td></tr>
      *                     <tr><td>{@link #CL_MEM_OBJECT_IMAGE1D_BUFFER MEM_OBJECT_IMAGE1D_BUFFER}</td><td>&#x2265; {@code image_row_pitch}</td></tr>
@@ -724,11 +726,9 @@ public class CL12 extends CL11 {
      *         <li>{@link CL10#CL_OUT_OF_RESOURCES OUT_OF_RESOURCES} if there is a failure to allocate resources required by the OpenCL implementation on the device.</li>
      *         <li>{@link CL10#CL_OUT_OF_HOST_MEMORY OUT_OF_HOST_MEMORY} if there is a failure to allocate resources required by the OpenCL implementation on the host.</li>
      *         </ul>
-     * 
-     * @see <a target="_blank" href="https://www.khronos.org/registry/OpenCL/sdk/2.1/docs/man/xhtml/clCreateImage.html">Reference Page</a>
      */
     @NativeType("cl_mem")
-    public static long clCreateImage(@NativeType("cl_context") long context, @NativeType("cl_mem_flags") long flags, @NativeType("cl_image_format const *") CLImageFormat image_format, @NativeType("cl_image_desc const *") CLImageDesc image_desc, @Nullable @NativeType("void *") FloatBuffer host_ptr, @Nullable @NativeType("cl_int *") IntBuffer errcode_ret) {
+    public static long clCreateImage(@NativeType("cl_context") long context, @NativeType("cl_mem_flags") long flags, @NativeType("const cl_image_format *") CLImageFormat image_format, @NativeType("const cl_image_desc *") CLImageDesc image_desc, @Nullable @NativeType("void *") FloatBuffer host_ptr, @Nullable @NativeType("cl_int *") IntBuffer errcode_ret) {
         if (CHECKS) {
             checkSafe(errcode_ret, 1);
         }
@@ -752,6 +752,8 @@ public class CL12 extends CL11 {
     }
 
     /**
+     * <p><a target="_blank" href="https://www.khronos.org/registry/OpenCL/sdk/2.1/docs/man/xhtml/clCreateProgramWithBuiltInKernels.html">Reference Page</a></p>
+     * 
      * Creates a program object for a context, and loads the information related to the built-in kernels into a program object.
      *
      * @param context      a valid OpenCL context
@@ -775,11 +777,9 @@ public class CL12 extends CL11 {
      *         <li>{@link CL10#CL_OUT_OF_RESOURCES OUT_OF_RESOURCES} if there is a failure to allocate resources required by the OpenCL implementation on the device.</li>
      *         <li>{@link CL10#CL_OUT_OF_HOST_MEMORY OUT_OF_HOST_MEMORY} if there is a failure to allocate resources required by the OpenCL implementation on the host.</li>
      *         </ul>
-     * 
-     * @see <a target="_blank" href="https://www.khronos.org/registry/OpenCL/sdk/2.1/docs/man/xhtml/clCreateProgramWithBuiltInKernels.html">Reference Page</a>
      */
     @NativeType("cl_program")
-    public static long clCreateProgramWithBuiltInKernels(@NativeType("cl_context") long context, @NativeType("cl_device_id const *") PointerBuffer device_list, @NativeType("cl_char const *") ByteBuffer kernel_names, @Nullable @NativeType("cl_int *") IntBuffer errcode_ret) {
+    public static long clCreateProgramWithBuiltInKernels(@NativeType("cl_context") long context, @NativeType("const cl_device_id *") PointerBuffer device_list, @NativeType("const cl_char *") ByteBuffer kernel_names, @Nullable @NativeType("cl_int *") IntBuffer errcode_ret) {
         if (CHECKS) {
             checkNT1(kernel_names);
             checkSafe(errcode_ret, 1);
@@ -788,6 +788,8 @@ public class CL12 extends CL11 {
     }
 
     /**
+     * <p><a target="_blank" href="https://www.khronos.org/registry/OpenCL/sdk/2.1/docs/man/xhtml/clCreateProgramWithBuiltInKernels.html">Reference Page</a></p>
+     * 
      * Creates a program object for a context, and loads the information related to the built-in kernels into a program object.
      *
      * @param context      a valid OpenCL context
@@ -811,11 +813,9 @@ public class CL12 extends CL11 {
      *         <li>{@link CL10#CL_OUT_OF_RESOURCES OUT_OF_RESOURCES} if there is a failure to allocate resources required by the OpenCL implementation on the device.</li>
      *         <li>{@link CL10#CL_OUT_OF_HOST_MEMORY OUT_OF_HOST_MEMORY} if there is a failure to allocate resources required by the OpenCL implementation on the host.</li>
      *         </ul>
-     * 
-     * @see <a target="_blank" href="https://www.khronos.org/registry/OpenCL/sdk/2.1/docs/man/xhtml/clCreateProgramWithBuiltInKernels.html">Reference Page</a>
      */
     @NativeType("cl_program")
-    public static long clCreateProgramWithBuiltInKernels(@NativeType("cl_context") long context, @NativeType("cl_device_id const *") PointerBuffer device_list, @NativeType("cl_char const *") CharSequence kernel_names, @Nullable @NativeType("cl_int *") IntBuffer errcode_ret) {
+    public static long clCreateProgramWithBuiltInKernels(@NativeType("cl_context") long context, @NativeType("const cl_device_id *") PointerBuffer device_list, @NativeType("const cl_char *") CharSequence kernel_names, @Nullable @NativeType("cl_int *") IntBuffer errcode_ret) {
         if (CHECKS) {
             checkSafe(errcode_ret, 1);
         }
@@ -829,6 +829,8 @@ public class CL12 extends CL11 {
     }
 
     /**
+     * <p><a target="_blank" href="https://www.khronos.org/registry/OpenCL/sdk/2.1/docs/man/xhtml/clCreateProgramWithBuiltInKernels.html">Reference Page</a></p>
+     * 
      * Creates a program object for a context, and loads the information related to the built-in kernels into a program object.
      *
      * @param context      a valid OpenCL context
@@ -847,11 +849,9 @@ public class CL12 extends CL11 {
      *         <li>{@link CL10#CL_OUT_OF_RESOURCES OUT_OF_RESOURCES} if there is a failure to allocate resources required by the OpenCL implementation on the device.</li>
      *         <li>{@link CL10#CL_OUT_OF_HOST_MEMORY OUT_OF_HOST_MEMORY} if there is a failure to allocate resources required by the OpenCL implementation on the host.</li>
      *         </ul>
-     * 
-     * @see <a target="_blank" href="https://www.khronos.org/registry/OpenCL/sdk/2.1/docs/man/xhtml/clCreateProgramWithBuiltInKernels.html">Reference Page</a>
      */
     @NativeType("cl_program")
-    public static long clCreateProgramWithBuiltInKernels(@NativeType("cl_context") long context, @NativeType("cl_device_id const *") long device, @NativeType("cl_char const *") CharSequence kernel_names, @Nullable @NativeType("cl_int *") IntBuffer errcode_ret) {
+    public static long clCreateProgramWithBuiltInKernels(@NativeType("cl_context") long context, @NativeType("const cl_device_id *") long device, @NativeType("const cl_char *") CharSequence kernel_names, @Nullable @NativeType("cl_int *") IntBuffer errcode_ret) {
         if (CHECKS) {
             checkSafe(errcode_ret, 1);
         }
@@ -883,6 +883,8 @@ public class CL12 extends CL11 {
     }
 
     /**
+     * <p><a target="_blank" href="https://www.khronos.org/registry/OpenCL/sdk/2.1/docs/man/xhtml/clCompileProgram.html">Reference Page</a></p>
+     * 
      * Compiles a program's source for all the devices or a specific device(s) in the OpenCL context associated with {@code program}. The pre-processor runs
      * before the program sources are compiled. The compiled binary is built for all devices associated with {@code program} or the list of devices specified.
      * The compiled binary can be queried using {@link CL10#clGetProgramInfo GetProgramInfo}(program, {@link CL10#CL_PROGRAM_BINARIES PROGRAM_BINARIES}, &hellip;) and can be specified
@@ -930,11 +932,9 @@ public class CL12 extends CL11 {
      *         <li>{@link CL10#CL_OUT_OF_RESOURCES OUT_OF_RESOURCES} if there is a failure to allocate resources required by the OpenCL implementation on the device.</li>
      *         <li>{@link CL10#CL_OUT_OF_HOST_MEMORY OUT_OF_HOST_MEMORY} if there is a failure to allocate resources required by the OpenCL implementation on the host.</li>
      *         </ul>
-     * 
-     * @see <a target="_blank" href="https://www.khronos.org/registry/OpenCL/sdk/2.1/docs/man/xhtml/clCompileProgram.html">Reference Page</a>
      */
     @NativeType("cl_int")
-    public static int clCompileProgram(@NativeType("cl_program") long program, @Nullable @NativeType("cl_device_id const *") PointerBuffer device_list, @NativeType("cl_char const *") ByteBuffer options, @Nullable @NativeType("cl_program const *") PointerBuffer input_headers, @Nullable @NativeType("cl_char const **") PointerBuffer header_include_names, @Nullable @NativeType("void (*) (cl_program, void *)") CLProgramCallbackI pfn_notify, @NativeType("void *") long user_data) {
+    public static int clCompileProgram(@NativeType("cl_program") long program, @Nullable @NativeType("const cl_device_id *") PointerBuffer device_list, @NativeType("const cl_char *") ByteBuffer options, @Nullable @NativeType("const cl_program *") PointerBuffer input_headers, @Nullable @NativeType("const cl_char **") PointerBuffer header_include_names, @Nullable @NativeType("void (*) (cl_program, void *)") CLProgramCallbackI pfn_notify, @NativeType("void *") long user_data) {
         if (CHECKS) {
             checkNT1(options);
             checkSafe(header_include_names, remainingSafe(input_headers));
@@ -943,6 +943,8 @@ public class CL12 extends CL11 {
     }
 
     /**
+     * <p><a target="_blank" href="https://www.khronos.org/registry/OpenCL/sdk/2.1/docs/man/xhtml/clCompileProgram.html">Reference Page</a></p>
+     * 
      * Compiles a program's source for all the devices or a specific device(s) in the OpenCL context associated with {@code program}. The pre-processor runs
      * before the program sources are compiled. The compiled binary is built for all devices associated with {@code program} or the list of devices specified.
      * The compiled binary can be queried using {@link CL10#clGetProgramInfo GetProgramInfo}(program, {@link CL10#CL_PROGRAM_BINARIES PROGRAM_BINARIES}, &hellip;) and can be specified
@@ -990,11 +992,9 @@ public class CL12 extends CL11 {
      *         <li>{@link CL10#CL_OUT_OF_RESOURCES OUT_OF_RESOURCES} if there is a failure to allocate resources required by the OpenCL implementation on the device.</li>
      *         <li>{@link CL10#CL_OUT_OF_HOST_MEMORY OUT_OF_HOST_MEMORY} if there is a failure to allocate resources required by the OpenCL implementation on the host.</li>
      *         </ul>
-     * 
-     * @see <a target="_blank" href="https://www.khronos.org/registry/OpenCL/sdk/2.1/docs/man/xhtml/clCompileProgram.html">Reference Page</a>
      */
     @NativeType("cl_int")
-    public static int clCompileProgram(@NativeType("cl_program") long program, @Nullable @NativeType("cl_device_id const *") PointerBuffer device_list, @NativeType("cl_char const *") CharSequence options, @Nullable @NativeType("cl_program const *") PointerBuffer input_headers, @Nullable @NativeType("cl_char const **") PointerBuffer header_include_names, @Nullable @NativeType("void (*) (cl_program, void *)") CLProgramCallbackI pfn_notify, @NativeType("void *") long user_data) {
+    public static int clCompileProgram(@NativeType("cl_program") long program, @Nullable @NativeType("const cl_device_id *") PointerBuffer device_list, @NativeType("const cl_char *") CharSequence options, @Nullable @NativeType("const cl_program *") PointerBuffer input_headers, @Nullable @NativeType("const cl_char **") PointerBuffer header_include_names, @Nullable @NativeType("void (*) (cl_program, void *)") CLProgramCallbackI pfn_notify, @NativeType("void *") long user_data) {
         if (CHECKS) {
             checkSafe(header_include_names, remainingSafe(input_headers));
         }
@@ -1025,6 +1025,8 @@ public class CL12 extends CL11 {
     }
 
     /**
+     * <p><a target="_blank" href="https://www.khronos.org/registry/OpenCL/sdk/2.1/docs/man/xhtml/clLinkProgram.html">Reference Page</a></p>
+     * 
      * Links a set of compiled program objects and libraries for all the devices or a specific device(s) in the OpenCL context and creates an executable.
      * {@code clLinkProgram} creates a new program object which contains this executable. The executable binary can be queried using
      * {@link CL10#clGetProgramInfo GetProgramInfo}(program, {@link CL10#CL_PROGRAM_BINARIES PROGRAM_BINARIES}, &hellip;) and can be specified to {@link CL10#clCreateProgramWithBinary CreateProgramWithBinary} to
@@ -1091,11 +1093,9 @@ public class CL12 extends CL11 {
      *         <li>{@link CL10#CL_OUT_OF_RESOURCES OUT_OF_RESOURCES} if there is a failure to allocate resources required by the OpenCL implementation on the device.</li>
      *         <li>{@link CL10#CL_OUT_OF_HOST_MEMORY OUT_OF_HOST_MEMORY} if there is a failure to allocate resources required by the OpenCL implementation on the host.</li>
      *         </ul>
-     * 
-     * @see <a target="_blank" href="https://www.khronos.org/registry/OpenCL/sdk/2.1/docs/man/xhtml/clLinkProgram.html">Reference Page</a>
      */
     @NativeType("cl_program")
-    public static long clLinkProgram(@NativeType("cl_context") long context, @Nullable @NativeType("cl_device_id const *") PointerBuffer device_list, @NativeType("cl_char const *") ByteBuffer options, @Nullable @NativeType("cl_program const *") PointerBuffer input_programs, @Nullable @NativeType("void (*) (cl_program, void *)") CLProgramCallbackI pfn_notify, @NativeType("void *") long user_data) {
+    public static long clLinkProgram(@NativeType("cl_context") long context, @Nullable @NativeType("const cl_device_id *") PointerBuffer device_list, @NativeType("const cl_char *") ByteBuffer options, @Nullable @NativeType("const cl_program *") PointerBuffer input_programs, @Nullable @NativeType("void (*) (cl_program, void *)") CLProgramCallbackI pfn_notify, @NativeType("void *") long user_data) {
         if (CHECKS) {
             checkNT1(options);
         }
@@ -1103,6 +1103,8 @@ public class CL12 extends CL11 {
     }
 
     /**
+     * <p><a target="_blank" href="https://www.khronos.org/registry/OpenCL/sdk/2.1/docs/man/xhtml/clLinkProgram.html">Reference Page</a></p>
+     * 
      * Links a set of compiled program objects and libraries for all the devices or a specific device(s) in the OpenCL context and creates an executable.
      * {@code clLinkProgram} creates a new program object which contains this executable. The executable binary can be queried using
      * {@link CL10#clGetProgramInfo GetProgramInfo}(program, {@link CL10#CL_PROGRAM_BINARIES PROGRAM_BINARIES}, &hellip;) and can be specified to {@link CL10#clCreateProgramWithBinary CreateProgramWithBinary} to
@@ -1169,11 +1171,9 @@ public class CL12 extends CL11 {
      *         <li>{@link CL10#CL_OUT_OF_RESOURCES OUT_OF_RESOURCES} if there is a failure to allocate resources required by the OpenCL implementation on the device.</li>
      *         <li>{@link CL10#CL_OUT_OF_HOST_MEMORY OUT_OF_HOST_MEMORY} if there is a failure to allocate resources required by the OpenCL implementation on the host.</li>
      *         </ul>
-     * 
-     * @see <a target="_blank" href="https://www.khronos.org/registry/OpenCL/sdk/2.1/docs/man/xhtml/clLinkProgram.html">Reference Page</a>
      */
     @NativeType("cl_program")
-    public static long clLinkProgram(@NativeType("cl_context") long context, @Nullable @NativeType("cl_device_id const *") PointerBuffer device_list, @NativeType("cl_char const *") CharSequence options, @Nullable @NativeType("cl_program const *") PointerBuffer input_programs, @Nullable @NativeType("void (*) (cl_program, void *)") CLProgramCallbackI pfn_notify, @NativeType("void *") long user_data) {
+    public static long clLinkProgram(@NativeType("cl_context") long context, @Nullable @NativeType("const cl_device_id *") PointerBuffer device_list, @NativeType("const cl_char *") CharSequence options, @Nullable @NativeType("const cl_program *") PointerBuffer input_programs, @Nullable @NativeType("void (*) (cl_program, void *)") CLProgramCallbackI pfn_notify, @NativeType("void *") long user_data) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
             ByteBuffer optionsEncoded = stack.ASCII(options);
@@ -1184,6 +1184,8 @@ public class CL12 extends CL11 {
     }
 
     /**
+     * <p><a target="_blank" href="https://www.khronos.org/registry/OpenCL/sdk/2.1/docs/man/xhtml/clLinkProgram.html">Reference Page</a></p>
+     * 
      * Links a set of compiled program objects and libraries for all the devices or a specific device(s) in the OpenCL context and creates an executable.
      * {@code clLinkProgram} creates a new program object which contains this executable. The executable binary can be queried using
      * {@link CL10#clGetProgramInfo GetProgramInfo}(program, {@link CL10#CL_PROGRAM_BINARIES PROGRAM_BINARIES}, &hellip;) and can be specified to {@link CL10#clCreateProgramWithBinary CreateProgramWithBinary} to
@@ -1240,11 +1242,9 @@ public class CL12 extends CL11 {
      *         <li>{@link CL10#CL_OUT_OF_RESOURCES OUT_OF_RESOURCES} if there is a failure to allocate resources required by the OpenCL implementation on the device.</li>
      *         <li>{@link CL10#CL_OUT_OF_HOST_MEMORY OUT_OF_HOST_MEMORY} if there is a failure to allocate resources required by the OpenCL implementation on the host.</li>
      *         </ul>
-     * 
-     * @see <a target="_blank" href="https://www.khronos.org/registry/OpenCL/sdk/2.1/docs/man/xhtml/clLinkProgram.html">Reference Page</a>
      */
     @NativeType("cl_program")
-    public static long clLinkProgram(@NativeType("cl_context") long context, @Nullable @NativeType("cl_device_id const *") PointerBuffer device_list, @NativeType("cl_char const *") CharSequence options, @Nullable @NativeType("cl_program const *") long input_program, @Nullable @NativeType("void (*) (cl_program, void *)") CLProgramCallbackI pfn_notify, @NativeType("void *") long user_data) {
+    public static long clLinkProgram(@NativeType("cl_context") long context, @Nullable @NativeType("const cl_device_id *") PointerBuffer device_list, @NativeType("const cl_char *") CharSequence options, @Nullable @NativeType("const cl_program *") long input_program, @Nullable @NativeType("void (*) (cl_program, void *)") CLProgramCallbackI pfn_notify, @NativeType("void *") long user_data) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
             ByteBuffer optionsEncoded = stack.ASCII(options);
@@ -1258,6 +1258,8 @@ public class CL12 extends CL11 {
     // --- [ clUnloadPlatformCompiler ] ---
 
     /**
+     * <p><a target="_blank" href="https://www.khronos.org/registry/OpenCL/sdk/2.1/docs/man/xhtml/clUnloadPlatformCompiler.html">Reference Page</a></p>
+     * 
      * Allows the implementation to release the resources allocated by the OpenCL compiler for platform. This is a hint from the application and does not
      * guarantee that the compiler will not be used in the future or that the compiler will actually be unloaded by the implementation. Calls to
      * {@link CL10#clBuildProgram BuildProgram}, {@link #clCompileProgram CompileProgram} or {@link #clLinkProgram LinkProgram} after {@code clUnloadPlatformCompiler} will reload the compiler, if necessary, to build the
@@ -1270,8 +1272,6 @@ public class CL12 extends CL11 {
      *         <ul>
      *         <li>{@link CL10#CL_INVALID_PLATFORM INVALID_PLATFORM} if {@code platform} is not a valid platform.</li>
      *         </ul>
-     * 
-     * @see <a target="_blank" href="https://www.khronos.org/registry/OpenCL/sdk/2.1/docs/man/xhtml/clUnloadPlatformCompiler.html">Reference Page</a>
      */
     @NativeType("cl_int")
     public static int clUnloadPlatformCompiler(@NativeType("cl_platform_id") long platform) {
@@ -1300,6 +1300,8 @@ public class CL12 extends CL11 {
     }
 
     /**
+     * <p><a target="_blank" href="https://www.khronos.org/registry/OpenCL/sdk/2.1/docs/man/xhtml/clGetKernelArgInfo.html">Reference Page</a></p>
+     * 
      * Returns information about the arguments of a kernel. Kernel argument information is only available if the program object associated with kernel is
      * created with {@link CL10#clCreateProgramWithSource CreateProgramWithSource} and the program executable is built with the {@code -cl-kernel-arg-info} option specified in options
      * argument to {@link CL10#clBuildProgram BuildProgram} or {@link #clCompileProgram CompileProgram}.
@@ -1320,8 +1322,6 @@ public class CL12 extends CL11 {
      *         <li>{@link #CL_KERNEL_ARG_INFO_NOT_AVAILABLE KERNEL_ARG_INFO_NOT_AVAILABLE} if the argument information is not available for {@code kernel}.</li>
      *         <li>{@link CL10#CL_INVALID_KERNEL INVALID_KERNEL} if {@code kernel} is a not a valid kernel object.</li>
      *         </ul>
-     * 
-     * @see <a target="_blank" href="https://www.khronos.org/registry/OpenCL/sdk/2.1/docs/man/xhtml/clGetKernelArgInfo.html">Reference Page</a>
      */
     @NativeType("cl_int")
     public static int clGetKernelArgInfo(@NativeType("cl_kernel") long kernel, @NativeType("cl_uint") int arg_indx, @NativeType("cl_kernel_arg_info") int param_name, @Nullable @NativeType("void *") ByteBuffer param_value, @Nullable @NativeType("size_t *") PointerBuffer param_value_size_ret) {
@@ -1332,6 +1332,8 @@ public class CL12 extends CL11 {
     }
 
     /**
+     * <p><a target="_blank" href="https://www.khronos.org/registry/OpenCL/sdk/2.1/docs/man/xhtml/clGetKernelArgInfo.html">Reference Page</a></p>
+     * 
      * Returns information about the arguments of a kernel. Kernel argument information is only available if the program object associated with kernel is
      * created with {@link CL10#clCreateProgramWithSource CreateProgramWithSource} and the program executable is built with the {@code -cl-kernel-arg-info} option specified in options
      * argument to {@link CL10#clBuildProgram BuildProgram} or {@link #clCompileProgram CompileProgram}.
@@ -1352,18 +1354,18 @@ public class CL12 extends CL11 {
      *         <li>{@link #CL_KERNEL_ARG_INFO_NOT_AVAILABLE KERNEL_ARG_INFO_NOT_AVAILABLE} if the argument information is not available for {@code kernel}.</li>
      *         <li>{@link CL10#CL_INVALID_KERNEL INVALID_KERNEL} if {@code kernel} is a not a valid kernel object.</li>
      *         </ul>
-     * 
-     * @see <a target="_blank" href="https://www.khronos.org/registry/OpenCL/sdk/2.1/docs/man/xhtml/clGetKernelArgInfo.html">Reference Page</a>
      */
     @NativeType("cl_int")
     public static int clGetKernelArgInfo(@NativeType("cl_kernel") long kernel, @NativeType("cl_uint") int arg_indx, @NativeType("cl_kernel_arg_info") int param_name, @Nullable @NativeType("void *") IntBuffer param_value, @Nullable @NativeType("size_t *") PointerBuffer param_value_size_ret) {
         if (CHECKS) {
             checkSafe(param_value_size_ret, 1);
         }
-        return nclGetKernelArgInfo(kernel, arg_indx, param_name, Integer.toUnsignedLong(remainingSafe(param_value)) << 2, memAddressSafe(param_value), memAddressSafe(param_value_size_ret));
+        return nclGetKernelArgInfo(kernel, arg_indx, param_name, remainingSafe(param_value) << 2, memAddressSafe(param_value), memAddressSafe(param_value_size_ret));
     }
 
     /**
+     * <p><a target="_blank" href="https://www.khronos.org/registry/OpenCL/sdk/2.1/docs/man/xhtml/clGetKernelArgInfo.html">Reference Page</a></p>
+     * 
      * Returns information about the arguments of a kernel. Kernel argument information is only available if the program object associated with kernel is
      * created with {@link CL10#clCreateProgramWithSource CreateProgramWithSource} and the program executable is built with the {@code -cl-kernel-arg-info} option specified in options
      * argument to {@link CL10#clBuildProgram BuildProgram} or {@link #clCompileProgram CompileProgram}.
@@ -1384,15 +1386,13 @@ public class CL12 extends CL11 {
      *         <li>{@link #CL_KERNEL_ARG_INFO_NOT_AVAILABLE KERNEL_ARG_INFO_NOT_AVAILABLE} if the argument information is not available for {@code kernel}.</li>
      *         <li>{@link CL10#CL_INVALID_KERNEL INVALID_KERNEL} if {@code kernel} is a not a valid kernel object.</li>
      *         </ul>
-     * 
-     * @see <a target="_blank" href="https://www.khronos.org/registry/OpenCL/sdk/2.1/docs/man/xhtml/clGetKernelArgInfo.html">Reference Page</a>
      */
     @NativeType("cl_int")
     public static int clGetKernelArgInfo(@NativeType("cl_kernel") long kernel, @NativeType("cl_uint") int arg_indx, @NativeType("cl_kernel_arg_info") int param_name, @Nullable @NativeType("void *") LongBuffer param_value, @Nullable @NativeType("size_t *") PointerBuffer param_value_size_ret) {
         if (CHECKS) {
             checkSafe(param_value_size_ret, 1);
         }
-        return nclGetKernelArgInfo(kernel, arg_indx, param_name, Integer.toUnsignedLong(remainingSafe(param_value)) << 3, memAddressSafe(param_value), memAddressSafe(param_value_size_ret));
+        return nclGetKernelArgInfo(kernel, arg_indx, param_name, remainingSafe(param_value) << 3, memAddressSafe(param_value), memAddressSafe(param_value_size_ret));
     }
 
     // --- [ clEnqueueFillBuffer ] ---
@@ -1414,6 +1414,8 @@ public class CL12 extends CL11 {
     }
 
     /**
+     * <p><a target="_blank" href="https://www.khronos.org/registry/OpenCL/sdk/2.1/docs/man/xhtml/clEnqueueFillBuffer.html">Reference Page</a></p>
+     * 
      * Enqueues a command to fill a buffer object with a pattern of a given pattern size. The usage information which indicates whether the memory object can
      * be read or written by a kernel and/or the host and is given by the {@code cl_mem_flags} argument value specified when buffer is created is ignored by
      * {@code clEnqueueFillBuffer}.
@@ -1454,11 +1456,9 @@ public class CL12 extends CL11 {
      *         <li>{@link CL10#CL_OUT_OF_RESOURCES OUT_OF_RESOURCES} if there is a failure to allocate resources required by the OpenCL implementation on the device.</li>
      *         <li>{@link CL10#CL_OUT_OF_HOST_MEMORY OUT_OF_HOST_MEMORY} if there is a failure to allocate resources required by the OpenCL implementation on the host.</li>
      *         </ul>
-     * 
-     * @see <a target="_blank" href="https://www.khronos.org/registry/OpenCL/sdk/2.1/docs/man/xhtml/clEnqueueFillBuffer.html">Reference Page</a>
      */
     @NativeType("cl_int")
-    public static int clEnqueueFillBuffer(@NativeType("cl_command_queue") long command_queue, @NativeType("cl_mem") long buffer, @NativeType("void const *") ByteBuffer pattern, @NativeType("size_t") long offset, @NativeType("size_t") long size, @Nullable @NativeType("cl_event const *") PointerBuffer event_wait_list, @Nullable @NativeType("cl_event *") PointerBuffer event) {
+    public static int clEnqueueFillBuffer(@NativeType("cl_command_queue") long command_queue, @NativeType("cl_mem") long buffer, @NativeType("const void *") ByteBuffer pattern, @NativeType("size_t") long offset, @NativeType("size_t") long size, @Nullable @NativeType("const cl_event *") PointerBuffer event_wait_list, @Nullable @NativeType("cl_event *") PointerBuffer event) {
         if (CHECKS) {
             checkSafe(event, 1);
         }
@@ -1483,6 +1483,8 @@ public class CL12 extends CL11 {
     }
 
     /**
+     * <p><a target="_blank" href="https://www.khronos.org/registry/OpenCL/sdk/2.1/docs/man/xhtml/clEnqueueFillImage.html">Reference Page</a></p>
+     * 
      * Enqueues a command to fill an image object with a specified color. The usage information which indicates whether the memory object can be read or
      * written by a kernel and/or the host and is given by the {@code cl_mem_flags} argument value specified when image is created is ignored by
      * {@code clEnqueueFillImage}.
@@ -1528,11 +1530,9 @@ public class CL12 extends CL11 {
      *         <li>{@link CL10#CL_OUT_OF_RESOURCES OUT_OF_RESOURCES} if there is a failure to allocate resources required by the OpenCL implementation on the device.</li>
      *         <li>{@link CL10#CL_OUT_OF_HOST_MEMORY OUT_OF_HOST_MEMORY} if there is a failure to allocate resources required by the OpenCL implementation on the host.</li>
      *         </ul>
-     * 
-     * @see <a target="_blank" href="https://www.khronos.org/registry/OpenCL/sdk/2.1/docs/man/xhtml/clEnqueueFillImage.html">Reference Page</a>
      */
     @NativeType("cl_int")
-    public static int clEnqueueFillImage(@NativeType("cl_command_queue") long command_queue, @NativeType("cl_mem") long image, @NativeType("void const *") ByteBuffer fill_color, @NativeType("size_t const *") PointerBuffer origin, @NativeType("size_t const *") PointerBuffer region, @Nullable @NativeType("cl_event const *") PointerBuffer event_wait_list, @Nullable @NativeType("cl_event *") PointerBuffer event) {
+    public static int clEnqueueFillImage(@NativeType("cl_command_queue") long command_queue, @NativeType("cl_mem") long image, @NativeType("const void *") ByteBuffer fill_color, @NativeType("const size_t *") PointerBuffer origin, @NativeType("const size_t *") PointerBuffer region, @Nullable @NativeType("const cl_event *") PointerBuffer event_wait_list, @Nullable @NativeType("cl_event *") PointerBuffer event) {
         if (CHECKS) {
             check(fill_color, 16);
             check(origin, 1);
@@ -1543,6 +1543,8 @@ public class CL12 extends CL11 {
     }
 
     /**
+     * <p><a target="_blank" href="https://www.khronos.org/registry/OpenCL/sdk/2.1/docs/man/xhtml/clEnqueueFillImage.html">Reference Page</a></p>
+     * 
      * Enqueues a command to fill an image object with a specified color. The usage information which indicates whether the memory object can be read or
      * written by a kernel and/or the host and is given by the {@code cl_mem_flags} argument value specified when image is created is ignored by
      * {@code clEnqueueFillImage}.
@@ -1588,11 +1590,9 @@ public class CL12 extends CL11 {
      *         <li>{@link CL10#CL_OUT_OF_RESOURCES OUT_OF_RESOURCES} if there is a failure to allocate resources required by the OpenCL implementation on the device.</li>
      *         <li>{@link CL10#CL_OUT_OF_HOST_MEMORY OUT_OF_HOST_MEMORY} if there is a failure to allocate resources required by the OpenCL implementation on the host.</li>
      *         </ul>
-     * 
-     * @see <a target="_blank" href="https://www.khronos.org/registry/OpenCL/sdk/2.1/docs/man/xhtml/clEnqueueFillImage.html">Reference Page</a>
      */
     @NativeType("cl_int")
-    public static int clEnqueueFillImage(@NativeType("cl_command_queue") long command_queue, @NativeType("cl_mem") long image, @NativeType("void const *") IntBuffer fill_color, @NativeType("size_t const *") PointerBuffer origin, @NativeType("size_t const *") PointerBuffer region, @Nullable @NativeType("cl_event const *") PointerBuffer event_wait_list, @Nullable @NativeType("cl_event *") PointerBuffer event) {
+    public static int clEnqueueFillImage(@NativeType("cl_command_queue") long command_queue, @NativeType("cl_mem") long image, @NativeType("const void *") IntBuffer fill_color, @NativeType("const size_t *") PointerBuffer origin, @NativeType("const size_t *") PointerBuffer region, @Nullable @NativeType("const cl_event *") PointerBuffer event_wait_list, @Nullable @NativeType("cl_event *") PointerBuffer event) {
         if (CHECKS) {
             check(fill_color, 16 >> 2);
             check(origin, 1);
@@ -1603,6 +1603,8 @@ public class CL12 extends CL11 {
     }
 
     /**
+     * <p><a target="_blank" href="https://www.khronos.org/registry/OpenCL/sdk/2.1/docs/man/xhtml/clEnqueueFillImage.html">Reference Page</a></p>
+     * 
      * Enqueues a command to fill an image object with a specified color. The usage information which indicates whether the memory object can be read or
      * written by a kernel and/or the host and is given by the {@code cl_mem_flags} argument value specified when image is created is ignored by
      * {@code clEnqueueFillImage}.
@@ -1648,11 +1650,9 @@ public class CL12 extends CL11 {
      *         <li>{@link CL10#CL_OUT_OF_RESOURCES OUT_OF_RESOURCES} if there is a failure to allocate resources required by the OpenCL implementation on the device.</li>
      *         <li>{@link CL10#CL_OUT_OF_HOST_MEMORY OUT_OF_HOST_MEMORY} if there is a failure to allocate resources required by the OpenCL implementation on the host.</li>
      *         </ul>
-     * 
-     * @see <a target="_blank" href="https://www.khronos.org/registry/OpenCL/sdk/2.1/docs/man/xhtml/clEnqueueFillImage.html">Reference Page</a>
      */
     @NativeType("cl_int")
-    public static int clEnqueueFillImage(@NativeType("cl_command_queue") long command_queue, @NativeType("cl_mem") long image, @NativeType("void const *") FloatBuffer fill_color, @NativeType("size_t const *") PointerBuffer origin, @NativeType("size_t const *") PointerBuffer region, @Nullable @NativeType("cl_event const *") PointerBuffer event_wait_list, @Nullable @NativeType("cl_event *") PointerBuffer event) {
+    public static int clEnqueueFillImage(@NativeType("cl_command_queue") long command_queue, @NativeType("cl_mem") long image, @NativeType("const void *") FloatBuffer fill_color, @NativeType("const size_t *") PointerBuffer origin, @NativeType("const size_t *") PointerBuffer region, @Nullable @NativeType("const cl_event *") PointerBuffer event_wait_list, @Nullable @NativeType("cl_event *") PointerBuffer event) {
         if (CHECKS) {
             check(fill_color, 16 >> 2);
             check(origin, 1);
@@ -1680,6 +1680,8 @@ public class CL12 extends CL11 {
     }
 
     /**
+     * <p><a target="_blank" href="https://www.khronos.org/registry/OpenCL/sdk/2.1/docs/man/xhtml/clEnqueueMigrateMemObjects.html">Reference Page</a></p>
+     * 
      * Enqueues a command to indicate which device a set of memory objects should be associated with. Typically, memory objects are implicitly migrated to a
      * device for which enqueued commands, using the memory object, are targeted. {@code clEnqueueMigrateMemObjects} allows this migration to be explicitly
      * performed ahead of the dependent commands. This allows a user to preemptively change the association of a memory object, through regular command queue
@@ -1722,11 +1724,9 @@ public class CL12 extends CL11 {
      *         <li>{@link CL10#CL_OUT_OF_RESOURCES OUT_OF_RESOURCES} if there is a failure to allocate resources required by the OpenCL implementation on the device.</li>
      *         <li>{@link CL10#CL_OUT_OF_HOST_MEMORY OUT_OF_HOST_MEMORY} if there is a failure to allocate resources required by the OpenCL implementation on the host.</li>
      *         </ul>
-     * 
-     * @see <a target="_blank" href="https://www.khronos.org/registry/OpenCL/sdk/2.1/docs/man/xhtml/clEnqueueMigrateMemObjects.html">Reference Page</a>
      */
     @NativeType("cl_int")
-    public static int clEnqueueMigrateMemObjects(@NativeType("cl_command_queue") long command_queue, @NativeType("cl_mem const *") PointerBuffer mem_objects, @NativeType("cl_mem_migration_flags") long flags, @Nullable @NativeType("cl_event const *") PointerBuffer event_wait_list, @Nullable @NativeType("cl_event *") PointerBuffer event) {
+    public static int clEnqueueMigrateMemObjects(@NativeType("cl_command_queue") long command_queue, @NativeType("const cl_mem *") PointerBuffer mem_objects, @NativeType("cl_mem_migration_flags") long flags, @Nullable @NativeType("const cl_event *") PointerBuffer event_wait_list, @Nullable @NativeType("cl_event *") PointerBuffer event) {
         if (CHECKS) {
             checkSafe(event, 1);
         }
@@ -1750,6 +1750,8 @@ public class CL12 extends CL11 {
     }
 
     /**
+     * <p><a target="_blank" href="https://www.khronos.org/registry/OpenCL/sdk/2.1/docs/man/xhtml/clEnqueueMarkerWithWaitList.html">Reference Page</a></p>
+     * 
      * Enqueues a marker command which waits for either a list of events to complete, or if the list is empty it waits for all commands previously enqueued in
      * {@code command_queue} to complete before it completes. This command returns an event which can be waited on, i.e. this event can be waited on to insure
      * that all events either in the {@code event_wait_list} or all previously enqueued commands, queued before this command to {@code command_queue}, have
@@ -1774,11 +1776,9 @@ public class CL12 extends CL11 {
      *         <li>{@link CL10#CL_OUT_OF_RESOURCES OUT_OF_RESOURCES} if there is a failure to allocate resources required by the OpenCL implementation on the device.</li>
      *         <li>{@link CL10#CL_OUT_OF_HOST_MEMORY OUT_OF_HOST_MEMORY} if there is a failure to allocate resources required by the OpenCL implementation on the host.</li>
      *         </ul>
-     * 
-     * @see <a target="_blank" href="https://www.khronos.org/registry/OpenCL/sdk/2.1/docs/man/xhtml/clEnqueueMarkerWithWaitList.html">Reference Page</a>
      */
     @NativeType("cl_int")
-    public static int clEnqueueMarkerWithWaitList(@NativeType("cl_command_queue") long command_queue, @Nullable @NativeType("cl_event const *") PointerBuffer event_wait_list, @Nullable @NativeType("cl_event *") PointerBuffer event) {
+    public static int clEnqueueMarkerWithWaitList(@NativeType("cl_command_queue") long command_queue, @Nullable @NativeType("const cl_event *") PointerBuffer event_wait_list, @Nullable @NativeType("cl_event *") PointerBuffer event) {
         if (CHECKS) {
             checkSafe(event, 1);
         }
@@ -1802,6 +1802,8 @@ public class CL12 extends CL11 {
     }
 
     /**
+     * <p><a target="_blank" href="https://www.khronos.org/registry/OpenCL/sdk/2.1/docs/man/xhtml/clEnqueueBarrierWithWaitList.html">Reference Page</a></p>
+     * 
      * enqueues a barrier command which waits for either a list of events to complete, or if the list is empty it waits for all commands previously enqueued in
      * {@code command_queue} to complete before it completes. This command blocks command execution, that is, any following commands enqueued after it do not
      * execute until it completes. This command returns an event which can be waited on, i.e. this event can be waited on to insure that all events either in
@@ -1826,11 +1828,9 @@ public class CL12 extends CL11 {
      *         <li>{@link CL10#CL_OUT_OF_RESOURCES OUT_OF_RESOURCES} if there is a failure to allocate resources required by the OpenCL implementation on the device.</li>
      *         <li>{@link CL10#CL_OUT_OF_HOST_MEMORY OUT_OF_HOST_MEMORY} if there is a failure to allocate resources required by the OpenCL implementation on the host.</li>
      *         </ul>
-     * 
-     * @see <a target="_blank" href="https://www.khronos.org/registry/OpenCL/sdk/2.1/docs/man/xhtml/clEnqueueBarrierWithWaitList.html">Reference Page</a>
      */
     @NativeType("cl_int")
-    public static int clEnqueueBarrierWithWaitList(@NativeType("cl_command_queue") long command_queue, @Nullable @NativeType("cl_event const *") PointerBuffer event_wait_list, @Nullable @NativeType("cl_event *") PointerBuffer event) {
+    public static int clEnqueueBarrierWithWaitList(@NativeType("cl_command_queue") long command_queue, @Nullable @NativeType("const cl_event *") PointerBuffer event_wait_list, @Nullable @NativeType("cl_event *") PointerBuffer event) {
         if (CHECKS) {
             checkSafe(event, 1);
         }
@@ -1838,12 +1838,12 @@ public class CL12 extends CL11 {
     }
 
     /**
-     * Array version of: {@link #clCreateSubDevices CreateSubDevices}
+     * <p><a target="_blank" href="https://www.khronos.org/registry/OpenCL/sdk/2.1/docs/man/xhtml/clCreateSubDevices.html">Reference Page</a></p>
      * 
-     * @see <a target="_blank" href="https://www.khronos.org/registry/OpenCL/sdk/2.1/docs/man/xhtml/clCreateSubDevices.html">Reference Page</a>
+     * register Array version of: {@link #clCreateSubDevices CreateSubDevices}
      */
     @NativeType("cl_int")
-    public static int clCreateSubDevices(@NativeType("cl_device_id") long in_device, @NativeType("cl_device_partition_property const *") PointerBuffer properties, @Nullable @NativeType("cl_device_id *") PointerBuffer out_devices, @Nullable @NativeType("cl_uint *") int[] num_devices_ret) {
+    public static int clCreateSubDevices(@NativeType("cl_device_id") long in_device, @NativeType("const cl_device_partition_property *") PointerBuffer properties, @Nullable @NativeType("cl_device_id *") PointerBuffer out_devices, @Nullable @NativeType("cl_uint *") int[] num_devices_ret) {
         long __functionAddress = CL.getICD().clCreateSubDevices;
         if (CHECKS) {
             check(__functionAddress);
@@ -1855,12 +1855,12 @@ public class CL12 extends CL11 {
     }
 
     /**
-     * Array version of: {@link #clCreateImage CreateImage}
+     * <p><a target="_blank" href="https://www.khronos.org/registry/OpenCL/sdk/2.1/docs/man/xhtml/clCreateImage.html">Reference Page</a></p>
      * 
-     * @see <a target="_blank" href="https://www.khronos.org/registry/OpenCL/sdk/2.1/docs/man/xhtml/clCreateImage.html">Reference Page</a>
+     * register Array version of: {@link #clCreateImage CreateImage}
      */
     @NativeType("cl_mem")
-    public static long clCreateImage(@NativeType("cl_context") long context, @NativeType("cl_mem_flags") long flags, @NativeType("cl_image_format const *") CLImageFormat image_format, @NativeType("cl_image_desc const *") CLImageDesc image_desc, @Nullable @NativeType("void *") ByteBuffer host_ptr, @Nullable @NativeType("cl_int *") int[] errcode_ret) {
+    public static long clCreateImage(@NativeType("cl_context") long context, @NativeType("cl_mem_flags") long flags, @NativeType("const cl_image_format *") CLImageFormat image_format, @NativeType("const cl_image_desc *") CLImageDesc image_desc, @Nullable @NativeType("void *") ByteBuffer host_ptr, @Nullable @NativeType("cl_int *") int[] errcode_ret) {
         long __functionAddress = CL.getICD().clCreateImage;
         if (CHECKS) {
             check(__functionAddress);
@@ -1871,12 +1871,12 @@ public class CL12 extends CL11 {
     }
 
     /**
-     * Array version of: {@link #clCreateImage CreateImage}
+     * <p><a target="_blank" href="https://www.khronos.org/registry/OpenCL/sdk/2.1/docs/man/xhtml/clCreateImage.html">Reference Page</a></p>
      * 
-     * @see <a target="_blank" href="https://www.khronos.org/registry/OpenCL/sdk/2.1/docs/man/xhtml/clCreateImage.html">Reference Page</a>
+     * register Array version of: {@link #clCreateImage CreateImage}
      */
     @NativeType("cl_mem")
-    public static long clCreateImage(@NativeType("cl_context") long context, @NativeType("cl_mem_flags") long flags, @NativeType("cl_image_format const *") CLImageFormat image_format, @NativeType("cl_image_desc const *") CLImageDesc image_desc, @Nullable @NativeType("void *") short[] host_ptr, @Nullable @NativeType("cl_int *") int[] errcode_ret) {
+    public static long clCreateImage(@NativeType("cl_context") long context, @NativeType("cl_mem_flags") long flags, @NativeType("const cl_image_format *") CLImageFormat image_format, @NativeType("const cl_image_desc *") CLImageDesc image_desc, @Nullable @NativeType("void *") byte[] host_ptr, @Nullable @NativeType("cl_int *") int[] errcode_ret) {
         long __functionAddress = CL.getICD().clCreateImage;
         if (CHECKS) {
             check(__functionAddress);
@@ -1887,12 +1887,12 @@ public class CL12 extends CL11 {
     }
 
     /**
-     * Array version of: {@link #clCreateImage CreateImage}
+     * <p><a target="_blank" href="https://www.khronos.org/registry/OpenCL/sdk/2.1/docs/man/xhtml/clCreateImage.html">Reference Page</a></p>
      * 
-     * @see <a target="_blank" href="https://www.khronos.org/registry/OpenCL/sdk/2.1/docs/man/xhtml/clCreateImage.html">Reference Page</a>
+     * register Array version of: {@link #clCreateImage CreateImage}
      */
     @NativeType("cl_mem")
-    public static long clCreateImage(@NativeType("cl_context") long context, @NativeType("cl_mem_flags") long flags, @NativeType("cl_image_format const *") CLImageFormat image_format, @NativeType("cl_image_desc const *") CLImageDesc image_desc, @Nullable @NativeType("void *") int[] host_ptr, @Nullable @NativeType("cl_int *") int[] errcode_ret) {
+    public static long clCreateImage(@NativeType("cl_context") long context, @NativeType("cl_mem_flags") long flags, @NativeType("const cl_image_format *") CLImageFormat image_format, @NativeType("const cl_image_desc *") CLImageDesc image_desc, @Nullable @NativeType("void *") short[] host_ptr, @Nullable @NativeType("cl_int *") int[] errcode_ret) {
         long __functionAddress = CL.getICD().clCreateImage;
         if (CHECKS) {
             check(__functionAddress);
@@ -1903,12 +1903,12 @@ public class CL12 extends CL11 {
     }
 
     /**
-     * Array version of: {@link #clCreateImage CreateImage}
+     * <p><a target="_blank" href="https://www.khronos.org/registry/OpenCL/sdk/2.1/docs/man/xhtml/clCreateImage.html">Reference Page</a></p>
      * 
-     * @see <a target="_blank" href="https://www.khronos.org/registry/OpenCL/sdk/2.1/docs/man/xhtml/clCreateImage.html">Reference Page</a>
+     * register Array version of: {@link #clCreateImage CreateImage}
      */
     @NativeType("cl_mem")
-    public static long clCreateImage(@NativeType("cl_context") long context, @NativeType("cl_mem_flags") long flags, @NativeType("cl_image_format const *") CLImageFormat image_format, @NativeType("cl_image_desc const *") CLImageDesc image_desc, @Nullable @NativeType("void *") float[] host_ptr, @Nullable @NativeType("cl_int *") int[] errcode_ret) {
+    public static long clCreateImage(@NativeType("cl_context") long context, @NativeType("cl_mem_flags") long flags, @NativeType("const cl_image_format *") CLImageFormat image_format, @NativeType("const cl_image_desc *") CLImageDesc image_desc, @Nullable @NativeType("void *") int[] host_ptr, @Nullable @NativeType("cl_int *") int[] errcode_ret) {
         long __functionAddress = CL.getICD().clCreateImage;
         if (CHECKS) {
             check(__functionAddress);
@@ -1919,12 +1919,28 @@ public class CL12 extends CL11 {
     }
 
     /**
-     * Array version of: {@link #clCreateProgramWithBuiltInKernels CreateProgramWithBuiltInKernels}
+     * <p><a target="_blank" href="https://www.khronos.org/registry/OpenCL/sdk/2.1/docs/man/xhtml/clCreateImage.html">Reference Page</a></p>
      * 
-     * @see <a target="_blank" href="https://www.khronos.org/registry/OpenCL/sdk/2.1/docs/man/xhtml/clCreateProgramWithBuiltInKernels.html">Reference Page</a>
+     * register Array version of: {@link #clCreateImage CreateImage}
+     */
+    @NativeType("cl_mem")
+    public static long clCreateImage(@NativeType("cl_context") long context, @NativeType("cl_mem_flags") long flags, @NativeType("const cl_image_format *") CLImageFormat image_format, @NativeType("const cl_image_desc *") CLImageDesc image_desc, @Nullable @NativeType("void *") float[] host_ptr, @Nullable @NativeType("cl_int *") int[] errcode_ret) {
+        long __functionAddress = CL.getICD().clCreateImage;
+        if (CHECKS) {
+            check(__functionAddress);
+            check(context);
+            checkSafe(errcode_ret, 1);
+        }
+        return callPJPPPPP(__functionAddress, context, flags, image_format.address(), image_desc.address(), host_ptr, errcode_ret);
+    }
+
+    /**
+     * <p><a target="_blank" href="https://www.khronos.org/registry/OpenCL/sdk/2.1/docs/man/xhtml/clCreateProgramWithBuiltInKernels.html">Reference Page</a></p>
+     * 
+     * register Array version of: {@link #clCreateProgramWithBuiltInKernels CreateProgramWithBuiltInKernels}
      */
     @NativeType("cl_program")
-    public static long clCreateProgramWithBuiltInKernels(@NativeType("cl_context") long context, @NativeType("cl_device_id const *") PointerBuffer device_list, @NativeType("cl_char const *") ByteBuffer kernel_names, @Nullable @NativeType("cl_int *") int[] errcode_ret) {
+    public static long clCreateProgramWithBuiltInKernels(@NativeType("cl_context") long context, @NativeType("const cl_device_id *") PointerBuffer device_list, @NativeType("const cl_char *") ByteBuffer kernel_names, @Nullable @NativeType("cl_int *") int[] errcode_ret) {
         long __functionAddress = CL.getICD().clCreateProgramWithBuiltInKernels;
         if (CHECKS) {
             check(__functionAddress);
@@ -1936,12 +1952,12 @@ public class CL12 extends CL11 {
     }
 
     /**
-     * Array version of: {@link #clCreateProgramWithBuiltInKernels CreateProgramWithBuiltInKernels}
+     * <p><a target="_blank" href="https://www.khronos.org/registry/OpenCL/sdk/2.1/docs/man/xhtml/clCreateProgramWithBuiltInKernels.html">Reference Page</a></p>
      * 
-     * @see <a target="_blank" href="https://www.khronos.org/registry/OpenCL/sdk/2.1/docs/man/xhtml/clCreateProgramWithBuiltInKernels.html">Reference Page</a>
+     * register Array version of: {@link #clCreateProgramWithBuiltInKernels CreateProgramWithBuiltInKernels}
      */
     @NativeType("cl_program")
-    public static long clCreateProgramWithBuiltInKernels(@NativeType("cl_context") long context, @NativeType("cl_device_id const *") PointerBuffer device_list, @NativeType("cl_char const *") CharSequence kernel_names, @Nullable @NativeType("cl_int *") int[] errcode_ret) {
+    public static long clCreateProgramWithBuiltInKernels(@NativeType("cl_context") long context, @NativeType("const cl_device_id *") PointerBuffer device_list, @NativeType("const cl_char *") CharSequence kernel_names, @Nullable @NativeType("cl_int *") int[] errcode_ret) {
         long __functionAddress = CL.getICD().clCreateProgramWithBuiltInKernels;
         if (CHECKS) {
             check(__functionAddress);
@@ -1958,9 +1974,9 @@ public class CL12 extends CL11 {
     }
 
     /**
-     * Array version of: {@link #clGetKernelArgInfo GetKernelArgInfo}
+     * <p><a target="_blank" href="https://www.khronos.org/registry/OpenCL/sdk/2.1/docs/man/xhtml/clGetKernelArgInfo.html">Reference Page</a></p>
      * 
-     * @see <a target="_blank" href="https://www.khronos.org/registry/OpenCL/sdk/2.1/docs/man/xhtml/clGetKernelArgInfo.html">Reference Page</a>
+     * register Array version of: {@link #clGetKernelArgInfo GetKernelArgInfo}
      */
     @NativeType("cl_int")
     public static int clGetKernelArgInfo(@NativeType("cl_kernel") long kernel, @NativeType("cl_uint") int arg_indx, @NativeType("cl_kernel_arg_info") int param_name, @Nullable @NativeType("void *") int[] param_value, @Nullable @NativeType("size_t *") PointerBuffer param_value_size_ret) {
@@ -1970,13 +1986,13 @@ public class CL12 extends CL11 {
             check(kernel);
             checkSafe(param_value_size_ret, 1);
         }
-        return callPPPPI(__functionAddress, kernel, arg_indx, param_name, Integer.toUnsignedLong(lengthSafe(param_value)) << 2, param_value, memAddressSafe(param_value_size_ret));
+        return callPPPPI(__functionAddress, kernel, arg_indx, param_name, (long)(lengthSafe(param_value) << 2), param_value, memAddressSafe(param_value_size_ret));
     }
 
     /**
-     * Array version of: {@link #clGetKernelArgInfo GetKernelArgInfo}
+     * <p><a target="_blank" href="https://www.khronos.org/registry/OpenCL/sdk/2.1/docs/man/xhtml/clGetKernelArgInfo.html">Reference Page</a></p>
      * 
-     * @see <a target="_blank" href="https://www.khronos.org/registry/OpenCL/sdk/2.1/docs/man/xhtml/clGetKernelArgInfo.html">Reference Page</a>
+     * register Array version of: {@link #clGetKernelArgInfo GetKernelArgInfo}
      */
     @NativeType("cl_int")
     public static int clGetKernelArgInfo(@NativeType("cl_kernel") long kernel, @NativeType("cl_uint") int arg_indx, @NativeType("cl_kernel_arg_info") int param_name, @Nullable @NativeType("void *") long[] param_value, @Nullable @NativeType("size_t *") PointerBuffer param_value_size_ret) {
@@ -1986,16 +2002,16 @@ public class CL12 extends CL11 {
             check(kernel);
             checkSafe(param_value_size_ret, 1);
         }
-        return callPPPPI(__functionAddress, kernel, arg_indx, param_name, Integer.toUnsignedLong(lengthSafe(param_value)) << 3, param_value, memAddressSafe(param_value_size_ret));
+        return callPPPPI(__functionAddress, kernel, arg_indx, param_name, (long)(lengthSafe(param_value) << 3), param_value, memAddressSafe(param_value_size_ret));
     }
 
     /**
-     * Array version of: {@link #clEnqueueFillImage EnqueueFillImage}
+     * <p><a target="_blank" href="https://www.khronos.org/registry/OpenCL/sdk/2.1/docs/man/xhtml/clEnqueueFillImage.html">Reference Page</a></p>
      * 
-     * @see <a target="_blank" href="https://www.khronos.org/registry/OpenCL/sdk/2.1/docs/man/xhtml/clEnqueueFillImage.html">Reference Page</a>
+     * register Array version of: {@link #clEnqueueFillImage EnqueueFillImage}
      */
     @NativeType("cl_int")
-    public static int clEnqueueFillImage(@NativeType("cl_command_queue") long command_queue, @NativeType("cl_mem") long image, @NativeType("void const *") int[] fill_color, @NativeType("size_t const *") PointerBuffer origin, @NativeType("size_t const *") PointerBuffer region, @Nullable @NativeType("cl_event const *") PointerBuffer event_wait_list, @Nullable @NativeType("cl_event *") PointerBuffer event) {
+    public static int clEnqueueFillImage(@NativeType("cl_command_queue") long command_queue, @NativeType("cl_mem") long image, @NativeType("const void *") int[] fill_color, @NativeType("const size_t *") PointerBuffer origin, @NativeType("const size_t *") PointerBuffer region, @Nullable @NativeType("const cl_event *") PointerBuffer event_wait_list, @Nullable @NativeType("cl_event *") PointerBuffer event) {
         long __functionAddress = CL.getICD().clEnqueueFillImage;
         if (CHECKS) {
             check(__functionAddress);
@@ -2010,12 +2026,12 @@ public class CL12 extends CL11 {
     }
 
     /**
-     * Array version of: {@link #clEnqueueFillImage EnqueueFillImage}
+     * <p><a target="_blank" href="https://www.khronos.org/registry/OpenCL/sdk/2.1/docs/man/xhtml/clEnqueueFillImage.html">Reference Page</a></p>
      * 
-     * @see <a target="_blank" href="https://www.khronos.org/registry/OpenCL/sdk/2.1/docs/man/xhtml/clEnqueueFillImage.html">Reference Page</a>
+     * register Array version of: {@link #clEnqueueFillImage EnqueueFillImage}
      */
     @NativeType("cl_int")
-    public static int clEnqueueFillImage(@NativeType("cl_command_queue") long command_queue, @NativeType("cl_mem") long image, @NativeType("void const *") float[] fill_color, @NativeType("size_t const *") PointerBuffer origin, @NativeType("size_t const *") PointerBuffer region, @Nullable @NativeType("cl_event const *") PointerBuffer event_wait_list, @Nullable @NativeType("cl_event *") PointerBuffer event) {
+    public static int clEnqueueFillImage(@NativeType("cl_command_queue") long command_queue, @NativeType("cl_mem") long image, @NativeType("const void *") float[] fill_color, @NativeType("const size_t *") PointerBuffer origin, @NativeType("const size_t *") PointerBuffer region, @Nullable @NativeType("const cl_event *") PointerBuffer event_wait_list, @Nullable @NativeType("cl_event *") PointerBuffer event) {
         long __functionAddress = CL.getICD().clEnqueueFillImage;
         if (CHECKS) {
             check(__functionAddress);

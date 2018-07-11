@@ -51,8 +51,6 @@ import static org.lwjgl.system.MemoryStack.*;
  * <li>{@code y} <b>must</b> be less than or equal to {@code viewportBoundsRange}[1]</li>
  * <li><code>(y + height)</code> <b>must</b> be greater than or equal to {@code viewportBoundsRange}[0]</li>
  * <li><code>(y + height)</code> <b>must</b> be less than or equal to {@code viewportBoundsRange}[1]</li>
- * <li>Unless {@link EXTDepthRangeUnrestricted VK_EXT_depth_range_unrestricted} extension is enabled {@code minDepth} <b>must</b> be between {@code 0.0} and {@code 1.0}, inclusive</li>
- * <li>Unless {@link EXTDepthRangeUnrestricted VK_EXT_depth_range_unrestricted} extension is enabled {@code maxDepth} <b>must</b> be between {@code 0.0} and {@code 1.0}, inclusive</li>
  * </ul>
  * 
  * <h5>See Also</h5>
@@ -72,7 +70,7 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct VkViewport {
  *     float x;
  *     float y;
@@ -80,14 +78,13 @@ import static org.lwjgl.system.MemoryStack.*;
  *     float height;
  *     float minDepth;
  *     float maxDepth;
- * }</code></pre>
+ * }</pre></code>
  */
 public class VkViewport extends Struct implements NativeResource {
 
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */

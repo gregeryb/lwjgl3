@@ -10,7 +10,6 @@ import java.util.*;
 import java.util.function.*;
 import java.util.stream.*;
 
-import static org.lwjgl.system.Checks.*;
 import static org.lwjgl.system.MemoryUtil.*;
 
 /** Base class of struct custom buffers. */
@@ -35,7 +34,7 @@ public abstract class StructBuffer<T extends Struct, SELF extends StructBuffer<T
      * @throws java.nio.BufferUnderflowException If the buffer's current position is not smaller than its limit
      */
     public T get() {
-        return nget(nextGetIndex());
+        return newInstance(address + nextGetIndex() * sizeof());
     }
 
     /**
@@ -77,14 +76,10 @@ public abstract class StructBuffer<T extends Struct, SELF extends StructBuffer<T
      *
      * @return the struct at the specified index
      *
-     * @throws IndexOutOfBoundsException If {@code index} is negative or not smaller than the buffer's limit
+     * @throws IndexOutOfBoundsException If <tt>index</tt> is negative or not smaller than the buffer's limit
      */
     public T get(int index) {
-        return nget(check(index, limit));
-    }
-
-    private T nget(long index) {
-        return newInstance(address + index * sizeof());
+        return newInstance(address + checkIndex(index) * sizeof());
     }
 
     /**
@@ -94,10 +89,10 @@ public abstract class StructBuffer<T extends Struct, SELF extends StructBuffer<T
      *
      * @return the struct at the specified index
      *
-     * @throws IndexOutOfBoundsException If {@code index} is negative or not smaller than the buffer's limit
+     * @throws IndexOutOfBoundsException If <tt>index</tt> is negative or not smaller than the buffer's limit
      */
     public SELF get(int index, T value) {
-        memCopy(address + check(index, limit) * sizeof(), value.address(), sizeof());
+        memCopy(address + checkIndex(index) * sizeof(), value.address(), sizeof());
         return self();
     }
 
@@ -111,11 +106,11 @@ public abstract class StructBuffer<T extends Struct, SELF extends StructBuffer<T
      *
      * @return This buffer
      *
-     * @throws IndexOutOfBoundsException        If {@code index} is negative or not smaller than the buffer's limit
+     * @throws IndexOutOfBoundsException        If <tt>index</tt> is negative or not smaller than the buffer's limit
      * @throws java.nio.ReadOnlyBufferException If this buffer is read-only
      */
     public SELF put(int index, T value) {
-        memCopy(value.address(), address + check(index, limit) * sizeof(), sizeof());
+        memCopy(value.address(), address + checkIndex(index) * sizeof(), sizeof());
         return self();
     }
 
@@ -124,27 +119,23 @@ public abstract class StructBuffer<T extends Struct, SELF extends StructBuffer<T
     @Override
     public Iterator<T> iterator() {
         return new Iterator<T>() {
-            int index = position;
-            int fence = limit;
+            int cursor = position;
 
             @Override public boolean hasNext() {
-                return index < fence;
+                return cursor < limit;
             }
 
             @Override public T next() {
-                return nget(index++);
+                return get(cursor++);
             }
 
             @Override public void forEachRemaining(Consumer<? super T> action) {
                 Objects.requireNonNull(action);
-                int i = index;
-                try {
-                    for (; i < fence; i++) {
-                        action.accept(nget(i));
-                    }
-                } finally {
-                    index = i;
+                int i = cursor;
+                for (; i < limit; i++) {
+                    action.accept(get(i));
                 }
+                cursor = i;
             }
         };
     }
@@ -152,8 +143,8 @@ public abstract class StructBuffer<T extends Struct, SELF extends StructBuffer<T
     @Override
     public void forEach(Consumer<? super T> action) {
         Objects.requireNonNull(action);
-        for (int i = position, fence = limit; i < fence; i++) {
-            action.accept(nget(i));
+        for (int i = position; i < limit; i++) {
+            action.accept(get(i));
         }
     }
 
@@ -181,7 +172,7 @@ public abstract class StructBuffer<T extends Struct, SELF extends StructBuffer<T
             Objects.requireNonNull(action);
 
             if (index < fence) {
-                action.accept(nget(index++));
+                action.accept(get(index++));
                 return true;
             }
 
@@ -213,13 +204,10 @@ public abstract class StructBuffer<T extends Struct, SELF extends StructBuffer<T
         public void forEachRemaining(Consumer<? super T> action) {
             Objects.requireNonNull(action);
             int i = index;
-            try {
-                for (; i < fence; i++) {
-                    action.accept(nget(i));
-                }
-            } finally {
-                index = i;
+            for (; i < fence; i++) {
+                action.accept(get(i));
             }
+            index = i;
         }
 
         @Override

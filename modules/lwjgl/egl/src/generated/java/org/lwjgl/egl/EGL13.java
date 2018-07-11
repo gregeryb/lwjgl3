@@ -6,7 +6,7 @@
 package org.lwjgl.egl;
 
 /** The core EGL 1.3 functionality. */
-public class EGL13 extends EGL12 {
+public final class EGL13 {
 
     public static final int
         EGL_CONFORMANT               = 0x3042,
@@ -22,6 +22,6 @@ public class EGL13 extends EGL12 {
         EGL_VG_COLORSPACE_LINEAR     = 0x308A,
         EGL_VG_COLORSPACE_LINEAR_BIT = 0x20;
 
-    protected EGL13() {}
+    private EGL13() {}
 
 }

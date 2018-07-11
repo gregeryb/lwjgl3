@@ -31,7 +31,7 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct MSG {
  *     HWND hwnd;
  *     UINT message;
@@ -39,14 +39,13 @@ import static org.lwjgl.system.MemoryStack.*;
  *     LPARAM lParam;
  *     DWORD time;
  *     {@link POINT POINT} pt;
- * }</code></pre>
+ * }</pre></code>
  */
 public class MSG extends Struct implements NativeResource {
 
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */
@@ -113,8 +112,6 @@ public class MSG extends Struct implements NativeResource {
     public int time() { return ntime(address()); }
     /** Returns a {@link POINT} view of the {@code pt} field. */
     public POINT pt() { return npt(address()); }
-    /** Passes the {@code pt} field to the specified {@link java.util.function.Consumer Consumer}. */
-    public MSG pt(java.util.function.Consumer<POINT> consumer) { consumer.accept(pt()); return this; }
 
     /** Sets the specified value to the {@code hwnd} field. */
     public MSG hwnd(@NativeType("HWND") long value) { nhwnd(address(), value); return this; }
@@ -390,8 +387,6 @@ public class MSG extends Struct implements NativeResource {
         public int time() { return MSG.ntime(address()); }
         /** Returns a {@link POINT} view of the {@code pt} field. */
         public POINT pt() { return MSG.npt(address()); }
-        /** Passes the {@code pt} field to the specified {@link java.util.function.Consumer Consumer}. */
-        public MSG.Buffer pt(java.util.function.Consumer<POINT> consumer) { consumer.accept(pt()); return this; }
 
         /** Sets the specified value to the {@code hwnd} field. */
         public MSG.Buffer hwnd(@NativeType("HWND") long value) { MSG.nhwnd(address(), value); return this; }

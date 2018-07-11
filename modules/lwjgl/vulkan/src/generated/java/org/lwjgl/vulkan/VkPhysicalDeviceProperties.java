@@ -23,37 +23,17 @@ import static org.lwjgl.vulkan.VK10.*;
  * 
  * <h5>Description</h5>
  * 
- * <div style="margin-left: 26px; border-left: 1px solid gray; padding-left: 14px;"><h5>Note</h5>
+ * <p>The {@code vendorID} and {@code deviceID} fields are provided to allow applications to adapt to device characteristics that are not adequately exposed by other Vulkan queries. These <b>may</b> include performance profiles, hardware errata, or other characteristics. In PCI-based implementations, the low sixteen bits of {@code vendorID} and {@code deviceID} <b>must</b> contain (respectively) the PCI vendor and device IDs associated with the hardware device, and the remaining bits <b>must</b> be set to zero. In non-PCI implementations, the choice of what values to return <b>may</b> be dictated by operating system or platform policies. It is otherwise at the discretion of the implementer, subject to the following constraints and guidelines:</p>
  * 
- * <p>The value of {@code apiVersion} <b>may</b> be different than the version returned by {@link VK11#vkEnumerateInstanceVersion EnumerateInstanceVersion}; either higher or lower. In such cases, the application <b>must</b> not use functionality that exceeds the version of Vulkan associated with a given object. The {@code pApiVersion} parameter returned by {@link VK11#vkEnumerateInstanceVersion EnumerateInstanceVersion} is the version associated with a {@code VkInstance} and its children, except for a {@code VkPhysicalDevice} and its children. {@link VkPhysicalDeviceProperties}{@code ::apiVersion} is the version associated with a {@code VkPhysicalDevice} and its children.</p>
- * </div>
- * 
- * <p>The {@code vendorID} and {@code deviceID} fields are provided to allow applications to adapt to device characteristics that are not adequately exposed by other Vulkan queries.</p>
- * 
- * <div style="margin-left: 26px; border-left: 1px solid gray; padding-left: 14px;"><h5>Note</h5>
- * 
- * <p>These <b>may</b> include performance profiles, hardware errata, or other characteristics.</p>
- * </div>
- * 
- * <p>The <em>vendor</em> identified by {@code vendorID} is the entity responsible for the most salient characteristics of the underlying implementation of the {@code VkPhysicalDevice} being queried.</p>
- * 
- * <div style="margin-left: 26px; border-left: 1px solid gray; padding-left: 14px;"><h5>Note</h5>
- * 
- * <p>For example, in the case of a discrete GPU implementation, this <b>should</b> be the GPU chipset vendor. In the case of a hardware accelerator integrated into a system-on-chip (SoC), this <b>should</b> be the supplier of the silicon IP used to create the accelerator.</p>
- * </div>
- * 
- * <p>If the vendor has a <a target="_blank" href="https://pcisig.com/membership/member-companies">PCI vendor ID</a>, the low 16 bits of {@code vendorID} <b>must</b> contain that PCI vendor ID, and the remaining bits <b>must</b> be set to zero. Otherwise, the value returned <b>must</b> be a valid Khronos vendor ID, obtained as described in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#vulkan-styleguide">Vulkan Documentation and Extensions: Procedures and Conventions</a> document in the section "{@code Registering a Vendor ID with Khronos}". Khronos vendor IDs are allocated starting at 0x10000, to distinguish them from the PCI vendor ID namespace.</p>
- * 
- * <p>The vendor is also responsible for the value returned in {@code deviceID}. If the implementation is driven primarily by a <a target="_blank" href="https://pcisig.com/">PCI device</a> with a <a target="_blank" href="https://pcisig.com/">PCI device ID</a>, the low 16 bits of {@code deviceID} <b>must</b> contain that PCI device ID, and the remaining bits <b>must</b> be set to zero. Otherwise, the choice of what values to return <b>may</b> be dictated by operating system or platform policies - but <b>should</b> uniquely identify both the device version and any major configuration options (for example, core count in the case of multicore devices).</p>
- * 
- * <div style="margin-left: 26px; border-left: 1px solid gray; padding-left: 14px;"><h5>Note</h5>
- * 
- * <p>The same device ID <b>should</b> be used for all physical implementations of that device version and configuration. For example, all uses of a specific silicon IP GPU version and configuration <b>should</b> use the same device ID, even if those uses occur in different SoCs.</p>
- * </div>
+ * <ul>
+ * <li>For purposes of physical device identification, the <em>vendor</em> of a physical device is the entity responsible for the most salient characteristics of the hardware represented by the physical device handle. In the case of a discrete GPU, this <b>should</b> be the GPU chipset vendor. In the case of a GPU or other accelerator integrated into a system-on-chip (SoC), this <b>should</b> be the supplier of the silicon IP used to create the GPU or other accelerator.</li>
+ * <li>If the vendor of the physical device has a valid PCI vendor ID issued by <a target="_blank" href="https://pcisig.com/">PCI-SIG</a>, that ID <b>should</b> be used to construct {@code vendorID} as described above for PCI-based implementations. Implementations that do not return a PCI vendor ID in {@code vendorID} <b>must</b> return a valid Khronos vendor ID, obtained as described in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#vulkan-styleguide">Vulkan Documentation and Extensions</a> document in the section “Registering a Vendor ID with Khronos”. Khronos vendor IDs are allocated starting at 0x10000, to distinguish them from the PCI vendor ID namespace.</li>
+ * <li>The vendor of the physical device is responsible for selecting {@code deviceID}. The value selected <b>should</b> uniquely identify both the device version and any major configuration options (for example, core count in the case of multicore devices). The same device ID <b>should</b> be used for all physical implementations of that device version and configuration. For example, all uses of a specific silicon IP GPU version and configuration <b>should</b> use the same device ID, even if those uses occur in different SoCs.</li>
+ * </ul>
  * 
  * <h5>See Also</h5>
  * 
- * <p>{@link VkPhysicalDeviceLimits}, {@link VkPhysicalDeviceProperties2}, {@link VkPhysicalDeviceSparseProperties}, {@link VK10#vkGetPhysicalDeviceProperties GetPhysicalDeviceProperties}</p>
+ * <p>{@link VkPhysicalDeviceLimits}, {@link VkPhysicalDeviceProperties2KHR}, {@link VkPhysicalDeviceSparseProperties}, {@link VK10#vkGetPhysicalDeviceProperties GetPhysicalDeviceProperties}</p>
  * 
  * <h3>Member documentation</h3>
  * 
@@ -71,7 +51,7 @@ import static org.lwjgl.vulkan.VK10.*;
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct VkPhysicalDeviceProperties {
  *     uint32_t apiVersion;
  *     uint32_t driverVersion;
@@ -82,14 +62,13 @@ import static org.lwjgl.vulkan.VK10.*;
  *     uint8_t pipelineCacheUUID[VK_UUID_SIZE];
  *     {@link VkPhysicalDeviceLimits VkPhysicalDeviceLimits} limits;
  *     {@link VkPhysicalDeviceSparseProperties VkPhysicalDeviceSparseProperties} sparseProperties;
- * }</code></pre>
+ * }</pre></code>
  */
 public class VkPhysicalDeviceProperties extends Struct implements NativeResource {
 
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */
@@ -339,7 +318,8 @@ public class VkPhysicalDeviceProperties extends Struct implements NativeResource
     public static ByteBuffer npipelineCacheUUID(long struct) { return memByteBuffer(struct + VkPhysicalDeviceProperties.PIPELINECACHEUUID, VK_UUID_SIZE); }
     /** Unsafe version of {@link #pipelineCacheUUID(int) pipelineCacheUUID}. */
     public static byte npipelineCacheUUID(long struct, int index) {
-        return memGetByte(struct + VkPhysicalDeviceProperties.PIPELINECACHEUUID + check(index, VK_UUID_SIZE) * 1);
+        if (CHECKS) { check(index, VK_UUID_SIZE); }
+        return memGetByte(struct + VkPhysicalDeviceProperties.PIPELINECACHEUUID + index * 1);
     }
     /** Unsafe version of {@link #limits}. */
     public static VkPhysicalDeviceLimits nlimits(long struct) { return VkPhysicalDeviceLimits.create(struct + VkPhysicalDeviceProperties.LIMITS); }

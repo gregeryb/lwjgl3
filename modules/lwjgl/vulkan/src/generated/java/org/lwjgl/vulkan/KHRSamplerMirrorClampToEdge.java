@@ -14,7 +14,7 @@ package org.lwjgl.vulkan;
  * 
  * <p>Creating a sampler with the new address mode in each dimension</p>
  * 
- * <pre><code>
+ * <code><pre>
  *     VkSamplerCreateInfo createInfo =
  *     {
  *         VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO // sType
@@ -28,8 +28,8 @@ package org.lwjgl.vulkan;
  *     VkSampler sampler;
  *     VkResult result = vkCreateSampler(
  *         device,
- *         &amp;createInfo,
- *         &amp;sampler);</code></pre>
+ *         &createInfo,
+ *         &sampler);</pre></code>
  * 
  * <dl>
  * <dt><b>Name String</b></dt>
@@ -46,7 +46,7 @@ package org.lwjgl.vulkan;
  * </ul></dd>
  * <dt><b>Contact</b></dt>
  * <dd><ul>
- * <li>Tobias Hector @tobski</li>
+ * <li>Tobias Hector @tobias</li>
  * </ul></dd>
  * <dt><b>Last Modified Date</b></dt>
  * <dd>2016-02-16</dd>
@@ -64,7 +64,6 @@ public final class KHRSamplerMirrorClampToEdge {
     /** The extension name. */
     public static final String VK_KHR_SAMPLER_MIRROR_CLAMP_TO_EDGE_EXTENSION_NAME = "VK_KHR_sampler_mirror_clamp_to_edge";
 
-    /** Extends {@code VkSamplerAddressMode}. */
     public static final int VK_SAMPLER_ADDRESS_MODE_MIRROR_CLAMP_TO_EDGE = 4;
 
     private KHRSamplerMirrorClampToEdge() {}

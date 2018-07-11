@@ -18,14 +18,14 @@ import static org.lwjgl.glfw.GLFW.*;
  * 
  * <h3>Type</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * void (*) (
  *     GLFWwindow *window,
  *     int key,
  *     int scancode,
  *     int action,
  *     int mods
- * )</code></pre>
+ * )</pre></code>
  */
 public abstract class GLFWKeyCallback extends Callback implements GLFWKeyCallbackI {
 

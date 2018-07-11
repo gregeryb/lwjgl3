@@ -16,11 +16,11 @@ import static org.lwjgl.system.MemoryUtil.*;
  * 
  * <h3>Type</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * void (*) (
  *     cl_mem memobj,
  *     void *user_data
- * )</code></pre>
+ * )</pre></code>
  */
 public abstract class CLMemObjectDestructorCallback extends Callback implements CLMemObjectDestructorCallbackI {
 

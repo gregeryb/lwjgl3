@@ -86,7 +86,7 @@ public class GLXSGIVideoSync {
         return nglXWaitVideoSyncSGI(divisor, remainder, memAddress(count));
     }
 
-    /** Array version of: {@link #glXGetVideoSyncSGI GetVideoSyncSGI} */
+    /** register Array version of: {@link #glXGetVideoSyncSGI GetVideoSyncSGI} */
     @NativeType("GLint")
     public static int glXGetVideoSyncSGI(@NativeType("unsigned int *") int[] count) {
         long __functionAddress = GL.getCapabilitiesGLXClient().glXGetVideoSyncSGI;
@@ -97,7 +97,7 @@ public class GLXSGIVideoSync {
         return callPI(__functionAddress, count);
     }
 
-    /** Array version of: {@link #glXWaitVideoSyncSGI WaitVideoSyncSGI} */
+    /** register Array version of: {@link #glXWaitVideoSyncSGI WaitVideoSyncSGI} */
     @NativeType("GLint")
     public static int glXWaitVideoSyncSGI(int divisor, int remainder, @NativeType("unsigned int *") int[] count) {
         long __functionAddress = GL.getCapabilitiesGLXClient().glXWaitVideoSyncSGI;

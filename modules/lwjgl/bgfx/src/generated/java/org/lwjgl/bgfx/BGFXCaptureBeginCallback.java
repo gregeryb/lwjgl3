@@ -16,7 +16,7 @@ import static org.lwjgl.system.MemoryUtil.*;
  * 
  * <h3>Type</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * void (*) (
  *     bgfx_callback_interface_t *_this,
  *     uint32_t _width,
@@ -24,7 +24,7 @@ import static org.lwjgl.system.MemoryUtil.*;
  *     uint32_t _pitch,
  *     bgfx_texture_format_t _format,
  *     bool _yflip
- * )</code></pre>
+ * )</pre></code>
  */
 public abstract class BGFXCaptureBeginCallback extends Callback implements BGFXCaptureBeginCallbackI {
 

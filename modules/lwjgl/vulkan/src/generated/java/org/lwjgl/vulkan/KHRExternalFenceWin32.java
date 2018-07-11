@@ -32,7 +32,7 @@ import static org.lwjgl.system.MemoryUtil.*;
  * </ul></dd>
  * <dt><b>Contact</b></dt>
  * <dd><ul>
- * <li>Jesse Hall @critsec</li>
+ * <li>Jesse Hall @jessehall</li>
  * </ul></dd>
  * <dt><b>Last Modified Date</b></dt>
  * <dd>2017-05-08</dd>
@@ -76,10 +76,9 @@ public class KHRExternalFenceWin32 {
         throw new UnsupportedOperationException();
     }
 
-    static boolean checkCapsDevice(FunctionProvider provider, java.util.Map<String, Long> caps, java.util.Set<String> ext) {
-        return ext.contains("VK_KHR_external_fence_win32") && VK.checkExtension("VK_KHR_external_fence_win32",
-               VK.isSupported(provider, "vkImportFenceWin32HandleKHR", caps)
-            && VK.isSupported(provider, "vkGetFenceWin32HandleKHR", caps)
+    static boolean isAvailable(VKCapabilitiesDevice caps) {
+        return checkFunctions(
+            caps.vkImportFenceWin32HandleKHR, caps.vkGetFenceWin32HandleKHR
         );
     }
 
@@ -102,10 +101,10 @@ public class KHRExternalFenceWin32 {
      * 
      * <p>To import a fence payload from a Windows handle, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * VkResult vkImportFenceWin32HandleKHR(
      *     VkDevice                                    device,
-     *     const VkImportFenceWin32HandleInfoKHR*      pImportFenceWin32HandleInfo);</code></pre>
+     *     const VkImportFenceWin32HandleInfoKHR*      pImportFenceWin32HandleInfo);</pre></code>
      * 
      * <h5>Description</h5>
      * 
@@ -130,7 +129,7 @@ public class KHRExternalFenceWin32 {
      * <dt>On failure, this command returns</dt>
      * <dd><ul>
      * <li>{@link VK10#VK_ERROR_OUT_OF_HOST_MEMORY ERROR_OUT_OF_HOST_MEMORY}</li>
-     * <li>{@link VK11#VK_ERROR_INVALID_EXTERNAL_HANDLE ERROR_INVALID_EXTERNAL_HANDLE}</li>
+     * <li>{@link KHRExternalMemory#VK_ERROR_INVALID_EXTERNAL_HANDLE_KHR ERROR_INVALID_EXTERNAL_HANDLE_KHR}</li>
      * </ul></dd>
      * </dl>
      * 
@@ -142,7 +141,7 @@ public class KHRExternalFenceWin32 {
      * @param pImportFenceWin32HandleInfo points to a {@link VkImportFenceWin32HandleInfoKHR} structure specifying the fence and import parameters.
      */
     @NativeType("VkResult")
-    public static int vkImportFenceWin32HandleKHR(VkDevice device, @NativeType("VkImportFenceWin32HandleInfoKHR const *") VkImportFenceWin32HandleInfoKHR pImportFenceWin32HandleInfo) {
+    public static int vkImportFenceWin32HandleKHR(VkDevice device, @NativeType("const VkImportFenceWin32HandleInfoKHR *") VkImportFenceWin32HandleInfoKHR pImportFenceWin32HandleInfo) {
         return nvkImportFenceWin32HandleKHR(device, pImportFenceWin32HandleInfo.address());
     }
 
@@ -164,11 +163,11 @@ public class KHRExternalFenceWin32 {
      * 
      * <p>To export a Windows handle representing the state of a fence, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * VkResult vkGetFenceWin32HandleKHR(
      *     VkDevice                                    device,
      *     const VkFenceGetWin32HandleInfoKHR*         pGetWin32HandleInfo,
-     *     HANDLE*                                     pHandle);</code></pre>
+     *     HANDLE*                                     pHandle);</pre></code>
      * 
      * <h5>Description</h5>
      * 
@@ -207,7 +206,7 @@ public class KHRExternalFenceWin32 {
      * @param pHandle             will return the Windows handle representing the fence state.
      */
     @NativeType("VkResult")
-    public static int vkGetFenceWin32HandleKHR(VkDevice device, @NativeType("VkFenceGetWin32HandleInfoKHR const *") VkFenceGetWin32HandleInfoKHR pGetWin32HandleInfo, @NativeType("HANDLE *") PointerBuffer pHandle) {
+    public static int vkGetFenceWin32HandleKHR(VkDevice device, @NativeType("const VkFenceGetWin32HandleInfoKHR *") VkFenceGetWin32HandleInfoKHR pGetWin32HandleInfo, @NativeType("HANDLE *") PointerBuffer pHandle) {
         if (CHECKS) {
             check(pHandle, 1);
         }

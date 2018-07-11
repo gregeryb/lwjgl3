@@ -17,7 +17,7 @@ import static org.lwjgl.system.MemoryStack.*;
 import static org.lwjgl.system.MemoryUtil.*;
 
 /** Native bindings to ALC 1.1 functionality. */
-public class ALC11 extends ALC10 {
+public class ALC11 {
 
     /** Context creation attributes. */
     public static final int
@@ -67,7 +67,7 @@ public class ALC11 extends ALC10 {
      * @param samples    the number of sample frames to buffer in the AL
      */
     @NativeType("ALCdevice *")
-    public static long alcCaptureOpenDevice(@Nullable @NativeType("ALCchar const *") ByteBuffer deviceName, @NativeType("ALCuint") int frequency, @NativeType("ALCenum") int format, @NativeType("ALCsizei") int samples) {
+    public static long alcCaptureOpenDevice(@Nullable @NativeType("const ALCchar *") ByteBuffer deviceName, @NativeType("ALCuint") int frequency, @NativeType("ALCenum") int format, @NativeType("ALCsizei") int samples) {
         if (CHECKS) {
             checkNT1Safe(deviceName);
         }
@@ -86,7 +86,7 @@ public class ALC11 extends ALC10 {
      * @param samples    the number of sample frames to buffer in the AL
      */
     @NativeType("ALCdevice *")
-    public static long alcCaptureOpenDevice(@Nullable @NativeType("ALCchar const *") CharSequence deviceName, @NativeType("ALCuint") int frequency, @NativeType("ALCenum") int format, @NativeType("ALCsizei") int samples) {
+    public static long alcCaptureOpenDevice(@Nullable @NativeType("const ALCchar *") CharSequence deviceName, @NativeType("ALCuint") int frequency, @NativeType("ALCenum") int format, @NativeType("ALCsizei") int samples) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
             ByteBuffer deviceNameEncoded = stack.UTF8Safe(deviceName);
@@ -222,7 +222,18 @@ public class ALC11 extends ALC10 {
         nalcCaptureSamples(device, memAddress(buffer), samples);
     }
 
-    /** Array version of: {@link #alcCaptureSamples CaptureSamples} */
+    /** register Array version of: {@link #alcCaptureSamples CaptureSamples} */
+    @NativeType("ALCvoid")
+    public static void alcCaptureSamples(@NativeType("ALCdevice *") long device, @NativeType("ALCvoid *") byte[] buffer, @NativeType("ALCsizei") int samples) {
+		long __functionAddress = ALC.getICD().alcCaptureSamples;
+        if (CHECKS) {
+            check(__functionAddress);
+            check(device);
+        }
+        invokePPV(__functionAddress, device, buffer, samples);
+    }
+
+    /** register Array version of: {@link #alcCaptureSamples CaptureSamples} */
     @NativeType("ALCvoid")
     public static void alcCaptureSamples(@NativeType("ALCdevice *") long device, @NativeType("ALCvoid *") short[] buffer, @NativeType("ALCsizei") int samples) {
 		long __functionAddress = ALC.getICD().alcCaptureSamples;
@@ -233,7 +244,7 @@ public class ALC11 extends ALC10 {
         invokePPV(__functionAddress, device, buffer, samples);
     }
 
-    /** Array version of: {@link #alcCaptureSamples CaptureSamples} */
+    /** register Array version of: {@link #alcCaptureSamples CaptureSamples} */
     @NativeType("ALCvoid")
     public static void alcCaptureSamples(@NativeType("ALCdevice *") long device, @NativeType("ALCvoid *") int[] buffer, @NativeType("ALCsizei") int samples) {
 		long __functionAddress = ALC.getICD().alcCaptureSamples;
@@ -244,7 +255,7 @@ public class ALC11 extends ALC10 {
         invokePPV(__functionAddress, device, buffer, samples);
     }
 
-    /** Array version of: {@link #alcCaptureSamples CaptureSamples} */
+    /** register Array version of: {@link #alcCaptureSamples CaptureSamples} */
     @NativeType("ALCvoid")
     public static void alcCaptureSamples(@NativeType("ALCdevice *") long device, @NativeType("ALCvoid *") float[] buffer, @NativeType("ALCsizei") int samples) {
 		long __functionAddress = ALC.getICD().alcCaptureSamples;

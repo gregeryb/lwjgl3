@@ -16,11 +16,11 @@ import static org.lwjgl.system.MemoryUtil.*;
  * 
  * <h3>Type</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * int (*) (
- *     char const *msg,
+ *     const char *msg,
  *     void *ctx
- * )</code></pre>
+ * )</pre></code>
  */
 public abstract class MDBMsgFunc extends Callback implements MDBMsgFuncI {
 

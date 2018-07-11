@@ -41,7 +41,7 @@ import static org.lwjgl.system.MemoryUtil.*;
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct VkShaderStatisticsInfoAMD {
  *     VkShaderStageFlags shaderStageMask;
  *     {@link VkShaderResourceUsageAMD VkShaderResourceUsageAMD} resourceUsage;
@@ -50,14 +50,13 @@ import static org.lwjgl.system.MemoryUtil.*;
  *     uint32_t numAvailableVgprs;
  *     uint32_t numAvailableSgprs;
  *     uint32_t computeWorkGroupSize[3];
- * }</code></pre>
+ * }</pre></code>
  */
 public class VkShaderStatisticsInfoAMD extends Struct {
 
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */
@@ -181,7 +180,8 @@ public class VkShaderStatisticsInfoAMD extends Struct {
     public static IntBuffer ncomputeWorkGroupSize(long struct) { return memIntBuffer(struct + VkShaderStatisticsInfoAMD.COMPUTEWORKGROUPSIZE, 3); }
     /** Unsafe version of {@link #computeWorkGroupSize(int) computeWorkGroupSize}. */
     public static int ncomputeWorkGroupSize(long struct, int index) {
-        return memGetInt(struct + VkShaderStatisticsInfoAMD.COMPUTEWORKGROUPSIZE + check(index, 3) * 4);
+        if (CHECKS) { check(index, 3); }
+        return memGetInt(struct + VkShaderStatisticsInfoAMD.COMPUTEWORKGROUPSIZE + index * 4);
     }
 
     // -----------------------------------

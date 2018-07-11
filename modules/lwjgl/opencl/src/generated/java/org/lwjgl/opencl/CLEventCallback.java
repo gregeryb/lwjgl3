@@ -16,12 +16,12 @@ import static org.lwjgl.system.MemoryUtil.*;
  * 
  * <h3>Type</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * void (*) (
  *     cl_event event,
  *     cl_int event_command_exec_status,
  *     void *user_data
- * )</code></pre>
+ * )</pre></code>
  */
 public abstract class CLEventCallback extends Callback implements CLEventCallbackI {
 

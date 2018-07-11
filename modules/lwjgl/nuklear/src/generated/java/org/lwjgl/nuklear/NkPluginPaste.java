@@ -16,11 +16,11 @@ import static org.lwjgl.system.MemoryUtil.*;
  * 
  * <h3>Type</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * void (*) (
  *     nk_handle handle,
  *     struct nk_text_edit *edit
- * )</code></pre>
+ * )</pre></code>
  */
 public abstract class NkPluginPaste extends Callback implements NkPluginPasteI {
 

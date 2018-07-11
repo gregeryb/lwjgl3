@@ -16,18 +16,63 @@ import static org.lwjgl.system.MemoryUtil.*;
 import static org.lwjgl.system.MemoryStack.*;
 
 /**
- * See {@link VkQueueFamilyProperties2}.
+ * Structure providing information about a queue family.
+ * 
+ * <h5>Valid Usage (Implicit)</h5>
+ * 
+ * <ul>
+ * <li>{@code sType} <b>must</b> be {@link KHRGetPhysicalDeviceProperties2#VK_STRUCTURE_TYPE_QUEUE_FAMILY_PROPERTIES_2_KHR STRUCTURE_TYPE_QUEUE_FAMILY_PROPERTIES_2_KHR}</li>
+ * <li>{@code pNext} <b>must</b> be {@code NULL}</li>
+ * </ul>
+ * 
+ * <h5>See Also</h5>
+ * 
+ * <p>{@link VkQueueFamilyProperties}, {@link KHRGetPhysicalDeviceProperties2#vkGetPhysicalDeviceQueueFamilyProperties2KHR GetPhysicalDeviceQueueFamilyProperties2KHR}</p>
+ * 
+ * <h3>Member documentation</h3>
+ * 
+ * <ul>
+ * <li>{@code sType} &ndash; the type of this structure.</li>
+ * <li>{@code pNext} &ndash; {@code NULL} or a pointer to an extension-specific structure.</li>
+ * <li>{@code queueFamilyProperties} &ndash; a structure of type {@link VkQueueFamilyProperties} which is populated with the same values as in {@link VK10#vkGetPhysicalDeviceQueueFamilyProperties GetPhysicalDeviceQueueFamilyProperties}.</li>
+ * </ul>
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct VkQueueFamilyProperties2KHR {
  *     VkStructureType sType;
  *     void * pNext;
  *     {@link VkQueueFamilyProperties VkQueueFamilyProperties} queueFamilyProperties;
- * }</code></pre>
+ * }</pre></code>
  */
-public class VkQueueFamilyProperties2KHR extends VkQueueFamilyProperties2 {
+public class VkQueueFamilyProperties2KHR extends Struct implements NativeResource {
+
+    /** The struct size in bytes. */
+    public static final int SIZEOF;
+
+    public static final int ALIGNOF;
+
+    /** The struct member offsets. */
+    public static final int
+        STYPE,
+        PNEXT,
+        QUEUEFAMILYPROPERTIES;
+
+    static {
+        Layout layout = __struct(
+            __member(4),
+            __member(POINTER_SIZE),
+            __member(VkQueueFamilyProperties.SIZEOF, VkQueueFamilyProperties.ALIGNOF)
+        );
+
+        SIZEOF = layout.getSize();
+        ALIGNOF = layout.getAlignment();
+
+        STYPE = layout.offsetof(0);
+        PNEXT = layout.offsetof(1);
+        QUEUEFAMILYPROPERTIES = layout.offsetof(2);
+    }
 
     VkQueueFamilyProperties2KHR(long address, @Nullable ByteBuffer container) {
         super(address, container);
@@ -43,36 +88,17 @@ public class VkQueueFamilyProperties2KHR extends VkQueueFamilyProperties2 {
         this(memAddress(container), __checkContainer(container, SIZEOF));
     }
 
-    /** Sets the specified value to the {@code sType} field. */
     @Override
-    public VkQueueFamilyProperties2KHR sType(@NativeType("VkStructureType") int value) { nsType(address(), value); return this; }
-    /** Sets the specified value to the {@code pNext} field. */
-    @Override
-    public VkQueueFamilyProperties2KHR pNext(@NativeType("void *") long value) { npNext(address(), value); return this; }
+    public int sizeof() { return SIZEOF; }
 
-    /** Initializes this struct with the specified values. */
-    @Override
-    public VkQueueFamilyProperties2KHR set(
-        int sType,
-        long pNext
-    ) {
-        sType(sType);
-        pNext(pNext);
-
-        return this;
-    }
-
-    /**
-     * Copies the specified struct data to this struct.
-     *
-     * @param src the source struct
-     *
-     * @return this struct
-     */
-    public VkQueueFamilyProperties2KHR set(VkQueueFamilyProperties2KHR src) {
-        memCopy(src.address(), address(), SIZEOF);
-        return this;
-    }
+    /** Returns the value of the {@code sType} field. */
+    @NativeType("VkStructureType")
+    public int sType() { return nsType(address()); }
+    /** Returns the value of the {@code pNext} field. */
+    @NativeType("void *")
+    public long pNext() { return npNext(address()); }
+    /** Returns a {@link VkQueueFamilyProperties} view of the {@code queueFamilyProperties} field. */
+    public VkQueueFamilyProperties queueFamilyProperties() { return nqueueFamilyProperties(address()); }
 
     // -----------------------------------
 
@@ -215,8 +241,17 @@ public class VkQueueFamilyProperties2KHR extends VkQueueFamilyProperties2 {
 
     // -----------------------------------
 
+    /** Unsafe version of {@link #sType}. */
+    public static int nsType(long struct) { return memGetInt(struct + VkQueueFamilyProperties2KHR.STYPE); }
+    /** Unsafe version of {@link #pNext}. */
+    public static long npNext(long struct) { return memGetAddress(struct + VkQueueFamilyProperties2KHR.PNEXT); }
+    /** Unsafe version of {@link #queueFamilyProperties}. */
+    public static VkQueueFamilyProperties nqueueFamilyProperties(long struct) { return VkQueueFamilyProperties.create(struct + VkQueueFamilyProperties2KHR.QUEUEFAMILYPROPERTIES); }
+
+    // -----------------------------------
+
     /** An array of {@link VkQueueFamilyProperties2KHR} structs. */
-    public static class Buffer extends VkQueueFamilyProperties2.Buffer {
+    public static class Buffer extends StructBuffer<VkQueueFamilyProperties2KHR, Buffer> implements NativeResource {
 
         /**
          * Creates a new {@link VkQueueFamilyProperties2KHR.Buffer} instance backed by the specified container.
@@ -228,7 +263,7 @@ public class VkQueueFamilyProperties2KHR extends VkQueueFamilyProperties2 {
          * <p>The created buffer instance holds a strong reference to the container object.</p>
          */
         public Buffer(ByteBuffer container) {
-            super(container);
+            super(container, container.remaining() / SIZEOF);
         }
 
         public Buffer(long address, int cap) {
@@ -254,12 +289,19 @@ public class VkQueueFamilyProperties2KHR extends VkQueueFamilyProperties2 {
             return new VkQueueFamilyProperties2KHR(address, container);
         }
 
-        /** Sets the specified value to the {@code sType} field. */
         @Override
-        public VkQueueFamilyProperties2KHR.Buffer sType(@NativeType("VkStructureType") int value) { VkQueueFamilyProperties2KHR.nsType(address(), value); return this; }
-        /** Sets the specified value to the {@code pNext} field. */
-        @Override
-        public VkQueueFamilyProperties2KHR.Buffer pNext(@NativeType("void *") long value) { VkQueueFamilyProperties2KHR.npNext(address(), value); return this; }
+        public int sizeof() {
+            return SIZEOF;
+        }
+
+        /** Returns the value of the {@code sType} field. */
+        @NativeType("VkStructureType")
+        public int sType() { return VkQueueFamilyProperties2KHR.nsType(address()); }
+        /** Returns the value of the {@code pNext} field. */
+        @NativeType("void *")
+        public long pNext() { return VkQueueFamilyProperties2KHR.npNext(address()); }
+        /** Returns a {@link VkQueueFamilyProperties} view of the {@code queueFamilyProperties} field. */
+        public VkQueueFamilyProperties queueFamilyProperties() { return VkQueueFamilyProperties2KHR.nqueueFamilyProperties(address()); }
 
     }
 

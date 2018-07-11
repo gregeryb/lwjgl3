@@ -350,7 +350,7 @@ public class AL10 {
      * @param paramName the parameter to query. One of:<br><table><tr><td>{@link #AL_VENDOR VENDOR}</td><td>{@link #AL_VERSION VERSION}</td><td>{@link #AL_RENDERER RENDERER}</td><td>{@link #AL_EXTENSIONS EXTENSIONS}</td></tr></table>
      */
     @Nullable
-    @NativeType("ALchar const *")
+    @NativeType("const ALchar *")
     public static String alGetString(@NativeType("ALenum") int paramName) {
         long __result = nalGetString(paramName);
         return memUTF8Safe(__result);
@@ -389,7 +389,7 @@ public class AL10 {
      * of frequency shift (pitch change) is proportional to the speed of listener and source along their line of sight. The Doppler Effect as implemented by
      * OpenAL is described by the formula below. Effects of the medium (air, water) moving with respect to listener and source are ignored.</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * SS: AL_SPEED_OF_SOUND = speed of sound (default value 343.3)
      * DF: AL_DOPPLER_FACTOR = Doppler factor (default 1.0)
      * vls: Listener velocity scalar (scalar, projected on source-to-listener vector)
@@ -414,7 +414,7 @@ public class AL10 {
      * vss = min(vss, SS / DF)
      * vls = min(vls, SS / DF)
      * 
-     * f' = f * (SS - DF * vls) / (SS - DF * vss)</code></pre>
+     * f' = f * (SS - DF * vls) / (SS - DF * vss)</pre></code>
      * 
      * <p>The {@code dopplerFactor} is a simple scaling of source and listener velocities to exaggerate or deemphasize the Doppler (pitch) shift resulting from
      * the calculation.</p>
@@ -437,11 +437,11 @@ public class AL10 {
      * support the AL_DOPPLER_VELOCITY parameter (the alDopplerVelocity call will remain as an entry point so that 1.0 applications can link with a 1.1
      * library), the above formula can be changed to the following:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * vss = min(vss, (SS * DV)/DF)
      * vls = min(vls, (SS * DV)/DF)
      * 
-     * f' = f * (SS * DV - DF*vls) / (SS * DV - DF * vss)</code></pre>
+     * f' = f * (SS * DV - DF*vls) / (SS * DV - DF * vss)</pre></code>
      * 
      * <p>OpenAL 1.1 programmers would never use AL_DOPPLER_VELOCITY (which defaults to 1.0).</p>
      *
@@ -512,7 +512,7 @@ public class AL10 {
      * @param values    the parameter values
      */
     @NativeType("ALvoid")
-    public static void alListenerfv(@NativeType("ALenum") int paramName, @NativeType("ALfloat const *") FloatBuffer values) {
+    public static void alListenerfv(@NativeType("ALenum") int paramName, @NativeType("const ALfloat *") FloatBuffer values) {
         if (CHECKS) {
             check(values, 1);
         }
@@ -775,7 +775,7 @@ public class AL10 {
      * @param values the parameter values
      */
     @NativeType("ALvoid")
-    public static void alSourcefv(@NativeType("ALuint") int source, @NativeType("ALenum") int param, @NativeType("ALfloat const *") FloatBuffer values) {
+    public static void alSourcefv(@NativeType("ALuint") int source, @NativeType("ALenum") int param, @NativeType("const ALfloat *") FloatBuffer values) {
         if (CHECKS) {
             check(values, 1);
         }
@@ -1138,7 +1138,7 @@ public class AL10 {
      * @param sources the sources to play
      */
     @NativeType("ALvoid")
-    public static void alSourcePlayv(@NativeType("ALuint const *") IntBuffer sources) {
+    public static void alSourcePlayv(@NativeType("const ALuint *") IntBuffer sources) {
         nalSourcePlayv(sources.remaining(), memAddress(sources));
     }
 
@@ -1160,7 +1160,7 @@ public class AL10 {
      * @param sources the sources to pause
      */
     @NativeType("ALvoid")
-    public static void alSourcePausev(@NativeType("ALuint const *") IntBuffer sources) {
+    public static void alSourcePausev(@NativeType("const ALuint *") IntBuffer sources) {
         nalSourcePausev(sources.remaining(), memAddress(sources));
     }
 
@@ -1182,7 +1182,7 @@ public class AL10 {
      * @param sources the sources to stop
      */
     @NativeType("ALvoid")
-    public static void alSourceStopv(@NativeType("ALuint const *") IntBuffer sources) {
+    public static void alSourceStopv(@NativeType("const ALuint *") IntBuffer sources) {
         nalSourceStopv(sources.remaining(), memAddress(sources));
     }
 
@@ -1204,7 +1204,7 @@ public class AL10 {
      * @param sources the sources to rewind
      */
     @NativeType("ALvoid")
-    public static void alSourceRewindv(@NativeType("ALuint const *") IntBuffer sources) {
+    public static void alSourceRewindv(@NativeType("const ALuint *") IntBuffer sources) {
         nalSourceRewindv(sources.remaining(), memAddress(sources));
     }
 
@@ -1261,13 +1261,13 @@ public class AL10 {
      * @param bufferNames the buffers to delete
      */
     @NativeType("ALvoid")
-    public static void alDeleteBuffers(@NativeType("ALuint const *") IntBuffer bufferNames) {
+    public static void alDeleteBuffers(@NativeType("const ALuint *") IntBuffer bufferNames) {
         nalDeleteBuffers(bufferNames.remaining(), memAddress(bufferNames));
     }
 
     /** Requests the deletion of a number of buffers. */
     @NativeType("ALvoid")
-    public static void alDeleteBuffers(@NativeType("ALuint const *") int bufferName) {
+    public static void alDeleteBuffers(@NativeType("const ALuint *") int bufferName) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
             IntBuffer bufferNames = stack.ints(bufferName);
@@ -1406,7 +1406,7 @@ public class AL10 {
      * @param frequency  the data frequency
      */
     @NativeType("ALvoid")
-    public static void alBufferData(@NativeType("ALuint") int bufferName, @NativeType("ALenum") int format, @NativeType("ALvoid const *") ByteBuffer data, @NativeType("ALsizei") int frequency) {
+    public static void alBufferData(@NativeType("ALuint") int bufferName, @NativeType("ALenum") int format, @NativeType("const ALvoid *") ByteBuffer data, @NativeType("ALsizei") int frequency) {
         nalBufferData(bufferName, format, memAddress(data), data.remaining(), frequency);
     }
 
@@ -1432,7 +1432,7 @@ public class AL10 {
      * @param frequency  the data frequency
      */
     @NativeType("ALvoid")
-    public static void alBufferData(@NativeType("ALuint") int bufferName, @NativeType("ALenum") int format, @NativeType("ALvoid const *") ShortBuffer data, @NativeType("ALsizei") int frequency) {
+    public static void alBufferData(@NativeType("ALuint") int bufferName, @NativeType("ALenum") int format, @NativeType("const ALvoid *") ShortBuffer data, @NativeType("ALsizei") int frequency) {
         nalBufferData(bufferName, format, memAddress(data), data.remaining() << 1, frequency);
     }
 
@@ -1458,7 +1458,7 @@ public class AL10 {
      * @param frequency  the data frequency
      */
     @NativeType("ALvoid")
-    public static void alBufferData(@NativeType("ALuint") int bufferName, @NativeType("ALenum") int format, @NativeType("ALvoid const *") IntBuffer data, @NativeType("ALsizei") int frequency) {
+    public static void alBufferData(@NativeType("ALuint") int bufferName, @NativeType("ALenum") int format, @NativeType("const ALvoid *") IntBuffer data, @NativeType("ALsizei") int frequency) {
         nalBufferData(bufferName, format, memAddress(data), data.remaining() << 2, frequency);
     }
 
@@ -1484,7 +1484,7 @@ public class AL10 {
      * @param frequency  the data frequency
      */
     @NativeType("ALvoid")
-    public static void alBufferData(@NativeType("ALuint") int bufferName, @NativeType("ALenum") int format, @NativeType("ALvoid const *") FloatBuffer data, @NativeType("ALsizei") int frequency) {
+    public static void alBufferData(@NativeType("ALuint") int bufferName, @NativeType("ALenum") int format, @NativeType("const ALvoid *") FloatBuffer data, @NativeType("ALsizei") int frequency) {
         nalBufferData(bufferName, format, memAddress(data), data.remaining() << 2, frequency);
     }
 
@@ -1502,7 +1502,7 @@ public class AL10 {
      * @param enumName the enum name
      */
     @NativeType("ALuint")
-    public static int alGetEnumValue(@NativeType("ALchar const *") ByteBuffer enumName) {
+    public static int alGetEnumValue(@NativeType("const ALchar *") ByteBuffer enumName) {
         if (CHECKS) {
             checkNT1(enumName);
         }
@@ -1515,7 +1515,7 @@ public class AL10 {
      * @param enumName the enum name
      */
     @NativeType("ALuint")
-    public static int alGetEnumValue(@NativeType("ALchar const *") CharSequence enumName) {
+    public static int alGetEnumValue(@NativeType("const ALchar *") CharSequence enumName) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
             ByteBuffer enumNameEncoded = stack.ASCII(enumName);
@@ -1545,7 +1545,7 @@ public class AL10 {
      * @param funcName the function name
      */
     @NativeType("void *")
-    public static long alGetProcAddress(@NativeType("ALchar const *") ByteBuffer funcName) {
+    public static long alGetProcAddress(@NativeType("const ALchar *") ByteBuffer funcName) {
         if (CHECKS) {
             checkNT1(funcName);
         }
@@ -1564,7 +1564,7 @@ public class AL10 {
      * @param funcName the function name
      */
     @NativeType("void *")
-    public static long alGetProcAddress(@NativeType("ALchar const *") CharSequence funcName) {
+    public static long alGetProcAddress(@NativeType("const ALchar *") CharSequence funcName) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
             ByteBuffer funcNameEncoded = stack.ASCII(funcName);
@@ -1591,7 +1591,7 @@ public class AL10 {
      * @param extName the extension name
      */
     @NativeType("ALCboolean")
-    public static boolean alIsExtensionPresent(@NativeType("ALchar const *") ByteBuffer extName) {
+    public static boolean alIsExtensionPresent(@NativeType("const ALchar *") ByteBuffer extName) {
         if (CHECKS) {
             checkNT1(extName);
         }
@@ -1607,7 +1607,7 @@ public class AL10 {
      * @param extName the extension name
      */
     @NativeType("ALCboolean")
-    public static boolean alIsExtensionPresent(@NativeType("ALchar const *") CharSequence extName) {
+    public static boolean alIsExtensionPresent(@NativeType("const ALchar *") CharSequence extName) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
             ByteBuffer extNameEncoded = stack.ASCII(extName);
@@ -1617,7 +1617,7 @@ public class AL10 {
         }
     }
 
-    /** Array version of: {@link #alGetIntegerv GetIntegerv} */
+    /** register Array version of: {@link #alGetIntegerv GetIntegerv} */
     @NativeType("ALvoid")
     public static void alGetIntegerv(@NativeType("ALenum") int paramName, @NativeType("ALint *") int[] dest) {
         long __functionAddress = AL.getICD().alGetIntegerv;
@@ -1627,7 +1627,7 @@ public class AL10 {
         invokePV(__functionAddress, paramName, dest);
     }
 
-    /** Array version of: {@link #alGetFloatv GetFloatv} */
+    /** register Array version of: {@link #alGetFloatv GetFloatv} */
     @NativeType("ALvoid")
     public static void alGetFloatv(@NativeType("ALenum") int paramName, @NativeType("ALfloat *") float[] dest) {
         long __functionAddress = AL.getICD().alGetFloatv;
@@ -1637,7 +1637,7 @@ public class AL10 {
         invokePV(__functionAddress, paramName, dest);
     }
 
-    /** Array version of: {@link #alGetDoublev GetDoublev} */
+    /** register Array version of: {@link #alGetDoublev GetDoublev} */
     @NativeType("ALvoid")
     public static void alGetDoublev(@NativeType("ALenum") int paramName, @NativeType("ALdouble *") double[] dest) {
         long __functionAddress = AL.getICD().alGetDoublev;
@@ -1647,9 +1647,9 @@ public class AL10 {
         invokePV(__functionAddress, paramName, dest);
     }
 
-    /** Array version of: {@link #alListenerfv Listenerfv} */
+    /** register Array version of: {@link #alListenerfv Listenerfv} */
     @NativeType("ALvoid")
-    public static void alListenerfv(@NativeType("ALenum") int paramName, @NativeType("ALfloat const *") float[] values) {
+    public static void alListenerfv(@NativeType("ALenum") int paramName, @NativeType("const ALfloat *") float[] values) {
         long __functionAddress = AL.getICD().alListenerfv;
         if (CHECKS) {
             check(values, 1);
@@ -1657,7 +1657,7 @@ public class AL10 {
         invokePV(__functionAddress, paramName, values);
     }
 
-    /** Array version of: {@link #alGetListenerf GetListenerf} */
+    /** register Array version of: {@link #alGetListenerf GetListenerf} */
     @NativeType("ALvoid")
     public static void alGetListenerf(@NativeType("ALenum") int paramName, @NativeType("ALfloat *") float[] value) {
         long __functionAddress = AL.getICD().alGetListenerf;
@@ -1667,7 +1667,7 @@ public class AL10 {
         invokePV(__functionAddress, paramName, value);
     }
 
-    /** Array version of: {@link #alGetListeneri GetListeneri} */
+    /** register Array version of: {@link #alGetListeneri GetListeneri} */
     @NativeType("ALvoid")
     public static void alGetListeneri(@NativeType("ALenum") int paramName, @NativeType("ALint *") int[] value) {
         long __functionAddress = AL.getICD().alGetListeneri;
@@ -1677,7 +1677,7 @@ public class AL10 {
         invokePV(__functionAddress, paramName, value);
     }
 
-    /** Array version of: {@link #alGetListener3f GetListener3f} */
+    /** register Array version of: {@link #alGetListener3f GetListener3f} */
     @NativeType("ALvoid")
     public static void alGetListener3f(@NativeType("ALenum") int paramName, @NativeType("ALfloat *") float[] value1, @NativeType("ALfloat *") float[] value2, @NativeType("ALfloat *") float[] value3) {
         long __functionAddress = AL.getICD().alGetListener3f;
@@ -1689,7 +1689,7 @@ public class AL10 {
         invokePPPV(__functionAddress, paramName, value1, value2, value3);
     }
 
-    /** Array version of: {@link #alGetListenerfv GetListenerfv} */
+    /** register Array version of: {@link #alGetListenerfv GetListenerfv} */
     @NativeType("ALvoid")
     public static void alGetListenerfv(@NativeType("ALenum") int paramName, @NativeType("ALfloat *") float[] values) {
         long __functionAddress = AL.getICD().alGetListenerfv;
@@ -1699,23 +1699,23 @@ public class AL10 {
         invokePV(__functionAddress, paramName, values);
     }
 
-    /** Array version of: {@link #alGenSources GenSources} */
+    /** register Array version of: {@link #alGenSources GenSources} */
     @NativeType("ALvoid")
     public static void alGenSources(@NativeType("ALuint *") int[] srcNames) {
         long __functionAddress = AL.getICD().alGenSources;
         invokePV(__functionAddress, srcNames.length, srcNames);
     }
 
-    /** Array version of: {@link #alDeleteSources DeleteSources} */
+    /** register Array version of: {@link #alDeleteSources DeleteSources} */
     @NativeType("ALvoid")
     public static void alDeleteSources(@NativeType("ALuint *") int[] sources) {
         long __functionAddress = AL.getICD().alDeleteSources;
         invokePV(__functionAddress, sources.length, sources);
     }
 
-    /** Array version of: {@link #alSourcefv Sourcefv} */
+    /** register Array version of: {@link #alSourcefv Sourcefv} */
     @NativeType("ALvoid")
-    public static void alSourcefv(@NativeType("ALuint") int source, @NativeType("ALenum") int param, @NativeType("ALfloat const *") float[] values) {
+    public static void alSourcefv(@NativeType("ALuint") int source, @NativeType("ALenum") int param, @NativeType("const ALfloat *") float[] values) {
         long __functionAddress = AL.getICD().alSourcefv;
         if (CHECKS) {
             check(values, 1);
@@ -1723,7 +1723,7 @@ public class AL10 {
         invokePV(__functionAddress, source, param, values);
     }
 
-    /** Array version of: {@link #alGetSourcef GetSourcef} */
+    /** register Array version of: {@link #alGetSourcef GetSourcef} */
     @NativeType("ALvoid")
     public static void alGetSourcef(@NativeType("ALuint") int source, @NativeType("ALenum") int param, @NativeType("ALfloat *") float[] value) {
         long __functionAddress = AL.getICD().alGetSourcef;
@@ -1733,7 +1733,7 @@ public class AL10 {
         invokePV(__functionAddress, source, param, value);
     }
 
-    /** Array version of: {@link #alGetSource3f GetSource3f} */
+    /** register Array version of: {@link #alGetSource3f GetSource3f} */
     @NativeType("ALvoid")
     public static void alGetSource3f(@NativeType("ALuint") int source, @NativeType("ALenum") int param, @NativeType("ALfloat *") float[] v1, @NativeType("ALfloat *") float[] v2, @NativeType("ALfloat *") float[] v3) {
         long __functionAddress = AL.getICD().alGetSource3f;
@@ -1745,7 +1745,7 @@ public class AL10 {
         invokePPPV(__functionAddress, source, param, v1, v2, v3);
     }
 
-    /** Array version of: {@link #alGetSourcefv GetSourcefv} */
+    /** register Array version of: {@link #alGetSourcefv GetSourcefv} */
     @NativeType("ALvoid")
     public static void alGetSourcefv(@NativeType("ALuint") int source, @NativeType("ALenum") int param, @NativeType("ALfloat *") float[] values) {
         long __functionAddress = AL.getICD().alGetSourcefv;
@@ -1755,7 +1755,7 @@ public class AL10 {
         invokePV(__functionAddress, source, param, values);
     }
 
-    /** Array version of: {@link #alGetSourcei GetSourcei} */
+    /** register Array version of: {@link #alGetSourcei GetSourcei} */
     @NativeType("ALvoid")
     public static void alGetSourcei(@NativeType("ALuint") int source, @NativeType("ALenum") int param, @NativeType("ALint *") int[] value) {
         long __functionAddress = AL.getICD().alGetSourcei;
@@ -1765,7 +1765,7 @@ public class AL10 {
         invokePV(__functionAddress, source, param, value);
     }
 
-    /** Array version of: {@link #alGetSourceiv GetSourceiv} */
+    /** register Array version of: {@link #alGetSourceiv GetSourceiv} */
     @NativeType("ALvoid")
     public static void alGetSourceiv(@NativeType("ALuint") int source, @NativeType("ALenum") int param, @NativeType("ALint *") int[] values) {
         long __functionAddress = AL.getICD().alGetSourceiv;
@@ -1775,63 +1775,63 @@ public class AL10 {
         invokePV(__functionAddress, source, param, values);
     }
 
-    /** Array version of: {@link #alSourceQueueBuffers SourceQueueBuffers} */
+    /** register Array version of: {@link #alSourceQueueBuffers SourceQueueBuffers} */
     @NativeType("ALvoid")
     public static void alSourceQueueBuffers(@NativeType("ALuint") int sourceName, @NativeType("ALuint *") int[] bufferNames) {
         long __functionAddress = AL.getICD().alSourceQueueBuffers;
         invokePV(__functionAddress, sourceName, bufferNames.length, bufferNames);
     }
 
-    /** Array version of: {@link #alSourceUnqueueBuffers SourceUnqueueBuffers} */
+    /** register Array version of: {@link #alSourceUnqueueBuffers SourceUnqueueBuffers} */
     @NativeType("ALvoid")
     public static void alSourceUnqueueBuffers(@NativeType("ALuint") int sourceName, @NativeType("ALuint *") int[] bufferNames) {
         long __functionAddress = AL.getICD().alSourceUnqueueBuffers;
         invokePV(__functionAddress, sourceName, bufferNames.length, bufferNames);
     }
 
-    /** Array version of: {@link #alSourcePlayv SourcePlayv} */
+    /** register Array version of: {@link #alSourcePlayv SourcePlayv} */
     @NativeType("ALvoid")
-    public static void alSourcePlayv(@NativeType("ALuint const *") int[] sources) {
+    public static void alSourcePlayv(@NativeType("const ALuint *") int[] sources) {
         long __functionAddress = AL.getICD().alSourcePlayv;
         invokePV(__functionAddress, sources.length, sources);
     }
 
-    /** Array version of: {@link #alSourcePausev SourcePausev} */
+    /** register Array version of: {@link #alSourcePausev SourcePausev} */
     @NativeType("ALvoid")
-    public static void alSourcePausev(@NativeType("ALuint const *") int[] sources) {
+    public static void alSourcePausev(@NativeType("const ALuint *") int[] sources) {
         long __functionAddress = AL.getICD().alSourcePausev;
         invokePV(__functionAddress, sources.length, sources);
     }
 
-    /** Array version of: {@link #alSourceStopv SourceStopv} */
+    /** register Array version of: {@link #alSourceStopv SourceStopv} */
     @NativeType("ALvoid")
-    public static void alSourceStopv(@NativeType("ALuint const *") int[] sources) {
+    public static void alSourceStopv(@NativeType("const ALuint *") int[] sources) {
         long __functionAddress = AL.getICD().alSourceStopv;
         invokePV(__functionAddress, sources.length, sources);
     }
 
-    /** Array version of: {@link #alSourceRewindv SourceRewindv} */
+    /** register Array version of: {@link #alSourceRewindv SourceRewindv} */
     @NativeType("ALvoid")
-    public static void alSourceRewindv(@NativeType("ALuint const *") int[] sources) {
+    public static void alSourceRewindv(@NativeType("const ALuint *") int[] sources) {
         long __functionAddress = AL.getICD().alSourceRewindv;
         invokePV(__functionAddress, sources.length, sources);
     }
 
-    /** Array version of: {@link #alGenBuffers GenBuffers} */
+    /** register Array version of: {@link #alGenBuffers GenBuffers} */
     @NativeType("ALvoid")
     public static void alGenBuffers(@NativeType("ALuint *") int[] bufferNames) {
         long __functionAddress = AL.getICD().alGenBuffers;
         invokePV(__functionAddress, bufferNames.length, bufferNames);
     }
 
-    /** Array version of: {@link #alDeleteBuffers DeleteBuffers} */
+    /** register Array version of: {@link #alDeleteBuffers DeleteBuffers} */
     @NativeType("ALvoid")
-    public static void alDeleteBuffers(@NativeType("ALuint const *") int[] bufferNames) {
+    public static void alDeleteBuffers(@NativeType("const ALuint *") int[] bufferNames) {
         long __functionAddress = AL.getICD().alDeleteBuffers;
         invokePV(__functionAddress, bufferNames.length, bufferNames);
     }
 
-    /** Array version of: {@link #alGetBufferf GetBufferf} */
+    /** register Array version of: {@link #alGetBufferf GetBufferf} */
     @NativeType("ALvoid")
     public static void alGetBufferf(@NativeType("ALuint") int bufferName, @NativeType("ALenum") int paramName, @NativeType("ALfloat *") float[] value) {
         long __functionAddress = AL.getICD().alGetBufferf;
@@ -1841,7 +1841,7 @@ public class AL10 {
         invokePV(__functionAddress, bufferName, paramName, value);
     }
 
-    /** Array version of: {@link #alGetBufferi GetBufferi} */
+    /** register Array version of: {@link #alGetBufferi GetBufferi} */
     @NativeType("ALvoid")
     public static void alGetBufferi(@NativeType("ALuint") int bufferName, @NativeType("ALenum") int paramName, @NativeType("ALint *") int[] value) {
         long __functionAddress = AL.getICD().alGetBufferi;
@@ -1851,23 +1851,30 @@ public class AL10 {
         invokePV(__functionAddress, bufferName, paramName, value);
     }
 
-    /** Array version of: {@link #alBufferData BufferData} */
+    /** register Array version of: {@link #alBufferData BufferData} */
     @NativeType("ALvoid")
-    public static void alBufferData(@NativeType("ALuint") int bufferName, @NativeType("ALenum") int format, @NativeType("ALvoid const *") short[] data, @NativeType("ALsizei") int frequency) {
+    public static void alBufferData(@NativeType("ALuint") int bufferName, @NativeType("ALenum") int format, @NativeType("const ALvoid *") byte[] data, @NativeType("ALsizei") int frequency) {
+        long __functionAddress = AL.getICD().alBufferData;
+        invokePV(__functionAddress, bufferName, format, data, data.length << 0, frequency);
+    }
+
+    /** register Array version of: {@link #alBufferData BufferData} */
+    @NativeType("ALvoid")
+    public static void alBufferData(@NativeType("ALuint") int bufferName, @NativeType("ALenum") int format, @NativeType("const ALvoid *") short[] data, @NativeType("ALsizei") int frequency) {
         long __functionAddress = AL.getICD().alBufferData;
         invokePV(__functionAddress, bufferName, format, data, data.length << 1, frequency);
     }
 
-    /** Array version of: {@link #alBufferData BufferData} */
+    /** register Array version of: {@link #alBufferData BufferData} */
     @NativeType("ALvoid")
-    public static void alBufferData(@NativeType("ALuint") int bufferName, @NativeType("ALenum") int format, @NativeType("ALvoid const *") int[] data, @NativeType("ALsizei") int frequency) {
+    public static void alBufferData(@NativeType("ALuint") int bufferName, @NativeType("ALenum") int format, @NativeType("const ALvoid *") int[] data, @NativeType("ALsizei") int frequency) {
         long __functionAddress = AL.getICD().alBufferData;
         invokePV(__functionAddress, bufferName, format, data, data.length << 2, frequency);
     }
 
-    /** Array version of: {@link #alBufferData BufferData} */
+    /** register Array version of: {@link #alBufferData BufferData} */
     @NativeType("ALvoid")
-    public static void alBufferData(@NativeType("ALuint") int bufferName, @NativeType("ALenum") int format, @NativeType("ALvoid const *") float[] data, @NativeType("ALsizei") int frequency) {
+    public static void alBufferData(@NativeType("ALuint") int bufferName, @NativeType("ALenum") int format, @NativeType("const ALvoid *") float[] data, @NativeType("ALsizei") int frequency) {
         long __functionAddress = AL.getICD().alBufferData;
         invokePV(__functionAddress, bufferName, format, data, data.length << 2, frequency);
     }

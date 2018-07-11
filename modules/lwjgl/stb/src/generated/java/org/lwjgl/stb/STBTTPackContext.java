@@ -20,7 +20,7 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct stbtt_pack_context {
  *     void * user_allocator_context;
  *     {@link STBRPContext stbrp_context} * pack_info;
@@ -32,7 +32,7 @@ import static org.lwjgl.system.MemoryStack.*;
  *     unsigned int v_oversample;
  *     unsigned char * pixels;
  *     {@link STBRPNode stbrp_node} * nodes;
- * }</code></pre>
+ * }</pre></code>
  */
 @NativeType("struct stbtt_pack_context")
 public class STBTTPackContext extends Struct implements NativeResource {
@@ -40,7 +40,6 @@ public class STBTTPackContext extends Struct implements NativeResource {
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */

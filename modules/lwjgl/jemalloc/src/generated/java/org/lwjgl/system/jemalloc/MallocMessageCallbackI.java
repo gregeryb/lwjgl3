@@ -14,14 +14,14 @@ import static org.lwjgl.system.dyncall.DynCallback.*;
  * 
  * <h3>Type</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * void (*) (
  *     void *cbopaque,
- *     char const *s
- * )</code></pre>
+ *     const char *s
+ * )</pre></code>
  */
 @FunctionalInterface
-@NativeType("void (*) (void *, char const *)")
+@NativeType("void (*) (void *, const char *)")
 public interface MallocMessageCallbackI extends CallbackI.V {
 
     String SIGNATURE = "(pp)v";
@@ -43,6 +43,6 @@ public interface MallocMessageCallbackI extends CallbackI.V {
      * @param cbopaque the opaque pointer passed to {@link JEmalloc#je_malloc_usable_size malloc_usable_size}
      * @param s        the message
      */
-    void invoke(@NativeType("void *") long cbopaque, @NativeType("char const *") long s);
+    void invoke(@NativeType("void *") long cbopaque, @NativeType("const char *") long s);
 
 }

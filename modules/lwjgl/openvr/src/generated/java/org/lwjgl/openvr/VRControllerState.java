@@ -29,13 +29,13 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct VRControllerState_t {
  *     uint32_t unPacketNum;
  *     uint64_t ulButtonPressed;
  *     uint64_t ulButtonTouched;
  *     {@link VRControllerAxis VRControllerAxis_t} rAxis[5];
- * }</code></pre>
+ * }</pre></code>
  */
 @NativeType("struct VRControllerState_t")
 public class VRControllerState extends Struct implements NativeResource {
@@ -43,7 +43,6 @@ public class VRControllerState extends Struct implements NativeResource {
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */
@@ -292,7 +291,8 @@ public class VRControllerState extends Struct implements NativeResource {
     public static VRControllerAxis.Buffer nrAxis(long struct) { return VRControllerAxis.create(struct + VRControllerState.RAXIS, 5); }
     /** Unsafe version of {@link #rAxis(int) rAxis}. */
     public static VRControllerAxis nrAxis(long struct, int index) {
-        return VRControllerAxis.create(struct + VRControllerState.RAXIS + check(index, 5) * VRControllerAxis.SIZEOF);
+        if (CHECKS) { check(index, 5); }
+        return VRControllerAxis.create(struct + VRControllerState.RAXIS + index * VRControllerAxis.SIZEOF);
     }
 
     /** Unsafe version of {@link #unPacketNum(int) unPacketNum}. */
@@ -308,7 +308,8 @@ public class VRControllerState extends Struct implements NativeResource {
     }
     /** Unsafe version of {@link #rAxis(int, VRControllerAxis) rAxis}. */
     public static void nrAxis(long struct, int index, VRControllerAxis value) {
-        memCopy(value.address(), struct + VRControllerState.RAXIS + check(index, 5) * VRControllerAxis.SIZEOF, VRControllerAxis.SIZEOF);
+        if (CHECKS) { check(index, 5); }
+        memCopy(value.address(), struct + VRControllerState.RAXIS + index * VRControllerAxis.SIZEOF, VRControllerAxis.SIZEOF);
     }
 
     // -----------------------------------

@@ -41,8 +41,6 @@ import static org.lwjgl.vulkan.VK10.*;
  * <li>{@link VK10#VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT MEMORY_PROPERTY_DEVICE_LOCAL_BIT} | {@link VK10#VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT MEMORY_PROPERTY_HOST_VISIBLE_BIT} | {@link VK10#VK_MEMORY_PROPERTY_HOST_CACHED_BIT MEMORY_PROPERTY_HOST_CACHED_BIT}</li>
  * <li>{@link VK10#VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT MEMORY_PROPERTY_DEVICE_LOCAL_BIT} | {@link VK10#VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT MEMORY_PROPERTY_HOST_VISIBLE_BIT} | {@link VK10#VK_MEMORY_PROPERTY_HOST_CACHED_BIT MEMORY_PROPERTY_HOST_CACHED_BIT} | {@link VK10#VK_MEMORY_PROPERTY_HOST_COHERENT_BIT MEMORY_PROPERTY_HOST_COHERENT_BIT}</li>
  * <li>{@link VK10#VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT MEMORY_PROPERTY_DEVICE_LOCAL_BIT} | {@link VK10#VK_MEMORY_PROPERTY_LAZILY_ALLOCATED_BIT MEMORY_PROPERTY_LAZILY_ALLOCATED_BIT}</li>
- * <li>{@link VK11#VK_MEMORY_PROPERTY_PROTECTED_BIT MEMORY_PROPERTY_PROTECTED_BIT}</li>
- * <li>{@link VK11#VK_MEMORY_PROPERTY_PROTECTED_BIT MEMORY_PROPERTY_PROTECTED_BIT} | {@link VK10#VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT MEMORY_PROPERTY_DEVICE_LOCAL_BIT}</li>
  * </ul>
  * 
  * <p>There <b>must</b> be at least one memory type with both the {@link VK10#VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT MEMORY_PROPERTY_HOST_VISIBLE_BIT} and {@link VK10#VK_MEMORY_PROPERTY_HOST_COHERENT_BIT MEMORY_PROPERTY_HOST_COHERENT_BIT} bits set in its {@code propertyFlags}. There <b>must</b> be at least one memory type with the {@link VK10#VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT MEMORY_PROPERTY_DEVICE_LOCAL_BIT} bit set in its {@code propertyFlags}.</p>
@@ -61,23 +59,23 @@ import static org.lwjgl.vulkan.VK10.*;
  * 
  * <p>This ordering requirement enables applications to use a simple search loop to select the desired memory type along the lines of:</p>
  * 
- * <pre><code>
+ * <code><pre>
  * // Find a memory in `memoryTypeBitsRequirement` that includes all of `requiredProperties`
  * int32_t findProperties(const VkPhysicalDeviceMemoryProperties* pMemoryProperties,
  *                        uint32_t memoryTypeBitsRequirement,
  *                        VkMemoryPropertyFlags requiredProperties) {
- *     const uint32_t memoryCount = pMemoryProperties-&gt;memoryTypeCount;
- *     for (uint32_t memoryIndex = 0; memoryIndex &lt; memoryCount; ++memoryIndex) {
- *         const uint32_t memoryTypeBits = (1 &lt;&lt; memoryIndex);
- *         const bool isRequiredMemoryType = memoryTypeBitsRequirement &amp; memoryTypeBits;
+ *     const uint32_t memoryCount = pMemoryProperties->memoryTypeCount;
+ *     for (uint32_t memoryIndex = 0; memoryIndex < memoryCount; ++memoryIndex) {
+ *         const uint32_t memoryTypeBits = (1 << memoryIndex);
+ *         const bool isRequiredMemoryType = memoryTypeBitsRequirement & memoryTypeBits;
  * 
  *         const VkMemoryPropertyFlags properties =
- *             pMemoryProperties-&gt;memoryTypes[memoryIndex].propertyFlags;
+ *             pMemoryProperties->memoryTypes[memoryIndex].propertyFlags;
  *         const bool hasRequiredProperties =
- *             (properties &amp; requiredProperties) == requiredProperties;
+ *             (properties & requiredProperties) == requiredProperties;
  * 
- *         if (isRequiredMemoryType &amp;&amp; hasRequiredProperties)
- *             return static_cast&lt;int32_t&gt;(memoryIndex);
+ *         if (isRequiredMemoryType && hasRequiredProperties)
+ *             return static_cast<int32_t>(memoryIndex);
  *     }
  * 
  *     // failed to find memory type
@@ -91,16 +89,16 @@ import static org.lwjgl.vulkan.VK10.*;
  * // `requiredProperties` are the property flags that must be present
  * // `optimalProperties` are the property flags that are preferred by the application
  * VkMemoryRequirements memoryRequirements;
- * vkGetImageMemoryRequirements(device, image, &amp;memoryRequirements);
+ * vkGetImageMemoryRequirements(device, image, &memoryRequirements);
  * int32_t memoryType =
- *     findProperties(&amp;memoryProperties, memoryRequirements.memoryTypeBits, optimalProperties);
+ *     findProperties(&memoryProperties, memoryRequirements.memoryTypeBits, optimalProperties);
  * if (memoryType == -1) // not found; try fallback properties
  *     memoryType =
- *         findProperties(&amp;memoryProperties, memoryRequirements.memoryTypeBits, requiredProperties);</code></pre>
+ *         findProperties(&memoryProperties, memoryRequirements.memoryTypeBits, requiredProperties);</pre></code>
  * 
  * <h5>See Also</h5>
  * 
- * <p>{@link VkMemoryHeap}, {@link VkMemoryType}, {@link VkPhysicalDeviceMemoryProperties2}, {@link VK10#vkGetPhysicalDeviceMemoryProperties GetPhysicalDeviceMemoryProperties}</p>
+ * <p>{@link VkMemoryHeap}, {@link VkMemoryType}, {@link VkPhysicalDeviceMemoryProperties2KHR}, {@link VK10#vkGetPhysicalDeviceMemoryProperties GetPhysicalDeviceMemoryProperties}</p>
  * 
  * <h3>Member documentation</h3>
  * 
@@ -113,20 +111,19 @@ import static org.lwjgl.vulkan.VK10.*;
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct VkPhysicalDeviceMemoryProperties {
  *     uint32_t memoryTypeCount;
  *     {@link VkMemoryType VkMemoryType} memoryTypes[VK_MAX_MEMORY_TYPES];
  *     uint32_t memoryHeapCount;
  *     {@link VkMemoryHeap VkMemoryHeap} memoryHeaps[VK_MAX_MEMORY_HEAPS];
- * }</code></pre>
+ * }</pre></code>
  */
 public class VkPhysicalDeviceMemoryProperties extends Struct implements NativeResource {
 
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */
@@ -334,7 +331,8 @@ public class VkPhysicalDeviceMemoryProperties extends Struct implements NativeRe
     public static VkMemoryType.Buffer nmemoryTypes(long struct) { return VkMemoryType.create(struct + VkPhysicalDeviceMemoryProperties.MEMORYTYPES, nmemoryTypeCount(struct)); }
     /** Unsafe version of {@link #memoryTypes(int) memoryTypes}. */
     public static VkMemoryType nmemoryTypes(long struct, int index) {
-        return VkMemoryType.create(struct + VkPhysicalDeviceMemoryProperties.MEMORYTYPES + check(index, nmemoryTypeCount(struct)) * VkMemoryType.SIZEOF);
+        if (CHECKS) { check(index, nmemoryTypeCount(struct)); }
+        return VkMemoryType.create(struct + VkPhysicalDeviceMemoryProperties.MEMORYTYPES + index * VkMemoryType.SIZEOF);
     }
     /** Unsafe version of {@link #memoryHeapCount}. */
     public static int nmemoryHeapCount(long struct) { return memGetInt(struct + VkPhysicalDeviceMemoryProperties.MEMORYHEAPCOUNT); }
@@ -342,7 +340,8 @@ public class VkPhysicalDeviceMemoryProperties extends Struct implements NativeRe
     public static VkMemoryHeap.Buffer nmemoryHeaps(long struct) { return VkMemoryHeap.create(struct + VkPhysicalDeviceMemoryProperties.MEMORYHEAPS, nmemoryHeapCount(struct)); }
     /** Unsafe version of {@link #memoryHeaps(int) memoryHeaps}. */
     public static VkMemoryHeap nmemoryHeaps(long struct, int index) {
-        return VkMemoryHeap.create(struct + VkPhysicalDeviceMemoryProperties.MEMORYHEAPS + check(index, nmemoryHeapCount(struct)) * VkMemoryHeap.SIZEOF);
+        if (CHECKS) { check(index, nmemoryHeapCount(struct)); }
+        return VkMemoryHeap.create(struct + VkPhysicalDeviceMemoryProperties.MEMORYHEAPS + index * VkMemoryHeap.SIZEOF);
     }
 
     // -----------------------------------

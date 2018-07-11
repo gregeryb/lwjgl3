@@ -16,11 +16,11 @@ import static org.lwjgl.system.MemoryUtil.*;
  * 
  * <h3>Type</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * void (*) (
  *     void *user,
  *     int n
- * )</code></pre>
+ * )</pre></code>
  */
 public abstract class STBISkipCallback extends Callback implements STBISkipCallbackI {
 

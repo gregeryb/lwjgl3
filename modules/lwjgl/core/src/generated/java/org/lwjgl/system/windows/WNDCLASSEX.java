@@ -46,7 +46,7 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct WNDCLASSEX {
  *     UINT cbSize;
  *     UINT style;
@@ -60,14 +60,13 @@ import static org.lwjgl.system.MemoryStack.*;
  *     LPCTSTR lpszMenuName;
  *     LPCTSTR lpszClassName;
  *     HICON hIconSm;
- * }</code></pre>
+ * }</pre></code>
  */
 public class WNDCLASSEX extends Struct implements NativeResource {
 
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */
@@ -214,7 +213,7 @@ public class WNDCLASSEX extends Struct implements NativeResource {
         long hIcon,
         long hCursor,
         long hbrBackground,
-        @Nullable ByteBuffer lpszMenuName,
+        ByteBuffer lpszMenuName,
         ByteBuffer lpszClassName,
         long hIconSm
     ) {

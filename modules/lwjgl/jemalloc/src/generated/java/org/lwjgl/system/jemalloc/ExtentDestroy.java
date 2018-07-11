@@ -16,14 +16,14 @@ import static org.lwjgl.system.MemoryUtil.*;
  * 
  * <h3>Type</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * bool (*) (
  *     extent_hooks_t *extent_hooks,
  *     void *addr,
  *     size_t size,
  *     bool committed,
  *     unsigned int arena_ind
- * )</code></pre>
+ * )</pre></code>
  */
 public abstract class ExtentDestroy extends Callback implements ExtentDestroyI {
 

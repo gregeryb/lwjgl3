@@ -97,7 +97,7 @@ public class NVBindlessTexture {
 
     public static native void nglUniformHandleui64vNV(int location, int count, long values);
 
-    public static void glUniformHandleui64vNV(@NativeType("GLint") int location, @NativeType("GLuint64 const *") LongBuffer values) {
+    public static void glUniformHandleui64vNV(@NativeType("GLint") int location, @NativeType("const GLuint64 *") LongBuffer values) {
         nglUniformHandleui64vNV(location, values.remaining(), memAddress(values));
     }
 
@@ -109,7 +109,7 @@ public class NVBindlessTexture {
 
     public static native void nglProgramUniformHandleui64vNV(int program, int location, int count, long values);
 
-    public static void glProgramUniformHandleui64vNV(@NativeType("GLuint") int program, @NativeType("GLint") int location, @NativeType("GLuint64 const *") LongBuffer values) {
+    public static void glProgramUniformHandleui64vNV(@NativeType("GLuint") int program, @NativeType("GLint") int location, @NativeType("const GLuint64 *") LongBuffer values) {
         nglProgramUniformHandleui64vNV(program, location, values.remaining(), memAddress(values));
     }
 
@@ -123,8 +123,8 @@ public class NVBindlessTexture {
     @NativeType("GLboolean")
     public static native boolean glIsImageHandleResidentNV(@NativeType("GLuint64") long handle);
 
-    /** Array version of: {@link #glUniformHandleui64vNV UniformHandleui64vNV} */
-    public static void glUniformHandleui64vNV(@NativeType("GLint") int location, @NativeType("GLuint64 const *") long[] values) {
+    /** register Array version of: {@link #glUniformHandleui64vNV UniformHandleui64vNV} */
+    public static void glUniformHandleui64vNV(@NativeType("GLint") int location, @NativeType("const GLuint64 *") long[] values) {
         long __functionAddress = GLES.getICD().glUniformHandleui64vNV;
         if (CHECKS) {
             check(__functionAddress);
@@ -132,8 +132,8 @@ public class NVBindlessTexture {
         callPV(__functionAddress, location, values.length, values);
     }
 
-    /** Array version of: {@link #glProgramUniformHandleui64vNV ProgramUniformHandleui64vNV} */
-    public static void glProgramUniformHandleui64vNV(@NativeType("GLuint") int program, @NativeType("GLint") int location, @NativeType("GLuint64 const *") long[] values) {
+    /** register Array version of: {@link #glProgramUniformHandleui64vNV ProgramUniformHandleui64vNV} */
+    public static void glProgramUniformHandleui64vNV(@NativeType("GLuint") int program, @NativeType("GLint") int location, @NativeType("const GLuint64 *") long[] values) {
         long __functionAddress = GLES.getICD().glProgramUniformHandleui64vNV;
         if (CHECKS) {
             check(__functionAddress);

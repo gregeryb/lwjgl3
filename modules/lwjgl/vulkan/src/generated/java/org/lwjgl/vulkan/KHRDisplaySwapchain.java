@@ -22,7 +22,7 @@ import static org.lwjgl.system.MemoryUtil.*;
  * 
  * <div style="margin-left: 26px; border-left: 1px solid gray; padding-left: 14px;"><h5>Note</h5>
  * 
- * <p>The example code for the {@link KHRDisplay VK_KHR_display} and {@code VK_KHR_display_swapchain} extensions was removed from the appendix after revision 1.0.43. The display swapchain creation example code was ported to the cube demo that is shipped with the official Khronos SDK, and is being kept up-to-date in that location (see: https://github.com/KhronosGroup/Vulkan-Tools/blob/master/cube/cube.c).</p>
+ * <p>The example code for the {@link KHRDisplay VK_KHR_display} and {@code VK_KHR_display_swapchain} extensions was removed from the appendix after revision 1.0.43. The display swapchain creation example code was ported to the cube demo that is shipped with the official Khronos SDK, and is being kept up-to-date in that location (see: https://github.com/KhronosGroup/Vulkan-LoaderAndValidationLayers/blob/master/demos/cube.c).</p>
  * </div>
  * 
  * <dl>
@@ -74,9 +74,9 @@ public class KHRDisplaySwapchain {
         throw new UnsupportedOperationException();
     }
 
-    static boolean checkCapsDevice(FunctionProvider provider, java.util.Map<String, Long> caps, java.util.Set<String> ext) {
-        return ext.contains("VK_KHR_display_swapchain") && VK.checkExtension("VK_KHR_display_swapchain",
-               VK.isSupported(provider, "vkCreateSharedSwapchainsKHR", caps)
+    static boolean isAvailable(VKCapabilitiesDevice caps) {
+        return checkFunctions(
+            caps.vkCreateSharedSwapchainsKHR
         );
     }
 
@@ -104,13 +104,13 @@ public class KHRDisplaySwapchain {
      * 
      * <p>When the {@code VK_KHR_display_swapchain} extension is enabled, multiple swapchains that share presentable images are created by calling:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * VkResult vkCreateSharedSwapchainsKHR(
      *     VkDevice                                    device,
      *     uint32_t                                    swapchainCount,
      *     const VkSwapchainCreateInfoKHR*             pCreateInfos,
      *     const VkAllocationCallbacks*                pAllocator,
-     *     VkSwapchainKHR*                             pSwapchains);</code></pre>
+     *     VkSwapchainKHR*                             pSwapchains);</pre></code>
      * 
      * <h5>Description</h5>
      * 
@@ -162,16 +162,16 @@ public class KHRDisplaySwapchain {
      * @param pSwapchains  a pointer to an array of {@code VkSwapchainKHR} handles in which the created swapchain objects will be returned.
      */
     @NativeType("VkResult")
-    public static int vkCreateSharedSwapchainsKHR(VkDevice device, @NativeType("VkSwapchainCreateInfoKHR const *") VkSwapchainCreateInfoKHR.Buffer pCreateInfos, @Nullable @NativeType("VkAllocationCallbacks const *") VkAllocationCallbacks pAllocator, @NativeType("VkSwapchainKHR *") LongBuffer pSwapchains) {
+    public static int vkCreateSharedSwapchainsKHR(VkDevice device, @NativeType("const VkSwapchainCreateInfoKHR *") VkSwapchainCreateInfoKHR.Buffer pCreateInfos, @Nullable @NativeType("const VkAllocationCallbacks *") VkAllocationCallbacks pAllocator, @NativeType("VkSwapchainKHR *") LongBuffer pSwapchains) {
         if (CHECKS) {
             check(pSwapchains, pCreateInfos.remaining());
         }
         return nvkCreateSharedSwapchainsKHR(device, pCreateInfos.remaining(), pCreateInfos.address(), memAddressSafe(pAllocator), memAddress(pSwapchains));
     }
 
-    /** Array version of: {@link #vkCreateSharedSwapchainsKHR CreateSharedSwapchainsKHR} */
+    /** register Array version of: {@link #vkCreateSharedSwapchainsKHR CreateSharedSwapchainsKHR} */
     @NativeType("VkResult")
-    public static int vkCreateSharedSwapchainsKHR(VkDevice device, @NativeType("VkSwapchainCreateInfoKHR const *") VkSwapchainCreateInfoKHR.Buffer pCreateInfos, @Nullable @NativeType("VkAllocationCallbacks const *") VkAllocationCallbacks pAllocator, @NativeType("VkSwapchainKHR *") long[] pSwapchains) {
+    public static int vkCreateSharedSwapchainsKHR(VkDevice device, @NativeType("const VkSwapchainCreateInfoKHR *") VkSwapchainCreateInfoKHR.Buffer pCreateInfos, @Nullable @NativeType("const VkAllocationCallbacks *") VkAllocationCallbacks pAllocator, @NativeType("VkSwapchainKHR *") long[] pSwapchains) {
         long __functionAddress = device.getCapabilities().vkCreateSharedSwapchainsKHR;
         if (CHECKS) {
             check(__functionAddress);

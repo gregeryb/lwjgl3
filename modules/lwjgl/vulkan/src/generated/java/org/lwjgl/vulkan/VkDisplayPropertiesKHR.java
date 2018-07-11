@@ -42,23 +42,22 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct VkDisplayPropertiesKHR {
  *     VkDisplayKHR display;
- *     char const * displayName;
+ *     const char * displayName;
  *     {@link VkExtent2D VkExtent2D} physicalDimensions;
  *     {@link VkExtent2D VkExtent2D} physicalResolution;
  *     VkSurfaceTransformFlagsKHR supportedTransforms;
  *     VkBool32 planeReorderPossible;
  *     VkBool32 persistentContent;
- * }</code></pre>
+ * }</pre></code>
  */
 public class VkDisplayPropertiesKHR extends Struct implements NativeResource {
 
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */
@@ -115,19 +114,15 @@ public class VkDisplayPropertiesKHR extends Struct implements NativeResource {
     @NativeType("VkDisplayKHR")
     public long display() { return ndisplay(address()); }
     /** Returns a {@link ByteBuffer} view of the null-terminated string pointed to by the {@code displayName} field. */
-    @NativeType("char const *")
+    @NativeType("const char *")
     public ByteBuffer displayName() { return ndisplayName(address()); }
     /** Decodes the null-terminated string pointed to by the {@code displayName} field. */
-    @NativeType("char const *")
+    @NativeType("const char *")
     public String displayNameString() { return ndisplayNameString(address()); }
     /** Returns a {@link VkExtent2D} view of the {@code physicalDimensions} field. */
     public VkExtent2D physicalDimensions() { return nphysicalDimensions(address()); }
-    /** Passes the {@code physicalDimensions} field to the specified {@link java.util.function.Consumer Consumer}. */
-    public VkDisplayPropertiesKHR physicalDimensions(java.util.function.Consumer<VkExtent2D> consumer) { consumer.accept(physicalDimensions()); return this; }
     /** Returns a {@link VkExtent2D} view of the {@code physicalResolution} field. */
     public VkExtent2D physicalResolution() { return nphysicalResolution(address()); }
-    /** Passes the {@code physicalResolution} field to the specified {@link java.util.function.Consumer Consumer}. */
-    public VkDisplayPropertiesKHR physicalResolution(java.util.function.Consumer<VkExtent2D> consumer) { consumer.accept(physicalResolution()); return this; }
     /** Returns the value of the {@code supportedTransforms} field. */
     @NativeType("VkSurfaceTransformFlagsKHR")
     public int supportedTransforms() { return nsupportedTransforms(address()); }
@@ -346,19 +341,15 @@ public class VkDisplayPropertiesKHR extends Struct implements NativeResource {
         @NativeType("VkDisplayKHR")
         public long display() { return VkDisplayPropertiesKHR.ndisplay(address()); }
         /** Returns a {@link ByteBuffer} view of the null-terminated string pointed to by the {@code displayName} field. */
-        @NativeType("char const *")
+        @NativeType("const char *")
         public ByteBuffer displayName() { return VkDisplayPropertiesKHR.ndisplayName(address()); }
         /** Decodes the null-terminated string pointed to by the {@code displayName} field. */
-        @NativeType("char const *")
+        @NativeType("const char *")
         public String displayNameString() { return VkDisplayPropertiesKHR.ndisplayNameString(address()); }
         /** Returns a {@link VkExtent2D} view of the {@code physicalDimensions} field. */
         public VkExtent2D physicalDimensions() { return VkDisplayPropertiesKHR.nphysicalDimensions(address()); }
-        /** Passes the {@code physicalDimensions} field to the specified {@link java.util.function.Consumer Consumer}. */
-        public VkDisplayPropertiesKHR.Buffer physicalDimensions(java.util.function.Consumer<VkExtent2D> consumer) { consumer.accept(physicalDimensions()); return this; }
         /** Returns a {@link VkExtent2D} view of the {@code physicalResolution} field. */
         public VkExtent2D physicalResolution() { return VkDisplayPropertiesKHR.nphysicalResolution(address()); }
-        /** Passes the {@code physicalResolution} field to the specified {@link java.util.function.Consumer Consumer}. */
-        public VkDisplayPropertiesKHR.Buffer physicalResolution(java.util.function.Consumer<VkExtent2D> consumer) { consumer.accept(physicalResolution()); return this; }
         /** Returns the value of the {@code supportedTransforms} field. */
         @NativeType("VkSurfaceTransformFlagsKHR")
         public int supportedTransforms() { return VkDisplayPropertiesKHR.nsupportedTransforms(address()); }

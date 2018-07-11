@@ -16,18 +16,61 @@ import static org.lwjgl.system.MemoryUtil.*;
 import static org.lwjgl.system.MemoryStack.*;
 
 /**
- * See {@link VkExternalMemoryImageCreateInfo}.
+ * Specify that an image may be backed by external memory.
+ * 
+ * <h5>Valid Usage (Implicit)</h5>
+ * 
+ * <ul>
+ * <li>{@code sType} <b>must</b> be {@link KHRExternalMemory#VK_STRUCTURE_TYPE_EXTERNAL_MEMORY_IMAGE_CREATE_INFO_KHR STRUCTURE_TYPE_EXTERNAL_MEMORY_IMAGE_CREATE_INFO_KHR}</li>
+ * <li>{@code pNext} <b>must</b> be {@code NULL}</li>
+ * <li>{@code handleTypes} <b>must</b> be a valid combination of {@code VkExternalMemoryHandleTypeFlagBitsKHR} values</li>
+ * <li>{@code handleTypes} <b>must</b> not be 0</li>
+ * </ul>
+ * 
+ * <h3>Member documentation</h3>
+ * 
+ * <ul>
+ * <li>{@code sType} &ndash; the type of this structure.</li>
+ * <li>{@code pNext} &ndash; {@code NULL} or a pointer to an extension-specific structure.</li>
+ * <li>{@code handleTypes} &ndash; a bitmask of {@code VkExternalMemoryHandleTypeFlagBitsKHR} specifying one or more external memory handle types.</li>
+ * </ul>
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct VkExternalMemoryImageCreateInfoKHR {
  *     VkStructureType sType;
- *     void const * pNext;
- *     VkExternalMemoryHandleTypeFlags handleTypes;
- * }</code></pre>
+ *     const void * pNext;
+ *     VkExternalMemoryHandleTypeFlagsKHR handleTypes;
+ * }</pre></code>
  */
-public class VkExternalMemoryImageCreateInfoKHR extends VkExternalMemoryImageCreateInfo {
+public class VkExternalMemoryImageCreateInfoKHR extends Struct implements NativeResource {
+
+    /** The struct size in bytes. */
+    public static final int SIZEOF;
+
+    public static final int ALIGNOF;
+
+    /** The struct member offsets. */
+    public static final int
+        STYPE,
+        PNEXT,
+        HANDLETYPES;
+
+    static {
+        Layout layout = __struct(
+            __member(4),
+            __member(POINTER_SIZE),
+            __member(4)
+        );
+
+        SIZEOF = layout.getSize();
+        ALIGNOF = layout.getAlignment();
+
+        STYPE = layout.offsetof(0);
+        PNEXT = layout.offsetof(1);
+        HANDLETYPES = layout.offsetof(2);
+    }
 
     VkExternalMemoryImageCreateInfoKHR(long address, @Nullable ByteBuffer container) {
         super(address, container);
@@ -43,18 +86,27 @@ public class VkExternalMemoryImageCreateInfoKHR extends VkExternalMemoryImageCre
         this(memAddress(container), __checkContainer(container, SIZEOF));
     }
 
-    /** Sets the specified value to the {@code sType} field. */
     @Override
+    public int sizeof() { return SIZEOF; }
+
+    /** Returns the value of the {@code sType} field. */
+    @NativeType("VkStructureType")
+    public int sType() { return nsType(address()); }
+    /** Returns the value of the {@code pNext} field. */
+    @NativeType("const void *")
+    public long pNext() { return npNext(address()); }
+    /** Returns the value of the {@code handleTypes} field. */
+    @NativeType("VkExternalMemoryHandleTypeFlagsKHR")
+    public int handleTypes() { return nhandleTypes(address()); }
+
+    /** Sets the specified value to the {@code sType} field. */
     public VkExternalMemoryImageCreateInfoKHR sType(@NativeType("VkStructureType") int value) { nsType(address(), value); return this; }
     /** Sets the specified value to the {@code pNext} field. */
-    @Override
-    public VkExternalMemoryImageCreateInfoKHR pNext(@NativeType("void const *") long value) { npNext(address(), value); return this; }
+    public VkExternalMemoryImageCreateInfoKHR pNext(@NativeType("const void *") long value) { npNext(address(), value); return this; }
     /** Sets the specified value to the {@code handleTypes} field. */
-    @Override
-    public VkExternalMemoryImageCreateInfoKHR handleTypes(@NativeType("VkExternalMemoryHandleTypeFlags") int value) { nhandleTypes(address(), value); return this; }
+    public VkExternalMemoryImageCreateInfoKHR handleTypes(@NativeType("VkExternalMemoryHandleTypeFlagsKHR") int value) { nhandleTypes(address(), value); return this; }
 
     /** Initializes this struct with the specified values. */
-    @Override
     public VkExternalMemoryImageCreateInfoKHR set(
         int sType,
         long pNext,
@@ -220,8 +272,24 @@ public class VkExternalMemoryImageCreateInfoKHR extends VkExternalMemoryImageCre
 
     // -----------------------------------
 
+    /** Unsafe version of {@link #sType}. */
+    public static int nsType(long struct) { return memGetInt(struct + VkExternalMemoryImageCreateInfoKHR.STYPE); }
+    /** Unsafe version of {@link #pNext}. */
+    public static long npNext(long struct) { return memGetAddress(struct + VkExternalMemoryImageCreateInfoKHR.PNEXT); }
+    /** Unsafe version of {@link #handleTypes}. */
+    public static int nhandleTypes(long struct) { return memGetInt(struct + VkExternalMemoryImageCreateInfoKHR.HANDLETYPES); }
+
+    /** Unsafe version of {@link #sType(int) sType}. */
+    public static void nsType(long struct, int value) { memPutInt(struct + VkExternalMemoryImageCreateInfoKHR.STYPE, value); }
+    /** Unsafe version of {@link #pNext(long) pNext}. */
+    public static void npNext(long struct, long value) { memPutAddress(struct + VkExternalMemoryImageCreateInfoKHR.PNEXT, value); }
+    /** Unsafe version of {@link #handleTypes(int) handleTypes}. */
+    public static void nhandleTypes(long struct, int value) { memPutInt(struct + VkExternalMemoryImageCreateInfoKHR.HANDLETYPES, value); }
+
+    // -----------------------------------
+
     /** An array of {@link VkExternalMemoryImageCreateInfoKHR} structs. */
-    public static class Buffer extends VkExternalMemoryImageCreateInfo.Buffer {
+    public static class Buffer extends StructBuffer<VkExternalMemoryImageCreateInfoKHR, Buffer> implements NativeResource {
 
         /**
          * Creates a new {@link VkExternalMemoryImageCreateInfoKHR.Buffer} instance backed by the specified container.
@@ -233,7 +301,7 @@ public class VkExternalMemoryImageCreateInfoKHR extends VkExternalMemoryImageCre
          * <p>The created buffer instance holds a strong reference to the container object.</p>
          */
         public Buffer(ByteBuffer container) {
-            super(container);
+            super(container, container.remaining() / SIZEOF);
         }
 
         public Buffer(long address, int cap) {
@@ -259,15 +327,27 @@ public class VkExternalMemoryImageCreateInfoKHR extends VkExternalMemoryImageCre
             return new VkExternalMemoryImageCreateInfoKHR(address, container);
         }
 
-        /** Sets the specified value to the {@code sType} field. */
         @Override
+        public int sizeof() {
+            return SIZEOF;
+        }
+
+        /** Returns the value of the {@code sType} field. */
+        @NativeType("VkStructureType")
+        public int sType() { return VkExternalMemoryImageCreateInfoKHR.nsType(address()); }
+        /** Returns the value of the {@code pNext} field. */
+        @NativeType("const void *")
+        public long pNext() { return VkExternalMemoryImageCreateInfoKHR.npNext(address()); }
+        /** Returns the value of the {@code handleTypes} field. */
+        @NativeType("VkExternalMemoryHandleTypeFlagsKHR")
+        public int handleTypes() { return VkExternalMemoryImageCreateInfoKHR.nhandleTypes(address()); }
+
+        /** Sets the specified value to the {@code sType} field. */
         public VkExternalMemoryImageCreateInfoKHR.Buffer sType(@NativeType("VkStructureType") int value) { VkExternalMemoryImageCreateInfoKHR.nsType(address(), value); return this; }
         /** Sets the specified value to the {@code pNext} field. */
-        @Override
-        public VkExternalMemoryImageCreateInfoKHR.Buffer pNext(@NativeType("void const *") long value) { VkExternalMemoryImageCreateInfoKHR.npNext(address(), value); return this; }
+        public VkExternalMemoryImageCreateInfoKHR.Buffer pNext(@NativeType("const void *") long value) { VkExternalMemoryImageCreateInfoKHR.npNext(address(), value); return this; }
         /** Sets the specified value to the {@code handleTypes} field. */
-        @Override
-        public VkExternalMemoryImageCreateInfoKHR.Buffer handleTypes(@NativeType("VkExternalMemoryHandleTypeFlags") int value) { VkExternalMemoryImageCreateInfoKHR.nhandleTypes(address(), value); return this; }
+        public VkExternalMemoryImageCreateInfoKHR.Buffer handleTypes(@NativeType("VkExternalMemoryHandleTypeFlagsKHR") int value) { VkExternalMemoryImageCreateInfoKHR.nhandleTypes(address(), value); return this; }
 
     }
 

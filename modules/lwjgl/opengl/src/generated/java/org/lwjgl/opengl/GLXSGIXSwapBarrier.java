@@ -79,7 +79,7 @@ public class GLXSGIXSwapBarrier {
         return nglXQueryMaxSwapBarriersSGIX(display, screen, memAddress(max)) != 0;
     }
 
-    /** Array version of: {@link #glXQueryMaxSwapBarriersSGIX QueryMaxSwapBarriersSGIX} */
+    /** register Array version of: {@link #glXQueryMaxSwapBarriersSGIX QueryMaxSwapBarriersSGIX} */
     @NativeType("Bool")
     public static boolean glXQueryMaxSwapBarriersSGIX(@NativeType("Display *") long display, int screen, @NativeType("int *") int[] max) {
         long __functionAddress = GL.getCapabilitiesGLXClient().glXQueryMaxSwapBarriersSGIX;

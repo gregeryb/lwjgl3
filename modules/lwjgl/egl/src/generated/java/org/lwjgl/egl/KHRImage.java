@@ -12,6 +12,8 @@ import java.nio.*;
 import org.lwjgl.system.*;
 
 import static org.lwjgl.system.Checks.*;
+import static org.lwjgl.system.JNI.*;
+import static org.lwjgl.system.MemoryUtil.*;
 
 /**
  * Native bindings to the <a target="_blank" href="https://www.khronos.org/registry/EGL/extensions/KHR/EGL_KHR_image.txt">KHR_image</a> extension.
@@ -40,25 +42,49 @@ public class KHRImage {
     // --- [ eglCreateImageKHR ] ---
 
     public static long neglCreateImageKHR(long dpy, long ctx, int target, long buffer, long attrib_list) {
-        return KHRImageBase.neglCreateImageKHR(dpy, ctx, target, buffer, attrib_list);
+        long __functionAddress = EGL.getCapabilities().eglCreateImageKHR;
+        if (CHECKS) {
+            check(__functionAddress);
+            check(dpy);
+            check(ctx);
+            check(buffer);
+        }
+        return callPPPPP(__functionAddress, dpy, ctx, target, buffer, attrib_list);
     }
 
     @NativeType("EGLImageKHR")
-    public static long eglCreateImageKHR(@NativeType("EGLDisplay") long dpy, @NativeType("EGLContext") long ctx, @NativeType("EGLenum") int target, @NativeType("EGLClientBuffer") long buffer, @Nullable @NativeType("EGLint const *") IntBuffer attrib_list) {
-        return KHRImageBase.eglCreateImageKHR(dpy, ctx, target, buffer, attrib_list);
+    public static long eglCreateImageKHR(@NativeType("EGLDisplay") long dpy, @NativeType("EGLContext") long ctx, @NativeType("EGLenum") int target, @NativeType("EGLClientBuffer") long buffer, @Nullable @NativeType("const EGLint *") IntBuffer attrib_list) {
+        if (CHECKS) {
+            checkNTSafe(attrib_list, EGL10.EGL_NONE);
+        }
+        return neglCreateImageKHR(dpy, ctx, target, buffer, memAddressSafe(attrib_list));
     }
 
     // --- [ eglDestroyImageKHR ] ---
 
     @NativeType("EGLBoolean")
     public static boolean eglDestroyImageKHR(@NativeType("EGLDisplay") long dpy, @NativeType("EGLImageKHR") long image) {
-        return KHRImageBase.eglDestroyImageKHR(dpy, image);
+        long __functionAddress = EGL.getCapabilities().eglDestroyImageKHR;
+        if (CHECKS) {
+            check(__functionAddress);
+            check(dpy);
+            check(image);
+        }
+        return callPPI(__functionAddress, dpy, image) != 0;
     }
 
-    /** Array version of: {@link #eglCreateImageKHR CreateImageKHR} */
+    /** register Array version of: {@link #eglCreateImageKHR CreateImageKHR} */
     @NativeType("EGLImageKHR")
-    public static long eglCreateImageKHR(@NativeType("EGLDisplay") long dpy, @NativeType("EGLContext") long ctx, @NativeType("EGLenum") int target, @NativeType("EGLClientBuffer") long buffer, @Nullable @NativeType("EGLint const *") int[] attrib_list) {
-        return KHRImageBase.eglCreateImageKHR(dpy, ctx, target, buffer, attrib_list);
+    public static long eglCreateImageKHR(@NativeType("EGLDisplay") long dpy, @NativeType("EGLContext") long ctx, @NativeType("EGLenum") int target, @NativeType("EGLClientBuffer") long buffer, @Nullable @NativeType("const EGLint *") int[] attrib_list) {
+        long __functionAddress = EGL.getCapabilities().eglCreateImageKHR;
+        if (CHECKS) {
+            check(__functionAddress);
+            check(dpy);
+            check(ctx);
+            check(buffer);
+            checkNTSafe(attrib_list, EGL10.EGL_NONE);
+        }
+        return callPPPPP(__functionAddress, dpy, ctx, target, buffer, attrib_list);
     }
 
 }

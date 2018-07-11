@@ -41,7 +41,7 @@ public class EXTGPUProgramParameters {
 
     public static native void nglProgramEnvParameters4fvEXT(int target, int index, int count, long params);
 
-    public static void glProgramEnvParameters4fvEXT(@NativeType("GLenum") int target, @NativeType("GLuint") int index, @NativeType("GLfloat const *") FloatBuffer params) {
+    public static void glProgramEnvParameters4fvEXT(@NativeType("GLenum") int target, @NativeType("GLuint") int index, @NativeType("const GLfloat *") FloatBuffer params) {
         nglProgramEnvParameters4fvEXT(target, index, params.remaining() >> 2, memAddress(params));
     }
 
@@ -49,12 +49,12 @@ public class EXTGPUProgramParameters {
 
     public static native void nglProgramLocalParameters4fvEXT(int target, int index, int count, long params);
 
-    public static void glProgramLocalParameters4fvEXT(@NativeType("GLenum") int target, @NativeType("GLuint") int index, @NativeType("GLfloat const *") FloatBuffer params) {
+    public static void glProgramLocalParameters4fvEXT(@NativeType("GLenum") int target, @NativeType("GLuint") int index, @NativeType("const GLfloat *") FloatBuffer params) {
         nglProgramLocalParameters4fvEXT(target, index, params.remaining() >> 2, memAddress(params));
     }
 
-    /** Array version of: {@link #glProgramEnvParameters4fvEXT ProgramEnvParameters4fvEXT} */
-    public static void glProgramEnvParameters4fvEXT(@NativeType("GLenum") int target, @NativeType("GLuint") int index, @NativeType("GLfloat const *") float[] params) {
+    /** register Array version of: {@link #glProgramEnvParameters4fvEXT ProgramEnvParameters4fvEXT} */
+    public static void glProgramEnvParameters4fvEXT(@NativeType("GLenum") int target, @NativeType("GLuint") int index, @NativeType("const GLfloat *") float[] params) {
         long __functionAddress = GL.getICD().glProgramEnvParameters4fvEXT;
         if (CHECKS) {
             check(__functionAddress);
@@ -62,8 +62,8 @@ public class EXTGPUProgramParameters {
         callPV(__functionAddress, target, index, params.length >> 2, params);
     }
 
-    /** Array version of: {@link #glProgramLocalParameters4fvEXT ProgramLocalParameters4fvEXT} */
-    public static void glProgramLocalParameters4fvEXT(@NativeType("GLenum") int target, @NativeType("GLuint") int index, @NativeType("GLfloat const *") float[] params) {
+    /** register Array version of: {@link #glProgramLocalParameters4fvEXT ProgramLocalParameters4fvEXT} */
+    public static void glProgramLocalParameters4fvEXT(@NativeType("GLenum") int target, @NativeType("GLuint") int index, @NativeType("const GLfloat *") float[] params) {
         long __functionAddress = GL.getICD().glProgramLocalParameters4fvEXT;
         if (CHECKS) {
             check(__functionAddress);

@@ -39,7 +39,6 @@ This script is included in /config/build-definitions.xml.
     <property name="binding.tinyexr" value="true"/>
     <property name="binding.tinyfd" value="true"/>
     <property name="binding.tootle" value="true"/>
-    <property name="binding.vma" value="true"/>
     <property name="binding.vulkan" value="true"/>
     <property name="binding.xxhash" value="true"/>
     <property name="binding.yoga" value="true"/>
@@ -50,10 +49,11 @@ This script is included in /config/build-definitions.xml.
     <property name="java-only.binding.jawt" value="true"/>
     <property name="java-only.binding.odbc" value="true"/>
     <property name="java-only.binding.opencl" value="true"/>
+    <property name="java-only.binding.vulkan" value="true"/>
 
     <!-- Set the path to the Oculus SDK to enable. -->
     <!-- TODO: add headers in here -->
-    <property name="OCULUS_SDK_PATH" location="../OculusSDK" relative="false"/>
+    <property name="OCULUS_SDK_PATH" location="../../CLONES/OculusSDK" relative="false"/>
 
     <!-- // ================================ // -->
 
@@ -127,7 +127,7 @@ This script is included in /config/build-definitions.xml.
 
             var src = "modules/lwjgl/" + it + "/src";
 
-            templates.push(src + "/templates/kotlin");
+            templates.push(src + "/main/kotlin");
             sources.push(src + "/generated/java");
             if (java.nio.file.Files.isDirectory(java.nio.file.Paths.get(src + "/main/java"))) {
                 sources.push(src + "/main/java");
@@ -170,7 +170,6 @@ This script is included in /config/build-definitions.xml.
                 <sequential if:set="binding.tinyexr"><local name="module"/><property name="module" value="tinyexr"/><body/></sequential>
                 <sequential if:set="binding.tinyfd"><local name="module"/><property name="module" value="tinyfd"/><body/></sequential>
                 <sequential if:set="binding.tootle"><local name="module"/><property name="module" value="tootle"/><body/></sequential>
-                <sequential if:set="binding.vma"><local name="module"/><property name="module" value="vma"/><body/></sequential>
                 <sequential if:set="binding.vulkan"><local name="module"/><property name="module" value="vulkan"/><body/></sequential>
                 <sequential if:set="binding.xxhash"><local name="module"/><property name="module" value="xxhash"/><body/></sequential>
                 <sequential if:set="binding.yoga"><local name="module"/><property name="module" value="yoga"/><body/></sequential>

@@ -28,12 +28,12 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct bgfx_attachment_t {
  *     bgfx_texture_handle_t handle;
  *     uint16_t mip;
  *     uint16_t layer;
- * }</code></pre>
+ * }</pre></code>
  */
 @NativeType("struct bgfx_attachment_t")
 public class BGFXAttachment extends Struct implements NativeResource {
@@ -41,7 +41,6 @@ public class BGFXAttachment extends Struct implements NativeResource {
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */

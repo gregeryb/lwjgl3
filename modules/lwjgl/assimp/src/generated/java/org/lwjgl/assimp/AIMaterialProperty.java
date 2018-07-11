@@ -21,14 +21,14 @@ import static org.lwjgl.system.MemoryUtil.*;
  * 
  * <p>Material property names follow a simple scheme:</p>
  * 
- * <pre><code>
+ * <code><pre>
  * $&lt;name&gt;
  * ?&lt;name&gt;
  *     A public property, there must be corresponding AI_MATKEY_XXX define
  *     2nd: Public, but ignored by the aiProcess_RemoveRedundantMaterials
  *     post-processing step.
  * ~&lt;name&gt;
- *     A temporary property for internal use.</code></pre>
+ *     A temporary property for internal use.</pre></code>
  * 
  * <h3>Member documentation</h3>
  * 
@@ -45,7 +45,7 @@ import static org.lwjgl.system.MemoryUtil.*;
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct aiMaterialProperty {
  *     {@link AIString struct aiString} mKey;
  *     unsigned int mSemantic;
@@ -53,7 +53,7 @@ import static org.lwjgl.system.MemoryUtil.*;
  *     unsigned int mDataLength;
  *     aiPropertyTypeInfo mType;
  *     char * mData;
- * }</code></pre>
+ * }</pre></code>
  */
 @NativeType("struct aiMaterialProperty")
 public class AIMaterialProperty extends Struct {
@@ -61,7 +61,6 @@ public class AIMaterialProperty extends Struct {
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */
@@ -114,8 +113,6 @@ public class AIMaterialProperty extends Struct {
     /** Returns a {@link AIString} view of the {@code mKey} field. */
     @NativeType("struct aiString")
     public AIString mKey() { return nmKey(address()); }
-    /** Passes the {@code mKey} field to the specified {@link java.util.function.Consumer Consumer}. */
-    public AIMaterialProperty mKey(java.util.function.Consumer<AIString> consumer) { consumer.accept(mKey()); return this; }
     /** Returns the value of the {@code mSemantic} field. */
     @NativeType("unsigned int")
     public int mSemantic() { return nmSemantic(address()); }
@@ -225,8 +222,6 @@ public class AIMaterialProperty extends Struct {
         /** Returns a {@link AIString} view of the {@code mKey} field. */
         @NativeType("struct aiString")
         public AIString mKey() { return AIMaterialProperty.nmKey(address()); }
-        /** Passes the {@code mKey} field to the specified {@link java.util.function.Consumer Consumer}. */
-        public AIMaterialProperty.Buffer mKey(java.util.function.Consumer<AIString> consumer) { consumer.accept(mKey()); return this; }
         /** Returns the value of the {@code mSemantic} field. */
         @NativeType("unsigned int")
         public int mSemantic() { return AIMaterialProperty.nmSemantic(address()); }

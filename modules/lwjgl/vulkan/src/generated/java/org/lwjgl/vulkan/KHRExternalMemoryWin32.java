@@ -76,10 +76,9 @@ public class KHRExternalMemoryWin32 {
         throw new UnsupportedOperationException();
     }
 
-    static boolean checkCapsDevice(FunctionProvider provider, java.util.Map<String, Long> caps, java.util.Set<String> ext) {
-        return ext.contains("VK_KHR_external_memory_win32") && VK.checkExtension("VK_KHR_external_memory_win32",
-               VK.isSupported(provider, "vkGetMemoryWin32HandleKHR", caps)
-            && VK.isSupported(provider, "vkGetMemoryWin32HandlePropertiesKHR", caps)
+    static boolean isAvailable(VKCapabilitiesDevice caps) {
+        return checkFunctions(
+            caps.vkGetMemoryWin32HandleKHR, caps.vkGetMemoryWin32HandlePropertiesKHR
         );
     }
 
@@ -101,11 +100,11 @@ public class KHRExternalMemoryWin32 {
      * 
      * <p>To export a Windows handle representing the underlying resources of a Vulkan device memory object, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * VkResult vkGetMemoryWin32HandleKHR(
      *     VkDevice                                    device,
      *     const VkMemoryGetWin32HandleInfoKHR*        pGetWin32HandleInfo,
-     *     HANDLE*                                     pHandle);</code></pre>
+     *     HANDLE*                                     pHandle);</pre></code>
      * 
      * <h5>Description</h5>
      * 
@@ -142,7 +141,7 @@ public class KHRExternalMemoryWin32 {
      * @param pHandle             will return the Windows handle representing the underlying resources of the device memory object.
      */
     @NativeType("VkResult")
-    public static int vkGetMemoryWin32HandleKHR(VkDevice device, @NativeType("VkMemoryGetWin32HandleInfoKHR const *") VkMemoryGetWin32HandleInfoKHR pGetWin32HandleInfo, @NativeType("HANDLE *") PointerBuffer pHandle) {
+    public static int vkGetMemoryWin32HandleKHR(VkDevice device, @NativeType("const VkMemoryGetWin32HandleInfoKHR *") VkMemoryGetWin32HandleInfoKHR pGetWin32HandleInfo, @NativeType("HANDLE *") PointerBuffer pHandle) {
         if (CHECKS) {
             check(pHandle, 1);
         }
@@ -168,12 +167,12 @@ public class KHRExternalMemoryWin32 {
      * 
      * <p>Windows memory handles compatible with Vulkan <b>may</b> also be created by non-Vulkan APIs using methods beyond the scope of this specification. To determine the correct parameters to use when importing such handles, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * VkResult vkGetMemoryWin32HandlePropertiesKHR(
      *     VkDevice                                    device,
-     *     VkExternalMemoryHandleTypeFlagBits          handleType,
+     *     VkExternalMemoryHandleTypeFlagBitsKHR       handleType,
      *     HANDLE                                      handle,
-     *     VkMemoryWin32HandlePropertiesKHR*           pMemoryWin32HandleProperties);</code></pre>
+     *     VkMemoryWin32HandlePropertiesKHR*           pMemoryWin32HandleProperties);</pre></code>
      * 
      * <h5>Valid Usage</h5>
      * 
@@ -186,7 +185,7 @@ public class KHRExternalMemoryWin32 {
      * 
      * <ul>
      * <li>{@code device} <b>must</b> be a valid {@code VkDevice} handle</li>
-     * <li>{@code handleType} <b>must</b> be a valid {@code VkExternalMemoryHandleTypeFlagBits} value</li>
+     * <li>{@code handleType} <b>must</b> be a valid {@code VkExternalMemoryHandleTypeFlagBitsKHR} value</li>
      * <li>{@code pMemoryWin32HandleProperties} <b>must</b> be a valid pointer to a {@link VkMemoryWin32HandlePropertiesKHR} structure</li>
      * </ul>
      * 
@@ -199,7 +198,7 @@ public class KHRExternalMemoryWin32 {
      * </ul></dd>
      * <dt>On failure, this command returns</dt>
      * <dd><ul>
-     * <li>{@link VK11#VK_ERROR_INVALID_EXTERNAL_HANDLE ERROR_INVALID_EXTERNAL_HANDLE}</li>
+     * <li>{@link KHRExternalMemory#VK_ERROR_INVALID_EXTERNAL_HANDLE_KHR ERROR_INVALID_EXTERNAL_HANDLE_KHR}</li>
      * </ul></dd>
      * </dl>
      * 
@@ -213,7 +212,7 @@ public class KHRExternalMemoryWin32 {
      * @param pMemoryWin32HandleProperties will return properties of {@code handle}.
      */
     @NativeType("VkResult")
-    public static int vkGetMemoryWin32HandlePropertiesKHR(VkDevice device, @NativeType("VkExternalMemoryHandleTypeFlagBits") int handleType, @NativeType("HANDLE") long handle, @NativeType("VkMemoryWin32HandlePropertiesKHR *") VkMemoryWin32HandlePropertiesKHR pMemoryWin32HandleProperties) {
+    public static int vkGetMemoryWin32HandlePropertiesKHR(VkDevice device, @NativeType("VkExternalMemoryHandleTypeFlagBitsKHR") int handleType, @NativeType("HANDLE") long handle, @NativeType("VkMemoryWin32HandlePropertiesKHR *") VkMemoryWin32HandlePropertiesKHR pMemoryWin32HandleProperties) {
         return nvkGetMemoryWin32HandlePropertiesKHR(device, handleType, handle, pMemoryWin32HandleProperties.address());
     }
 

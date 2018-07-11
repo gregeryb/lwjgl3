@@ -185,7 +185,7 @@ public class ARBMatrixPalette {
         nglMatrixIndexPointerARB(size, GL11.GL_UNSIGNED_INT, stride, memAddress(pointer));
     }
 
-    /** Array version of: {@link #glMatrixIndexuivARB MatrixIndexuivARB} */
+    /** register Array version of: {@link #glMatrixIndexuivARB MatrixIndexuivARB} */
     public static void glMatrixIndexuivARB(@NativeType("GLuint *") int[] indices) {
         long __functionAddress = GL.getICD().glMatrixIndexuivARB;
         if (CHECKS) {
@@ -194,7 +194,7 @@ public class ARBMatrixPalette {
         callPV(__functionAddress, indices.length, indices);
     }
 
-    /** Array version of: {@link #glMatrixIndexusvARB MatrixIndexusvARB} */
+    /** register Array version of: {@link #glMatrixIndexusvARB MatrixIndexusvARB} */
     public static void glMatrixIndexusvARB(@NativeType("GLushort *") short[] indices) {
         long __functionAddress = GL.getICD().glMatrixIndexusvARB;
         if (CHECKS) {

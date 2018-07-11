@@ -5,9 +5,9 @@
 package org.lwjgl.system;
 
 /**
- * <p>Base interface for dynamically created native functions that call into Java code. Pointers to such functions can be passed to native APIs as callbacks.</p>
+ * Base interface for dynamically created native functions that call into Java code. Pointers to such functions can be passed to native APIs as callbacks.
  *
- * <p>This interface does not define a callback method, therefore it should not be implemented directly. The following inner interfaces should be used instead:</p>
+ * <p>This interface does not define a callback method, therefore it should not be implemented directly. The following inner interfaces should be used instead:
  * <ul>
  * <li>{@link V}</li>
  * <li>{@link Z}</li>
@@ -18,7 +18,7 @@ package org.lwjgl.system;
  * <li>{@link F}</li>
  * <li>{@link D}</li>
  * <li>{@link P}</li>
- * </ul>
+ * </ul></p>
  */
 public interface CallbackI extends Pointer {
 

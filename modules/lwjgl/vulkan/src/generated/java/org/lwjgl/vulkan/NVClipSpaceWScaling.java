@@ -21,14 +21,14 @@ import static org.lwjgl.system.JNI.*;
  * 
  * <h5>Examples</h5>
  * 
- * <pre><code>
+ * <code><pre>
  * VkViewport viewports[4];
  * VkRect2D scissors[4];
  * VkViewportWScalingNV scalings[4];
  * 
- * for (int i = 0; i &lt; 4; i++) {
- *     int x = (i &amp; 2) ? 0 : currentWindowWidth / 2;
- *     int y = (i &amp; 1) ? 0 : currentWindowHeight / 2;
+ * for (int i = 0; i < 4; i++) {
+ *     int x = (i & 2) ? 0 : currentWindowWidth / 2;
+ *     int y = (i & 1) ? 0 : currentWindowHeight / 2;
  * 
  *     viewports[i].x = 0;
  *     viewports[i].y = 0;
@@ -43,26 +43,26 @@ import static org.lwjgl.system.JNI.*;
  *     scissors[i].extent.height = currentWindowHeight/2;
  * 
  *     const float factor = 0.15;
- *     scalings[i].xcoeff = ((i &amp; 2) ? -1.0 : 1.0) * factor;
- *     scalings[i].ycoeff = ((i &amp; 1) ? -1.0 : 1.0) * factor;
+ *     scalings[i].xcoeff = ((i & 2) ? -1.0 : 1.0) * factor;
+ *     scalings[i].ycoeff = ((i & 1) ? -1.0 : 1.0) * factor;
  * }
  * 
  * VkPipelineViewportWScalingStateCreateInfoNV vpWScalingStateInfo = { VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_W_SCALING_STATE_CREATE_INFO_NV };
  * 
  * vpWScalingStateInfo.viewportWScalingEnable = VK_TRUE;
  * vpWScalingStateInfo.viewportCount = 4;
- * vpWScalingStateInfo.pViewportWScalings = &amp;scalings[0];
+ * vpWScalingStateInfo.pViewportWScalings = &scalings[0];
  * 
  * VkPipelineViewportStateCreateInfo vpStateInfo = { VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO };
  * vpStateInfo.viewportCount = 4;
- * vpStateInfo.pViewports = &amp;viewports[0];
+ * vpStateInfo.pViewports = &viewports[0];
  * vpStateInfo.scissorCount = 4;
- * vpStateInfo.pScissors = &amp;scissors[0];
- * vpStateInfo.pNext = &amp;vpWScalingStateInfo;</code></pre>
+ * vpStateInfo.pScissors = &scissors[0];
+ * vpStateInfo.pNext = &vpWScalingStateInfo;</pre></code>
  * 
  * <p>Example shader to read from a w-scaled texture:</p>
  * 
- * <pre><code>
+ * <code><pre>
  * // Vertex Shader
  * // Draw a triangle that covers the whole screen
  * const vec4 positions[3] = vec4[3](vec4(-1, -1, 0, 1),
@@ -99,7 +99,7 @@ import static org.lwjgl.system.JNI.*;
  *     P *= sign(uv);
  * 
  *     Color = texture(tex, P * 0.5 + 0.5);
- * }</code></pre>
+ * }</pre></code>
  * 
  * <dl>
  * <dt><b>Name String</b></dt>
@@ -116,7 +116,7 @@ import static org.lwjgl.system.JNI.*;
  * </ul></dd>
  * <dt><b>Contact</b></dt>
  * <dd><ul>
- * <li>Eric Werness @ewerness-nv</li>
+ * <li>Eric Werness @ewerness</li>
  * </ul></dd>
  * <dt><b>Last Modified Date</b></dt>
  * <dd>2017-02-15</dd>
@@ -145,9 +145,9 @@ public class NVClipSpaceWScaling {
         throw new UnsupportedOperationException();
     }
 
-    static boolean checkCapsDevice(FunctionProvider provider, java.util.Map<String, Long> caps, java.util.Set<String> ext) {
-        return ext.contains("VK_NV_clip_space_w_scaling") && VK.checkExtension("VK_NV_clip_space_w_scaling",
-               VK.isSupported(provider, "vkCmdSetViewportWScalingNV", caps)
+    static boolean isAvailable(VKCapabilitiesDevice caps) {
+        return checkFunctions(
+            caps.vkCmdSetViewportWScalingNV
         );
     }
 
@@ -173,12 +173,12 @@ public class NVClipSpaceWScaling {
      * 
      * <p>If the bound pipeline state object was not created with the {@link #VK_DYNAMIC_STATE_VIEWPORT_W_SCALING_NV DYNAMIC_STATE_VIEWPORT_W_SCALING_NV} dynamic state enabled, viewport <b>W</b> scaling parameters are specified using the {@code pViewportWScalings} member of {@link VkPipelineViewportWScalingStateCreateInfoNV} in the pipeline state object. If the pipeline state object was created with the {@link #VK_DYNAMIC_STATE_VIEWPORT_W_SCALING_NV DYNAMIC_STATE_VIEWPORT_W_SCALING_NV} dynamic state enabled, the viewport transformation parameters are dynamically set and changed with the command:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * void vkCmdSetViewportWScalingNV(
      *     VkCommandBuffer                             commandBuffer,
      *     uint32_t                                    firstViewport,
      *     uint32_t                                    viewportCount,
-     *     const VkViewportWScalingNV*                 pViewportWScalings);</code></pre>
+     *     const VkViewportWScalingNV*                 pViewportWScalings);</pre></code>
      * 
      * <h5>Description</h5>
      * 
@@ -187,7 +187,7 @@ public class NVClipSpaceWScaling {
      * <h5>Valid Usage</h5>
      * 
      * <ul>
-     * <li>The bound graphics pipeline <b>must</b> have been created with the {@link #VK_DYNAMIC_STATE_VIEWPORT_W_SCALING_NV DYNAMIC_STATE_VIEWPORT_W_SCALING_NV} dynamic state enabled</li>
+     * <li>The currently bound graphics pipeline <b>must</b> have been created with the {@link #VK_DYNAMIC_STATE_VIEWPORT_W_SCALING_NV DYNAMIC_STATE_VIEWPORT_W_SCALING_NV} dynamic state enabled</li>
      * <li>{@code firstViewport} <b>must</b> be less than {@link VkPhysicalDeviceLimits}{@code ::maxViewports}</li>
      * <li>The sum of {@code firstViewport} and {@code viewportCount} <b>must</b> be between 1 and {@link VkPhysicalDeviceLimits}{@code ::maxViewports}, inclusive</li>
      * </ul>
@@ -224,7 +224,7 @@ public class NVClipSpaceWScaling {
      * @param firstViewport      the index of the first viewport whose parameters are updated by the command.
      * @param pViewportWScalings a pointer to an array of {@link VkViewportWScalingNV} structures specifying viewport parameters.
      */
-    public static void vkCmdSetViewportWScalingNV(VkCommandBuffer commandBuffer, @NativeType("uint32_t") int firstViewport, @NativeType("VkViewportWScalingNV const *") VkViewportWScalingNV.Buffer pViewportWScalings) {
+    public static void vkCmdSetViewportWScalingNV(VkCommandBuffer commandBuffer, @NativeType("uint32_t") int firstViewport, @NativeType("const VkViewportWScalingNV *") VkViewportWScalingNV.Buffer pViewportWScalings) {
         nvkCmdSetViewportWScalingNV(commandBuffer, firstViewport, pViewportWScalings.remaining(), pViewportWScalings.address());
     }
 

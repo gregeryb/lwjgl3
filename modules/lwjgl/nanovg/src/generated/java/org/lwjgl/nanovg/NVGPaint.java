@@ -33,7 +33,7 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct NVGpaint {
  *     float xform[6];
  *     float extent[2];
@@ -42,7 +42,7 @@ import static org.lwjgl.system.MemoryStack.*;
  *     {@link NVGColor NVGcolor} innerColor;
  *     {@link NVGColor NVGcolor} outerColor;
  *     int image;
- * }</code></pre>
+ * }</pre></code>
  */
 @NativeType("struct NVGpaint")
 public class NVGPaint extends Struct implements NativeResource {
@@ -50,7 +50,6 @@ public class NVGPaint extends Struct implements NativeResource {
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */
@@ -120,13 +119,9 @@ public class NVGPaint extends Struct implements NativeResource {
     /** Returns a {@link NVGColor} view of the {@code innerColor} field. */
     @NativeType("NVGcolor")
     public NVGColor innerColor() { return ninnerColor(address()); }
-    /** Passes the {@code innerColor} field to the specified {@link java.util.function.Consumer Consumer}. */
-    public NVGPaint innerColor(java.util.function.Consumer<NVGColor> consumer) { consumer.accept(innerColor()); return this; }
     /** Returns a {@link NVGColor} view of the {@code outerColor} field. */
     @NativeType("NVGcolor")
     public NVGColor outerColor() { return nouterColor(address()); }
-    /** Passes the {@code outerColor} field to the specified {@link java.util.function.Consumer Consumer}. */
-    public NVGPaint outerColor(java.util.function.Consumer<NVGColor> consumer) { consumer.accept(outerColor()); return this; }
     /** Returns the value of the {@code image} field. */
     public int image() { return nimage(address()); }
 
@@ -327,13 +322,15 @@ public class NVGPaint extends Struct implements NativeResource {
     public static FloatBuffer nxform(long struct) { return memFloatBuffer(struct + NVGPaint.XFORM, 6); }
     /** Unsafe version of {@link #xform(int) xform}. */
     public static float nxform(long struct, int index) {
-        return memGetFloat(struct + NVGPaint.XFORM + check(index, 6) * 4);
+        if (CHECKS) { check(index, 6); }
+        return memGetFloat(struct + NVGPaint.XFORM + index * 4);
     }
     /** Unsafe version of {@link #extent}. */
     public static FloatBuffer nextent(long struct) { return memFloatBuffer(struct + NVGPaint.EXTENT, 2); }
     /** Unsafe version of {@link #extent(int) extent}. */
     public static float nextent(long struct, int index) {
-        return memGetFloat(struct + NVGPaint.EXTENT + check(index, 2) * 4);
+        if (CHECKS) { check(index, 2); }
+        return memGetFloat(struct + NVGPaint.EXTENT + index * 4);
     }
     /** Unsafe version of {@link #radius}. */
     public static float nradius(long struct) { return memGetFloat(struct + NVGPaint.RADIUS); }
@@ -353,7 +350,8 @@ public class NVGPaint extends Struct implements NativeResource {
     }
     /** Unsafe version of {@link #xform(int, float) xform}. */
     public static void nxform(long struct, int index, float value) {
-        memPutFloat(struct + NVGPaint.XFORM + check(index, 6) * 4, value);
+        if (CHECKS) { check(index, 6); }
+        memPutFloat(struct + NVGPaint.XFORM + index * 4, value);
     }
     /** Unsafe version of {@link #extent(FloatBuffer) extent}. */
     public static void nextent(long struct, FloatBuffer value) {
@@ -362,7 +360,8 @@ public class NVGPaint extends Struct implements NativeResource {
     }
     /** Unsafe version of {@link #extent(int, float) extent}. */
     public static void nextent(long struct, int index, float value) {
-        memPutFloat(struct + NVGPaint.EXTENT + check(index, 2) * 4, value);
+        if (CHECKS) { check(index, 2); }
+        memPutFloat(struct + NVGPaint.EXTENT + index * 4, value);
     }
     /** Unsafe version of {@link #radius(float) radius}. */
     public static void nradius(long struct, float value) { memPutFloat(struct + NVGPaint.RADIUS, value); }
@@ -438,13 +437,9 @@ public class NVGPaint extends Struct implements NativeResource {
         /** Returns a {@link NVGColor} view of the {@code innerColor} field. */
         @NativeType("NVGcolor")
         public NVGColor innerColor() { return NVGPaint.ninnerColor(address()); }
-        /** Passes the {@code innerColor} field to the specified {@link java.util.function.Consumer Consumer}. */
-        public NVGPaint.Buffer innerColor(java.util.function.Consumer<NVGColor> consumer) { consumer.accept(innerColor()); return this; }
         /** Returns a {@link NVGColor} view of the {@code outerColor} field. */
         @NativeType("NVGcolor")
         public NVGColor outerColor() { return NVGPaint.nouterColor(address()); }
-        /** Passes the {@code outerColor} field to the specified {@link java.util.function.Consumer Consumer}. */
-        public NVGPaint.Buffer outerColor(java.util.function.Consumer<NVGColor> consumer) { consumer.accept(outerColor()); return this; }
         /** Returns the value of the {@code image} field. */
         public int image() { return NVGPaint.nimage(address()); }
 

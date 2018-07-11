@@ -28,14 +28,14 @@ import static org.lwjgl.system.MemoryUtil.*;
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct JAWT_X11DrawingSurfaceInfo {
  *     Drawable drawable;
  *     Display * display;
  *     VisualID visualID;
  *     Colormap colormapID;
  *     int depth;
- * }</code></pre>
+ * }</pre></code>
  */
 @NativeType("struct JAWT_X11DrawingSurfaceInfo")
 public class JAWTX11DrawingSurfaceInfo extends Struct {
@@ -43,7 +43,6 @@ public class JAWTX11DrawingSurfaceInfo extends Struct {
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */

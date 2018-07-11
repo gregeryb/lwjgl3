@@ -21,11 +21,11 @@ import static org.lwjgl.glfw.GLFW.*;
  * 
  * <h3>Type</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * void (*) (
  *     int error,
  *     char *description
- * )</code></pre>
+ * )</pre></code>
  *
  * @since version 3.0
  */

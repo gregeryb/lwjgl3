@@ -40,21 +40,20 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct VkSparseImageMemoryRequirements {
  *     {@link VkSparseImageFormatProperties VkSparseImageFormatProperties} formatProperties;
  *     uint32_t imageMipTailFirstLod;
  *     VkDeviceSize imageMipTailSize;
  *     VkDeviceSize imageMipTailOffset;
  *     VkDeviceSize imageMipTailStride;
- * }</code></pre>
+ * }</pre></code>
  */
 public class VkSparseImageMemoryRequirements extends Struct implements NativeResource {
 
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */

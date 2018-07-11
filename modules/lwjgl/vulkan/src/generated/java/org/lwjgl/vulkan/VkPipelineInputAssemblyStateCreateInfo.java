@@ -55,21 +55,20 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct VkPipelineInputAssemblyStateCreateInfo {
  *     VkStructureType sType;
- *     void const * pNext;
+ *     const void * pNext;
  *     VkPipelineInputAssemblyStateCreateFlags flags;
  *     VkPrimitiveTopology topology;
  *     VkBool32 primitiveRestartEnable;
- * }</code></pre>
+ * }</pre></code>
  */
 public class VkPipelineInputAssemblyStateCreateInfo extends Struct implements NativeResource {
 
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */
@@ -120,7 +119,7 @@ public class VkPipelineInputAssemblyStateCreateInfo extends Struct implements Na
     @NativeType("VkStructureType")
     public int sType() { return nsType(address()); }
     /** Returns the value of the {@code pNext} field. */
-    @NativeType("void const *")
+    @NativeType("const void *")
     public long pNext() { return npNext(address()); }
     /** Returns the value of the {@code flags} field. */
     @NativeType("VkPipelineInputAssemblyStateCreateFlags")
@@ -135,7 +134,7 @@ public class VkPipelineInputAssemblyStateCreateInfo extends Struct implements Na
     /** Sets the specified value to the {@code sType} field. */
     public VkPipelineInputAssemblyStateCreateInfo sType(@NativeType("VkStructureType") int value) { nsType(address(), value); return this; }
     /** Sets the specified value to the {@code pNext} field. */
-    public VkPipelineInputAssemblyStateCreateInfo pNext(@NativeType("void const *") long value) { npNext(address(), value); return this; }
+    public VkPipelineInputAssemblyStateCreateInfo pNext(@NativeType("const void *") long value) { npNext(address(), value); return this; }
     /** Sets the specified value to the {@code flags} field. */
     public VkPipelineInputAssemblyStateCreateInfo flags(@NativeType("VkPipelineInputAssemblyStateCreateFlags") int value) { nflags(address(), value); return this; }
     /** Sets the specified value to the {@code topology} field. */
@@ -385,7 +384,7 @@ public class VkPipelineInputAssemblyStateCreateInfo extends Struct implements Na
         @NativeType("VkStructureType")
         public int sType() { return VkPipelineInputAssemblyStateCreateInfo.nsType(address()); }
         /** Returns the value of the {@code pNext} field. */
-        @NativeType("void const *")
+        @NativeType("const void *")
         public long pNext() { return VkPipelineInputAssemblyStateCreateInfo.npNext(address()); }
         /** Returns the value of the {@code flags} field. */
         @NativeType("VkPipelineInputAssemblyStateCreateFlags")
@@ -400,7 +399,7 @@ public class VkPipelineInputAssemblyStateCreateInfo extends Struct implements Na
         /** Sets the specified value to the {@code sType} field. */
         public VkPipelineInputAssemblyStateCreateInfo.Buffer sType(@NativeType("VkStructureType") int value) { VkPipelineInputAssemblyStateCreateInfo.nsType(address(), value); return this; }
         /** Sets the specified value to the {@code pNext} field. */
-        public VkPipelineInputAssemblyStateCreateInfo.Buffer pNext(@NativeType("void const *") long value) { VkPipelineInputAssemblyStateCreateInfo.npNext(address(), value); return this; }
+        public VkPipelineInputAssemblyStateCreateInfo.Buffer pNext(@NativeType("const void *") long value) { VkPipelineInputAssemblyStateCreateInfo.npNext(address(), value); return this; }
         /** Sets the specified value to the {@code flags} field. */
         public VkPipelineInputAssemblyStateCreateInfo.Buffer flags(@NativeType("VkPipelineInputAssemblyStateCreateFlags") int value) { VkPipelineInputAssemblyStateCreateInfo.nflags(address(), value); return this; }
         /** Sets the specified value to the {@code topology} field. */

@@ -14,18 +14,60 @@ import org.lwjgl.system.*;
 import static org.lwjgl.system.MemoryUtil.*;
 
 /**
- * See {@link VkExternalMemoryProperties}.
+ * Structure specifying external memory handle type capabilities.
+ * 
+ * <h5>Description</h5>
+ * 
+ * <p>{@code compatibleHandleTypes} <b>must</b> include at least {@code handleType}. Inclusion of a handle type in {@code compatibleHandleTypes} does not imply the values returned in {@link VkImageFormatProperties2KHR} will be the same when {@link VkPhysicalDeviceExternalImageFormatInfoKHR}{@code ::handleType} is set to that type. The application is responsible for querying the capabilities of all handle types intended for concurrent use in a single image and intersecting them to obtain the compatible set of capabilities.</p>
+ * 
+ * <h5>See Also</h5>
+ * 
+ * <p>{@link VkExternalBufferPropertiesKHR}, {@link VkExternalImageFormatPropertiesKHR}</p>
+ * 
+ * <h3>Member documentation</h3>
+ * 
+ * <ul>
+ * <li>{@code externalMemoryFeatures} &ndash; a bitmask of {@code VkExternalMemoryFeatureFlagBitsKHR} specifying the features of {@code handleType}.</li>
+ * <li>{@code exportFromImportedHandleTypes} &ndash; a bitmask of {@code VkExternalMemoryHandleTypeFlagBitsKHR} specifying which types of imported handle {@code handleType} <b>can</b> be exported from.</li>
+ * <li>{@code compatibleHandleTypes} &ndash; a bitmask of {@code VkExternalMemoryHandleTypeFlagBitsKHR} specifying handle types which <b>can</b> be specified at the same time as {@code handleType} when creating an image compatible with external memory.</li>
+ * </ul>
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct VkExternalMemoryPropertiesKHR {
- *     VkExternalMemoryFeatureFlags externalMemoryFeatures;
- *     VkExternalMemoryHandleTypeFlags exportFromImportedHandleTypes;
- *     VkExternalMemoryHandleTypeFlags compatibleHandleTypes;
- * }</code></pre>
+ *     VkExternalMemoryFeatureFlagsKHR externalMemoryFeatures;
+ *     VkExternalMemoryHandleTypeFlagsKHR exportFromImportedHandleTypes;
+ *     VkExternalMemoryHandleTypeFlagsKHR compatibleHandleTypes;
+ * }</pre></code>
  */
-public class VkExternalMemoryPropertiesKHR extends VkExternalMemoryProperties {
+public class VkExternalMemoryPropertiesKHR extends Struct {
+
+    /** The struct size in bytes. */
+    public static final int SIZEOF;
+
+    public static final int ALIGNOF;
+
+    /** The struct member offsets. */
+    public static final int
+        EXTERNALMEMORYFEATURES,
+        EXPORTFROMIMPORTEDHANDLETYPES,
+        COMPATIBLEHANDLETYPES;
+
+    static {
+        Layout layout = __struct(
+            __member(4),
+            __member(4),
+            __member(4)
+        );
+
+        SIZEOF = layout.getSize();
+        ALIGNOF = layout.getAlignment();
+
+        EXTERNALMEMORYFEATURES = layout.offsetof(0);
+        EXPORTFROMIMPORTEDHANDLETYPES = layout.offsetof(1);
+        COMPATIBLEHANDLETYPES = layout.offsetof(2);
+    }
 
     VkExternalMemoryPropertiesKHR(long address, @Nullable ByteBuffer container) {
         super(address, container);
@@ -40,6 +82,19 @@ public class VkExternalMemoryPropertiesKHR extends VkExternalMemoryProperties {
     public VkExternalMemoryPropertiesKHR(ByteBuffer container) {
         this(memAddress(container), __checkContainer(container, SIZEOF));
     }
+
+    @Override
+    public int sizeof() { return SIZEOF; }
+
+    /** Returns the value of the {@code externalMemoryFeatures} field. */
+    @NativeType("VkExternalMemoryFeatureFlagsKHR")
+    public int externalMemoryFeatures() { return nexternalMemoryFeatures(address()); }
+    /** Returns the value of the {@code exportFromImportedHandleTypes} field. */
+    @NativeType("VkExternalMemoryHandleTypeFlagsKHR")
+    public int exportFromImportedHandleTypes() { return nexportFromImportedHandleTypes(address()); }
+    /** Returns the value of the {@code compatibleHandleTypes} field. */
+    @NativeType("VkExternalMemoryHandleTypeFlagsKHR")
+    public int compatibleHandleTypes() { return ncompatibleHandleTypes(address()); }
 
     // -----------------------------------
 
@@ -72,8 +127,17 @@ public class VkExternalMemoryPropertiesKHR extends VkExternalMemoryProperties {
 
     // -----------------------------------
 
+    /** Unsafe version of {@link #externalMemoryFeatures}. */
+    public static int nexternalMemoryFeatures(long struct) { return memGetInt(struct + VkExternalMemoryPropertiesKHR.EXTERNALMEMORYFEATURES); }
+    /** Unsafe version of {@link #exportFromImportedHandleTypes}. */
+    public static int nexportFromImportedHandleTypes(long struct) { return memGetInt(struct + VkExternalMemoryPropertiesKHR.EXPORTFROMIMPORTEDHANDLETYPES); }
+    /** Unsafe version of {@link #compatibleHandleTypes}. */
+    public static int ncompatibleHandleTypes(long struct) { return memGetInt(struct + VkExternalMemoryPropertiesKHR.COMPATIBLEHANDLETYPES); }
+
+    // -----------------------------------
+
     /** An array of {@link VkExternalMemoryPropertiesKHR} structs. */
-    public static class Buffer extends VkExternalMemoryProperties.Buffer {
+    public static class Buffer extends StructBuffer<VkExternalMemoryPropertiesKHR, Buffer> {
 
         /**
          * Creates a new {@link VkExternalMemoryPropertiesKHR.Buffer} instance backed by the specified container.
@@ -85,7 +149,7 @@ public class VkExternalMemoryPropertiesKHR extends VkExternalMemoryProperties {
          * <p>The created buffer instance holds a strong reference to the container object.</p>
          */
         public Buffer(ByteBuffer container) {
-            super(container);
+            super(container, container.remaining() / SIZEOF);
         }
 
         public Buffer(long address, int cap) {
@@ -110,6 +174,21 @@ public class VkExternalMemoryPropertiesKHR extends VkExternalMemoryProperties {
         protected VkExternalMemoryPropertiesKHR newInstance(long address) {
             return new VkExternalMemoryPropertiesKHR(address, container);
         }
+
+        @Override
+        public int sizeof() {
+            return SIZEOF;
+        }
+
+        /** Returns the value of the {@code externalMemoryFeatures} field. */
+        @NativeType("VkExternalMemoryFeatureFlagsKHR")
+        public int externalMemoryFeatures() { return VkExternalMemoryPropertiesKHR.nexternalMemoryFeatures(address()); }
+        /** Returns the value of the {@code exportFromImportedHandleTypes} field. */
+        @NativeType("VkExternalMemoryHandleTypeFlagsKHR")
+        public int exportFromImportedHandleTypes() { return VkExternalMemoryPropertiesKHR.nexportFromImportedHandleTypes(address()); }
+        /** Returns the value of the {@code compatibleHandleTypes} field. */
+        @NativeType("VkExternalMemoryHandleTypeFlagsKHR")
+        public int compatibleHandleTypes() { return VkExternalMemoryPropertiesKHR.ncompatibleHandleTypes(address()); }
 
     }
 

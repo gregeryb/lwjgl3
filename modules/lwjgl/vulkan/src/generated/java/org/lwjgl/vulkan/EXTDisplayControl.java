@@ -131,12 +131,9 @@ public class EXTDisplayControl {
         throw new UnsupportedOperationException();
     }
 
-    static boolean checkCapsDevice(FunctionProvider provider, java.util.Map<String, Long> caps, java.util.Set<String> ext) {
-        return ext.contains("VK_EXT_display_control") && VK.checkExtension("VK_EXT_display_control",
-               VK.isSupported(provider, "vkDisplayPowerControlEXT", caps)
-            && VK.isSupported(provider, "vkRegisterDeviceEventEXT", caps)
-            && VK.isSupported(provider, "vkRegisterDisplayEventEXT", caps)
-            && VK.isSupported(provider, "vkGetSwapchainCounterEXT", caps)
+    static boolean isAvailable(VKCapabilitiesDevice caps) {
+        return checkFunctions(
+            caps.vkDisplayPowerControlEXT, caps.vkRegisterDeviceEventEXT, caps.vkRegisterDisplayEventEXT, caps.vkGetSwapchainCounterEXT
         );
     }
 
@@ -158,11 +155,11 @@ public class EXTDisplayControl {
      * 
      * <p>To set the power state of a display, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * VkResult vkDisplayPowerControlEXT(
      *     VkDevice                                    device,
      *     VkDisplayKHR                                display,
-     *     const VkDisplayPowerInfoEXT*                pDisplayPowerInfo);</code></pre>
+     *     const VkDisplayPowerInfoEXT*                pDisplayPowerInfo);</pre></code>
      * 
      * <h5>Valid Usage (Implicit)</h5>
      * 
@@ -190,7 +187,7 @@ public class EXTDisplayControl {
      * @param pDisplayPowerInfo an instance of {@link VkDisplayPowerInfoEXT} specifying the new power state of {@code display}.
      */
     @NativeType("VkResult")
-    public static int vkDisplayPowerControlEXT(VkDevice device, @NativeType("VkDisplayKHR") long display, @NativeType("VkDisplayPowerInfoEXT const *") VkDisplayPowerInfoEXT pDisplayPowerInfo) {
+    public static int vkDisplayPowerControlEXT(VkDevice device, @NativeType("VkDisplayKHR") long display, @NativeType("const VkDisplayPowerInfoEXT *") VkDisplayPowerInfoEXT pDisplayPowerInfo) {
         return nvkDisplayPowerControlEXT(device, display, pDisplayPowerInfo.address());
     }
 
@@ -213,12 +210,12 @@ public class EXTDisplayControl {
      * 
      * <p>To create a fence that will be signaled when an event occurs on a device, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * VkResult vkRegisterDeviceEventEXT(
      *     VkDevice                                    device,
      *     const VkDeviceEventInfoEXT*                 pDeviceEventInfo,
      *     const VkAllocationCallbacks*                pAllocator,
-     *     VkFence*                                    pFence);</code></pre>
+     *     VkFence*                                    pFence);</pre></code>
      * 
      * <h5>Valid Usage (Implicit)</h5>
      * 
@@ -248,7 +245,7 @@ public class EXTDisplayControl {
      * @param pFence           points to a handle in which the resulting fence object is returned.
      */
     @NativeType("VkResult")
-    public static int vkRegisterDeviceEventEXT(VkDevice device, @NativeType("VkDeviceEventInfoEXT const *") VkDeviceEventInfoEXT pDeviceEventInfo, @Nullable @NativeType("VkAllocationCallbacks const *") VkAllocationCallbacks pAllocator, @NativeType("VkFence *") LongBuffer pFence) {
+    public static int vkRegisterDeviceEventEXT(VkDevice device, @NativeType("const VkDeviceEventInfoEXT *") VkDeviceEventInfoEXT pDeviceEventInfo, @Nullable @NativeType("const VkAllocationCallbacks *") VkAllocationCallbacks pAllocator, @NativeType("VkFence *") LongBuffer pFence) {
         if (CHECKS) {
             check(pFence, 1);
         }
@@ -274,13 +271,13 @@ public class EXTDisplayControl {
      * 
      * <p>To create a fence that will be signaled when an event occurs on a {@code VkDisplayKHR} object, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * VkResult vkRegisterDisplayEventEXT(
      *     VkDevice                                    device,
      *     VkDisplayKHR                                display,
      *     const VkDisplayEventInfoEXT*                pDisplayEventInfo,
      *     const VkAllocationCallbacks*                pAllocator,
-     *     VkFence*                                    pFence);</code></pre>
+     *     VkFence*                                    pFence);</pre></code>
      * 
      * <h5>Valid Usage (Implicit)</h5>
      * 
@@ -312,7 +309,7 @@ public class EXTDisplayControl {
      * @param pFence            points to a handle in which the resulting fence object is returned.
      */
     @NativeType("VkResult")
-    public static int vkRegisterDisplayEventEXT(VkDevice device, @NativeType("VkDisplayKHR") long display, @NativeType("VkDisplayEventInfoEXT const *") VkDisplayEventInfoEXT pDisplayEventInfo, @Nullable @NativeType("VkAllocationCallbacks const *") VkAllocationCallbacks pAllocator, @NativeType("VkFence *") LongBuffer pFence) {
+    public static int vkRegisterDisplayEventEXT(VkDevice device, @NativeType("VkDisplayKHR") long display, @NativeType("const VkDisplayEventInfoEXT *") VkDisplayEventInfoEXT pDisplayEventInfo, @Nullable @NativeType("const VkAllocationCallbacks *") VkAllocationCallbacks pAllocator, @NativeType("VkFence *") LongBuffer pFence) {
         if (CHECKS) {
             check(pFence, 1);
         }
@@ -337,12 +334,12 @@ public class EXTDisplayControl {
      * 
      * <p>The requested counters become active when the first presentation command for the associated swapchain is processed by the presentation engine. To query the value of an active counter, use:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * VkResult vkGetSwapchainCounterEXT(
      *     VkDevice                                    device,
      *     VkSwapchainKHR                              swapchain,
      *     VkSurfaceCounterFlagBitsEXT                 counter,
-     *     uint64_t*                                   pCounterValue);</code></pre>
+     *     uint64_t*                                   pCounterValue);</pre></code>
      * 
      * <h5>Description</h5>
      * 
@@ -370,9 +367,6 @@ public class EXTDisplayControl {
      * <dt>On success, this command returns</dt>
      * <dd><ul>
      * <li>{@link VK10#VK_SUCCESS SUCCESS}</li>
-     * </ul></dd>
-     * <dt>On failure, this command returns</dt>
-     * <dd><ul>
      * <li>{@link VK10#VK_ERROR_DEVICE_LOST ERROR_DEVICE_LOST}</li>
      * <li>{@link KHRSwapchain#VK_ERROR_OUT_OF_DATE_KHR ERROR_OUT_OF_DATE_KHR}</li>
      * </ul></dd>
@@ -391,9 +385,9 @@ public class EXTDisplayControl {
         return nvkGetSwapchainCounterEXT(device, swapchain, counter, memAddress(pCounterValue));
     }
 
-    /** Array version of: {@link #vkRegisterDeviceEventEXT RegisterDeviceEventEXT} */
+    /** register Array version of: {@link #vkRegisterDeviceEventEXT RegisterDeviceEventEXT} */
     @NativeType("VkResult")
-    public static int vkRegisterDeviceEventEXT(VkDevice device, @NativeType("VkDeviceEventInfoEXT const *") VkDeviceEventInfoEXT pDeviceEventInfo, @Nullable @NativeType("VkAllocationCallbacks const *") VkAllocationCallbacks pAllocator, @NativeType("VkFence *") long[] pFence) {
+    public static int vkRegisterDeviceEventEXT(VkDevice device, @NativeType("const VkDeviceEventInfoEXT *") VkDeviceEventInfoEXT pDeviceEventInfo, @Nullable @NativeType("const VkAllocationCallbacks *") VkAllocationCallbacks pAllocator, @NativeType("VkFence *") long[] pFence) {
         long __functionAddress = device.getCapabilities().vkRegisterDeviceEventEXT;
         if (CHECKS) {
             check(__functionAddress);
@@ -403,9 +397,9 @@ public class EXTDisplayControl {
         return callPPPPI(__functionAddress, device.address(), pDeviceEventInfo.address(), memAddressSafe(pAllocator), pFence);
     }
 
-    /** Array version of: {@link #vkRegisterDisplayEventEXT RegisterDisplayEventEXT} */
+    /** register Array version of: {@link #vkRegisterDisplayEventEXT RegisterDisplayEventEXT} */
     @NativeType("VkResult")
-    public static int vkRegisterDisplayEventEXT(VkDevice device, @NativeType("VkDisplayKHR") long display, @NativeType("VkDisplayEventInfoEXT const *") VkDisplayEventInfoEXT pDisplayEventInfo, @Nullable @NativeType("VkAllocationCallbacks const *") VkAllocationCallbacks pAllocator, @NativeType("VkFence *") long[] pFence) {
+    public static int vkRegisterDisplayEventEXT(VkDevice device, @NativeType("VkDisplayKHR") long display, @NativeType("const VkDisplayEventInfoEXT *") VkDisplayEventInfoEXT pDisplayEventInfo, @Nullable @NativeType("const VkAllocationCallbacks *") VkAllocationCallbacks pAllocator, @NativeType("VkFence *") long[] pFence) {
         long __functionAddress = device.getCapabilities().vkRegisterDisplayEventEXT;
         if (CHECKS) {
             check(__functionAddress);
@@ -415,7 +409,7 @@ public class EXTDisplayControl {
         return callPJPPPI(__functionAddress, device.address(), display, pDisplayEventInfo.address(), memAddressSafe(pAllocator), pFence);
     }
 
-    /** Array version of: {@link #vkGetSwapchainCounterEXT GetSwapchainCounterEXT} */
+    /** register Array version of: {@link #vkGetSwapchainCounterEXT GetSwapchainCounterEXT} */
     @NativeType("VkResult")
     public static int vkGetSwapchainCounterEXT(VkDevice device, @NativeType("VkSwapchainKHR") long swapchain, @NativeType("VkSurfaceCounterFlagBitsEXT") int counter, @NativeType("uint64_t *") long[] pCounterValue) {
         long __functionAddress = device.getCapabilities().vkGetSwapchainCounterEXT;

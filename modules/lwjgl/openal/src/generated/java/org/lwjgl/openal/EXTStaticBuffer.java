@@ -99,7 +99,17 @@ public class EXTStaticBuffer {
         nalBufferDataStatic(buffer, format, memAddress(data), data.remaining() << 2, freq);
     }
 
-    /** Array version of: {@link #alBufferDataStatic BufferDataStatic} */
+    /** register Array version of: {@link #alBufferDataStatic BufferDataStatic} */
+    @NativeType("ALvoid")
+    public static void alBufferDataStatic(@NativeType("ALint") int buffer, @NativeType("ALenum") int format, @NativeType("ALvoid *") byte[] data, @NativeType("ALsizei") int freq) {
+        long __functionAddress = AL.getICD().alBufferDataStatic;
+        if (CHECKS) {
+            check(__functionAddress);
+        }
+        invokePV(__functionAddress, buffer, format, data, data.length << 0, freq);
+    }
+
+    /** register Array version of: {@link #alBufferDataStatic BufferDataStatic} */
     @NativeType("ALvoid")
     public static void alBufferDataStatic(@NativeType("ALint") int buffer, @NativeType("ALenum") int format, @NativeType("ALvoid *") short[] data, @NativeType("ALsizei") int freq) {
         long __functionAddress = AL.getICD().alBufferDataStatic;
@@ -109,7 +119,7 @@ public class EXTStaticBuffer {
         invokePV(__functionAddress, buffer, format, data, data.length << 1, freq);
     }
 
-    /** Array version of: {@link #alBufferDataStatic BufferDataStatic} */
+    /** register Array version of: {@link #alBufferDataStatic BufferDataStatic} */
     @NativeType("ALvoid")
     public static void alBufferDataStatic(@NativeType("ALint") int buffer, @NativeType("ALenum") int format, @NativeType("ALvoid *") int[] data, @NativeType("ALsizei") int freq) {
         long __functionAddress = AL.getICD().alBufferDataStatic;
@@ -119,7 +129,7 @@ public class EXTStaticBuffer {
         invokePV(__functionAddress, buffer, format, data, data.length << 2, freq);
     }
 
-    /** Array version of: {@link #alBufferDataStatic BufferDataStatic} */
+    /** register Array version of: {@link #alBufferDataStatic BufferDataStatic} */
     @NativeType("ALvoid")
     public static void alBufferDataStatic(@NativeType("ALint") int buffer, @NativeType("ALenum") int format, @NativeType("ALvoid *") float[] data, @NativeType("ALsizei") int freq) {
         long __functionAddress = AL.getICD().alBufferDataStatic;

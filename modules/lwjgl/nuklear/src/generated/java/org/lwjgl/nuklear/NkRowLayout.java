@@ -23,14 +23,14 @@ import static org.lwjgl.system.MemoryUtil.*;
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct nk_row_layout {
  *     enum nk_panel_row_layout_type type;
  *     int index;
  *     float height;
  *     float min_height;
  *     int columns;
- *     float const * ratio;
+ *     const float * ratio;
  *     float item_width;
  *     float item_height;
  *     float item_offset;
@@ -38,7 +38,7 @@ import static org.lwjgl.system.MemoryUtil.*;
  *     {@link NkRect struct nk_rect} item;
  *     int tree_depth;
  *     float templates[16];
- * }</code></pre>
+ * }</pre></code>
  */
 @NativeType("struct nk_row_layout")
 public class NkRowLayout extends Struct {
@@ -46,7 +46,6 @@ public class NkRowLayout extends Struct {
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */
@@ -133,7 +132,7 @@ public class NkRowLayout extends Struct {
      *
      * @param capacity the number of elements in the returned buffer
      */
-    @NativeType("float const *")
+    @NativeType("const float *")
     public FloatBuffer ratio(int capacity) { return nratio(address(), capacity); }
     /** Returns the value of the {@code item_width} field. */
     public float item_width() { return nitem_width(address()); }
@@ -146,8 +145,6 @@ public class NkRowLayout extends Struct {
     /** Returns a {@link NkRect} view of the {@code item} field. */
     @NativeType("struct nk_rect")
     public NkRect item() { return nitem(address()); }
-    /** Passes the {@code item} field to the specified {@link java.util.function.Consumer Consumer}. */
-    public NkRowLayout item(java.util.function.Consumer<NkRect> consumer) { consumer.accept(item()); return this; }
     /** Returns the value of the {@code tree_depth} field. */
     public int tree_depth() { return ntree_depth(address()); }
     /** Returns a {@link FloatBuffer} view of the {@code templates} field. */
@@ -215,7 +212,8 @@ public class NkRowLayout extends Struct {
     public static FloatBuffer ntemplates(long struct) { return memFloatBuffer(struct + NkRowLayout.TEMPLATES, 16); }
     /** Unsafe version of {@link #templates(int) templates}. */
     public static float ntemplates(long struct, int index) {
-        return memGetFloat(struct + NkRowLayout.TEMPLATES + check(index, 16) * 4);
+        if (CHECKS) { check(index, 16); }
+        return memGetFloat(struct + NkRowLayout.TEMPLATES + index * 4);
     }
 
     // -----------------------------------
@@ -280,7 +278,7 @@ public class NkRowLayout extends Struct {
          *
          * @param capacity the number of elements in the returned buffer
          */
-        @NativeType("float const *")
+        @NativeType("const float *")
         public FloatBuffer ratio(int capacity) { return NkRowLayout.nratio(address(), capacity); }
         /** Returns the value of the {@code item_width} field. */
         public float item_width() { return NkRowLayout.nitem_width(address()); }
@@ -293,8 +291,6 @@ public class NkRowLayout extends Struct {
         /** Returns a {@link NkRect} view of the {@code item} field. */
         @NativeType("struct nk_rect")
         public NkRect item() { return NkRowLayout.nitem(address()); }
-        /** Passes the {@code item} field to the specified {@link java.util.function.Consumer Consumer}. */
-        public NkRowLayout.Buffer item(java.util.function.Consumer<NkRect> consumer) { consumer.accept(item()); return this; }
         /** Returns the value of the {@code tree_depth} field. */
         public int tree_depth() { return NkRowLayout.ntree_depth(address()); }
         /** Returns a {@link FloatBuffer} view of the {@code templates} field. */

@@ -20,7 +20,7 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <h5>Description</h5>
  * 
- * <div style="margin-left: 26px; border-left: 1px solid gray; padding-left: 14px;"><h5>Note</h5>
+ * <div style="margin-left: 26px; border-left: 1px solid gray; padding-left: 14px;"><h5>note</h5>
  * 
  * <p>The validity and use of this data is outside the scope of Vulkan and thus no +Valid Usage+ is given.</p>
  * </div>
@@ -46,10 +46,10 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct VkHdrMetadataEXT {
  *     VkStructureType sType;
- *     void const * pNext;
+ *     const void * pNext;
  *     {@link VkXYColorEXT VkXYColorEXT} displayPrimaryRed;
  *     {@link VkXYColorEXT VkXYColorEXT} displayPrimaryGreen;
  *     {@link VkXYColorEXT VkXYColorEXT} displayPrimaryBlue;
@@ -58,14 +58,13 @@ import static org.lwjgl.system.MemoryStack.*;
  *     float minLuminance;
  *     float maxContentLightLevel;
  *     float maxFrameAverageLightLevel;
- * }</code></pre>
+ * }</pre></code>
  */
 public class VkHdrMetadataEXT extends Struct implements NativeResource {
 
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */
@@ -131,24 +130,16 @@ public class VkHdrMetadataEXT extends Struct implements NativeResource {
     @NativeType("VkStructureType")
     public int sType() { return nsType(address()); }
     /** Returns the value of the {@code pNext} field. */
-    @NativeType("void const *")
+    @NativeType("const void *")
     public long pNext() { return npNext(address()); }
     /** Returns a {@link VkXYColorEXT} view of the {@code displayPrimaryRed} field. */
     public VkXYColorEXT displayPrimaryRed() { return ndisplayPrimaryRed(address()); }
-    /** Passes the {@code displayPrimaryRed} field to the specified {@link java.util.function.Consumer Consumer}. */
-    public VkHdrMetadataEXT displayPrimaryRed(java.util.function.Consumer<VkXYColorEXT> consumer) { consumer.accept(displayPrimaryRed()); return this; }
     /** Returns a {@link VkXYColorEXT} view of the {@code displayPrimaryGreen} field. */
     public VkXYColorEXT displayPrimaryGreen() { return ndisplayPrimaryGreen(address()); }
-    /** Passes the {@code displayPrimaryGreen} field to the specified {@link java.util.function.Consumer Consumer}. */
-    public VkHdrMetadataEXT displayPrimaryGreen(java.util.function.Consumer<VkXYColorEXT> consumer) { consumer.accept(displayPrimaryGreen()); return this; }
     /** Returns a {@link VkXYColorEXT} view of the {@code displayPrimaryBlue} field. */
     public VkXYColorEXT displayPrimaryBlue() { return ndisplayPrimaryBlue(address()); }
-    /** Passes the {@code displayPrimaryBlue} field to the specified {@link java.util.function.Consumer Consumer}. */
-    public VkHdrMetadataEXT displayPrimaryBlue(java.util.function.Consumer<VkXYColorEXT> consumer) { consumer.accept(displayPrimaryBlue()); return this; }
     /** Returns a {@link VkXYColorEXT} view of the {@code whitePoint} field. */
     public VkXYColorEXT whitePoint() { return nwhitePoint(address()); }
-    /** Passes the {@code whitePoint} field to the specified {@link java.util.function.Consumer Consumer}. */
-    public VkHdrMetadataEXT whitePoint(java.util.function.Consumer<VkXYColorEXT> consumer) { consumer.accept(whitePoint()); return this; }
     /** Returns the value of the {@code maxLuminance} field. */
     public float maxLuminance() { return nmaxLuminance(address()); }
     /** Returns the value of the {@code minLuminance} field. */
@@ -161,7 +152,7 @@ public class VkHdrMetadataEXT extends Struct implements NativeResource {
     /** Sets the specified value to the {@code sType} field. */
     public VkHdrMetadataEXT sType(@NativeType("VkStructureType") int value) { nsType(address(), value); return this; }
     /** Sets the specified value to the {@code pNext} field. */
-    public VkHdrMetadataEXT pNext(@NativeType("void const *") long value) { npNext(address(), value); return this; }
+    public VkHdrMetadataEXT pNext(@NativeType("const void *") long value) { npNext(address(), value); return this; }
     /** Copies the specified {@link VkXYColorEXT} to the {@code displayPrimaryRed} field. */
     public VkHdrMetadataEXT displayPrimaryRed(VkXYColorEXT value) { ndisplayPrimaryRed(address(), value); return this; }
     /** Copies the specified {@link VkXYColorEXT} to the {@code displayPrimaryGreen} field. */
@@ -451,24 +442,16 @@ public class VkHdrMetadataEXT extends Struct implements NativeResource {
         @NativeType("VkStructureType")
         public int sType() { return VkHdrMetadataEXT.nsType(address()); }
         /** Returns the value of the {@code pNext} field. */
-        @NativeType("void const *")
+        @NativeType("const void *")
         public long pNext() { return VkHdrMetadataEXT.npNext(address()); }
         /** Returns a {@link VkXYColorEXT} view of the {@code displayPrimaryRed} field. */
         public VkXYColorEXT displayPrimaryRed() { return VkHdrMetadataEXT.ndisplayPrimaryRed(address()); }
-        /** Passes the {@code displayPrimaryRed} field to the specified {@link java.util.function.Consumer Consumer}. */
-        public VkHdrMetadataEXT.Buffer displayPrimaryRed(java.util.function.Consumer<VkXYColorEXT> consumer) { consumer.accept(displayPrimaryRed()); return this; }
         /** Returns a {@link VkXYColorEXT} view of the {@code displayPrimaryGreen} field. */
         public VkXYColorEXT displayPrimaryGreen() { return VkHdrMetadataEXT.ndisplayPrimaryGreen(address()); }
-        /** Passes the {@code displayPrimaryGreen} field to the specified {@link java.util.function.Consumer Consumer}. */
-        public VkHdrMetadataEXT.Buffer displayPrimaryGreen(java.util.function.Consumer<VkXYColorEXT> consumer) { consumer.accept(displayPrimaryGreen()); return this; }
         /** Returns a {@link VkXYColorEXT} view of the {@code displayPrimaryBlue} field. */
         public VkXYColorEXT displayPrimaryBlue() { return VkHdrMetadataEXT.ndisplayPrimaryBlue(address()); }
-        /** Passes the {@code displayPrimaryBlue} field to the specified {@link java.util.function.Consumer Consumer}. */
-        public VkHdrMetadataEXT.Buffer displayPrimaryBlue(java.util.function.Consumer<VkXYColorEXT> consumer) { consumer.accept(displayPrimaryBlue()); return this; }
         /** Returns a {@link VkXYColorEXT} view of the {@code whitePoint} field. */
         public VkXYColorEXT whitePoint() { return VkHdrMetadataEXT.nwhitePoint(address()); }
-        /** Passes the {@code whitePoint} field to the specified {@link java.util.function.Consumer Consumer}. */
-        public VkHdrMetadataEXT.Buffer whitePoint(java.util.function.Consumer<VkXYColorEXT> consumer) { consumer.accept(whitePoint()); return this; }
         /** Returns the value of the {@code maxLuminance} field. */
         public float maxLuminance() { return VkHdrMetadataEXT.nmaxLuminance(address()); }
         /** Returns the value of the {@code minLuminance} field. */
@@ -481,7 +464,7 @@ public class VkHdrMetadataEXT extends Struct implements NativeResource {
         /** Sets the specified value to the {@code sType} field. */
         public VkHdrMetadataEXT.Buffer sType(@NativeType("VkStructureType") int value) { VkHdrMetadataEXT.nsType(address(), value); return this; }
         /** Sets the specified value to the {@code pNext} field. */
-        public VkHdrMetadataEXT.Buffer pNext(@NativeType("void const *") long value) { VkHdrMetadataEXT.npNext(address(), value); return this; }
+        public VkHdrMetadataEXT.Buffer pNext(@NativeType("const void *") long value) { VkHdrMetadataEXT.npNext(address(), value); return this; }
         /** Copies the specified {@link VkXYColorEXT} to the {@code displayPrimaryRed} field. */
         public VkHdrMetadataEXT.Buffer displayPrimaryRed(VkXYColorEXT value) { VkHdrMetadataEXT.ndisplayPrimaryRed(address(), value); return this; }
         /** Copies the specified {@link VkXYColorEXT} to the {@code displayPrimaryGreen} field. */

@@ -16,13 +16,13 @@ import static org.lwjgl.system.MemoryUtil.*;
  * 
  * <h3>Type</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * void (*) (
  *     void *user_data,
  *     void *obj_ptr,
- *     char const *type_name,
+ *     const char *type_name,
  *     cl_uint refcount
- * )</code></pre>
+ * )</pre></code>
  */
 public abstract class CLReportLiveObjectsAlteraCallback extends Callback implements CLReportLiveObjectsAlteraCallbackI {
 

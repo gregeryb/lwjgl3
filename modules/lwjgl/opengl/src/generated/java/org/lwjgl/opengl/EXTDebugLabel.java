@@ -53,11 +53,11 @@ public class EXTDebugLabel {
 
     public static native void nglLabelObjectEXT(int type, int object, int length, long label);
 
-    public static void glLabelObjectEXT(@NativeType("GLenum") int type, @NativeType("GLuint") int object, @NativeType("GLchar const *") ByteBuffer label) {
+    public static void glLabelObjectEXT(@NativeType("GLenum") int type, @NativeType("GLuint") int object, @NativeType("const GLchar *") ByteBuffer label) {
         nglLabelObjectEXT(type, object, label.remaining(), memAddress(label));
     }
 
-    public static void glLabelObjectEXT(@NativeType("GLenum") int type, @NativeType("GLuint") int object, @NativeType("GLchar const *") CharSequence label) {
+    public static void glLabelObjectEXT(@NativeType("GLenum") int type, @NativeType("GLuint") int object, @NativeType("const GLchar *") CharSequence label) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
             ByteBuffer labelEncoded = stack.UTF8(label, false);
@@ -91,7 +91,7 @@ public class EXTDebugLabel {
         }
     }
 
-    /** Array version of: {@link #glGetObjectLabelEXT GetObjectLabelEXT} */
+    /** register Array version of: {@link #glGetObjectLabelEXT GetObjectLabelEXT} */
     public static void glGetObjectLabelEXT(@NativeType("GLenum") int type, @NativeType("GLuint") int object, @NativeType("GLsizei *") int[] length, @NativeType("GLchar *") ByteBuffer label) {
         long __functionAddress = GL.getICD().glGetObjectLabelEXT;
         if (CHECKS) {

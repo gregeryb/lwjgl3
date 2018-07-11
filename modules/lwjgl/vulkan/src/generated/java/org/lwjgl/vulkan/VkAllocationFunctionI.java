@@ -16,12 +16,12 @@ import static org.lwjgl.system.dyncall.DynCallback.*;
  * 
  * <p>The type of {@code pfnAllocation} is:</p>
  * 
- * <pre><code>
+ * <code><pre>
  * typedef void* (VKAPI_PTR *PFN_vkAllocationFunction)(
  *     void*                                       pUserData,
  *     size_t                                      size,
  *     size_t                                      alignment,
- *     VkSystemAllocationScope                     allocationScope);</code></pre>
+ *     VkSystemAllocationScope                     allocationScope);</pre></code>
  * 
  * <h5>Description</h5>
  * 

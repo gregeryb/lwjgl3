@@ -131,7 +131,7 @@ public class SOFTSourceLatency {
      * @param value  the parameter values
      */
     @NativeType("ALvoid")
-    public static void alSourcedvSOFT(@NativeType("ALuint") int source, @NativeType("ALenum") int param, @NativeType("ALdouble const *") DoubleBuffer value) {
+    public static void alSourcedvSOFT(@NativeType("ALuint") int source, @NativeType("ALenum") int param, @NativeType("const ALdouble *") DoubleBuffer value) {
         if (CHECKS) {
             check(value, 1);
         }
@@ -295,7 +295,7 @@ public class SOFTSourceLatency {
      * @param values the parameter values
      */
     @NativeType("ALvoid")
-    public static void alSourcei64vSOFT(@NativeType("ALuint") int source, @NativeType("ALenum") int param, @NativeType("ALint64SOFT const *") LongBuffer values) {
+    public static void alSourcei64vSOFT(@NativeType("ALuint") int source, @NativeType("ALenum") int param, @NativeType("const ALint64SOFT *") LongBuffer values) {
         if (CHECKS) {
             check(values, 1);
         }
@@ -402,9 +402,9 @@ public class SOFTSourceLatency {
         nalGetSourcei64vSOFT(source, param, memAddress(values));
     }
 
-    /** Array version of: {@link #alSourcedvSOFT SourcedvSOFT} */
+    /** register Array version of: {@link #alSourcedvSOFT SourcedvSOFT} */
     @NativeType("ALvoid")
-    public static void alSourcedvSOFT(@NativeType("ALuint") int source, @NativeType("ALenum") int param, @NativeType("ALdouble const *") double[] value) {
+    public static void alSourcedvSOFT(@NativeType("ALuint") int source, @NativeType("ALenum") int param, @NativeType("const ALdouble *") double[] value) {
         long __functionAddress = AL.getICD().alSourcedvSOFT;
         if (CHECKS) {
             check(__functionAddress);
@@ -413,7 +413,7 @@ public class SOFTSourceLatency {
         invokePV(__functionAddress, source, param, value);
     }
 
-    /** Array version of: {@link #alGetSourcedSOFT GetSourcedSOFT} */
+    /** register Array version of: {@link #alGetSourcedSOFT GetSourcedSOFT} */
     @NativeType("ALvoid")
     public static void alGetSourcedSOFT(@NativeType("ALuint") int source, @NativeType("ALenum") int param, @NativeType("ALdouble *") double[] value) {
         long __functionAddress = AL.getICD().alGetSourcedSOFT;
@@ -424,7 +424,7 @@ public class SOFTSourceLatency {
         invokePV(__functionAddress, source, param, value);
     }
 
-    /** Array version of: {@link #alGetSource3dSOFT GetSource3dSOFT} */
+    /** register Array version of: {@link #alGetSource3dSOFT GetSource3dSOFT} */
     @NativeType("ALvoid")
     public static void alGetSource3dSOFT(@NativeType("ALuint") int source, @NativeType("ALenum") int param, @NativeType("ALdouble *") double[] value1, @NativeType("ALdouble *") double[] value2, @NativeType("ALdouble *") double[] value3) {
         long __functionAddress = AL.getICD().alGetSource3dSOFT;
@@ -437,7 +437,7 @@ public class SOFTSourceLatency {
         invokePPPV(__functionAddress, source, param, value1, value2, value3);
     }
 
-    /** Array version of: {@link #alGetSourcedvSOFT GetSourcedvSOFT} */
+    /** register Array version of: {@link #alGetSourcedvSOFT GetSourcedvSOFT} */
     @NativeType("ALvoid")
     public static void alGetSourcedvSOFT(@NativeType("ALuint") int source, @NativeType("ALenum") int param, @NativeType("ALdouble *") double[] values) {
         long __functionAddress = AL.getICD().alGetSourcedvSOFT;
@@ -448,9 +448,9 @@ public class SOFTSourceLatency {
         invokePV(__functionAddress, source, param, values);
     }
 
-    /** Array version of: {@link #alSourcei64vSOFT Sourcei64vSOFT} */
+    /** register Array version of: {@link #alSourcei64vSOFT Sourcei64vSOFT} */
     @NativeType("ALvoid")
-    public static void alSourcei64vSOFT(@NativeType("ALuint") int source, @NativeType("ALenum") int param, @NativeType("ALint64SOFT const *") long[] values) {
+    public static void alSourcei64vSOFT(@NativeType("ALuint") int source, @NativeType("ALenum") int param, @NativeType("const ALint64SOFT *") long[] values) {
         long __functionAddress = AL.getICD().alSourcei64vSOFT;
         if (CHECKS) {
             check(__functionAddress);
@@ -459,7 +459,7 @@ public class SOFTSourceLatency {
         invokePV(__functionAddress, source, param, values);
     }
 
-    /** Array version of: {@link #alGetSourcei64SOFT GetSourcei64SOFT} */
+    /** register Array version of: {@link #alGetSourcei64SOFT GetSourcei64SOFT} */
     @NativeType("ALvoid")
     public static void alGetSourcei64SOFT(@NativeType("ALuint") int source, @NativeType("ALenum") int param, @NativeType("ALint64SOFT *") long[] value) {
         long __functionAddress = AL.getICD().alGetSourcei64SOFT;
@@ -470,7 +470,7 @@ public class SOFTSourceLatency {
         invokePV(__functionAddress, source, param, value);
     }
 
-    /** Array version of: {@link #alGetSource3i64SOFT GetSource3i64SOFT} */
+    /** register Array version of: {@link #alGetSource3i64SOFT GetSource3i64SOFT} */
     @NativeType("ALvoid")
     public static void alGetSource3i64SOFT(@NativeType("ALuint") int source, @NativeType("ALenum") int param, @NativeType("ALint64SOFT *") long[] value1, @NativeType("ALint64SOFT *") long[] value2, @NativeType("ALint64SOFT *") long[] value3) {
         long __functionAddress = AL.getICD().alGetSource3i64SOFT;
@@ -483,7 +483,7 @@ public class SOFTSourceLatency {
         invokePPPV(__functionAddress, source, param, value1, value2, value3);
     }
 
-    /** Array version of: {@link #alGetSourcei64vSOFT GetSourcei64vSOFT} */
+    /** register Array version of: {@link #alGetSourcei64vSOFT GetSourcei64vSOFT} */
     @NativeType("ALvoid")
     public static void alGetSourcei64vSOFT(@NativeType("ALuint") int source, @NativeType("ALenum") int param, @NativeType("ALint64SOFT *") long[] values) {
         long __functionAddress = AL.getICD().alGetSourcei64vSOFT;

@@ -39,8 +39,7 @@ public class JNINativeInterface {
         JNI_VERSION_1_4 = 0x10004,
         JNI_VERSION_1_6 = 0x10006,
         JNI_VERSION_1_8 = 0x10008,
-        JNI_VERSION_9   = 0x90000,
-        JNI_VERSION_10  = 0xA0000;
+        JNI_VERSION_9   = 0x90000;
 
     /**
      * {@code jobjectRefType}: Return values from {@link #GetObjectRefType}.
@@ -112,13 +111,21 @@ public class JNINativeInterface {
 
     // --- [ FromReflectedMethod ] ---
 
-    /** Converts a {@link Method} or {@link Constructor} object to a method ID. */
+    /**
+     * Converts a {@link Method} or {@link Constructor} object to a method ID.
+     *
+     * @param method 
+     */
     @NativeType("jmethodID")
     public static native long FromReflectedMethod(@NativeType("jobject") Method method);
 
     // --- [ FromReflectedField ] ---
 
-    /** Converts a {@link Field} to a field ID. */
+    /**
+     * Converts a {@link Field} to a field ID.
+     *
+     * @param field 
+     */
     @NativeType("jfieldID")
     public static native long FromReflectedField(@NativeType("jobject") Field field);
 
@@ -131,6 +138,8 @@ public class JNINativeInterface {
     /**
      * Converts a method ID derived from {@code cls} to a {@link Method} or {@link Constructor} object.
      *
+     * @param cls      
+     * @param methodID 
      * @param isStatic must be set to {@link #JNI_TRUE TRUE} if the method ID refers to a static field, and # FALSE otherwise
      */
     @Nullable
@@ -151,6 +160,8 @@ public class JNINativeInterface {
     /**
      * Converts a field ID derived from {@code cls} to a {@link Field} object.
      *
+     * @param cls      
+     * @param fieldID  
      * @param isStatic must be set to {@link #JNI_TRUE TRUE} if {@code fieldID} refers to a static field, and {@link #JNI_FALSE FALSE} otherwise
      */
     @Nullable
@@ -231,7 +242,7 @@ public class JNINativeInterface {
      * <p>The {@code mode} argument provides information on how the array buffer should be released. {@code mode} has no effect if {@code elems} is not a
      * copy of the elements in array. Otherwise, mode has the following impact, as shown in the following table:</p>
      * 
-     * <table class=striped>
+     * <table class=lwjgl>
      * <tr><th>mode</th><th>actions</th></tr>
      * <tr><td>0</td><td>copy back the content and free the elems buffer</td></tr>
      * <tr><td>{@link #JNI_COMMIT COMMIT}</td><td>copy back the content but do not free the elems buffer</td></tr>
@@ -288,7 +299,7 @@ public class JNINativeInterface {
      * <p>The {@code mode} argument provides information on how the array buffer should be released. {@code mode} has no effect if {@code elems} is not a
      * copy of the elements in array. Otherwise, mode has the following impact, as shown in the following table:</p>
      * 
-     * <table class=striped>
+     * <table class=lwjgl>
      * <tr><th>mode</th><th>actions</th></tr>
      * <tr><td>0</td><td>copy back the content and free the elems buffer</td></tr>
      * <tr><td>{@link #JNI_COMMIT COMMIT}</td><td>copy back the content but do not free the elems buffer</td></tr>
@@ -345,7 +356,7 @@ public class JNINativeInterface {
      * <p>The {@code mode} argument provides information on how the array buffer should be released. {@code mode} has no effect if {@code elems} is not a
      * copy of the elements in array. Otherwise, mode has the following impact, as shown in the following table:</p>
      * 
-     * <table class=striped>
+     * <table class=lwjgl>
      * <tr><th>mode</th><th>actions</th></tr>
      * <tr><td>0</td><td>copy back the content and free the elems buffer</td></tr>
      * <tr><td>{@link #JNI_COMMIT COMMIT}</td><td>copy back the content but do not free the elems buffer</td></tr>
@@ -402,7 +413,7 @@ public class JNINativeInterface {
      * <p>The {@code mode} argument provides information on how the array buffer should be released. {@code mode} has no effect if {@code elems} is not a
      * copy of the elements in array. Otherwise, mode has the following impact, as shown in the following table:</p>
      * 
-     * <table class=striped>
+     * <table class=lwjgl>
      * <tr><th>mode</th><th>actions</th></tr>
      * <tr><td>0</td><td>copy back the content and free the elems buffer</td></tr>
      * <tr><td>{@link #JNI_COMMIT COMMIT}</td><td>copy back the content but do not free the elems buffer</td></tr>
@@ -459,7 +470,7 @@ public class JNINativeInterface {
      * <p>The {@code mode} argument provides information on how the array buffer should be released. {@code mode} has no effect if {@code elems} is not a
      * copy of the elements in array. Otherwise, mode has the following impact, as shown in the following table:</p>
      * 
-     * <table class=striped>
+     * <table class=lwjgl>
      * <tr><th>mode</th><th>actions</th></tr>
      * <tr><td>0</td><td>copy back the content and free the elems buffer</td></tr>
      * <tr><td>{@link #JNI_COMMIT COMMIT}</td><td>copy back the content but do not free the elems buffer</td></tr>
@@ -516,7 +527,7 @@ public class JNINativeInterface {
      * <p>The {@code mode} argument provides information on how the array buffer should be released. {@code mode} has no effect if {@code elems} is not a
      * copy of the elements in array. Otherwise, mode has the following impact, as shown in the following table:</p>
      * 
-     * <table class=striped>
+     * <table class=lwjgl>
      * <tr><th>mode</th><th>actions</th></tr>
      * <tr><td>0</td><td>copy back the content and free the elems buffer</td></tr>
      * <tr><td>{@link #JNI_COMMIT COMMIT}</td><td>copy back the content but do not free the elems buffer</td></tr>
@@ -573,7 +584,7 @@ public class JNINativeInterface {
      * <p>The {@code mode} argument provides information on how the array buffer should be released. {@code mode} has no effect if {@code elems} is not a
      * copy of the elements in array. Otherwise, mode has the following impact, as shown in the following table:</p>
      * 
-     * <table class=striped>
+     * <table class=lwjgl>
      * <tr><th>mode</th><th>actions</th></tr>
      * <tr><td>0</td><td>copy back the content and free the elems buffer</td></tr>
      * <tr><td>{@link #JNI_COMMIT COMMIT}</td><td>copy back the content but do not free the elems buffer</td></tr>
@@ -630,7 +641,7 @@ public class JNINativeInterface {
      * <p>The {@code mode} argument provides information on how the array buffer should be released. {@code mode} has no effect if {@code elems} is not a
      * copy of the elements in array. Otherwise, mode has the following impact, as shown in the following table:</p>
      * 
-     * <table class=striped>
+     * <table class=lwjgl>
      * <tr><th>mode</th><th>actions</th></tr>
      * <tr><td>0</td><td>copy back the content and free the elems buffer</td></tr>
      * <tr><td>{@link #JNI_COMMIT COMMIT}</td><td>copy back the content but do not free the elems buffer</td></tr>
@@ -684,7 +695,7 @@ public class JNINativeInterface {
      * @param start the starting index
      * @param buf   the source buffer
      */
-    public static void SetBooleanArrayRegion(@NativeType("jbooleanArray") byte[] array, @NativeType("jsize") int start, @NativeType("jboolean const *") ByteBuffer buf) {
+    public static void SetBooleanArrayRegion(@NativeType("jbooleanArray") byte[] array, @NativeType("jsize") int start, @NativeType("const jboolean *") ByteBuffer buf) {
         nSetBooleanArrayRegion(array, start, buf.remaining(), memAddress(buf));
     }
 
@@ -724,7 +735,7 @@ public class JNINativeInterface {
      * @param start the starting index
      * @param buf   the source buffer
      */
-    public static void SetByteArrayRegion(@NativeType("jbyteArray") byte[] array, @NativeType("jsize") int start, @NativeType("jbyte const *") ByteBuffer buf) {
+    public static void SetByteArrayRegion(@NativeType("jbyteArray") byte[] array, @NativeType("jsize") int start, @NativeType("const jbyte *") ByteBuffer buf) {
         nSetByteArrayRegion(array, start, buf.remaining(), memAddress(buf));
     }
 
@@ -764,7 +775,7 @@ public class JNINativeInterface {
      * @param start the starting index
      * @param buf   the source buffer
      */
-    public static void SetCharArrayRegion(@NativeType("jcharArray") char[] array, @NativeType("jsize") int start, @NativeType("jchar const *") ShortBuffer buf) {
+    public static void SetCharArrayRegion(@NativeType("jcharArray") char[] array, @NativeType("jsize") int start, @NativeType("const jchar *") ShortBuffer buf) {
         nSetCharArrayRegion(array, start, buf.remaining(), memAddress(buf));
     }
 
@@ -804,7 +815,7 @@ public class JNINativeInterface {
      * @param start the starting index
      * @param buf   the source buffer
      */
-    public static void SetShortArrayRegion(@NativeType("jshortArray") short[] array, @NativeType("jsize") int start, @NativeType("jshort const *") ShortBuffer buf) {
+    public static void SetShortArrayRegion(@NativeType("jshortArray") short[] array, @NativeType("jsize") int start, @NativeType("const jshort *") ShortBuffer buf) {
         nSetShortArrayRegion(array, start, buf.remaining(), memAddress(buf));
     }
 
@@ -844,7 +855,7 @@ public class JNINativeInterface {
      * @param start the starting index
      * @param buf   the source buffer
      */
-    public static void SetIntArrayRegion(@NativeType("jintArray") int[] array, @NativeType("jsize") int start, @NativeType("jint const *") IntBuffer buf) {
+    public static void SetIntArrayRegion(@NativeType("jintArray") int[] array, @NativeType("jsize") int start, @NativeType("const jint *") IntBuffer buf) {
         nSetIntArrayRegion(array, start, buf.remaining(), memAddress(buf));
     }
 
@@ -884,7 +895,7 @@ public class JNINativeInterface {
      * @param start the starting index
      * @param buf   the source buffer
      */
-    public static void SetLongArrayRegion(@NativeType("jlongArray") long[] array, @NativeType("jsize") int start, @NativeType("jlong const *") LongBuffer buf) {
+    public static void SetLongArrayRegion(@NativeType("jlongArray") long[] array, @NativeType("jsize") int start, @NativeType("const jlong *") LongBuffer buf) {
         nSetLongArrayRegion(array, start, buf.remaining(), memAddress(buf));
     }
 
@@ -924,7 +935,7 @@ public class JNINativeInterface {
      * @param start the starting index
      * @param buf   the source buffer
      */
-    public static void SetFloatArrayRegion(@NativeType("jfloatArray") float[] array, @NativeType("jsize") int start, @NativeType("jfloat const *") FloatBuffer buf) {
+    public static void SetFloatArrayRegion(@NativeType("jfloatArray") float[] array, @NativeType("jsize") int start, @NativeType("const jfloat *") FloatBuffer buf) {
         nSetFloatArrayRegion(array, start, buf.remaining(), memAddress(buf));
     }
 
@@ -964,7 +975,7 @@ public class JNINativeInterface {
      * @param start the starting index
      * @param buf   the source buffer
      */
-    public static void SetDoubleArrayRegion(@NativeType("jdoubleArray") double[] array, @NativeType("jsize") int start, @NativeType("jdouble const *") DoubleBuffer buf) {
+    public static void SetDoubleArrayRegion(@NativeType("jdoubleArray") double[] array, @NativeType("jsize") int start, @NativeType("const jdouble *") DoubleBuffer buf) {
         nSetDoubleArrayRegion(array, start, buf.remaining(), memAddress(buf));
     }
 
@@ -982,12 +993,13 @@ public class JNINativeInterface {
      * structures that contain the names, signatures, and function pointers of the native methods. The name and signature fields of the {@link JNINativeMethod}
      * structure are pointers to modified UTF-8 strings. The {@code nMethods} parameter specifies the number of native methods in the array.
      *
-     * @param methods the native methods in the class
+     * @param targetClass 
+     * @param methods     the native methods in the class
      *
      * @return “0” on success; returns a negative value on failure
      */
     @NativeType("jint")
-    public static int RegisterNatives(@NativeType("jclass") Class<?> targetClass, @NativeType("JNINativeMethod const *") JNINativeMethod.Buffer methods) {
+    public static int RegisterNatives(@NativeType("jclass") Class<?> targetClass, @NativeType("const JNINativeMethod *") JNINativeMethod.Buffer methods) {
         if (CHECKS) {
             JNINativeMethod.validate(methods.address(), methods.remaining());
         }
@@ -1032,7 +1044,13 @@ public class JNINativeInterface {
     /** Unsafe version of: {@link #GetStringRegion} */
     public static native void nGetStringRegion(String str, int start, int len, long buf);
 
-    /** Copies {@code len} number of Unicode characters beginning at offset {@code start} to the given buffer {@code buf}. */
+    /**
+     * Copies {@code len} number of Unicode characters beginning at offset {@code start} to the given buffer {@code buf}.
+     *
+     * @param str   
+     * @param start 
+     * @param buf   
+     */
     public static void GetStringRegion(@NativeType("jstring") String str, @NativeType("jsize") int start, @NativeType("jchar *") ByteBuffer buf) {
         nGetStringRegion(str, start, buf.remaining() >> 1, memAddress(buf));
     }
@@ -1045,6 +1063,11 @@ public class JNINativeInterface {
     /**
      * Translates {@code len} number of Unicode characters beginning at offset start into modified UTF-8 encoding and place the result in the given buffer
      * {@code buf}.
+     *
+     * @param str   
+     * @param start 
+     * @param len   
+     * @param buf   
      */
     public static void GetStringUTFRegion(@NativeType("jstring") String str, @NativeType("jsize") int start, @NativeType("jsize") int len, @NativeType("char *") ByteBuffer buf) {
         if (CHECKS) {
@@ -1058,6 +1081,8 @@ public class JNINativeInterface {
     /**
      * Creates a new weak global reference. Returns {@code NULL} if {@code obj} refers to null, or if the VM runs out of memory. If the VM runs out of memory, an
      * {@code OutOfMemoryError} will be thrown.
+     *
+     * @param obj 
      */
     @NativeType("void *")
     public static native long NewWeakGlobalRef(@NativeType("jobject") Object obj);
@@ -1067,7 +1092,11 @@ public class JNINativeInterface {
     /** Unsafe version of: {@link #DeleteWeakGlobalRef} */
     public static native void nDeleteWeakGlobalRef(long weakGlobalRef);
 
-    /** Delete the VM resources needed for the given weak global reference. */
+    /**
+     * Delete the VM resources needed for the given weak global reference.
+     *
+     * @param weakGlobalRef 
+     */
     public static void DeleteWeakGlobalRef(@NativeType("void *") long weakGlobalRef) {
         if (CHECKS) {
             check(weakGlobalRef);

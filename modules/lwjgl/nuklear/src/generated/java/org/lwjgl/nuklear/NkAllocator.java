@@ -18,12 +18,12 @@ import static org.lwjgl.system.MemoryStack.*;
 /**
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct nk_allocator {
  *     {@link NkHandle nk_handle} userdata;
  *     {@link NkPluginAllocI nk_plugin_alloc} alloc;
  *     {@link NkPluginFreeI nk_plugin_free} mfree;
- * }</code></pre>
+ * }</pre></code>
  */
 @NativeType("struct nk_allocator")
 public class NkAllocator extends Struct implements NativeResource {
@@ -31,7 +31,6 @@ public class NkAllocator extends Struct implements NativeResource {
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */
@@ -75,8 +74,6 @@ public class NkAllocator extends Struct implements NativeResource {
     /** Returns a {@link NkHandle} view of the {@code userdata} field. */
     @NativeType("nk_handle")
     public NkHandle userdata() { return nuserdata(address()); }
-    /** Passes the {@code userdata} field to the specified {@link java.util.function.Consumer Consumer}. */
-    public NkAllocator userdata(java.util.function.Consumer<NkHandle> consumer) { consumer.accept(userdata()); return this; }
     /** Returns the value of the {@code alloc} field. */
     @Nullable
     @NativeType("nk_plugin_alloc")
@@ -322,8 +319,6 @@ public class NkAllocator extends Struct implements NativeResource {
         /** Returns a {@link NkHandle} view of the {@code userdata} field. */
         @NativeType("nk_handle")
         public NkHandle userdata() { return NkAllocator.nuserdata(address()); }
-        /** Passes the {@code userdata} field to the specified {@link java.util.function.Consumer Consumer}. */
-        public NkAllocator.Buffer userdata(java.util.function.Consumer<NkHandle> consumer) { consumer.accept(userdata()); return this; }
         /** Returns the value of the {@code alloc} field. */
         @Nullable
         @NativeType("nk_plugin_alloc")

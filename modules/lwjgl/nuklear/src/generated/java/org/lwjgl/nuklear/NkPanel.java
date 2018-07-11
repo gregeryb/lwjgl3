@@ -17,12 +17,12 @@ import static org.lwjgl.system.MemoryUtil.*;
  * <h3>Member documentation</h3>
  * 
  * <ul>
- * <li>{@code type} &ndash; one of:<br><table><tr><td>{@link Nuklear#NK_PANEL_NONE PANEL_NONE}</td><td>{@link Nuklear#NK_PANEL_WINDOW PANEL_WINDOW}</td><td>{@link Nuklear#NK_PANEL_GROUP PANEL_GROUP}</td><td>{@link Nuklear#NK_PANEL_POPUP PANEL_POPUP}</td><td>{@link Nuklear#NK_PANEL_CONTEXTUAL PANEL_CONTEXTUAL}</td><td>{@link Nuklear#NK_PANEL_COMBO PANEL_COMBO}</td></tr><tr><td>{@link Nuklear#NK_PANEL_MENU PANEL_MENU}</td><td>{@link Nuklear#NK_PANEL_TOOLTIP PANEL_TOOLTIP}</td><td>{@link Nuklear#NK_PANEL_SET_NONBLOCK PANEL_SET_NONBLOCK}</td><td>{@link Nuklear#NK_PANEL_SET_POPUP PANEL_SET_POPUP}</td><td>{@link Nuklear#NK_PANEL_SET_SUB PANEL_SET_SUB}</td></tr></table></li>
+ * <li>{@code type} &ndash; one of:<br><table><tr><td>{@link Nuklear#NK_PANEL_WINDOW PANEL_WINDOW}</td><td>{@link Nuklear#NK_PANEL_GROUP PANEL_GROUP}</td><td>{@link Nuklear#NK_PANEL_POPUP PANEL_POPUP}</td><td>{@link Nuklear#NK_PANEL_CONTEXTUAL PANEL_CONTEXTUAL}</td><td>{@link Nuklear#NK_PANEL_COMBO PANEL_COMBO}</td><td>{@link Nuklear#NK_PANEL_MENU PANEL_MENU}</td></tr><tr><td>{@link Nuklear#NK_PANEL_TOOLTIP PANEL_TOOLTIP}</td><td>{@link Nuklear#NK_PANEL_SET_NONBLOCK PANEL_SET_NONBLOCK}</td><td>{@link Nuklear#NK_PANEL_SET_POPUP PANEL_SET_POPUP}</td><td>{@link Nuklear#NK_PANEL_SET_SUB PANEL_SET_SUB}</td></tr></table></li>
  * </ul>
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct nk_panel {
  *     enum nk_panel_type type;
  *     nk_flags flags;
@@ -42,7 +42,7 @@ import static org.lwjgl.system.MemoryUtil.*;
  *     {@link NkChart struct nk_chart} chart;
  *     {@link NkCommandBuffer struct nk_command_buffer} * buffer;
  *     {@link NkPanel struct nk_panel} * parent;
- * }</code></pre>
+ * }</pre></code>
  */
 @NativeType("struct nk_panel")
 public class NkPanel extends Struct {
@@ -50,7 +50,6 @@ public class NkPanel extends Struct {
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */
@@ -145,8 +144,6 @@ public class NkPanel extends Struct {
     /** Returns a {@link NkRect} view of the {@code bounds} field. */
     @NativeType("struct nk_rect")
     public NkRect bounds() { return nbounds(address()); }
-    /** Passes the {@code bounds} field to the specified {@link java.util.function.Consumer Consumer}. */
-    public NkPanel bounds(java.util.function.Consumer<NkRect> consumer) { consumer.accept(bounds()); return this; }
     /**
      * Returns a {@link IntBuffer} view of the data pointed to by the {@code offset_x} field.
      *
@@ -179,8 +176,6 @@ public class NkPanel extends Struct {
     /** Returns a {@link NkRect} view of the {@code clip} field. */
     @NativeType("struct nk_rect")
     public NkRect clip() { return nclip(address()); }
-    /** Passes the {@code clip} field to the specified {@link java.util.function.Consumer Consumer}. */
-    public NkPanel clip(java.util.function.Consumer<NkRect> consumer) { consumer.accept(clip()); return this; }
     /** Returns a {@link NkMenuState} view of the {@code menu} field. */
     @NativeType("struct nk_menu_state")
     public NkMenuState menu() { return nmenu(address()); }
@@ -320,8 +315,6 @@ public class NkPanel extends Struct {
         /** Returns a {@link NkRect} view of the {@code bounds} field. */
         @NativeType("struct nk_rect")
         public NkRect bounds() { return NkPanel.nbounds(address()); }
-        /** Passes the {@code bounds} field to the specified {@link java.util.function.Consumer Consumer}. */
-        public NkPanel.Buffer bounds(java.util.function.Consumer<NkRect> consumer) { consumer.accept(bounds()); return this; }
         /**
          * Returns a {@link IntBuffer} view of the data pointed to by the {@code offset_x} field.
          *
@@ -354,8 +347,6 @@ public class NkPanel extends Struct {
         /** Returns a {@link NkRect} view of the {@code clip} field. */
         @NativeType("struct nk_rect")
         public NkRect clip() { return NkPanel.nclip(address()); }
-        /** Passes the {@code clip} field to the specified {@link java.util.function.Consumer Consumer}. */
-        public NkPanel.Buffer clip(java.util.function.Consumer<NkRect> consumer) { consumer.accept(clip()); return this; }
         /** Returns a {@link NkMenuState} view of the {@code menu} field. */
         @NativeType("struct nk_menu_state")
         public NkMenuState menu() { return NkPanel.nmenu(address()); }

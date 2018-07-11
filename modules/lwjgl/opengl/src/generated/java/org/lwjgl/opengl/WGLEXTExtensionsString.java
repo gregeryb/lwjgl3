@@ -43,7 +43,7 @@ public class WGLEXTExtensionsString {
      * empty string is returned.
      */
     @Nullable
-    @NativeType("char const *")
+    @NativeType("const char *")
     public static String wglGetExtensionsStringEXT() {
         long __result = nwglGetExtensionsStringEXT();
         return memASCIISafe(__result);

@@ -335,7 +335,7 @@ public class GLX {
      * Prevents X requests from executing until any outstanding OpenGL rendering is done.
      * 
      * <p>OpenGL calls made prior to {@code glXWaitGL} are guaranteed to be executed before X rendering calls made after {@code glXWaitGL}. While the same result
-     * can be achieved using {@link GL11C#glFinish Finish}, {@code glXWaitGL} does not require a round trip to the server, and is therefore more efficient in cases
+     * can be achieved using {@link GL11#glFinish Finish}, {@code glXWaitGL} does not require a round trip to the server, and is therefore more efficient in cases
      * where the client and server are on separate machines.</p>
      */
     public static void glXWaitGL() {
@@ -432,7 +432,7 @@ public class GLX {
         callPPV(__functionAddress, display, pixmap);
     }
 
-    /** Array version of: {@link #glXQueryExtension QueryExtension} */
+    /** register Array version of: {@link #glXQueryExtension QueryExtension} */
     @NativeType("Bool")
     public static boolean glXQueryExtension(@NativeType("Display *") long display, @NativeType("int *") int[] error_base, @NativeType("int *") int[] event_base) {
         long __functionAddress = Functions.QueryExtension;
@@ -444,7 +444,7 @@ public class GLX {
         return callPPPI(__functionAddress, display, error_base, event_base) != 0;
     }
 
-    /** Array version of: {@link #glXQueryVersion QueryVersion} */
+    /** register Array version of: {@link #glXQueryVersion QueryVersion} */
     @NativeType("Bool")
     public static boolean glXQueryVersion(@NativeType("Display *") long display, @NativeType("int *") int[] major, @NativeType("int *") int[] minor) {
         long __functionAddress = Functions.QueryVersion;
@@ -456,7 +456,7 @@ public class GLX {
         return callPPPI(__functionAddress, display, major, minor) != 0;
     }
 
-    /** Array version of: {@link #glXGetConfig GetConfig} */
+    /** register Array version of: {@link #glXGetConfig GetConfig} */
     public static int glXGetConfig(@NativeType("Display *") long display, @NativeType("XVisualInfo *") XVisualInfo visual, int attribute, @NativeType("int *") int[] value) {
         long __functionAddress = Functions.GetConfig;
         if (CHECKS) {
@@ -467,7 +467,7 @@ public class GLX {
         return callPPPI(__functionAddress, display, visual.address(), attribute, value);
     }
 
-    /** Array version of: {@link #glXChooseVisual ChooseVisual} */
+    /** register Array version of: {@link #glXChooseVisual ChooseVisual} */
     @Nullable
     @NativeType("XVisualInfo *")
     public static XVisualInfo glXChooseVisual(@NativeType("Display *") long display, int screen, @Nullable @NativeType("int *") int[] attrib_list) {

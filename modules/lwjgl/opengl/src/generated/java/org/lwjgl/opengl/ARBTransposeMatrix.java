@@ -57,7 +57,7 @@ public class ARBTransposeMatrix {
      * 
      * <p>The matrix is stored as 16 consecutive values, i.e. as:</p>
      * 
-     * <table class=striped>
+     * <table class="lwjgl matrix">
      * <tr><td>a1</td><td>a2</td><td>a3</td><td>a4</td></tr>
      * <tr><td>a5</td><td>a6</td><td>a7</td><td>a8</td></tr>
      * <tr><td>a9</td><td>a10</td><td>a11</td><td>a12</td></tr>
@@ -66,7 +66,7 @@ public class ARBTransposeMatrix {
      *
      * @param m the matrix data
      */
-    public static void glLoadTransposeMatrixfARB(@NativeType("GLfloat const *") FloatBuffer m) {
+    public static void glLoadTransposeMatrixfARB(@NativeType("const GLfloat *") FloatBuffer m) {
         if (CHECKS) {
             check(m, 16);
         }
@@ -83,7 +83,7 @@ public class ARBTransposeMatrix {
      *
      * @param m the matrix data
      */
-    public static void glLoadTransposeMatrixdARB(@NativeType("GLdouble const *") DoubleBuffer m) {
+    public static void glLoadTransposeMatrixdARB(@NativeType("const GLdouble *") DoubleBuffer m) {
         if (CHECKS) {
             check(m, 16);
         }
@@ -100,7 +100,7 @@ public class ARBTransposeMatrix {
      *
      * @param m the matrix data
      */
-    public static void glMultTransposeMatrixfARB(@NativeType("GLfloat const *") FloatBuffer m) {
+    public static void glMultTransposeMatrixfARB(@NativeType("const GLfloat *") FloatBuffer m) {
         if (CHECKS) {
             check(m, 16);
         }
@@ -117,15 +117,15 @@ public class ARBTransposeMatrix {
      *
      * @param m the matrix data
      */
-    public static void glMultTransposeMatrixdARB(@NativeType("GLdouble const *") DoubleBuffer m) {
+    public static void glMultTransposeMatrixdARB(@NativeType("const GLdouble *") DoubleBuffer m) {
         if (CHECKS) {
             check(m, 16);
         }
         nglMultTransposeMatrixdARB(memAddress(m));
     }
 
-    /** Array version of: {@link #glLoadTransposeMatrixfARB LoadTransposeMatrixfARB} */
-    public static void glLoadTransposeMatrixfARB(@NativeType("GLfloat const *") float[] m) {
+    /** register Array version of: {@link #glLoadTransposeMatrixfARB LoadTransposeMatrixfARB} */
+    public static void glLoadTransposeMatrixfARB(@NativeType("const GLfloat *") float[] m) {
         long __functionAddress = GL.getICD().glLoadTransposeMatrixfARB;
         if (CHECKS) {
             check(__functionAddress);
@@ -134,8 +134,8 @@ public class ARBTransposeMatrix {
         callPV(__functionAddress, m);
     }
 
-    /** Array version of: {@link #glLoadTransposeMatrixdARB LoadTransposeMatrixdARB} */
-    public static void glLoadTransposeMatrixdARB(@NativeType("GLdouble const *") double[] m) {
+    /** register Array version of: {@link #glLoadTransposeMatrixdARB LoadTransposeMatrixdARB} */
+    public static void glLoadTransposeMatrixdARB(@NativeType("const GLdouble *") double[] m) {
         long __functionAddress = GL.getICD().glLoadTransposeMatrixdARB;
         if (CHECKS) {
             check(__functionAddress);
@@ -144,8 +144,8 @@ public class ARBTransposeMatrix {
         callPV(__functionAddress, m);
     }
 
-    /** Array version of: {@link #glMultTransposeMatrixfARB MultTransposeMatrixfARB} */
-    public static void glMultTransposeMatrixfARB(@NativeType("GLfloat const *") float[] m) {
+    /** register Array version of: {@link #glMultTransposeMatrixfARB MultTransposeMatrixfARB} */
+    public static void glMultTransposeMatrixfARB(@NativeType("const GLfloat *") float[] m) {
         long __functionAddress = GL.getICD().glMultTransposeMatrixfARB;
         if (CHECKS) {
             check(__functionAddress);
@@ -154,8 +154,8 @@ public class ARBTransposeMatrix {
         callPV(__functionAddress, m);
     }
 
-    /** Array version of: {@link #glMultTransposeMatrixdARB MultTransposeMatrixdARB} */
-    public static void glMultTransposeMatrixdARB(@NativeType("GLdouble const *") double[] m) {
+    /** register Array version of: {@link #glMultTransposeMatrixdARB MultTransposeMatrixdARB} */
+    public static void glMultTransposeMatrixdARB(@NativeType("const GLdouble *") double[] m) {
         long __functionAddress = GL.getICD().glMultTransposeMatrixdARB;
         if (CHECKS) {
             check(__functionAddress);

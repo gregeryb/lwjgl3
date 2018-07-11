@@ -17,7 +17,7 @@ import static org.lwjgl.system.MemoryUtil.*;
 /**
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct nk_text_undo_state {
  *     {@link NkTextUndoRecord struct nk_text_undo_record} undo_rec[99];
  *     nk_rune undo_char[999];
@@ -25,7 +25,7 @@ import static org.lwjgl.system.MemoryUtil.*;
  *     short redo_point;
  *     short undo_char_point;
  *     short redo_char_point;
- * }</code></pre>
+ * }</pre></code>
  */
 @NativeType("struct nk_text_undo_state")
 class NkTextUndoState extends Struct {
@@ -33,7 +33,6 @@ class NkTextUndoState extends Struct {
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */
@@ -139,13 +138,15 @@ class NkTextUndoState extends Struct {
     public static NkTextUndoRecord.Buffer nundo_rec(long struct) { return NkTextUndoRecord.create(struct + NkTextUndoState.UNDO_REC, 99); }
     /** Unsafe version of {@link #undo_rec(int) undo_rec}. */
     public static NkTextUndoRecord nundo_rec(long struct, int index) {
-        return NkTextUndoRecord.create(struct + NkTextUndoState.UNDO_REC + check(index, 99) * NkTextUndoRecord.SIZEOF);
+        if (CHECKS) { check(index, 99); }
+        return NkTextUndoRecord.create(struct + NkTextUndoState.UNDO_REC + index * NkTextUndoRecord.SIZEOF);
     }
     /** Unsafe version of {@link #undo_char}. */
     public static IntBuffer nundo_char(long struct) { return memIntBuffer(struct + NkTextUndoState.UNDO_CHAR, 999); }
     /** Unsafe version of {@link #undo_char(int) undo_char}. */
     public static int nundo_char(long struct, int index) {
-        return memGetInt(struct + NkTextUndoState.UNDO_CHAR + check(index, 999) * 4);
+        if (CHECKS) { check(index, 999); }
+        return memGetInt(struct + NkTextUndoState.UNDO_CHAR + index * 4);
     }
     /** Unsafe version of {@link #undo_point}. */
     public static short nundo_point(long struct) { return memGetShort(struct + NkTextUndoState.UNDO_POINT); }

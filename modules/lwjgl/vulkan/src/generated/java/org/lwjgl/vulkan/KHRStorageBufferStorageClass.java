@@ -14,10 +14,6 @@ package org.lwjgl.vulkan;
  * 
  * <p>This extension provides a new SPIR-V {@code StorageBuffer} storage class. A {@code Block}-decorated object in this class is equivalent to a {@code BufferBlock}-decorated object in the {@code Uniform} storage class.</p>
  * 
- * <h5>Promotion to Vulkan 1.1</h5>
- * 
- * <p>All functionality in this extension is included in core Vulkan 1.1.</p>
- * 
  * <dl>
  * <dt><b>Name String</b></dt>
  * <dd>{@code VK_KHR_storage_buffer_storage_class}</dd>
@@ -33,16 +29,15 @@ package org.lwjgl.vulkan;
  * </ul></dd>
  * <dt><b>Contact</b></dt>
  * <dd><ul>
- * <li>Alexander Galazin @alegal-arm</li>
+ * <li>Alexander Galazin @debater</li>
  * </ul></dd>
  * <dt><b>Last Modified Date</b></dt>
- * <dd>2017-09-05</dd>
+ * <dd>2017-03-23</dd>
  * <dt><b>IP Status</b></dt>
  * <dd>No known IP claims.</dd>
  * <dt><b>Interactions and External Dependencies</b></dt>
  * <dd><ul>
  * <li>This extension requires the <a target="_blank" href="https://www.khronos.org/registry/spir-v/extensions/KHR/SPV_KHR_storage_buffer_storage_class.html">SPV_KHR_storage_buffer_storage_class</a> SPIR-V extension.</li>
- * <li>Promoted to Vulkan 1.1 Core</li>
  * </ul></dd>
  * <dt><b>Contributors</b></dt>
  * <dd><ul>

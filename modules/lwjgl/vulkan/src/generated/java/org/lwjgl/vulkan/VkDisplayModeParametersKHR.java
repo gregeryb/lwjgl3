@@ -38,18 +38,17 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct VkDisplayModeParametersKHR {
  *     {@link VkExtent2D VkExtent2D} visibleRegion;
  *     uint32_t refreshRate;
- * }</code></pre>
+ * }</pre></code>
  */
 public class VkDisplayModeParametersKHR extends Struct implements NativeResource {
 
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */
@@ -89,8 +88,6 @@ public class VkDisplayModeParametersKHR extends Struct implements NativeResource
 
     /** Returns a {@link VkExtent2D} view of the {@code visibleRegion} field. */
     public VkExtent2D visibleRegion() { return nvisibleRegion(address()); }
-    /** Passes the {@code visibleRegion} field to the specified {@link java.util.function.Consumer Consumer}. */
-    public VkDisplayModeParametersKHR visibleRegion(java.util.function.Consumer<VkExtent2D> consumer) { consumer.accept(visibleRegion()); return this; }
     /** Returns the value of the {@code refreshRate} field. */
     @NativeType("uint32_t")
     public int refreshRate() { return nrefreshRate(address()); }
@@ -322,8 +319,6 @@ public class VkDisplayModeParametersKHR extends Struct implements NativeResource
 
         /** Returns a {@link VkExtent2D} view of the {@code visibleRegion} field. */
         public VkExtent2D visibleRegion() { return VkDisplayModeParametersKHR.nvisibleRegion(address()); }
-        /** Passes the {@code visibleRegion} field to the specified {@link java.util.function.Consumer Consumer}. */
-        public VkDisplayModeParametersKHR.Buffer visibleRegion(java.util.function.Consumer<VkExtent2D> consumer) { consumer.accept(visibleRegion()); return this; }
         /** Returns the value of the {@code refreshRate} field. */
         @NativeType("uint32_t")
         public int refreshRate() { return VkDisplayModeParametersKHR.nrefreshRate(address()); }

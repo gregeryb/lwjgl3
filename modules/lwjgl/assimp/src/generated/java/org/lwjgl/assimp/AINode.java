@@ -37,7 +37,7 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct aiNode {
  *     {@link AIString struct aiString} mName;
  *     {@link AIMatrix4x4 struct aiMatrix4x4} mTransformation;
@@ -47,7 +47,7 @@ import static org.lwjgl.system.MemoryStack.*;
  *     unsigned int mNumMeshes;
  *     unsigned int * mMeshes;
  *     {@link AIMetaData struct aiMetadata} * mMetadata;
- * }</code></pre>
+ * }</pre></code>
  */
 @NativeType("struct aiNode")
 public class AINode extends Struct implements NativeResource {
@@ -55,7 +55,6 @@ public class AINode extends Struct implements NativeResource {
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */
@@ -114,13 +113,9 @@ public class AINode extends Struct implements NativeResource {
     /** Returns a {@link AIString} view of the {@code mName} field. */
     @NativeType("struct aiString")
     public AIString mName() { return nmName(address()); }
-    /** Passes the {@code mName} field to the specified {@link java.util.function.Consumer Consumer}. */
-    public AINode mName(java.util.function.Consumer<AIString> consumer) { consumer.accept(mName()); return this; }
     /** Returns a {@link AIMatrix4x4} view of the {@code mTransformation} field. */
     @NativeType("struct aiMatrix4x4")
     public AIMatrix4x4 mTransformation() { return nmTransformation(address()); }
-    /** Passes the {@code mTransformation} field to the specified {@link java.util.function.Consumer Consumer}. */
-    public AINode mTransformation(java.util.function.Consumer<AIMatrix4x4> consumer) { consumer.accept(mTransformation()); return this; }
     /** Returns a {@link AINode} view of the struct pointed to by the {@code mParent} field. */
     @Nullable
     @NativeType("struct aiNode *")
@@ -161,10 +156,10 @@ public class AINode extends Struct implements NativeResource {
     public AINode set(
         AIString mName,
         AIMatrix4x4 mTransformation,
-        @Nullable AINode mParent,
-        @Nullable PointerBuffer mChildren,
-        @Nullable IntBuffer mMeshes,
-        @Nullable AIMetaData mMetadata
+        AINode mParent,
+        PointerBuffer mChildren,
+        IntBuffer mMeshes,
+        AIMetaData mMetadata
     ) {
         mName(mName);
         mTransformation(mTransformation);
@@ -442,13 +437,9 @@ public class AINode extends Struct implements NativeResource {
         /** Returns a {@link AIString} view of the {@code mName} field. */
         @NativeType("struct aiString")
         public AIString mName() { return AINode.nmName(address()); }
-        /** Passes the {@code mName} field to the specified {@link java.util.function.Consumer Consumer}. */
-        public AINode.Buffer mName(java.util.function.Consumer<AIString> consumer) { consumer.accept(mName()); return this; }
         /** Returns a {@link AIMatrix4x4} view of the {@code mTransformation} field. */
         @NativeType("struct aiMatrix4x4")
         public AIMatrix4x4 mTransformation() { return AINode.nmTransformation(address()); }
-        /** Passes the {@code mTransformation} field to the specified {@link java.util.function.Consumer Consumer}. */
-        public AINode.Buffer mTransformation(java.util.function.Consumer<AIMatrix4x4> consumer) { consumer.accept(mTransformation()); return this; }
         /** Returns a {@link AINode} view of the struct pointed to by the {@code mParent} field. */
         @Nullable
         @NativeType("struct aiNode *")

@@ -32,10 +32,10 @@ import static org.lwjgl.system.MemoryUtil.*;
  */
 public class ARBGLSPIRV {
 
-    /** Accepted by the {@code binaryformat} parameter of {@link GL41C#glShaderBinary ShaderBinary}. */
+    /** Accepted by the {@code binaryformat} parameter of {@link GL41#glShaderBinary ShaderBinary}. */
     public static final int GL_SHADER_BINARY_FORMAT_SPIR_V_ARB = 0x9551;
 
-    /** Accepted by the {@code pname} parameter of {@link GL20C#glGetShaderiv GetShaderiv}. */
+    /** Accepted by the {@code pname} parameter of {@link GL20#glGetShaderiv GetShaderiv}. */
     public static final int GL_SPIR_V_BINARY_ARB = 0x9552;
 
     static { GL.initialize(); }
@@ -64,7 +64,7 @@ public class ARBGLSPIRV {
      * 
      * <p>Shaders associated with SPIR-V modules must be specialized before they can be linked into a program object. It is not necessary to specialize the
      * shader before it is attached to a program object. Once specialized, a shader may not be specialized again without first re-associating the original
-     * SPIR-V module with it, through {@link GL41C#glShaderBinary ShaderBinary}.</p>
+     * SPIR-V module with it, through {@link GL41#glShaderBinary ShaderBinary}.</p>
      * 
      * <p>Specialization does two things:</p>
      * 
@@ -76,7 +76,7 @@ public class ARBGLSPIRV {
      * <p>On successful shader specialization, the compile status for shader is set to {@link GL11#GL_TRUE TRUE}. On failure, the compile status for shader is set to {@link GL11#GL_FALSE FALSE} and
      * additional information about the cause of the failure may be available in the shader compilation log.</p>
      *
-     * @param shader         the name of a shader object containing unspecialized SPIR-V as created from a successful call to {@link GL41C#glShaderBinary ShaderBinary} to which a SPIR-V module was
+     * @param shader         the name of a shader object containing unspecialized SPIR-V as created from a successful call to {@link GL41#glShaderBinary ShaderBinary} to which a SPIR-V module was
      *                       passed
      * @param pEntryPoint    a pointer to a null-terminated UTF-8 string specifying the name of the entry point in the SPIR-V module to use for this shader
      * @param pConstantIndex is a pointer to an array of {@code numSpecializationConstants} unsigned integers, each holding the index of a specialization constant in the SPIR-V
@@ -89,7 +89,7 @@ public class ARBGLSPIRV {
      *                       <p>Although this array is of unsigned integer, each entry is bitcast to the appropriate type for the module, and therefore, floating-point constants
      *                       may be set by including their IEEE-754 bit representation in the {@code pConstantValue} array.</p>
      */
-    public static void glSpecializeShaderARB(@NativeType("GLuint") int shader, @NativeType("GLchar const *") ByteBuffer pEntryPoint, @NativeType("GLuint const *") IntBuffer pConstantIndex, @NativeType("GLuint const *") IntBuffer pConstantValue) {
+    public static void glSpecializeShaderARB(@NativeType("GLuint") int shader, @NativeType("const GLchar *") ByteBuffer pEntryPoint, @NativeType("const GLuint *") IntBuffer pConstantIndex, @NativeType("const GLuint *") IntBuffer pConstantValue) {
         if (CHECKS) {
             checkNT1(pEntryPoint);
             check(pConstantValue, pConstantIndex.remaining());
@@ -102,7 +102,7 @@ public class ARBGLSPIRV {
      * 
      * <p>Shaders associated with SPIR-V modules must be specialized before they can be linked into a program object. It is not necessary to specialize the
      * shader before it is attached to a program object. Once specialized, a shader may not be specialized again without first re-associating the original
-     * SPIR-V module with it, through {@link GL41C#glShaderBinary ShaderBinary}.</p>
+     * SPIR-V module with it, through {@link GL41#glShaderBinary ShaderBinary}.</p>
      * 
      * <p>Specialization does two things:</p>
      * 
@@ -114,7 +114,7 @@ public class ARBGLSPIRV {
      * <p>On successful shader specialization, the compile status for shader is set to {@link GL11#GL_TRUE TRUE}. On failure, the compile status for shader is set to {@link GL11#GL_FALSE FALSE} and
      * additional information about the cause of the failure may be available in the shader compilation log.</p>
      *
-     * @param shader         the name of a shader object containing unspecialized SPIR-V as created from a successful call to {@link GL41C#glShaderBinary ShaderBinary} to which a SPIR-V module was
+     * @param shader         the name of a shader object containing unspecialized SPIR-V as created from a successful call to {@link GL41#glShaderBinary ShaderBinary} to which a SPIR-V module was
      *                       passed
      * @param pEntryPoint    a pointer to a null-terminated UTF-8 string specifying the name of the entry point in the SPIR-V module to use for this shader
      * @param pConstantIndex is a pointer to an array of {@code numSpecializationConstants} unsigned integers, each holding the index of a specialization constant in the SPIR-V
@@ -127,7 +127,7 @@ public class ARBGLSPIRV {
      *                       <p>Although this array is of unsigned integer, each entry is bitcast to the appropriate type for the module, and therefore, floating-point constants
      *                       may be set by including their IEEE-754 bit representation in the {@code pConstantValue} array.</p>
      */
-    public static void glSpecializeShaderARB(@NativeType("GLuint") int shader, @NativeType("GLchar const *") CharSequence pEntryPoint, @NativeType("GLuint const *") IntBuffer pConstantIndex, @NativeType("GLuint const *") IntBuffer pConstantValue) {
+    public static void glSpecializeShaderARB(@NativeType("GLuint") int shader, @NativeType("const GLchar *") CharSequence pEntryPoint, @NativeType("const GLuint *") IntBuffer pConstantIndex, @NativeType("const GLuint *") IntBuffer pConstantValue) {
         if (CHECKS) {
             check(pConstantValue, pConstantIndex.remaining());
         }
@@ -140,8 +140,8 @@ public class ARBGLSPIRV {
         }
     }
 
-    /** Array version of: {@link #glSpecializeShaderARB SpecializeShaderARB} */
-    public static void glSpecializeShaderARB(@NativeType("GLuint") int shader, @NativeType("GLchar const *") ByteBuffer pEntryPoint, @NativeType("GLuint const *") int[] pConstantIndex, @NativeType("GLuint const *") int[] pConstantValue) {
+    /** register Array version of: {@link #glSpecializeShaderARB SpecializeShaderARB} */
+    public static void glSpecializeShaderARB(@NativeType("GLuint") int shader, @NativeType("const GLchar *") ByteBuffer pEntryPoint, @NativeType("const GLuint *") int[] pConstantIndex, @NativeType("const GLuint *") int[] pConstantValue) {
         long __functionAddress = GL.getICD().glSpecializeShaderARB;
         if (CHECKS) {
             check(__functionAddress);
@@ -151,8 +151,8 @@ public class ARBGLSPIRV {
         callPPPV(__functionAddress, shader, memAddress(pEntryPoint), pConstantIndex.length, pConstantIndex, pConstantValue);
     }
 
-    /** Array version of: {@link #glSpecializeShaderARB SpecializeShaderARB} */
-    public static void glSpecializeShaderARB(@NativeType("GLuint") int shader, @NativeType("GLchar const *") CharSequence pEntryPoint, @NativeType("GLuint const *") int[] pConstantIndex, @NativeType("GLuint const *") int[] pConstantValue) {
+    /** register Array version of: {@link #glSpecializeShaderARB SpecializeShaderARB} */
+    public static void glSpecializeShaderARB(@NativeType("GLuint") int shader, @NativeType("const GLchar *") CharSequence pEntryPoint, @NativeType("const GLuint *") int[] pConstantIndex, @NativeType("const GLuint *") int[] pConstantValue) {
         long __functionAddress = GL.getICD().glSpecializeShaderARB;
         if (CHECKS) {
             check(__functionAddress);

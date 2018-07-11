@@ -14,12 +14,12 @@ import static org.lwjgl.system.MemoryUtil.*;
 /**
  * <h3>Type</h3>
  * 
- * <pre><code>
- * void * (*) (
+ * <code><pre>
+ * void* (*) (
  *     nk_handle handle,
  *     void *old,
  *     nk_size size
- * )</code></pre>
+ * )</pre></code>
  */
 public abstract class NkPluginAlloc extends Callback implements NkPluginAllocI {
 

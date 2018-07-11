@@ -1,12 +1,7 @@
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.lwjgl/lwjgl/badge.svg)](http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22org.lwjgl%22%20)
-[![API Javadoc](https://img.shields.io/badge/API-docs-blue.svg?style=flat-square)](https://javadoc.lwjgl.org/)
-[![License](https://img.shields.io/badge/license-BSD-blue.svg)](https://github.com/LWJGL/lwjgl3/blob/master/LICENSE.md)
-[![Slack Status](https://slackin-bfxneqmzsp.now.sh/badge.svg)](http://slack.lwjgl.org/)
-
-[![Backers on Open Collective](https://opencollective.com/lwjgl/backers/badge.svg)](#backers)
-[![Sponsors on Open Collective](https://opencollective.com/lwjgl/sponsors/badge.svg)](#sponsors)
+[![Backers on Open Collective](https://opencollective.com/lwjgl/backers/badge.svg)](#backers) [![Sponsors on Open Collective](https://opencollective.com/lwjgl/sponsors/badge.svg)](#sponsors) [![License](https://img.shields.io/badge/license-BSD-blue.svg)](https://github.com/LWJGL/lwjgl3/blob/master/LICENSE.md)
 ![Size](https://reposs.herokuapp.com/?path=lwjgl/lwjgl3)
 [![Build Status](https://travis-ci.org/LWJGL-CI/lwjgl3.svg?branch=master-linux64)](https://travis-ci.org/LWJGL-CI/lwjgl3)
+[![Slack Status](https://slack.lwjgl.org/badge.svg)](https://slack.lwjgl.org/)
 
 ## LWJGL - Lightweight Java Game Library 3
 
@@ -34,7 +29,7 @@ Useful links:
 Contact:
 
 - [Forum](http://forum.lwjgl.org)
-- [Slack](https://lwjgl.slack.com/) (invitations [here](http://slack.lwjgl.org/))
+- [Slack](https://slack.lwjgl.org/)
 - [Twitter](https://twitter.com/LWJGL)
 
 If you'd like to contribute, see [doc/README](https://github.com/LWJGL/lwjgl3/tree/master/doc)
@@ -143,7 +138,6 @@ improve the chances of a quick and useful response.
 |[OpenVR](https://github.com/ValveSoftware/openvr)|An API and runtime that allows access to VR hardware from multiple vendors without requiring that applications have specific knowledge of the hardware they are targeting.|
 |[Tiny OpenEXR](https://github.com/syoyo/tinyexr)|A small, single header-only library to load and save OpenEXR(.exr) images.|
 |[Tootle (AMD)](https://github.com/GPUOpen-Tools/amd-tootle)|A 3D triangle mesh optimization library that improves on existing mesh preprocessing techniques.|
-|[Vulkan Memory Allocator](https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator)|An easy to integrate Vulkan memory allocation library.|
 |[Yoga](https://facebook.github.io/yoga/)|An open-source, cross-platform layout library that implements Flexbox.|
 
 #### [stb](https://github.com/nothings/stb) - single-file public domain libraries for C/C++

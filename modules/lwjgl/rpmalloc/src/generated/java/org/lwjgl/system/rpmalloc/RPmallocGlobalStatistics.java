@@ -20,20 +20,22 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <ul>
  * <li>{@code mapped} &ndash; Current amount of virtual memory mapped (only if {@code ENABLE_STATISTICS=1})</li>
- * <li>{@code cached} &ndash; Current amount of memory in global caches for small and medium sizes (&lt;64KiB)</li>
+ * <li>{@code cached} &ndash; Current amount of memory in global caches for small and medium sizes (<64KiB)</li>
+ * <li>{@code cached_large} &ndash; Curren amount of memory in global caches for large sizes (>=64KiB)</li>
  * <li>{@code mapped_total} &ndash; Total amount of memory mapped (only if {@code ENABLE_STATISTICS=1})</li>
  * <li>{@code unmapped_total} &ndash; Total amount of memory unmapped (only if {@code ENABLE_STATISTICS=1})</li>
  * </ul>
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct rpmalloc_global_statistics_t {
  *     size_t mapped;
  *     size_t cached;
+ *     size_t cached_large;
  *     size_t mapped_total;
  *     size_t unmapped_total;
- * }</code></pre>
+ * }</pre></code>
  */
 @NativeType("struct rpmalloc_global_statistics_t")
 public class RPmallocGlobalStatistics extends Struct implements NativeResource {
@@ -41,18 +43,19 @@ public class RPmallocGlobalStatistics extends Struct implements NativeResource {
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */
     public static final int
         MAPPED,
         CACHED,
+        CACHED_LARGE,
         MAPPED_TOTAL,
         UNMAPPED_TOTAL;
 
     static {
         Layout layout = __struct(
+            __member(POINTER_SIZE),
             __member(POINTER_SIZE),
             __member(POINTER_SIZE),
             __member(POINTER_SIZE),
@@ -64,8 +67,9 @@ public class RPmallocGlobalStatistics extends Struct implements NativeResource {
 
         MAPPED = layout.offsetof(0);
         CACHED = layout.offsetof(1);
-        MAPPED_TOTAL = layout.offsetof(2);
-        UNMAPPED_TOTAL = layout.offsetof(3);
+        CACHED_LARGE = layout.offsetof(2);
+        MAPPED_TOTAL = layout.offsetof(3);
+        UNMAPPED_TOTAL = layout.offsetof(4);
     }
 
     RPmallocGlobalStatistics(long address, @Nullable ByteBuffer container) {
@@ -91,6 +95,9 @@ public class RPmallocGlobalStatistics extends Struct implements NativeResource {
     /** Returns the value of the {@code cached} field. */
     @NativeType("size_t")
     public long cached() { return ncached(address()); }
+    /** Returns the value of the {@code cached_large} field. */
+    @NativeType("size_t")
+    public long cached_large() { return ncached_large(address()); }
     /** Returns the value of the {@code mapped_total} field. */
     @NativeType("size_t")
     public long mapped_total() { return nmapped_total(address()); }
@@ -243,6 +250,8 @@ public class RPmallocGlobalStatistics extends Struct implements NativeResource {
     public static long nmapped(long struct) { return memGetAddress(struct + RPmallocGlobalStatistics.MAPPED); }
     /** Unsafe version of {@link #cached}. */
     public static long ncached(long struct) { return memGetAddress(struct + RPmallocGlobalStatistics.CACHED); }
+    /** Unsafe version of {@link #cached_large}. */
+    public static long ncached_large(long struct) { return memGetAddress(struct + RPmallocGlobalStatistics.CACHED_LARGE); }
     /** Unsafe version of {@link #mapped_total}. */
     public static long nmapped_total(long struct) { return memGetAddress(struct + RPmallocGlobalStatistics.MAPPED_TOTAL); }
     /** Unsafe version of {@link #unmapped_total}. */
@@ -300,6 +309,9 @@ public class RPmallocGlobalStatistics extends Struct implements NativeResource {
         /** Returns the value of the {@code cached} field. */
         @NativeType("size_t")
         public long cached() { return RPmallocGlobalStatistics.ncached(address()); }
+        /** Returns the value of the {@code cached_large} field. */
+        @NativeType("size_t")
+        public long cached_large() { return RPmallocGlobalStatistics.ncached_large(address()); }
         /** Returns the value of the {@code mapped_total} field. */
         @NativeType("size_t")
         public long mapped_total() { return RPmallocGlobalStatistics.nmapped_total(address()); }

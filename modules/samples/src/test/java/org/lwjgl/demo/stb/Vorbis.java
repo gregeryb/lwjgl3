@@ -22,6 +22,7 @@ import static org.lwjgl.demo.util.IOUtil.*;
 import static org.lwjgl.glfw.Callbacks.*;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.glfw.GLFWNativeWin32.*;
+import static org.lwjgl.openal.AL10.*;
 import static org.lwjgl.openal.AL11.*;
 import static org.lwjgl.openal.ALC10.*;
 import static org.lwjgl.openal.EXTThreadLocalContext.*;
@@ -249,8 +250,6 @@ public final class Vorbis implements AutoCloseable {
 
     @Override
     public void close() {
-        GL.setCapabilities(null);
-
         glfwFreeCallbacks(window);
         glfwDestroyWindow(window);
 

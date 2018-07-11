@@ -19,13 +19,13 @@ import static org.lwjgl.system.MemoryStack.*;
 /**
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct nk_image {
  *     {@link NkHandle nk_handle} handle;
  *     unsigned short w;
  *     unsigned short h;
  *     unsigned short region[4];
- * }</code></pre>
+ * }</pre></code>
  */
 @NativeType("struct nk_image")
 public class NkImage extends Struct implements NativeResource {
@@ -33,7 +33,6 @@ public class NkImage extends Struct implements NativeResource {
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */
@@ -80,8 +79,6 @@ public class NkImage extends Struct implements NativeResource {
     /** Returns a {@link NkHandle} view of the {@code handle} field. */
     @NativeType("nk_handle")
     public NkHandle handle() { return nhandle(address()); }
-    /** Passes the {@code handle} field to the specified {@link java.util.function.Consumer Consumer}. */
-    public NkImage handle(java.util.function.Consumer<NkHandle> consumer) { consumer.accept(handle()); return this; }
     /** Returns the value of the {@code w} field. */
     @NativeType("unsigned short")
     public short w() { return nw(address()); }
@@ -284,7 +281,8 @@ public class NkImage extends Struct implements NativeResource {
     public static ShortBuffer nregion(long struct) { return memShortBuffer(struct + NkImage.REGION, 4); }
     /** Unsafe version of {@link #region(int) region}. */
     public static short nregion(long struct, int index) {
-        return memGetShort(struct + NkImage.REGION + check(index, 4) * 2);
+        if (CHECKS) { check(index, 4); }
+        return memGetShort(struct + NkImage.REGION + index * 2);
     }
 
     /** Unsafe version of {@link #handle(NkHandle) handle}. */
@@ -300,7 +298,8 @@ public class NkImage extends Struct implements NativeResource {
     }
     /** Unsafe version of {@link #region(int, short) region}. */
     public static void nregion(long struct, int index, short value) {
-        memPutShort(struct + NkImage.REGION + check(index, 4) * 2, value);
+        if (CHECKS) { check(index, 4); }
+        memPutShort(struct + NkImage.REGION + index * 2, value);
     }
 
     // -----------------------------------
@@ -352,8 +351,6 @@ public class NkImage extends Struct implements NativeResource {
         /** Returns a {@link NkHandle} view of the {@code handle} field. */
         @NativeType("nk_handle")
         public NkHandle handle() { return NkImage.nhandle(address()); }
-        /** Passes the {@code handle} field to the specified {@link java.util.function.Consumer Consumer}. */
-        public NkImage.Buffer handle(java.util.function.Consumer<NkHandle> consumer) { consumer.accept(handle()); return this; }
         /** Returns the value of the {@code w} field. */
         @NativeType("unsigned short")
         public short w() { return NkImage.nw(address()); }

@@ -94,12 +94,9 @@ public class EXTValidationCache {
         throw new UnsupportedOperationException();
     }
 
-    static boolean checkCapsDevice(FunctionProvider provider, java.util.Map<String, Long> caps, java.util.Set<String> ext) {
-        return ext.contains("VK_EXT_validation_cache") && VK.checkExtension("VK_EXT_validation_cache",
-               VK.isSupported(provider, "vkCreateValidationCacheEXT", caps)
-            && VK.isSupported(provider, "vkDestroyValidationCacheEXT", caps)
-            && VK.isSupported(provider, "vkMergeValidationCachesEXT", caps)
-            && VK.isSupported(provider, "vkGetValidationCacheDataEXT", caps)
+    static boolean isAvailable(VKCapabilitiesDevice caps) {
+        return checkFunctions(
+            caps.vkCreateValidationCacheEXT, caps.vkDestroyValidationCacheEXT, caps.vkMergeValidationCachesEXT, caps.vkGetValidationCacheDataEXT
         );
     }
 
@@ -123,12 +120,12 @@ public class EXTValidationCache {
      * 
      * <p>To create validation cache objects, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * VkResult vkCreateValidationCacheEXT(
      *     VkDevice                                    device,
      *     const VkValidationCacheCreateInfoEXT*       pCreateInfo,
      *     const VkAllocationCallbacks*                pAllocator,
-     *     VkValidationCacheEXT*                       pValidationCache);</code></pre>
+     *     VkValidationCacheEXT*                       pValidationCache);</pre></code>
      * 
      * <h5>Description</h5>
      * 
@@ -176,7 +173,7 @@ public class EXTValidationCache {
      * @param pValidationCache a pointer to a {@code VkValidationCacheEXT} handle in which the resulting validation cache object is returned.
      */
     @NativeType("VkResult")
-    public static int vkCreateValidationCacheEXT(VkDevice device, @NativeType("VkValidationCacheCreateInfoEXT const *") VkValidationCacheCreateInfoEXT pCreateInfo, @Nullable @NativeType("VkAllocationCallbacks const *") VkAllocationCallbacks pAllocator, @NativeType("VkValidationCacheEXT *") LongBuffer pValidationCache) {
+    public static int vkCreateValidationCacheEXT(VkDevice device, @NativeType("const VkValidationCacheCreateInfoEXT *") VkValidationCacheCreateInfoEXT pCreateInfo, @Nullable @NativeType("const VkAllocationCallbacks *") VkAllocationCallbacks pAllocator, @NativeType("VkValidationCacheEXT *") LongBuffer pValidationCache) {
         if (CHECKS) {
             check(pValidationCache, 1);
         }
@@ -202,11 +199,11 @@ public class EXTValidationCache {
      * 
      * <p>To destroy a validation cache, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * void vkDestroyValidationCacheEXT(
      *     VkDevice                                    device,
      *     VkValidationCacheEXT                        validationCache,
-     *     const VkAllocationCallbacks*                pAllocator);</code></pre>
+     *     const VkAllocationCallbacks*                pAllocator);</pre></code>
      * 
      * <h5>Valid Usage</h5>
      * 
@@ -238,7 +235,7 @@ public class EXTValidationCache {
      * @param validationCache the handle of the validation cache to destroy.
      * @param pAllocator      controls host memory allocation as described in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation">Memory Allocation</a> chapter.
      */
-    public static void vkDestroyValidationCacheEXT(VkDevice device, @NativeType("VkValidationCacheEXT") long validationCache, @Nullable @NativeType("VkAllocationCallbacks const *") VkAllocationCallbacks pAllocator) {
+    public static void vkDestroyValidationCacheEXT(VkDevice device, @NativeType("VkValidationCacheEXT") long validationCache, @Nullable @NativeType("const VkAllocationCallbacks *") VkAllocationCallbacks pAllocator) {
         nvkDestroyValidationCacheEXT(device, validationCache, memAddressSafe(pAllocator));
     }
 
@@ -264,12 +261,12 @@ public class EXTValidationCache {
      * 
      * <p>Validation cache objects <b>can</b> be merged using the command:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * VkResult vkMergeValidationCachesEXT(
      *     VkDevice                                    device,
      *     VkValidationCacheEXT                        dstCache,
      *     uint32_t                                    srcCacheCount,
-     *     const VkValidationCacheEXT*                 pSrcCaches);</code></pre>
+     *     const VkValidationCacheEXT*                 pSrcCaches);</pre></code>
      * 
      * <h5>Description</h5>
      * 
@@ -320,7 +317,7 @@ public class EXTValidationCache {
      * @param pSrcCaches an array of validation cache handles, which will be merged into {@code dstCache}. The previous contents of {@code dstCache} are included after the merge.
      */
     @NativeType("VkResult")
-    public static int vkMergeValidationCachesEXT(VkDevice device, @NativeType("VkValidationCacheEXT") long dstCache, @NativeType("VkValidationCacheEXT const *") LongBuffer pSrcCaches) {
+    public static int vkMergeValidationCachesEXT(VkDevice device, @NativeType("VkValidationCacheEXT") long dstCache, @NativeType("const VkValidationCacheEXT *") LongBuffer pSrcCaches) {
         return nvkMergeValidationCachesEXT(device, dstCache, pSrcCaches.remaining(), memAddress(pSrcCaches));
     }
 
@@ -346,12 +343,12 @@ public class EXTValidationCache {
      * 
      * <p>Data <b>can</b> be retrieved from a validation cache object using the command:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * VkResult vkGetValidationCacheDataEXT(
      *     VkDevice                                    device,
      *     VkValidationCacheEXT                        validationCache,
      *     size_t*                                     pDataSize,
-     *     void*                                       pData);</code></pre>
+     *     void*                                       pData);</pre></code>
      * 
      * <h5>Description</h5>
      * 
@@ -419,9 +416,9 @@ public class EXTValidationCache {
         return nvkGetValidationCacheDataEXT(device, validationCache, memAddress(pDataSize), memAddressSafe(pData));
     }
 
-    /** Array version of: {@link #vkCreateValidationCacheEXT CreateValidationCacheEXT} */
+    /** register Array version of: {@link #vkCreateValidationCacheEXT CreateValidationCacheEXT} */
     @NativeType("VkResult")
-    public static int vkCreateValidationCacheEXT(VkDevice device, @NativeType("VkValidationCacheCreateInfoEXT const *") VkValidationCacheCreateInfoEXT pCreateInfo, @Nullable @NativeType("VkAllocationCallbacks const *") VkAllocationCallbacks pAllocator, @NativeType("VkValidationCacheEXT *") long[] pValidationCache) {
+    public static int vkCreateValidationCacheEXT(VkDevice device, @NativeType("const VkValidationCacheCreateInfoEXT *") VkValidationCacheCreateInfoEXT pCreateInfo, @Nullable @NativeType("const VkAllocationCallbacks *") VkAllocationCallbacks pAllocator, @NativeType("VkValidationCacheEXT *") long[] pValidationCache) {
         long __functionAddress = device.getCapabilities().vkCreateValidationCacheEXT;
         if (CHECKS) {
             check(__functionAddress);
@@ -432,9 +429,9 @@ public class EXTValidationCache {
         return callPPPPI(__functionAddress, device.address(), pCreateInfo.address(), memAddressSafe(pAllocator), pValidationCache);
     }
 
-    /** Array version of: {@link #vkMergeValidationCachesEXT MergeValidationCachesEXT} */
+    /** register Array version of: {@link #vkMergeValidationCachesEXT MergeValidationCachesEXT} */
     @NativeType("VkResult")
-    public static int vkMergeValidationCachesEXT(VkDevice device, @NativeType("VkValidationCacheEXT") long dstCache, @NativeType("VkValidationCacheEXT const *") long[] pSrcCaches) {
+    public static int vkMergeValidationCachesEXT(VkDevice device, @NativeType("VkValidationCacheEXT") long dstCache, @NativeType("const VkValidationCacheEXT *") long[] pSrcCaches) {
         long __functionAddress = device.getCapabilities().vkMergeValidationCachesEXT;
         if (CHECKS) {
             check(__functionAddress);

@@ -31,7 +31,7 @@ import static org.lwjgl.system.MemoryUtil.*;
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct JAWT_DrawingSurface {
  *     JNIEnv * env;
  *     jobject target;
@@ -39,7 +39,7 @@ import static org.lwjgl.system.MemoryUtil.*;
  *     void * GetDrawingSurfaceInfo;
  *     void * FreeDrawingSurfaceInfo;
  *     void * Unlock;
- * }</code></pre>
+ * }</pre></code>
  */
 @NativeType("struct JAWT_DrawingSurface")
 public class JAWTDrawingSurface extends Struct {
@@ -47,7 +47,6 @@ public class JAWTDrawingSurface extends Struct {
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */

@@ -29,14 +29,14 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct nk_user_font_glyph {
  *     {@link NkVec2 struct nk_vec2} uv[2];
  *     {@link NkVec2 struct nk_vec2} offset;
  *     float width;
  *     float height;
  *     float xadvance;
- * }</code></pre>
+ * }</pre></code>
  */
 @NativeType("struct nk_user_font_glyph")
 public class NkUserFontGlyph extends Struct implements NativeResource {
@@ -44,7 +44,6 @@ public class NkUserFontGlyph extends Struct implements NativeResource {
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */
@@ -100,8 +99,6 @@ public class NkUserFontGlyph extends Struct implements NativeResource {
     /** Returns a {@link NkVec2} view of the {@code offset} field. */
     @NativeType("struct nk_vec2")
     public NkVec2 offset() { return noffset(address()); }
-    /** Passes the {@code offset} field to the specified {@link java.util.function.Consumer Consumer}. */
-    public NkUserFontGlyph offset(java.util.function.Consumer<NkVec2> consumer) { consumer.accept(offset()); return this; }
     /** Returns the value of the {@code width} field. */
     public float width() { return nwidth(address()); }
     /** Returns the value of the {@code height} field. */
@@ -296,7 +293,8 @@ public class NkUserFontGlyph extends Struct implements NativeResource {
     public static NkVec2.Buffer nuv(long struct) { return NkVec2.create(struct + NkUserFontGlyph.UV, 2); }
     /** Unsafe version of {@link #uv(int) uv}. */
     public static NkVec2 nuv(long struct, int index) {
-        return NkVec2.create(struct + NkUserFontGlyph.UV + check(index, 2) * NkVec2.SIZEOF);
+        if (CHECKS) { check(index, 2); }
+        return NkVec2.create(struct + NkUserFontGlyph.UV + index * NkVec2.SIZEOF);
     }
     /** Unsafe version of {@link #offset}. */
     public static NkVec2 noffset(long struct) { return NkVec2.create(struct + NkUserFontGlyph.OFFSET); }
@@ -314,7 +312,8 @@ public class NkUserFontGlyph extends Struct implements NativeResource {
     }
     /** Unsafe version of {@link #uv(int, NkVec2) uv}. */
     public static void nuv(long struct, int index, NkVec2 value) {
-        memCopy(value.address(), struct + NkUserFontGlyph.UV + check(index, 2) * NkVec2.SIZEOF, NkVec2.SIZEOF);
+        if (CHECKS) { check(index, 2); }
+        memCopy(value.address(), struct + NkUserFontGlyph.UV + index * NkVec2.SIZEOF, NkVec2.SIZEOF);
     }
     /** Unsafe version of {@link #offset(NkVec2) offset}. */
     public static void noffset(long struct, NkVec2 value) { memCopy(value.address(), struct + NkUserFontGlyph.OFFSET, NkVec2.SIZEOF); }
@@ -380,8 +379,6 @@ public class NkUserFontGlyph extends Struct implements NativeResource {
         /** Returns a {@link NkVec2} view of the {@code offset} field. */
         @NativeType("struct nk_vec2")
         public NkVec2 offset() { return NkUserFontGlyph.noffset(address()); }
-        /** Passes the {@code offset} field to the specified {@link java.util.function.Consumer Consumer}. */
-        public NkUserFontGlyph.Buffer offset(java.util.function.Consumer<NkVec2> consumer) { consumer.accept(offset()); return this; }
         /** Returns the value of the {@code width} field. */
         public float width() { return NkUserFontGlyph.nwidth(address()); }
         /** Returns the value of the {@code height} field. */

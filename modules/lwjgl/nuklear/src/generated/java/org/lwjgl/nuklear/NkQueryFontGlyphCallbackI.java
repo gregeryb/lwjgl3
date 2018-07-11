@@ -14,14 +14,14 @@ import static org.lwjgl.system.dyncall.DynCallback.*;
  * 
  * <h3>Type</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * void (*) (
  *     nk_handle handle,
  *     float font_height,
  *     struct nk_user_font_glyph *glyph,
  *     nk_rune codepoint,
  *     nk_rune next_codepoint
- * )</code></pre>
+ * )</pre></code>
  */
 @FunctionalInterface
 @NativeType("nk_query_font_glyph_f")

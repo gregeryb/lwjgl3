@@ -14,10 +14,10 @@ import static org.lwjgl.system.MemoryUtil.*;
 /**
  * <h3>Type</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * size_t (*) (
  *     struct aiFile *pFile
- * )</code></pre>
+ * )</pre></code>
  */
 public abstract class AIFileTellProc extends Callback implements AIFileTellProcI {
 

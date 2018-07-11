@@ -36,9 +36,14 @@ public class VROverlay {
         return callPPI(__functionAddress, pchOverlayKey, pOverlayHandle);
     }
 
-    /** Finds an existing overlay with the specified key. */
+    /**
+     * Finds an existing overlay with the specified key.
+     *
+     * @param pchOverlayKey  
+     * @param pOverlayHandle 
+     */
     @NativeType("EVROverlayError")
-    public static int VROverlay_FindOverlay(@NativeType("char const *") ByteBuffer pchOverlayKey, @NativeType("VROverlayHandle_t *") LongBuffer pOverlayHandle) {
+    public static int VROverlay_FindOverlay(@NativeType("const char *") ByteBuffer pchOverlayKey, @NativeType("VROverlayHandle_t *") LongBuffer pOverlayHandle) {
         if (CHECKS) {
             checkNT1(pchOverlayKey);
             check(pOverlayHandle, 1);
@@ -46,9 +51,14 @@ public class VROverlay {
         return nVROverlay_FindOverlay(memAddress(pchOverlayKey), memAddress(pOverlayHandle));
     }
 
-    /** Finds an existing overlay with the specified key. */
+    /**
+     * Finds an existing overlay with the specified key.
+     *
+     * @param pchOverlayKey  
+     * @param pOverlayHandle 
+     */
     @NativeType("EVROverlayError")
-    public static int VROverlay_FindOverlay(@NativeType("char const *") CharSequence pchOverlayKey, @NativeType("VROverlayHandle_t *") LongBuffer pOverlayHandle) {
+    public static int VROverlay_FindOverlay(@NativeType("const char *") CharSequence pchOverlayKey, @NativeType("VROverlayHandle_t *") LongBuffer pOverlayHandle) {
         if (CHECKS) {
             check(pOverlayHandle, 1);
         }
@@ -72,9 +82,15 @@ public class VROverlay {
         return callPPPI(__functionAddress, pchOverlayKey, pchOverlayName, pOverlayHandle);
     }
 
-    /** Creates a new named overlay. All overlays start hidden and with default settings. */
+    /**
+     * Creates a new named overlay. All overlays start hidden and with default settings.
+     *
+     * @param pchOverlayKey  
+     * @param pchOverlayName 
+     * @param pOverlayHandle 
+     */
     @NativeType("EVROverlayError")
-    public static int VROverlay_CreateOverlay(@NativeType("char const *") ByteBuffer pchOverlayKey, @NativeType("char const *") ByteBuffer pchOverlayName, @NativeType("VROverlayHandle_t *") LongBuffer pOverlayHandle) {
+    public static int VROverlay_CreateOverlay(@NativeType("const char *") ByteBuffer pchOverlayKey, @NativeType("const char *") ByteBuffer pchOverlayName, @NativeType("VROverlayHandle_t *") LongBuffer pOverlayHandle) {
         if (CHECKS) {
             checkNT1(pchOverlayKey);
             checkNT1(pchOverlayName);
@@ -83,9 +99,15 @@ public class VROverlay {
         return nVROverlay_CreateOverlay(memAddress(pchOverlayKey), memAddress(pchOverlayName), memAddress(pOverlayHandle));
     }
 
-    /** Creates a new named overlay. All overlays start hidden and with default settings. */
+    /**
+     * Creates a new named overlay. All overlays start hidden and with default settings.
+     *
+     * @param pchOverlayKey  
+     * @param pchOverlayName 
+     * @param pOverlayHandle 
+     */
     @NativeType("EVROverlayError")
-    public static int VROverlay_CreateOverlay(@NativeType("char const *") CharSequence pchOverlayKey, @NativeType("char const *") CharSequence pchOverlayName, @NativeType("VROverlayHandle_t *") LongBuffer pOverlayHandle) {
+    public static int VROverlay_CreateOverlay(@NativeType("const char *") CharSequence pchOverlayKey, @NativeType("const char *") CharSequence pchOverlayName, @NativeType("VROverlayHandle_t *") LongBuffer pOverlayHandle) {
         if (CHECKS) {
             check(pOverlayHandle, 1);
         }
@@ -101,7 +123,11 @@ public class VROverlay {
 
     // --- [ VROverlay_DestroyOverlay ] ---
 
-    /** Destroys the specified overlay. When an application calls {@link VR#VR_ShutdownInternal ShutdownInternal} all overlays created by that app are automatically destroyed. */
+    /**
+     * Destroys the specified overlay. When an application calls {@link VR#VR_ShutdownInternal ShutdownInternal} all overlays created by that app are automatically destroyed.
+     *
+     * @param ulOverlayHandle 
+     */
     @NativeType("EVROverlayError")
     public static int VROverlay_DestroyOverlay(@NativeType("VROverlayHandle_t") long ulOverlayHandle) {
         long __functionAddress = OpenVR.VROverlay.DestroyOverlay;
@@ -120,6 +146,8 @@ public class VROverlay {
      * samples the source texture directly rather than rasterizing into each eye's render texture first. Because if this, only one of these is supported at
      * any given time. It is most useful for overlays that are expected to take up most of the user's view (e.g. streaming video). This mode does not support
      * mouse input to your overlay.</p>
+     *
+     * @param ulOverlayHandle 
      */
     @NativeType("EVROverlayError")
     public static int VROverlay_SetHighQualityOverlay(@NativeType("VROverlayHandle_t") long ulOverlayHandle) {
@@ -159,6 +187,10 @@ public class VROverlay {
     /**
      * Fills the provided buffer with the string key of the overlay. Returns the size of buffer required to store the key, including the terminating null
      * character. {@link VR#k_unVROverlayMaxKeyLength} will be enough bytes to fit the string.
+     *
+     * @param ulOverlayHandle 
+     * @param pchValue        
+     * @param pError          
      */
     @NativeType("uint32_t")
     public static int VROverlay_GetOverlayKey(@NativeType("VROverlayHandle_t") long ulOverlayHandle, @Nullable @NativeType("char *") ByteBuffer pchValue, @NativeType("EVROverlayError *") IntBuffer pError) {
@@ -171,6 +203,10 @@ public class VROverlay {
     /**
      * Fills the provided buffer with the string key of the overlay. Returns the size of buffer required to store the key, including the terminating null
      * character. {@link VR#k_unVROverlayMaxKeyLength} will be enough bytes to fit the string.
+     *
+     * @param ulOverlayHandle 
+     * @param unBufferSize    
+     * @param pError          
      */
     @NativeType("uint32_t")
     public static String VROverlay_GetOverlayKey(@NativeType("VROverlayHandle_t") long ulOverlayHandle, @NativeType("uint32_t") int unBufferSize, @NativeType("EVROverlayError *") IntBuffer pError) {
@@ -201,6 +237,10 @@ public class VROverlay {
     /**
      * Fills the provided buffer with the friendly name of the overlay. Returns the size of buffer required to store the key, including the terminating null
      * character. {@link VR#k_unVROverlayMaxNameLength} will be enough bytes to fit the string.
+     *
+     * @param ulOverlayHandle 
+     * @param pchValue        
+     * @param pError          
      */
     @NativeType("uint32_t")
     public static int VROverlay_GetOverlayName(@NativeType("VROverlayHandle_t") long ulOverlayHandle, @Nullable @NativeType("char *") ByteBuffer pchValue, @NativeType("EVROverlayError *") IntBuffer pError) {
@@ -213,6 +253,10 @@ public class VROverlay {
     /**
      * Fills the provided buffer with the friendly name of the overlay. Returns the size of buffer required to store the key, including the terminating null
      * character. {@link VR#k_unVROverlayMaxNameLength} will be enough bytes to fit the string.
+     *
+     * @param ulOverlayHandle 
+     * @param unBufferSize    
+     * @param pError          
      */
     @NativeType("uint32_t")
     public static String VROverlay_GetOverlayName(@NativeType("VROverlayHandle_t") long ulOverlayHandle, @NativeType("uint32_t") int unBufferSize, @NativeType("EVROverlayError *") IntBuffer pError) {
@@ -240,7 +284,12 @@ public class VROverlay {
         return callJPI(__functionAddress, ulOverlayHandle, pchName);
     }
 
-    /** Sets the name to use for this overlay. */
+    /**
+     * Sets the name to use for this overlay.
+     *
+     * @param ulOverlayHandle 
+     * @param pchName         
+     */
     @NativeType("EVROverlayError")
     public static int VROverlay_SetOverlayName(@NativeType("VROverlayHandle_t") long ulOverlayHandle, @NativeType("char *") ByteBuffer pchName) {
         if (CHECKS) {
@@ -249,7 +298,12 @@ public class VROverlay {
         return nVROverlay_SetOverlayName(ulOverlayHandle, memAddress(pchName));
     }
 
-    /** Sets the name to use for this overlay. */
+    /**
+     * Sets the name to use for this overlay.
+     *
+     * @param ulOverlayHandle 
+     * @param pchName         
+     */
     @NativeType("EVROverlayError")
     public static int VROverlay_SetOverlayName(@NativeType("VROverlayHandle_t") long ulOverlayHandle, @NativeType("char *") CharSequence pchName) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
@@ -275,6 +329,11 @@ public class VROverlay {
     /**
      * Gets the raw image data from an overlay. Overlay image data is always returned as RGBA data, 4 bytes per pixel. If the buffer is not large enough,
      * width and height will be set and {@link VR#EVROverlayError_VROverlayError_ArrayTooSmall} is returned.
+     *
+     * @param ulOverlayHandle 
+     * @param pvBuffer        
+     * @param punWidth        
+     * @param punHeight       
      */
     @NativeType("EVROverlayError")
     public static int VROverlay_GetOverlayImageData(@NativeType("VROverlayHandle_t") long ulOverlayHandle, @NativeType("void *") ByteBuffer pvBuffer, @NativeType("uint32_t *") IntBuffer punWidth, @NativeType("uint32_t *") IntBuffer punHeight) {
@@ -302,7 +361,7 @@ public class VROverlay {
      * @param error one of:<br><table><tr><td>{@link VR#EVROverlayError_VROverlayError_None}</td></tr><tr><td>{@link VR#EVROverlayError_VROverlayError_UnknownOverlay}</td></tr><tr><td>{@link VR#EVROverlayError_VROverlayError_InvalidHandle}</td></tr><tr><td>{@link VR#EVROverlayError_VROverlayError_PermissionDenied}</td></tr><tr><td>{@link VR#EVROverlayError_VROverlayError_OverlayLimitExceeded}</td></tr><tr><td>{@link VR#EVROverlayError_VROverlayError_WrongVisibilityType}</td></tr><tr><td>{@link VR#EVROverlayError_VROverlayError_KeyTooLong}</td></tr><tr><td>{@link VR#EVROverlayError_VROverlayError_NameTooLong}</td></tr><tr><td>{@link VR#EVROverlayError_VROverlayError_KeyInUse}</td></tr><tr><td>{@link VR#EVROverlayError_VROverlayError_WrongTransformType}</td></tr><tr><td>{@link VR#EVROverlayError_VROverlayError_InvalidTrackedDevice}</td></tr><tr><td>{@link VR#EVROverlayError_VROverlayError_InvalidParameter}</td></tr><tr><td>{@link VR#EVROverlayError_VROverlayError_ThumbnailCantBeDestroyed}</td></tr><tr><td>{@link VR#EVROverlayError_VROverlayError_ArrayTooSmall}</td></tr><tr><td>{@link VR#EVROverlayError_VROverlayError_RequestFailed}</td></tr><tr><td>{@link VR#EVROverlayError_VROverlayError_InvalidTexture}</td></tr><tr><td>{@link VR#EVROverlayError_VROverlayError_UnableToLoadFile}</td></tr><tr><td>{@link VR#EVROverlayError_VROverlayError_KeyboardAlreadyInUse}</td></tr><tr><td>{@link VR#EVROverlayError_VROverlayError_NoNeighbor}</td></tr><tr><td>{@link VR#EVROverlayError_VROverlayError_TooManyMaskPrimitives}</td></tr><tr><td>{@link VR#EVROverlayError_VROverlayError_BadMaskPrimitive}</td></tr><tr><td>{@link VR#EVROverlayError_VROverlayError_TextureAlreadyLocked}</td></tr><tr><td>{@link VR#EVROverlayError_VROverlayError_TextureLockCapacityReached}</td></tr><tr><td>{@link VR#EVROverlayError_VROverlayError_TextureNotLocked}</td></tr></table>
      */
     @Nullable
-    @NativeType("char const *")
+    @NativeType("const char *")
     public static String VROverlay_GetOverlayErrorNameFromEnum(@NativeType("EVROverlayError") int error) {
         long __result = nVROverlay_GetOverlayErrorNameFromEnum(error);
         return memASCIISafe(__result);
@@ -313,6 +372,9 @@ public class VROverlay {
     /**
      * Sets the pid that is allowed to render to this overlay (the creator pid is always allow to render), by default this is the pid of the process that made
      * the overlay.
+     *
+     * @param ulOverlayHandle 
+     * @param unPID           
      */
     @NativeType("EVROverlayError")
     public static int VROverlay_SetOverlayRenderingPid(@NativeType("VROverlayHandle_t") long ulOverlayHandle, @NativeType("uint32_t") int unPID) {
@@ -325,7 +387,11 @@ public class VROverlay {
 
     // --- [ VROverlay_GetOverlayRenderingPid ] ---
 
-    /** Gets the pid that is allowed to render to this overlay. */
+    /**
+     * Gets the pid that is allowed to render to this overlay.
+     *
+     * @param ulOverlayHandle 
+     */
     @NativeType("uint32_t")
     public static int VROverlay_GetOverlayRenderingPid(@NativeType("VROverlayHandle_t") long ulOverlayHandle) {
         long __functionAddress = OpenVR.VROverlay.GetOverlayRenderingPid;
@@ -340,7 +406,9 @@ public class VROverlay {
     /**
      * Specify flag setting for a given overlay.
      *
-     * @param eOverlayFlag one of:<br><table><tr><td>{@link VR#VROverlayFlags_None}</td><td>{@link VR#VROverlayFlags_Curved}</td></tr><tr><td>{@link VR#VROverlayFlags_RGSS4X}</td><td>{@link VR#VROverlayFlags_NoDashboardTab}</td></tr><tr><td>{@link VR#VROverlayFlags_AcceptsGamepadEvents}</td><td>{@link VR#VROverlayFlags_ShowGamepadFocus}</td></tr><tr><td>{@link VR#VROverlayFlags_SendVRScrollEvents}</td><td>{@link VR#VROverlayFlags_SendVRTouchpadEvents}</td></tr><tr><td>{@link VR#VROverlayFlags_ShowTouchPadScrollWheel}</td><td>{@link VR#VROverlayFlags_TransferOwnershipToInternalProcess}</td></tr><tr><td>{@link VR#VROverlayFlags_SideBySide_Parallel}</td><td>{@link VR#VROverlayFlags_SideBySide_Crossed}</td></tr><tr><td>{@link VR#VROverlayFlags_Panorama}</td><td>{@link VR#VROverlayFlags_StereoPanorama}</td></tr><tr><td>{@link VR#VROverlayFlags_SortWithNonSceneOverlays}</td><td>{@link VR#VROverlayFlags_VisibleInDashboard}</td></tr></table>
+     * @param ulOverlayHandle 
+     * @param eOverlayFlag    one of:<br><table><tr><td>{@link VR#VROverlayFlags_None}</td><td>{@link VR#VROverlayFlags_Curved}</td></tr><tr><td>{@link VR#VROverlayFlags_RGSS4X}</td><td>{@link VR#VROverlayFlags_NoDashboardTab}</td></tr><tr><td>{@link VR#VROverlayFlags_AcceptsGamepadEvents}</td><td>{@link VR#VROverlayFlags_ShowGamepadFocus}</td></tr><tr><td>{@link VR#VROverlayFlags_SendVRScrollEvents}</td><td>{@link VR#VROverlayFlags_SendVRTouchpadEvents}</td></tr><tr><td>{@link VR#VROverlayFlags_ShowTouchPadScrollWheel}</td><td>{@link VR#VROverlayFlags_TransferOwnershipToInternalProcess}</td></tr><tr><td>{@link VR#VROverlayFlags_SideBySide_Parallel}</td><td>{@link VR#VROverlayFlags_SideBySide_Crossed}</td></tr><tr><td>{@link VR#VROverlayFlags_Panorama}</td><td>{@link VR#VROverlayFlags_StereoPanorama}</td></tr><tr><td>{@link VR#VROverlayFlags_SortWithNonSceneOverlays}</td><td>{@link VR#VROverlayFlags_VisibleInDashboard}</td></tr></table>
+     * @param bEnabled        
      */
     @NativeType("EVROverlayError")
     public static int VROverlay_SetOverlayFlag(@NativeType("VROverlayHandle_t") long ulOverlayHandle, @NativeType("VROverlayFlags") int eOverlayFlag, @NativeType("bool") boolean bEnabled) {
@@ -365,7 +433,9 @@ public class VROverlay {
     /**
      * Sets flag setting for a given overlay.
      *
-     * @param eOverlayFlag one of:<br><table><tr><td>{@link VR#VROverlayFlags_None}</td><td>{@link VR#VROverlayFlags_Curved}</td></tr><tr><td>{@link VR#VROverlayFlags_RGSS4X}</td><td>{@link VR#VROverlayFlags_NoDashboardTab}</td></tr><tr><td>{@link VR#VROverlayFlags_AcceptsGamepadEvents}</td><td>{@link VR#VROverlayFlags_ShowGamepadFocus}</td></tr><tr><td>{@link VR#VROverlayFlags_SendVRScrollEvents}</td><td>{@link VR#VROverlayFlags_SendVRTouchpadEvents}</td></tr><tr><td>{@link VR#VROverlayFlags_ShowTouchPadScrollWheel}</td><td>{@link VR#VROverlayFlags_TransferOwnershipToInternalProcess}</td></tr><tr><td>{@link VR#VROverlayFlags_SideBySide_Parallel}</td><td>{@link VR#VROverlayFlags_SideBySide_Crossed}</td></tr><tr><td>{@link VR#VROverlayFlags_Panorama}</td><td>{@link VR#VROverlayFlags_StereoPanorama}</td></tr><tr><td>{@link VR#VROverlayFlags_SortWithNonSceneOverlays}</td><td>{@link VR#VROverlayFlags_VisibleInDashboard}</td></tr></table>
+     * @param ulOverlayHandle 
+     * @param eOverlayFlag    one of:<br><table><tr><td>{@link VR#VROverlayFlags_None}</td><td>{@link VR#VROverlayFlags_Curved}</td></tr><tr><td>{@link VR#VROverlayFlags_RGSS4X}</td><td>{@link VR#VROverlayFlags_NoDashboardTab}</td></tr><tr><td>{@link VR#VROverlayFlags_AcceptsGamepadEvents}</td><td>{@link VR#VROverlayFlags_ShowGamepadFocus}</td></tr><tr><td>{@link VR#VROverlayFlags_SendVRScrollEvents}</td><td>{@link VR#VROverlayFlags_SendVRTouchpadEvents}</td></tr><tr><td>{@link VR#VROverlayFlags_ShowTouchPadScrollWheel}</td><td>{@link VR#VROverlayFlags_TransferOwnershipToInternalProcess}</td></tr><tr><td>{@link VR#VROverlayFlags_SideBySide_Parallel}</td><td>{@link VR#VROverlayFlags_SideBySide_Crossed}</td></tr><tr><td>{@link VR#VROverlayFlags_Panorama}</td><td>{@link VR#VROverlayFlags_StereoPanorama}</td></tr><tr><td>{@link VR#VROverlayFlags_SortWithNonSceneOverlays}</td><td>{@link VR#VROverlayFlags_VisibleInDashboard}</td></tr></table>
+     * @param pbEnabled       
      */
     @NativeType("EVROverlayError")
     public static int VROverlay_GetOverlayFlag(@NativeType("VROverlayHandle_t") long ulOverlayHandle, @NativeType("VROverlayFlags") int eOverlayFlag, @NativeType("bool *") ByteBuffer pbEnabled) {
@@ -377,7 +447,14 @@ public class VROverlay {
 
     // --- [ VROverlay_SetOverlayColor ] ---
 
-    /** Sets the color tint of the overlay quad. Use 0.0 to 1.0 per channel. */
+    /**
+     * Sets the color tint of the overlay quad. Use 0.0 to 1.0 per channel.
+     *
+     * @param ulOverlayHandle 
+     * @param fRed            
+     * @param fGreen          
+     * @param fBlue           
+     */
     @NativeType("EVROverlayError")
     public static int VROverlay_SetOverlayColor(@NativeType("VROverlayHandle_t") long ulOverlayHandle, float fRed, float fGreen, float fBlue) {
         long __functionAddress = OpenVR.VROverlay.SetOverlayColor;
@@ -398,7 +475,14 @@ public class VROverlay {
         return callJPPPI(__functionAddress, ulOverlayHandle, pfRed, pfGreen, pfBlue);
     }
 
-    /** Gets the color tint of the overlay quad. */
+    /**
+     * Gets the color tint of the overlay quad.
+     *
+     * @param ulOverlayHandle 
+     * @param pfRed           
+     * @param pfGreen         
+     * @param pfBlue          
+     */
     @NativeType("EVROverlayError")
     public static int VROverlay_GetOverlayColor(@NativeType("VROverlayHandle_t") long ulOverlayHandle, @NativeType("float *") FloatBuffer pfRed, @NativeType("float *") FloatBuffer pfGreen, @NativeType("float *") FloatBuffer pfBlue) {
         if (CHECKS) {
@@ -411,7 +495,12 @@ public class VROverlay {
 
     // --- [ VROverlay_SetOverlayAlpha ] ---
 
-    /** Sets the alpha of the overlay quad. Use 1.0 for 100 percent opacity to 0.0 for 0 percent opacity. */
+    /**
+     * Sets the alpha of the overlay quad. Use 1.0 for 100 percent opacity to 0.0 for 0 percent opacity.
+     *
+     * @param ulOverlayHandle 
+     * @param fAlpha          
+     */
     @NativeType("EVROverlayError")
     public static int VROverlay_SetOverlayAlpha(@NativeType("VROverlayHandle_t") long ulOverlayHandle, float fAlpha) {
         long __functionAddress = OpenVR.VROverlay.SetOverlayAlpha;
@@ -432,7 +521,12 @@ public class VROverlay {
         return callJPI(__functionAddress, ulOverlayHandle, pfAlpha);
     }
 
-    /** Gets the alpha of the overlay quad. By default overlays are rendering at 100 percent alpha (1.0). */
+    /**
+     * Gets the alpha of the overlay quad. By default overlays are rendering at 100 percent alpha (1.0).
+     *
+     * @param ulOverlayHandle 
+     * @param pfAlpha         
+     */
     @NativeType("EVROverlayError")
     public static int VROverlay_GetOverlayAlpha(@NativeType("VROverlayHandle_t") long ulOverlayHandle, @NativeType("float *") FloatBuffer pfAlpha) {
         if (CHECKS) {
@@ -447,6 +541,9 @@ public class VROverlay {
      * Sets the aspect ratio of the texels in the overlay. 1.0 means the texels are square. 2.0 means the texels are twice as wide as they are tall.
      * 
      * <p>Defaults to 1.0.</p>
+     *
+     * @param ulOverlayHandle 
+     * @param fTexelAspect    
      */
     @NativeType("EVROverlayError")
     public static int VROverlay_SetOverlayTexelAspect(@NativeType("VROverlayHandle_t") long ulOverlayHandle, float fTexelAspect) {
@@ -468,7 +565,12 @@ public class VROverlay {
         return callJPI(__functionAddress, ulOverlayHandle, pfTexelAspect);
     }
 
-    /** Gets the aspect ratio of the texels in the overlay. Defaults to 1.0. */
+    /**
+     * Gets the aspect ratio of the texels in the overlay. Defaults to 1.0.
+     *
+     * @param ulOverlayHandle 
+     * @param pfTexelAspect   
+     */
     @NativeType("EVROverlayError")
     public static int VROverlay_GetOverlayTexelAspect(@NativeType("VROverlayHandle_t") long ulOverlayHandle, @NativeType("float *") FloatBuffer pfTexelAspect) {
         if (CHECKS) {
@@ -491,6 +593,9 @@ public class VROverlay {
      * distance from the HMD.</p>
      * 
      * <p>Sort order defaults to 0.</p>
+     *
+     * @param ulOverlayHandle 
+     * @param unSortOrder     
      */
     @NativeType("EVROverlayError")
     public static int VROverlay_SetOverlaySortOrder(@NativeType("VROverlayHandle_t") long ulOverlayHandle, @NativeType("uint32_t") int unSortOrder) {
@@ -512,7 +617,12 @@ public class VROverlay {
         return callJPI(__functionAddress, ulOverlayHandle, punSortOrder);
     }
 
-    /** Gets the sort order of the overlay. See {@link #VROverlay_SetOverlaySortOrder SetOverlaySortOrder} for how this works. */
+    /**
+     * Gets the sort order of the overlay. See {@link #VROverlay_SetOverlaySortOrder SetOverlaySortOrder} for how this works.
+     *
+     * @param ulOverlayHandle 
+     * @param punSortOrder    
+     */
     @NativeType("EVROverlayError")
     public static int VROverlay_GetOverlaySortOrder(@NativeType("VROverlayHandle_t") long ulOverlayHandle, @NativeType("uint32_t *") IntBuffer punSortOrder) {
         if (CHECKS) {
@@ -523,7 +633,12 @@ public class VROverlay {
 
     // --- [ VROverlay_SetOverlayWidthInMeters ] ---
 
-    /** Sets the width of the overlay quad in meters. By default overlays are rendered on a quad that is 1 meter across. */
+    /**
+     * Sets the width of the overlay quad in meters. By default overlays are rendered on a quad that is 1 meter across.
+     *
+     * @param ulOverlayHandle 
+     * @param fWidthInMeters  
+     */
     @NativeType("EVROverlayError")
     public static int VROverlay_SetOverlayWidthInMeters(@NativeType("VROverlayHandle_t") long ulOverlayHandle, float fWidthInMeters) {
         long __functionAddress = OpenVR.VROverlay.SetOverlayWidthInMeters;
@@ -544,7 +659,12 @@ public class VROverlay {
         return callJPI(__functionAddress, ulOverlayHandle, pfWidthInMeters);
     }
 
-    /** Returns the width of the overlay quad in meters. By default overlays are rendered on a quad that is 1 meter across. */
+    /**
+     * Returns the width of the overlay quad in meters. By default overlays are rendered on a quad that is 1 meter across.
+     *
+     * @param ulOverlayHandle 
+     * @param pfWidthInMeters 
+     */
     @NativeType("EVROverlayError")
     public static int VROverlay_GetOverlayWidthInMeters(@NativeType("VROverlayHandle_t") long ulOverlayHandle, @NativeType("float *") FloatBuffer pfWidthInMeters) {
         if (CHECKS) {
@@ -558,6 +678,10 @@ public class VROverlay {
     /**
      * For high-quality curved overlays only, sets the distance range in meters from the overlay used to automatically curve the surface around the viewer.
      * Min is distance is when the surface will be most curved. Max is when least curved.
+     *
+     * @param ulOverlayHandle      
+     * @param fMinDistanceInMeters 
+     * @param fMaxDistanceInMeters 
      */
     @NativeType("EVROverlayError")
     public static int VROverlay_SetOverlayAutoCurveDistanceRangeInMeters(@NativeType("VROverlayHandle_t") long ulOverlayHandle, float fMinDistanceInMeters, float fMaxDistanceInMeters) {
@@ -582,6 +706,10 @@ public class VROverlay {
     /**
      * For high-quality curved overlays only, gets the distance range in meters from the overlay used to automatically curve the surface around the viewer.
      * Min is distance is when the surface will be most curved. Max is when least curved.
+     *
+     * @param ulOverlayHandle       
+     * @param pfMinDistanceInMeters 
+     * @param pfMaxDistanceInMeters 
      */
     @NativeType("EVROverlayError")
     public static int VROverlay_GetOverlayAutoCurveDistanceRangeInMeters(@NativeType("VROverlayHandle_t") long ulOverlayHandle, @NativeType("float *") FloatBuffer pfMinDistanceInMeters, @NativeType("float *") FloatBuffer pfMaxDistanceInMeters) {
@@ -598,6 +726,7 @@ public class VROverlay {
      * Sets the colorspace the overlay texture's data is in. Defaults to 'auto'. If the texture needs to be resolved, you should call {@link #VROverlay_SetOverlayTexture SetOverlayTexture}
      * with the appropriate colorspace instead.
      *
+     * @param ulOverlayHandle    
      * @param eTextureColorSpace one of:<br><table><tr><td>{@link VR#EColorSpace_ColorSpace_Auto}</td><td>{@link VR#EColorSpace_ColorSpace_Gamma}</td></tr><tr><td>{@link VR#EColorSpace_ColorSpace_Linear}</td></tr></table>
      */
     @NativeType("EVROverlayError")
@@ -620,7 +749,12 @@ public class VROverlay {
         return callJPI(__functionAddress, ulOverlayHandle, peTextureColorSpace);
     }
 
-    /** Gets the overlay's current colorspace setting. */
+    /**
+     * Gets the overlay's current colorspace setting.
+     *
+     * @param ulOverlayHandle     
+     * @param peTextureColorSpace 
+     */
     @NativeType("EVROverlayError")
     public static int VROverlay_GetOverlayTextureColorSpace(@NativeType("VROverlayHandle_t") long ulOverlayHandle, @NativeType("EColorSpace *") IntBuffer peTextureColorSpace) {
         if (CHECKS) {
@@ -640,9 +774,14 @@ public class VROverlay {
         return callJPI(__functionAddress, ulOverlayHandle, pOverlayTextureBounds);
     }
 
-    /** Sets the part of the texture to use for the overlay. UV Min is the upper left corner and UV Max is the lower right corner. */
+    /**
+     * Sets the part of the texture to use for the overlay. UV Min is the upper left corner and UV Max is the lower right corner.
+     *
+     * @param ulOverlayHandle       
+     * @param pOverlayTextureBounds 
+     */
     @NativeType("EVROverlayError")
-    public static int VROverlay_SetOverlayTextureBounds(@NativeType("VROverlayHandle_t") long ulOverlayHandle, @NativeType("VRTextureBounds_t const *") VRTextureBounds pOverlayTextureBounds) {
+    public static int VROverlay_SetOverlayTextureBounds(@NativeType("VROverlayHandle_t") long ulOverlayHandle, @NativeType("const VRTextureBounds_t *") VRTextureBounds pOverlayTextureBounds) {
         return nVROverlay_SetOverlayTextureBounds(ulOverlayHandle, pOverlayTextureBounds.address());
     }
 
@@ -657,7 +796,12 @@ public class VROverlay {
         return callJPI(__functionAddress, ulOverlayHandle, pOverlayTextureBounds);
     }
 
-    /** Gets the part of the texture to use for the overlay. UV Min is the upper left corner and UV Max is the lower right corner. */
+    /**
+     * Gets the part of the texture to use for the overlay. UV Min is the upper left corner and UV Max is the lower right corner.
+     *
+     * @param ulOverlayHandle       
+     * @param pOverlayTextureBounds 
+     */
     @NativeType("EVROverlayError")
     public static int VROverlay_GetOverlayTextureBounds(@NativeType("VROverlayHandle_t") long ulOverlayHandle, @NativeType("VRTextureBounds_t *") VRTextureBounds pOverlayTextureBounds) {
         return nVROverlay_GetOverlayTextureBounds(ulOverlayHandle, pOverlayTextureBounds.address());
@@ -674,7 +818,14 @@ public class VROverlay {
         return callJPPPI(__functionAddress, ulOverlayHandle, pchValue, unBufferSize, pColor, pError);
     }
 
-    /** Gets render model to draw behind this overlay. */
+    /**
+     * Gets render model to draw behind this overlay.
+     *
+     * @param ulOverlayHandle 
+     * @param pchValue        
+     * @param pColor          
+     * @param pError          
+     */
     @NativeType("uint32_t")
     public static int VROverlay_GetOverlayRenderModel(@NativeType("VROverlayHandle_t") long ulOverlayHandle, @NativeType("char *") ByteBuffer pchValue, @NativeType("HmdColor_t *") HmdColor pColor, @NativeType("EVROverlayError *") IntBuffer pError) {
         if (CHECKS) {
@@ -723,7 +874,12 @@ public class VROverlay {
         return callJPI(__functionAddress, ulOverlayHandle, peTransformType);
     }
 
-    /** Returns the transform type of this overlay. */
+    /**
+     * Returns the transform type of this overlay.
+     *
+     * @param ulOverlayHandle 
+     * @param peTransformType 
+     */
     @NativeType("EVROverlayError")
     public static int VROverlay_GetOverlayTransformType(@NativeType("VROverlayHandle_t") long ulOverlayHandle, @NativeType("VROverlayTransformType *") IntBuffer peTransformType) {
         if (CHECKS) {
@@ -746,10 +902,12 @@ public class VROverlay {
     /**
      * Sets the transform to absolute tracking origin.
      *
-     * @param eTrackingOrigin one of:<br><table><tr><td>{@link VR#ETrackingUniverseOrigin_TrackingUniverseSeated}</td></tr><tr><td>{@link VR#ETrackingUniverseOrigin_TrackingUniverseStanding}</td></tr><tr><td>{@link VR#ETrackingUniverseOrigin_TrackingUniverseRawAndUncalibrated}</td></tr></table>
+     * @param ulOverlayHandle                      
+     * @param eTrackingOrigin                      one of:<br><table><tr><td>{@link VR#ETrackingUniverseOrigin_TrackingUniverseSeated}</td></tr><tr><td>{@link VR#ETrackingUniverseOrigin_TrackingUniverseStanding}</td></tr><tr><td>{@link VR#ETrackingUniverseOrigin_TrackingUniverseRawAndUncalibrated}</td></tr></table>
+     * @param pmatTrackingOriginToOverlayTransform 
      */
     @NativeType("EVROverlayError")
-    public static int VROverlay_SetOverlayTransformAbsolute(@NativeType("VROverlayHandle_t") long ulOverlayHandle, @NativeType("ETrackingUniverseOrigin") int eTrackingOrigin, @NativeType("HmdMatrix34_t const *") HmdMatrix34 pmatTrackingOriginToOverlayTransform) {
+    public static int VROverlay_SetOverlayTransformAbsolute(@NativeType("VROverlayHandle_t") long ulOverlayHandle, @NativeType("ETrackingUniverseOrigin") int eTrackingOrigin, @NativeType("const HmdMatrix34_t *") HmdMatrix34 pmatTrackingOriginToOverlayTransform) {
         return nVROverlay_SetOverlayTransformAbsolute(ulOverlayHandle, eTrackingOrigin, pmatTrackingOriginToOverlayTransform.address());
     }
 
@@ -764,7 +922,13 @@ public class VROverlay {
         return callJPPI(__functionAddress, ulOverlayHandle, peTrackingOrigin, pmatTrackingOriginToOverlayTransform);
     }
 
-    /** Gets the transform if it is absolute. Returns an error if the transform is some other type. */
+    /**
+     * Gets the transform if it is absolute. Returns an error if the transform is some other type.
+     *
+     * @param ulOverlayHandle                      
+     * @param peTrackingOrigin                     
+     * @param pmatTrackingOriginToOverlayTransform 
+     */
     @NativeType("EVROverlayError")
     public static int VROverlay_GetOverlayTransformAbsolute(@NativeType("VROverlayHandle_t") long ulOverlayHandle, @NativeType("ETrackingUniverseOrigin *") IntBuffer peTrackingOrigin, @NativeType("HmdMatrix34_t *") HmdMatrix34 pmatTrackingOriginToOverlayTransform) {
         if (CHECKS) {
@@ -784,9 +948,15 @@ public class VROverlay {
         return callJPI(__functionAddress, ulOverlayHandle, unTrackedDevice, pmatTrackedDeviceToOverlayTransform);
     }
 
-    /** Sets the transform to relative to the transform of the specified tracked device. */
+    /**
+     * Sets the transform to relative to the transform of the specified tracked device.
+     *
+     * @param ulOverlayHandle                     
+     * @param unTrackedDevice                     
+     * @param pmatTrackedDeviceToOverlayTransform 
+     */
     @NativeType("EVROverlayError")
-    public static int VROverlay_SetOverlayTransformTrackedDeviceRelative(@NativeType("VROverlayHandle_t") long ulOverlayHandle, @NativeType("TrackedDeviceIndex_t") int unTrackedDevice, @NativeType("HmdMatrix34_t const *") HmdMatrix34 pmatTrackedDeviceToOverlayTransform) {
+    public static int VROverlay_SetOverlayTransformTrackedDeviceRelative(@NativeType("VROverlayHandle_t") long ulOverlayHandle, @NativeType("TrackedDeviceIndex_t") int unTrackedDevice, @NativeType("const HmdMatrix34_t *") HmdMatrix34 pmatTrackedDeviceToOverlayTransform) {
         return nVROverlay_SetOverlayTransformTrackedDeviceRelative(ulOverlayHandle, unTrackedDevice, pmatTrackedDeviceToOverlayTransform.address());
     }
 
@@ -801,7 +971,13 @@ public class VROverlay {
         return callJPPI(__functionAddress, ulOverlayHandle, punTrackedDevice, pmatTrackedDeviceToOverlayTransform);
     }
 
-    /** Gets the transform if it is relative to a tracked device. Returns an error if the transform is some other type. */
+    /**
+     * Gets the transform if it is relative to a tracked device. Returns an error if the transform is some other type.
+     *
+     * @param ulOverlayHandle                     
+     * @param punTrackedDevice                    
+     * @param pmatTrackedDeviceToOverlayTransform 
+     */
     @NativeType("EVROverlayError")
     public static int VROverlay_GetOverlayTransformTrackedDeviceRelative(@NativeType("VROverlayHandle_t") long ulOverlayHandle, @NativeType("TrackedDeviceIndex_t *") IntBuffer punTrackedDevice, @NativeType("HmdMatrix34_t *") HmdMatrix34 pmatTrackedDeviceToOverlayTransform) {
         if (CHECKS) {
@@ -824,9 +1000,13 @@ public class VROverlay {
     /**
      * Sets the transform to draw the overlay on a rendermodel component mesh instead of a quad. This will only draw when the system is drawing the device.
      * Overlays with this transform type cannot receive mouse events.
+     *
+     * @param ulOverlayHandle  
+     * @param unDeviceIndex    
+     * @param pchComponentName 
      */
     @NativeType("EVROverlayError")
-    public static int VROverlay_SetOverlayTransformTrackedDeviceComponent(@NativeType("VROverlayHandle_t") long ulOverlayHandle, @NativeType("TrackedDeviceIndex_t") int unDeviceIndex, @NativeType("char const *") ByteBuffer pchComponentName) {
+    public static int VROverlay_SetOverlayTransformTrackedDeviceComponent(@NativeType("VROverlayHandle_t") long ulOverlayHandle, @NativeType("TrackedDeviceIndex_t") int unDeviceIndex, @NativeType("const char *") ByteBuffer pchComponentName) {
         if (CHECKS) {
             checkNT1(pchComponentName);
         }
@@ -836,9 +1016,13 @@ public class VROverlay {
     /**
      * Sets the transform to draw the overlay on a rendermodel component mesh instead of a quad. This will only draw when the system is drawing the device.
      * Overlays with this transform type cannot receive mouse events.
+     *
+     * @param ulOverlayHandle  
+     * @param unDeviceIndex    
+     * @param pchComponentName 
      */
     @NativeType("EVROverlayError")
-    public static int VROverlay_SetOverlayTransformTrackedDeviceComponent(@NativeType("VROverlayHandle_t") long ulOverlayHandle, @NativeType("TrackedDeviceIndex_t") int unDeviceIndex, @NativeType("char const *") CharSequence pchComponentName) {
+    public static int VROverlay_SetOverlayTransformTrackedDeviceComponent(@NativeType("VROverlayHandle_t") long ulOverlayHandle, @NativeType("TrackedDeviceIndex_t") int unDeviceIndex, @NativeType("const char *") CharSequence pchComponentName) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
             ByteBuffer pchComponentNameEncoded = stack.ASCII(pchComponentName);
@@ -859,7 +1043,13 @@ public class VROverlay {
         return callJPPI(__functionAddress, ulOverlayHandle, punDeviceIndex, pchComponentName, unComponentNameSize);
     }
 
-    /** Gets the transform information when the overlay is rendering on a component. */
+    /**
+     * Gets the transform information when the overlay is rendering on a component.
+     *
+     * @param ulOverlayHandle  
+     * @param punDeviceIndex   
+     * @param pchComponentName 
+     */
     @NativeType("EVROverlayError")
     public static int VROverlay_GetOverlayTransformTrackedDeviceComponent(@NativeType("VROverlayHandle_t") long ulOverlayHandle, @NativeType("TrackedDeviceIndex_t *") IntBuffer punDeviceIndex, @NativeType("char *") ByteBuffer pchComponentName) {
         if (CHECKS) {
@@ -903,7 +1093,11 @@ public class VROverlay {
 
     // --- [ VROverlay_ShowOverlay ] ---
 
-    /** Shows the VR overlay. For dashboard overlays, only the Dashboard Manager is allowed to call this. */
+    /**
+     * Shows the VR overlay. For dashboard overlays, only the Dashboard Manager is allowed to call this.
+     *
+     * @param ulOverlayHandle 
+     */
     @NativeType("EVROverlayError")
     public static int VROverlay_ShowOverlay(@NativeType("VROverlayHandle_t") long ulOverlayHandle) {
         long __functionAddress = OpenVR.VROverlay.ShowOverlay;
@@ -915,7 +1109,11 @@ public class VROverlay {
 
     // --- [ VROverlay_HideOverlay ] ---
 
-    /** Hides the VR overlay. For dashboard overlays, only the Dashboard Manager is allowed to call this. */
+    /**
+     * Hides the VR overlay. For dashboard overlays, only the Dashboard Manager is allowed to call this.
+     *
+     * @param ulOverlayHandle 
+     */
     @NativeType("EVROverlayError")
     public static int VROverlay_HideOverlay(@NativeType("VROverlayHandle_t") long ulOverlayHandle) {
         long __functionAddress = OpenVR.VROverlay.HideOverlay;
@@ -927,7 +1125,11 @@ public class VROverlay {
 
     // --- [ VROverlay_IsOverlayVisible ] ---
 
-    /** Returns true if the overlay is visible. */
+    /**
+     * Returns true if the overlay is visible.
+     *
+     * @param ulOverlayHandle 
+     */
     @NativeType("bool")
     public static boolean VROverlay_IsOverlayVisible(@NativeType("VROverlayHandle_t") long ulOverlayHandle) {
         long __functionAddress = OpenVR.VROverlay.IsOverlayVisible;
@@ -952,7 +1154,10 @@ public class VROverlay {
      * Get the transform in 3d space associated with a specific 2d point in the overlay's coordinate space (where 0,0 is the lower left). -Z points out of the
      * overlay.
      *
-     * @param eTrackingOrigin one of:<br><table><tr><td>{@link VR#ETrackingUniverseOrigin_TrackingUniverseSeated}</td></tr><tr><td>{@link VR#ETrackingUniverseOrigin_TrackingUniverseStanding}</td></tr><tr><td>{@link VR#ETrackingUniverseOrigin_TrackingUniverseRawAndUncalibrated}</td></tr></table>
+     * @param ulOverlayHandle      
+     * @param eTrackingOrigin      one of:<br><table><tr><td>{@link VR#ETrackingUniverseOrigin_TrackingUniverseSeated}</td></tr><tr><td>{@link VR#ETrackingUniverseOrigin_TrackingUniverseStanding}</td></tr><tr><td>{@link VR#ETrackingUniverseOrigin_TrackingUniverseRawAndUncalibrated}</td></tr></table>
+     * @param coordinatesInOverlay 
+     * @param pmatTransform        
      */
     @NativeType("EVROverlayError")
     public static int VROverlay_GetTransformForOverlayCoordinates(@NativeType("VROverlayHandle_t") long ulOverlayHandle, @NativeType("ETrackingUniverseOrigin") int eTrackingOrigin, @NativeType("HmdVector2_t") HmdVector2 coordinatesInOverlay, @NativeType("HmdMatrix34_t *") HmdMatrix34 pmatTransform) {
@@ -974,6 +1179,10 @@ public class VROverlay {
      * Returns true and fills the event with the next event on the overlay's event queue, if there is one.
      * 
      * <p>If there are no events this method returns false. {@code uncbVREvent} should be the size in bytes of the {@link VREvent} struct.</p>
+     *
+     * @param ulOverlayHandle 
+     * @param pEvent          
+     * @param uncbVREvent     
      */
     @NativeType("bool")
     public static boolean VROverlay_PollNextOverlayEvent(@NativeType("VROverlayHandle_t") long ulOverlayHandle, @NativeType("VREvent_t *") VREvent pEvent, @NativeType("uint32_t") int uncbVREvent) {
@@ -984,6 +1193,9 @@ public class VROverlay {
      * Returns true and fills the event with the next event on the overlay's event queue, if there is one.
      * 
      * <p>If there are no events this method returns false. {@code uncbVREvent} should be the size in bytes of the {@link VREvent} struct.</p>
+     *
+     * @param ulOverlayHandle 
+     * @param pEvent          
      */
     @NativeType("bool")
     public static boolean VROverlay_PollNextOverlayEvent(@NativeType("VROverlayHandle_t") long ulOverlayHandle, @NativeType("VREvent_t *") VREvent pEvent) {
@@ -1001,7 +1213,12 @@ public class VROverlay {
         return callJPI(__functionAddress, ulOverlayHandle, peInputMethod);
     }
 
-    /** Returns the current input settings for the specified overlay. */
+    /**
+     * Returns the current input settings for the specified overlay.
+     *
+     * @param ulOverlayHandle 
+     * @param peInputMethod   
+     */
     @NativeType("EVROverlayError")
     public static int VROverlay_GetOverlayInputMethod(@NativeType("VROverlayHandle_t") long ulOverlayHandle, @NativeType("VROverlayInputMethod *") IntBuffer peInputMethod) {
         if (CHECKS) {
@@ -1015,7 +1232,8 @@ public class VROverlay {
     /**
      * Sets the input settings for the specified overlay.
      *
-     * @param eInputMethod one of:<br><table><tr><td>{@link VR#VROverlayInputMethod_None}</td><td>{@link VR#VROverlayInputMethod_Mouse}</td></tr><tr><td>{@link VR#VROverlayInputMethod_DualAnalog}</td></tr></table>
+     * @param ulOverlayHandle 
+     * @param eInputMethod    one of:<br><table><tr><td>{@link VR#VROverlayInputMethod_None}</td><td>{@link VR#VROverlayInputMethod_Mouse}</td></tr><tr><td>{@link VR#VROverlayInputMethod_DualAnalog}</td></tr></table>
      */
     @NativeType("EVROverlayError")
     public static int VROverlay_SetOverlayInputMethod(@NativeType("VROverlayHandle_t") long ulOverlayHandle, @NativeType("VROverlayInputMethod") int eInputMethod) {
@@ -1040,6 +1258,9 @@ public class VROverlay {
     /**
      * Gets the mouse scaling factor that is used for mouse events. The actual texture may be a different size, but this is typically the size of the
      * underlying UI in pixels.
+     *
+     * @param ulOverlayHandle 
+     * @param pvecMouseScale  
      */
     @NativeType("EVROverlayError")
     public static int VROverlay_GetOverlayMouseScale(@NativeType("VROverlayHandle_t") long ulOverlayHandle, @NativeType("HmdVector2_t *") HmdVector2 pvecMouseScale) {
@@ -1060,9 +1281,12 @@ public class VROverlay {
     /**
      * Sets the mouse scaling factor that is used for mouse events. The actual texture may be a different size, but this is typically the size of the
      * underlying UI in pixels (not in world space).
+     *
+     * @param ulOverlayHandle 
+     * @param pvecMouseScale  
      */
     @NativeType("EVROverlayError")
-    public static int VROverlay_SetOverlayMouseScale(@NativeType("VROverlayHandle_t") long ulOverlayHandle, @NativeType("HmdVector2_t const *") HmdVector2 pvecMouseScale) {
+    public static int VROverlay_SetOverlayMouseScale(@NativeType("VROverlayHandle_t") long ulOverlayHandle, @NativeType("const HmdVector2_t *") HmdVector2 pvecMouseScale) {
         return nVROverlay_SetOverlayMouseScale(ulOverlayHandle, pvecMouseScale.address());
     }
 
@@ -1080,9 +1304,13 @@ public class VROverlay {
     /**
      * Computes the overlay-space pixel coordinates of where the ray intersects the overlay with the specified settings. Returns false if there is no
      * intersection.
+     *
+     * @param ulOverlayHandle 
+     * @param pParams         
+     * @param pResults        
      */
     @NativeType("bool")
-    public static boolean VROverlay_ComputeOverlayIntersection(@NativeType("VROverlayHandle_t") long ulOverlayHandle, @NativeType("VROverlayIntersectionParams_t const *") VROverlayIntersectionParams pParams, @NativeType("VROverlayIntersectionResults_t *") VROverlayIntersectionResults pResults) {
+    public static boolean VROverlay_ComputeOverlayIntersection(@NativeType("VROverlayHandle_t") long ulOverlayHandle, @NativeType("const VROverlayIntersectionParams_t *") VROverlayIntersectionParams pParams, @NativeType("VROverlayIntersectionResults_t *") VROverlayIntersectionResults pResults) {
         return nVROverlay_ComputeOverlayIntersection(ulOverlayHandle, pParams.address(), pResults.address());
     }
 
@@ -1091,6 +1319,8 @@ public class VROverlay {
     /**
      * Returns true if the specified overlay is the hover target. An overlay is the hover target when it is the last overlay "moused over" by the virtual
      * mouse pointer.
+     *
+     * @param ulOverlayHandle 
      */
     @NativeType("bool")
     public static boolean VROverlay_IsHoverTargetOverlay(@NativeType("VROverlayHandle_t") long ulOverlayHandle) {
@@ -1115,7 +1345,11 @@ public class VROverlay {
 
     // --- [ VROverlay_SetGamepadFocusOverlay ] ---
 
-    /** Sets the current Gamepad focus overlay. */
+    /**
+     * Sets the current Gamepad focus overlay.
+     *
+     * @param ulNewFocusOverlay 
+     */
     @NativeType("EVROverlayError")
     public static int VROverlay_SetGamepadFocusOverlay(@NativeType("VROverlayHandle_t") long ulNewFocusOverlay) {
         long __functionAddress = OpenVR.VROverlay.SetGamepadFocusOverlay;
@@ -1133,6 +1367,8 @@ public class VROverlay {
      * "
      *
      * @param eDirection one of:<br><table><tr><td>{@link VR#EOverlayDirection_OverlayDirection_Up}</td><td>{@link VR#EOverlayDirection_OverlayDirection_Down}</td></tr><tr><td>{@link VR#EOverlayDirection_OverlayDirection_Left}</td><td>{@link VR#EOverlayDirection_OverlayDirection_Right}</td></tr><tr><td>{@link VR#EOverlayDirection_OverlayDirection_Count}</td></tr></table>
+     * @param ulFrom     
+     * @param ulTo       
      */
     @NativeType("EVROverlayError")
     public static int VROverlay_SetOverlayNeighbor(@NativeType("EOverlayDirection") int eDirection, @NativeType("VROverlayHandle_t") long ulFrom, @NativeType("VROverlayHandle_t") long ulTo) {
@@ -1149,6 +1385,7 @@ public class VROverlay {
      * Changes the Gamepad focus from one overlay to one of its neighbors.
      *
      * @param eDirection one of:<br><table><tr><td>{@link VR#EOverlayDirection_OverlayDirection_Up}</td><td>{@link VR#EOverlayDirection_OverlayDirection_Down}</td></tr><tr><td>{@link VR#EOverlayDirection_OverlayDirection_Left}</td><td>{@link VR#EOverlayDirection_OverlayDirection_Right}</td></tr><tr><td>{@link VR#EOverlayDirection_OverlayDirection_Count}</td></tr></table>
+     * @param ulFrom     
      *
      * @return {@link VR#EVROverlayError_VROverlayError_NoNeighbor} if there is no neighbor in that direction
      */
@@ -1175,7 +1412,10 @@ public class VROverlay {
     /**
      * Sets the analog input to Dual Analog coordinate scale for the specified overlay.
      *
-     * @param eWhich one of:<br><table><tr><td>{@link VR#EDualAnalogWhich_k_EDualAnalog_Left}</td><td>{@link VR#EDualAnalogWhich_k_EDualAnalog_Right}</td></tr></table>
+     * @param ulOverlay 
+     * @param eWhich    one of:<br><table><tr><td>{@link VR#EDualAnalogWhich_k_EDualAnalog_Left}</td><td>{@link VR#EDualAnalogWhich_k_EDualAnalog_Right}</td></tr></table>
+     * @param pvCenter  
+     * @param fRadius   
      */
     @NativeType("EVROverlayError")
     public static int VROverlay_SetOverlayDualAnalogTransform(@NativeType("VROverlayHandle_t") long ulOverlay, @NativeType("EDualAnalogWhich") int eWhich, @NativeType("HmdVector2_t *") HmdVector2 pvCenter, float fRadius) {
@@ -1196,7 +1436,10 @@ public class VROverlay {
     /**
      * Gets the analog input to Dual Analog coordinate scale for the specified overlay.
      *
-     * @param eWhich one of:<br><table><tr><td>{@link VR#EDualAnalogWhich_k_EDualAnalog_Left}</td><td>{@link VR#EDualAnalogWhich_k_EDualAnalog_Right}</td></tr></table>
+     * @param ulOverlay 
+     * @param eWhich    one of:<br><table><tr><td>{@link VR#EDualAnalogWhich_k_EDualAnalog_Left}</td><td>{@link VR#EDualAnalogWhich_k_EDualAnalog_Right}</td></tr></table>
+     * @param pvCenter  
+     * @param pfRadius  
      */
     @NativeType("EVROverlayError")
     public static int VROverlay_GetOverlayDualAnalogTransform(@NativeType("VROverlayHandle_t") long ulOverlay, @NativeType("EDualAnalogWhich") int eWhich, @NativeType("HmdVector2_t *") HmdVector2 pvCenter, @NativeType("float *") FloatBuffer pfRadius) {
@@ -1218,15 +1461,24 @@ public class VROverlay {
         return callJPI(__functionAddress, ulOverlayHandle, pTexture);
     }
 
-    /** Texture to draw for the overlay. This function can only be called by the overlay's creator or renderer process (see {@link #VROverlay_SetOverlayRenderingPid SetOverlayRenderingPid}). */
+    /**
+     * Texture to draw for the overlay. This function can only be called by the overlay's creator or renderer process (see {@link #VROverlay_SetOverlayRenderingPid SetOverlayRenderingPid}).
+     *
+     * @param ulOverlayHandle 
+     * @param pTexture        
+     */
     @NativeType("EVROverlayError")
-    public static int VROverlay_SetOverlayTexture(@NativeType("VROverlayHandle_t") long ulOverlayHandle, @NativeType("Texture_t const *") Texture pTexture) {
+    public static int VROverlay_SetOverlayTexture(@NativeType("VROverlayHandle_t") long ulOverlayHandle, @NativeType("const Texture_t *") Texture pTexture) {
         return nVROverlay_SetOverlayTexture(ulOverlayHandle, pTexture.address());
     }
 
     // --- [ VROverlay_ClearOverlayTexture ] ---
 
-    /** Use this to tell the overlay system to release the texture set for this overlay. */
+    /**
+     * Use this to tell the overlay system to release the texture set for this overlay.
+     *
+     * @param ulOverlayHandle 
+     */
     @NativeType("EVROverlayError")
     public static int VROverlay_ClearOverlayTexture(@NativeType("VROverlayHandle_t") long ulOverlayHandle) {
         long __functionAddress = OpenVR.VROverlay.ClearOverlayTexture;
@@ -1250,6 +1502,12 @@ public class VROverlay {
     /**
      * Separate interface for providing the data as a stream of bytes, but there is an upper bound on data that can be sent. This function can only be called
      * by the overlay's renderer process.
+     *
+     * @param ulOverlayHandle 
+     * @param pvBuffer        
+     * @param unWidth         
+     * @param unHeight        
+     * @param unDepth         
      */
     @NativeType("EVROverlayError")
     public static int VROverlay_SetOverlayRaw(@NativeType("VROverlayHandle_t") long ulOverlayHandle, @NativeType("void *") ByteBuffer pvBuffer, @NativeType("uint32_t") int unWidth, @NativeType("uint32_t") int unHeight, @NativeType("uint32_t") int unDepth) {
@@ -1270,9 +1528,12 @@ public class VROverlay {
     /**
      * Separate interface for providing the image through a filename: can be png or jpg, and should not be bigger than 1920x1080. This function can only be
      * called by the overlay's renderer process
+     *
+     * @param ulOverlayHandle 
+     * @param pchFilePath     
      */
     @NativeType("EVROverlayError")
-    public static int VROverlay_SetOverlayFromFile(@NativeType("VROverlayHandle_t") long ulOverlayHandle, @NativeType("char const *") ByteBuffer pchFilePath) {
+    public static int VROverlay_SetOverlayFromFile(@NativeType("VROverlayHandle_t") long ulOverlayHandle, @NativeType("const char *") ByteBuffer pchFilePath) {
         if (CHECKS) {
             checkNT1(pchFilePath);
         }
@@ -1282,9 +1543,12 @@ public class VROverlay {
     /**
      * Separate interface for providing the image through a filename: can be png or jpg, and should not be bigger than 1920x1080. This function can only be
      * called by the overlay's renderer process
+     *
+     * @param ulOverlayHandle 
+     * @param pchFilePath     
      */
     @NativeType("EVROverlayError")
-    public static int VROverlay_SetOverlayFromFile(@NativeType("VROverlayHandle_t") long ulOverlayHandle, @NativeType("char const *") CharSequence pchFilePath) {
+    public static int VROverlay_SetOverlayFromFile(@NativeType("VROverlayHandle_t") long ulOverlayHandle, @NativeType("const char *") CharSequence pchFilePath) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
             ByteBuffer pchFilePathEncoded = stack.ASCII(pchFilePath);
@@ -1318,6 +1582,16 @@ public class VROverlay {
      * <p>{@code pNativeTextureHandle} is an OUTPUT, it will be a pointer to a {@code ID3D11ShaderResourceView *}.
      * {@code pNativeTextureRef} is an INPUT and should be a {@code ID3D11Resource *}. The device used by {@code pNativeTextureRef} will be used to bind
      * {@code pNativeTextureHandle}.</p>
+     *
+     * @param ulOverlayHandle      
+     * @param pNativeTextureHandle 
+     * @param pNativeTextureRef    
+     * @param pWidth               
+     * @param pHeight              
+     * @param pNativeFormat        
+     * @param pAPIType             
+     * @param pColorSpace          
+     * @param pTextureBounds       
      */
     @NativeType("EVROverlayError")
     public static int VROverlay_GetOverlayTexture(@NativeType("VROverlayHandle_t") long ulOverlayHandle, @NativeType("void **") PointerBuffer pNativeTextureHandle, @NativeType("void *") long pNativeTextureRef, @NativeType("uint32_t *") IntBuffer pWidth, @NativeType("uint32_t *") IntBuffer pHeight, @NativeType("uint32_t *") IntBuffer pNativeFormat, @NativeType("ETextureType *") IntBuffer pAPIType, @NativeType("EColorSpace *") IntBuffer pColorSpace, @NativeType("VRTextureBounds_t *") VRTextureBounds pTextureBounds) {
@@ -1337,6 +1611,9 @@ public class VROverlay {
     /**
      * Release the {@code pNativeTextureHandle} provided from the {@link #VROverlay_GetOverlayTexture GetOverlayTexture} call, this allows the system to free the underlying GPU resources for
      * this object, so only do it once you stop rendering this texture.
+     *
+     * @param ulOverlayHandle      
+     * @param pNativeTextureHandle 
      */
     @NativeType("EVROverlayError")
     public static int VROverlay_ReleaseNativeOverlayHandle(@NativeType("VROverlayHandle_t") long ulOverlayHandle, @NativeType("void *") long pNativeTextureHandle) {
@@ -1359,7 +1636,13 @@ public class VROverlay {
         return callJPPI(__functionAddress, ulOverlayHandle, pWidth, pHeight);
     }
 
-    /** Get the size of the overlay texture. */
+    /**
+     * Get the size of the overlay texture.
+     *
+     * @param ulOverlayHandle 
+     * @param pWidth          
+     * @param pHeight         
+     */
     @NativeType("EVROverlayError")
     public static int VROverlay_GetOverlayTextureSize(@NativeType("VROverlayHandle_t") long ulOverlayHandle, @NativeType("uint32_t *") IntBuffer pWidth, @NativeType("uint32_t *") IntBuffer pHeight) {
         if (CHECKS) {
@@ -1380,9 +1663,16 @@ public class VROverlay {
         return callPPPPI(__functionAddress, pchOverlayKey, pchOverlayFriendlyName, pMainHandle, pThumbnailHandle);
     }
 
-    /** Creates a dashboard overlay and returns its handle. */
+    /**
+     * Creates a dashboard overlay and returns its handle.
+     *
+     * @param pchOverlayKey          
+     * @param pchOverlayFriendlyName 
+     * @param pMainHandle            
+     * @param pThumbnailHandle       
+     */
     @NativeType("EVROverlayError")
-    public static int VROverlay_CreateDashboardOverlay(@NativeType("char const *") ByteBuffer pchOverlayKey, @NativeType("char const *") ByteBuffer pchOverlayFriendlyName, @NativeType("VROverlayHandle_t *") LongBuffer pMainHandle, @NativeType("VROverlayHandle_t *") LongBuffer pThumbnailHandle) {
+    public static int VROverlay_CreateDashboardOverlay(@NativeType("const char *") ByteBuffer pchOverlayKey, @NativeType("const char *") ByteBuffer pchOverlayFriendlyName, @NativeType("VROverlayHandle_t *") LongBuffer pMainHandle, @NativeType("VROverlayHandle_t *") LongBuffer pThumbnailHandle) {
         if (CHECKS) {
             checkNT1(pchOverlayKey);
             checkNT1(pchOverlayFriendlyName);
@@ -1392,9 +1682,16 @@ public class VROverlay {
         return nVROverlay_CreateDashboardOverlay(memAddress(pchOverlayKey), memAddress(pchOverlayFriendlyName), memAddress(pMainHandle), memAddress(pThumbnailHandle));
     }
 
-    /** Creates a dashboard overlay and returns its handle. */
+    /**
+     * Creates a dashboard overlay and returns its handle.
+     *
+     * @param pchOverlayKey          
+     * @param pchOverlayFriendlyName 
+     * @param pMainHandle            
+     * @param pThumbnailHandle       
+     */
     @NativeType("EVROverlayError")
-    public static int VROverlay_CreateDashboardOverlay(@NativeType("char const *") CharSequence pchOverlayKey, @NativeType("char const *") CharSequence pchOverlayFriendlyName, @NativeType("VROverlayHandle_t *") LongBuffer pMainHandle, @NativeType("VROverlayHandle_t *") LongBuffer pThumbnailHandle) {
+    public static int VROverlay_CreateDashboardOverlay(@NativeType("const char *") CharSequence pchOverlayKey, @NativeType("const char *") CharSequence pchOverlayFriendlyName, @NativeType("VROverlayHandle_t *") LongBuffer pMainHandle, @NativeType("VROverlayHandle_t *") LongBuffer pThumbnailHandle) {
         if (CHECKS) {
             check(pMainHandle, 1);
             check(pThumbnailHandle, 1);
@@ -1423,7 +1720,11 @@ public class VROverlay {
 
     // --- [ VROverlay_IsActiveDashboardOverlay ] ---
 
-    /** Returns true if the dashboard is visible and the specified overlay is the active system Overlay. */
+    /**
+     * Returns true if the dashboard is visible and the specified overlay is the active system Overlay.
+     *
+     * @param ulOverlayHandle 
+     */
     @NativeType("bool")
     public static boolean VROverlay_IsActiveDashboardOverlay(@NativeType("VROverlayHandle_t") long ulOverlayHandle) {
         long __functionAddress = OpenVR.VROverlay.IsActiveDashboardOverlay;
@@ -1435,7 +1736,12 @@ public class VROverlay {
 
     // --- [ VROverlay_SetDashboardOverlaySceneProcess ] ---
 
-    /** Sets the dashboard overlay to only appear when the specified process ID has scene focus. */
+    /**
+     * Sets the dashboard overlay to only appear when the specified process ID has scene focus.
+     *
+     * @param ulOverlayHandle 
+     * @param unProcessId     
+     */
     @NativeType("EVROverlayError")
     public static int VROverlay_SetDashboardOverlaySceneProcess(@NativeType("VROverlayHandle_t") long ulOverlayHandle, @NativeType("uint32_t") int unProcessId) {
         long __functionAddress = OpenVR.VROverlay.SetDashboardOverlaySceneProcess;
@@ -1456,7 +1762,12 @@ public class VROverlay {
         return callJPI(__functionAddress, ulOverlayHandle, punProcessId);
     }
 
-    /** Gets the process ID that this dashboard overlay requires to have scene focus. */
+    /**
+     * Gets the process ID that this dashboard overlay requires to have scene focus.
+     *
+     * @param ulOverlayHandle 
+     * @param punProcessId    
+     */
     @NativeType("EVROverlayError")
     public static int VROverlay_GetDashboardOverlaySceneProcess(@NativeType("VROverlayHandle_t") long ulOverlayHandle, @NativeType("uint32_t *") IntBuffer punProcessId) {
         if (CHECKS) {
@@ -1476,16 +1787,24 @@ public class VROverlay {
         callPV(__functionAddress, pchOverlayToShow);
     }
 
-    /** Shows the dashboard. */
-    public static void VROverlay_ShowDashboard(@NativeType("char const *") ByteBuffer pchOverlayToShow) {
+    /**
+     * Shows the dashboard.
+     *
+     * @param pchOverlayToShow 
+     */
+    public static void VROverlay_ShowDashboard(@NativeType("const char *") ByteBuffer pchOverlayToShow) {
         if (CHECKS) {
             checkNT1(pchOverlayToShow);
         }
         nVROverlay_ShowDashboard(memAddress(pchOverlayToShow));
     }
 
-    /** Shows the dashboard. */
-    public static void VROverlay_ShowDashboard(@NativeType("char const *") CharSequence pchOverlayToShow) {
+    /**
+     * Shows the dashboard.
+     *
+     * @param pchOverlayToShow 
+     */
+    public static void VROverlay_ShowDashboard(@NativeType("const char *") CharSequence pchOverlayToShow) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
             ByteBuffer pchOverlayToShowEncoded = stack.ASCII(pchOverlayToShow);
@@ -1521,11 +1840,16 @@ public class VROverlay {
     /**
      * Show the virtual keyboard to accept input.
      *
-     * @param eInputMode     one of:<br><table><tr><td>{@link VR#EGamepadTextInputMode_k_EGamepadTextInputModeNormal}</td></tr><tr><td>{@link VR#EGamepadTextInputMode_k_EGamepadTextInputModePassword}</td></tr><tr><td>{@link VR#EGamepadTextInputMode_k_EGamepadTextInputModeSubmit}</td></tr></table>
-     * @param eLineInputMode one of:<br><table><tr><td>{@link VR#EGamepadTextInputLineMode_k_EGamepadTextInputLineModeSingleLine}</td></tr><tr><td>{@link VR#EGamepadTextInputLineMode_k_EGamepadTextInputLineModeMultipleLines}</td></tr></table>
+     * @param eInputMode      one of:<br><table><tr><td>{@link VR#EGamepadTextInputMode_k_EGamepadTextInputModeNormal}</td></tr><tr><td>{@link VR#EGamepadTextInputMode_k_EGamepadTextInputModePassword}</td></tr><tr><td>{@link VR#EGamepadTextInputMode_k_EGamepadTextInputModeSubmit}</td></tr></table>
+     * @param eLineInputMode  one of:<br><table><tr><td>{@link VR#EGamepadTextInputLineMode_k_EGamepadTextInputLineModeSingleLine}</td></tr><tr><td>{@link VR#EGamepadTextInputLineMode_k_EGamepadTextInputLineModeMultipleLines}</td></tr></table>
+     * @param pchDescription  
+     * @param unCharMax       
+     * @param pchExistingText 
+     * @param bUseMinimalMode 
+     * @param uUserValue      
      */
     @NativeType("EVROverlayError")
-    public static int VROverlay_ShowKeyboard(@NativeType("EGamepadTextInputMode") int eInputMode, @NativeType("EGamepadTextInputLineMode") int eLineInputMode, @NativeType("char const *") ByteBuffer pchDescription, @NativeType("uint32_t") int unCharMax, @NativeType("char const *") ByteBuffer pchExistingText, @NativeType("bool") boolean bUseMinimalMode, @NativeType("uint64_t") long uUserValue) {
+    public static int VROverlay_ShowKeyboard(@NativeType("EGamepadTextInputMode") int eInputMode, @NativeType("EGamepadTextInputLineMode") int eLineInputMode, @NativeType("const char *") ByteBuffer pchDescription, @NativeType("uint32_t") int unCharMax, @NativeType("const char *") ByteBuffer pchExistingText, @NativeType("bool") boolean bUseMinimalMode, @NativeType("uint64_t") long uUserValue) {
         if (CHECKS) {
             checkNT1(pchDescription);
             checkNT1(pchExistingText);
@@ -1536,11 +1860,16 @@ public class VROverlay {
     /**
      * Show the virtual keyboard to accept input.
      *
-     * @param eInputMode     one of:<br><table><tr><td>{@link VR#EGamepadTextInputMode_k_EGamepadTextInputModeNormal}</td></tr><tr><td>{@link VR#EGamepadTextInputMode_k_EGamepadTextInputModePassword}</td></tr><tr><td>{@link VR#EGamepadTextInputMode_k_EGamepadTextInputModeSubmit}</td></tr></table>
-     * @param eLineInputMode one of:<br><table><tr><td>{@link VR#EGamepadTextInputLineMode_k_EGamepadTextInputLineModeSingleLine}</td></tr><tr><td>{@link VR#EGamepadTextInputLineMode_k_EGamepadTextInputLineModeMultipleLines}</td></tr></table>
+     * @param eInputMode      one of:<br><table><tr><td>{@link VR#EGamepadTextInputMode_k_EGamepadTextInputModeNormal}</td></tr><tr><td>{@link VR#EGamepadTextInputMode_k_EGamepadTextInputModePassword}</td></tr><tr><td>{@link VR#EGamepadTextInputMode_k_EGamepadTextInputModeSubmit}</td></tr></table>
+     * @param eLineInputMode  one of:<br><table><tr><td>{@link VR#EGamepadTextInputLineMode_k_EGamepadTextInputLineModeSingleLine}</td></tr><tr><td>{@link VR#EGamepadTextInputLineMode_k_EGamepadTextInputLineModeMultipleLines}</td></tr></table>
+     * @param pchDescription  
+     * @param unCharMax       
+     * @param pchExistingText 
+     * @param bUseMinimalMode 
+     * @param uUserValue      
      */
     @NativeType("EVROverlayError")
-    public static int VROverlay_ShowKeyboard(@NativeType("EGamepadTextInputMode") int eInputMode, @NativeType("EGamepadTextInputLineMode") int eLineInputMode, @NativeType("char const *") CharSequence pchDescription, @NativeType("uint32_t") int unCharMax, @NativeType("char const *") CharSequence pchExistingText, @NativeType("bool") boolean bUseMinimalMode, @NativeType("uint64_t") long uUserValue) {
+    public static int VROverlay_ShowKeyboard(@NativeType("EGamepadTextInputMode") int eInputMode, @NativeType("EGamepadTextInputLineMode") int eLineInputMode, @NativeType("const char *") CharSequence pchDescription, @NativeType("uint32_t") int unCharMax, @NativeType("const char *") CharSequence pchExistingText, @NativeType("bool") boolean bUseMinimalMode, @NativeType("uint64_t") long uUserValue) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
             ByteBuffer pchDescriptionEncoded = stack.ASCII(pchDescription);
@@ -1563,11 +1892,17 @@ public class VROverlay {
     }
 
     /**
-     * @param eInputMode     one of:<br><table><tr><td>{@link VR#EGamepadTextInputMode_k_EGamepadTextInputModeNormal}</td></tr><tr><td>{@link VR#EGamepadTextInputMode_k_EGamepadTextInputModePassword}</td></tr><tr><td>{@link VR#EGamepadTextInputMode_k_EGamepadTextInputModeSubmit}</td></tr></table>
-     * @param eLineInputMode one of:<br><table><tr><td>{@link VR#EGamepadTextInputLineMode_k_EGamepadTextInputLineModeSingleLine}</td></tr><tr><td>{@link VR#EGamepadTextInputLineMode_k_EGamepadTextInputLineModeMultipleLines}</td></tr></table>
+     * @param ulOverlayHandle 
+     * @param eInputMode      one of:<br><table><tr><td>{@link VR#EGamepadTextInputMode_k_EGamepadTextInputModeNormal}</td></tr><tr><td>{@link VR#EGamepadTextInputMode_k_EGamepadTextInputModePassword}</td></tr><tr><td>{@link VR#EGamepadTextInputMode_k_EGamepadTextInputModeSubmit}</td></tr></table>
+     * @param eLineInputMode  one of:<br><table><tr><td>{@link VR#EGamepadTextInputLineMode_k_EGamepadTextInputLineModeSingleLine}</td></tr><tr><td>{@link VR#EGamepadTextInputLineMode_k_EGamepadTextInputLineModeMultipleLines}</td></tr></table>
+     * @param pchDescription  
+     * @param unCharMax       
+     * @param pchExistingText 
+     * @param bUseMinimalMode 
+     * @param uUserValue      
      */
     @NativeType("EVROverlayError")
-    public static int VROverlay_ShowKeyboardForOverlay(@NativeType("VROverlayHandle_t") long ulOverlayHandle, @NativeType("EGamepadTextInputMode") int eInputMode, @NativeType("EGamepadTextInputLineMode") int eLineInputMode, @NativeType("char const *") ByteBuffer pchDescription, @NativeType("uint32_t") int unCharMax, @NativeType("char const *") ByteBuffer pchExistingText, @NativeType("bool") boolean bUseMinimalMode, @NativeType("uint64_t") long uUserValue) {
+    public static int VROverlay_ShowKeyboardForOverlay(@NativeType("VROverlayHandle_t") long ulOverlayHandle, @NativeType("EGamepadTextInputMode") int eInputMode, @NativeType("EGamepadTextInputLineMode") int eLineInputMode, @NativeType("const char *") ByteBuffer pchDescription, @NativeType("uint32_t") int unCharMax, @NativeType("const char *") ByteBuffer pchExistingText, @NativeType("bool") boolean bUseMinimalMode, @NativeType("uint64_t") long uUserValue) {
         if (CHECKS) {
             checkNT1(pchDescription);
             checkNT1(pchExistingText);
@@ -1576,11 +1911,17 @@ public class VROverlay {
     }
 
     /**
-     * @param eInputMode     one of:<br><table><tr><td>{@link VR#EGamepadTextInputMode_k_EGamepadTextInputModeNormal}</td></tr><tr><td>{@link VR#EGamepadTextInputMode_k_EGamepadTextInputModePassword}</td></tr><tr><td>{@link VR#EGamepadTextInputMode_k_EGamepadTextInputModeSubmit}</td></tr></table>
-     * @param eLineInputMode one of:<br><table><tr><td>{@link VR#EGamepadTextInputLineMode_k_EGamepadTextInputLineModeSingleLine}</td></tr><tr><td>{@link VR#EGamepadTextInputLineMode_k_EGamepadTextInputLineModeMultipleLines}</td></tr></table>
+     * @param ulOverlayHandle 
+     * @param eInputMode      one of:<br><table><tr><td>{@link VR#EGamepadTextInputMode_k_EGamepadTextInputModeNormal}</td></tr><tr><td>{@link VR#EGamepadTextInputMode_k_EGamepadTextInputModePassword}</td></tr><tr><td>{@link VR#EGamepadTextInputMode_k_EGamepadTextInputModeSubmit}</td></tr></table>
+     * @param eLineInputMode  one of:<br><table><tr><td>{@link VR#EGamepadTextInputLineMode_k_EGamepadTextInputLineModeSingleLine}</td></tr><tr><td>{@link VR#EGamepadTextInputLineMode_k_EGamepadTextInputLineModeMultipleLines}</td></tr></table>
+     * @param pchDescription  
+     * @param unCharMax       
+     * @param pchExistingText 
+     * @param bUseMinimalMode 
+     * @param uUserValue      
      */
     @NativeType("EVROverlayError")
-    public static int VROverlay_ShowKeyboardForOverlay(@NativeType("VROverlayHandle_t") long ulOverlayHandle, @NativeType("EGamepadTextInputMode") int eInputMode, @NativeType("EGamepadTextInputLineMode") int eLineInputMode, @NativeType("char const *") CharSequence pchDescription, @NativeType("uint32_t") int unCharMax, @NativeType("char const *") CharSequence pchExistingText, @NativeType("bool") boolean bUseMinimalMode, @NativeType("uint64_t") long uUserValue) {
+    public static int VROverlay_ShowKeyboardForOverlay(@NativeType("VROverlayHandle_t") long ulOverlayHandle, @NativeType("EGamepadTextInputMode") int eInputMode, @NativeType("EGamepadTextInputLineMode") int eLineInputMode, @NativeType("const char *") CharSequence pchDescription, @NativeType("uint32_t") int unCharMax, @NativeType("const char *") CharSequence pchExistingText, @NativeType("bool") boolean bUseMinimalMode, @NativeType("uint64_t") long uUserValue) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
             ByteBuffer pchDescriptionEncoded = stack.ASCII(pchDescription);
@@ -1602,13 +1943,21 @@ public class VROverlay {
         return callPI(__functionAddress, pchText, cchText);
     }
 
-    /** Get the text that was entered into the text input. */
+    /**
+     * Get the text that was entered into the text input.
+     *
+     * @param pchText 
+     */
     @NativeType("uint32_t")
     public static int VROverlay_GetKeyboardText(@Nullable @NativeType("char *") ByteBuffer pchText) {
         return nVROverlay_GetKeyboardText(memAddressSafe(pchText), remainingSafe(pchText));
     }
 
-    /** Get the text that was entered into the text input. */
+    /**
+     * Get the text that was entered into the text input.
+     *
+     * @param cchText 
+     */
     @NativeType("uint32_t")
     public static String VROverlay_GetKeyboardText(@NativeType("uint32_t") int cchText) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
@@ -1646,9 +1995,10 @@ public class VROverlay {
     /**
      * Set the position of the keyboard in world space.
      *
-     * @param eTrackingOrigin one of:<br><table><tr><td>{@link VR#ETrackingUniverseOrigin_TrackingUniverseSeated}</td></tr><tr><td>{@link VR#ETrackingUniverseOrigin_TrackingUniverseStanding}</td></tr><tr><td>{@link VR#ETrackingUniverseOrigin_TrackingUniverseRawAndUncalibrated}</td></tr></table>
+     * @param eTrackingOrigin                       one of:<br><table><tr><td>{@link VR#ETrackingUniverseOrigin_TrackingUniverseSeated}</td></tr><tr><td>{@link VR#ETrackingUniverseOrigin_TrackingUniverseStanding}</td></tr><tr><td>{@link VR#ETrackingUniverseOrigin_TrackingUniverseRawAndUncalibrated}</td></tr></table>
+     * @param pmatTrackingOriginToKeyboardTransform 
      */
-    public static void VROverlay_SetKeyboardTransformAbsolute(@NativeType("ETrackingUniverseOrigin") int eTrackingOrigin, @NativeType("HmdMatrix34_t const *") HmdMatrix34 pmatTrackingOriginToKeyboardTransform) {
+    public static void VROverlay_SetKeyboardTransformAbsolute(@NativeType("ETrackingUniverseOrigin") int eTrackingOrigin, @NativeType("const HmdMatrix34_t *") HmdMatrix34 pmatTrackingOriginToKeyboardTransform) {
         nVROverlay_SetKeyboardTransformAbsolute(eTrackingOrigin, pmatTrackingOriginToKeyboardTransform.address());
     }
 
@@ -1663,7 +2013,12 @@ public class VROverlay {
         callJPV(__functionAddress, ulOverlayHandle, avoidRect);
     }
 
-    /** Set the position of the keyboard in overlay space by telling it to avoid a rectangle in the overlay. Rectangle coords have (0,0) in the bottom left. */
+    /**
+     * Set the position of the keyboard in overlay space by telling it to avoid a rectangle in the overlay. Rectangle coords have (0,0) in the bottom left.
+     *
+     * @param ulOverlayHandle 
+     * @param avoidRect       
+     */
     public static void VROverlay_SetKeyboardPositionForOverlay(@NativeType("VROverlayHandle_t") long ulOverlayHandle, @NativeType("HmdRect2_t") HmdRect2 avoidRect) {
         nVROverlay_SetKeyboardPositionForOverlay(ulOverlayHandle, avoidRect.address());
     }
@@ -1679,7 +2034,12 @@ public class VROverlay {
         return callJPI(__functionAddress, ulOverlayHandle, pMaskPrimitives, unNumMaskPrimitives, unPrimitiveSize);
     }
 
-    /** Sets a list of primitives to be used for controller ray intersection typically the size of the underlying UI in pixels(not in world space). */
+    /**
+     * Sets a list of primitives to be used for controller ray intersection typically the size of the underlying UI in pixels(not in world space).
+     *
+     * @param ulOverlayHandle 
+     * @param pMaskPrimitives 
+     */
     @NativeType("EVROverlayError")
     public static int VROverlay_SetOverlayIntersectionMask(@NativeType("VROverlayHandle_t") long ulOverlayHandle, @NativeType("VROverlayIntersectionMaskPrimitive_t *") VROverlayIntersectionMaskPrimitive.Buffer pMaskPrimitives) {
         return nVROverlay_SetOverlayIntersectionMask(ulOverlayHandle, pMaskPrimitives.address(), pMaskPrimitives.remaining(), VROverlayIntersectionMaskPrimitive.SIZEOF);
@@ -1714,9 +2074,18 @@ public class VROverlay {
         return callPPPPPPI(__functionAddress, pchText, pchCaption, pchButton0Text, pchButton1Text, pchButton2Text, pchButton3Text);
     }
 
-    /** Show the message overlay. This will block and return you a result. */
+    /**
+     * Show the message overlay. This will block and return you a result.
+     *
+     * @param pchText        
+     * @param pchCaption     
+     * @param pchButton0Text 
+     * @param pchButton1Text 
+     * @param pchButton2Text 
+     * @param pchButton3Text 
+     */
     @NativeType("VRMessageOverlayResponse")
-    public static int VROverlay_ShowMessageOverlay(@NativeType("char const *") ByteBuffer pchText, @NativeType("char const *") ByteBuffer pchCaption, @NativeType("char const *") ByteBuffer pchButton0Text, @Nullable @NativeType("char const *") ByteBuffer pchButton1Text, @Nullable @NativeType("char const *") ByteBuffer pchButton2Text, @Nullable @NativeType("char const *") ByteBuffer pchButton3Text) {
+    public static int VROverlay_ShowMessageOverlay(@NativeType("const char *") ByteBuffer pchText, @NativeType("const char *") ByteBuffer pchCaption, @NativeType("const char *") ByteBuffer pchButton0Text, @Nullable @NativeType("const char *") ByteBuffer pchButton1Text, @Nullable @NativeType("const char *") ByteBuffer pchButton2Text, @Nullable @NativeType("const char *") ByteBuffer pchButton3Text) {
         if (CHECKS) {
             checkNT1(pchText);
             checkNT1(pchCaption);
@@ -1728,9 +2097,18 @@ public class VROverlay {
         return nVROverlay_ShowMessageOverlay(memAddress(pchText), memAddress(pchCaption), memAddress(pchButton0Text), memAddressSafe(pchButton1Text), memAddressSafe(pchButton2Text), memAddressSafe(pchButton3Text));
     }
 
-    /** Show the message overlay. This will block and return you a result. */
+    /**
+     * Show the message overlay. This will block and return you a result.
+     *
+     * @param pchText        
+     * @param pchCaption     
+     * @param pchButton0Text 
+     * @param pchButton1Text 
+     * @param pchButton2Text 
+     * @param pchButton3Text 
+     */
     @NativeType("VRMessageOverlayResponse")
-    public static int VROverlay_ShowMessageOverlay(@NativeType("char const *") CharSequence pchText, @NativeType("char const *") CharSequence pchCaption, @NativeType("char const *") CharSequence pchButton0Text, @Nullable @NativeType("char const *") CharSequence pchButton1Text, @Nullable @NativeType("char const *") CharSequence pchButton2Text, @Nullable @NativeType("char const *") CharSequence pchButton3Text) {
+    public static int VROverlay_ShowMessageOverlay(@NativeType("const char *") CharSequence pchText, @NativeType("const char *") CharSequence pchCaption, @NativeType("const char *") CharSequence pchButton0Text, @Nullable @NativeType("const char *") CharSequence pchButton1Text, @Nullable @NativeType("const char *") CharSequence pchButton2Text, @Nullable @NativeType("const char *") CharSequence pchButton3Text) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
             ByteBuffer pchTextEncoded = stack.ASCII(pchText);

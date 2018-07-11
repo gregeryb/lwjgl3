@@ -79,7 +79,7 @@ public class RPmalloc {
     /** Unsafe version of: {@link #rpmalloc_initialize malloc_initialize} */
     public static native int nrpmalloc_initialize();
 
-    /** Initializes allocator with default configuration. */
+    /** Calls {@link #rpmalloc_initialize_config malloc_initialize_config} with the default configuration. */
     @NativeType("int")
     public static boolean rpmalloc_initialize() {
         return nrpmalloc_initialize() != 0;
@@ -91,53 +91,44 @@ public class RPmalloc {
     public static native int nrpmalloc_initialize_config(long config);
 
     /**
-     * Initializes allocator with given configuration.
+     * Call at process start to initialize the allocator and setup global data.
+     * 
+     * <p>This function also calls {@link #rpmalloc_thread_initialize malloc_thread_initialize}.</p>
      *
      * @param config an optional {@link RPMallocConfig} instance
      */
     @NativeType("int")
-    public static boolean rpmalloc_initialize_config(@Nullable @NativeType("rpmalloc_config_t const *") RPMallocConfig config) {
+    public static boolean rpmalloc_initialize_config(@Nullable @NativeType("const rpmalloc_config_t *") RPMallocConfig config) {
         return nrpmalloc_initialize_config(memAddressSafe(config)) != 0;
-    }
-
-    // --- [ rpmalloc_config ] ---
-
-    /** Unsafe version of: {@link #rpmalloc_config malloc_config} */
-    public static native long nrpmalloc_config();
-
-    /** Gets allocator configuration. */
-    @NativeType("rpmalloc_config_t const *")
-    public static RPMallocConfig rpmalloc_config() {
-        long __result = nrpmalloc_config();
-        return RPMallocConfig.create(__result);
     }
 
     // --- [ rpmalloc_finalize ] ---
 
-    /** Finalizes allocator. */
+    /**
+     * Call at process exit to finalize the allocator.
+     * 
+     * <p>This function also calls {@link #rpmalloc_thread_finalize malloc_thread_finalize}.</p>
+     */
     public static native void rpmalloc_finalize();
 
     // --- [ rpmalloc_thread_initialize ] ---
 
-    /** Initializes allocator for calling thread. */
+    /** Call at each thread start to initialize the thread local data for the allocator. */
     public static native void rpmalloc_thread_initialize();
 
     // --- [ rpmalloc_thread_finalize ] ---
 
-    /** Finalizes allocator for calling thread. */
+    /** Call at each thread exit to finalize and release thread cache back to global cache. */
     public static native void rpmalloc_thread_finalize();
 
     // --- [ rpmalloc_thread_collect ] ---
 
-    /** Performs deferred deallocations pending for the calling thread heap. */
     public static native void rpmalloc_thread_collect();
 
     // --- [ rpmalloc_is_thread_initialized ] ---
 
-    /** Unsafe version of: {@link #rpmalloc_is_thread_initialized malloc_is_thread_initialized} */
     public static native int nrpmalloc_is_thread_initialized();
 
-    /** Query if allocator is initialized for calling thread. */
     @NativeType("int")
     public static boolean rpmalloc_is_thread_initialized() {
         return nrpmalloc_is_thread_initialized() != 0;
@@ -145,30 +136,24 @@ public class RPmalloc {
 
     // --- [ rpmalloc_thread_statistics ] ---
 
-    /** Unsafe version of: {@link #rpmalloc_thread_statistics malloc_thread_statistics} */
     public static native void nrpmalloc_thread_statistics(long stats);
 
-    /** Gets per-thread statistics. */
     public static void rpmalloc_thread_statistics(@NativeType("rpmalloc_thread_statistics_t *") RPmallocThreadStatistics stats) {
         nrpmalloc_thread_statistics(stats.address());
     }
 
     // --- [ rpmalloc_global_statistics ] ---
 
-    /** Unsafe version of: {@link #rpmalloc_global_statistics malloc_global_statistics} */
     public static native void nrpmalloc_global_statistics(long stats);
 
-    /** Gets global statistics. */
     public static void rpmalloc_global_statistics(@NativeType("rpmalloc_global_statistics_t *") RPmallocGlobalStatistics stats) {
         nrpmalloc_global_statistics(stats.address());
     }
 
     // --- [ rpmalloc ] ---
 
-    /** Unsafe version of: {@link #rpmalloc malloc} */
     public static native long nrpmalloc(long size);
 
-    /** Allocates a memory block of at least the given size. */
     @Nullable
     @NativeType("void *")
     public static ByteBuffer rpmalloc(@NativeType("size_t") long size) {
@@ -178,50 +163,40 @@ public class RPmalloc {
 
     // --- [ rpfree ] ---
 
-    /** Unsafe version of: {@link #rpfree free} */
     public static native void nrpfree(long ptr);
 
-    /** Frees the given memory block. */
     public static void rpfree(@Nullable @NativeType("void *") ByteBuffer ptr) {
         nrpfree(memAddressSafe(ptr));
     }
 
-    /** Frees the given memory block. */
     public static void rpfree(@Nullable @NativeType("void *") ShortBuffer ptr) {
         nrpfree(memAddressSafe(ptr));
     }
 
-    /** Frees the given memory block. */
     public static void rpfree(@Nullable @NativeType("void *") IntBuffer ptr) {
         nrpfree(memAddressSafe(ptr));
     }
 
-    /** Frees the given memory block. */
     public static void rpfree(@Nullable @NativeType("void *") LongBuffer ptr) {
         nrpfree(memAddressSafe(ptr));
     }
 
-    /** Frees the given memory block. */
     public static void rpfree(@Nullable @NativeType("void *") FloatBuffer ptr) {
         nrpfree(memAddressSafe(ptr));
     }
 
-    /** Frees the given memory block. */
     public static void rpfree(@Nullable @NativeType("void *") DoubleBuffer ptr) {
         nrpfree(memAddressSafe(ptr));
     }
 
-    /** Frees the given memory block. */
     public static void rpfree(@Nullable @NativeType("void *") PointerBuffer ptr) {
         nrpfree(memAddressSafe(ptr));
     }
 
     // --- [ rpcalloc ] ---
 
-    /** Unsafe version of: {@link #rpcalloc calloc} */
     public static native long nrpcalloc(long num, long size);
 
-    /** Allocates a memory block of at least the given size and zero initializes it. */
     @Nullable
     @NativeType("void *")
     public static ByteBuffer rpcalloc(@NativeType("size_t") long num, @NativeType("size_t") long size) {
@@ -231,10 +206,8 @@ public class RPmalloc {
 
     // --- [ rprealloc ] ---
 
-    /** Unsafe version of: {@link #rprealloc realloc} */
     public static native long nrprealloc(long ptr, long size);
 
-    /** Reallocates the given block to at least the given size. */
     @Nullable
     @NativeType("void *")
     public static ByteBuffer rprealloc(@Nullable @NativeType("void *") ByteBuffer ptr, @NativeType("size_t") long size) {
@@ -244,10 +217,8 @@ public class RPmalloc {
 
     // --- [ rpaligned_realloc ] ---
 
-    /** Unsafe version of: {@link #rpaligned_realloc aligned_realloc} */
     public static native long nrpaligned_realloc(long ptr, long alignment, long size, long oldsize, int flags);
 
-    /** Reallocates the given block to at least the given size and alignment, with optional control flags (see {@link #RPMALLOC_NO_PRESERVE MALLOC_NO_PRESERVE}) */
     @Nullable
     @NativeType("void *")
     public static ByteBuffer rpaligned_realloc(@Nullable @NativeType("void *") ByteBuffer ptr, @NativeType("size_t") long alignment, @NativeType("size_t") long size, @NativeType("unsigned int") int flags) {
@@ -257,10 +228,8 @@ public class RPmalloc {
 
     // --- [ rpaligned_alloc ] ---
 
-    /** Unsafe version of: {@link #rpaligned_alloc aligned_alloc} */
     public static native long nrpaligned_alloc(long alignment, long size);
 
-    /** Allocates a memory block of at least the given size and alignment. */
     @Nullable
     @NativeType("void *")
     public static ByteBuffer rpaligned_alloc(@NativeType("size_t") long alignment, @NativeType("size_t") long size) {
@@ -270,10 +239,8 @@ public class RPmalloc {
 
     // --- [ rpmemalign ] ---
 
-    /** Unsafe version of: {@link #rpmemalign memalign} */
     public static native long nrpmemalign(long alignment, long size);
 
-    /** Allocates a memory block of at least the given size and alignment. */
     @Nullable
     @NativeType("void *")
     public static ByteBuffer rpmemalign(@NativeType("size_t") long alignment, @NativeType("size_t") long size) {
@@ -283,10 +250,8 @@ public class RPmalloc {
 
     // --- [ rpposix_memalign ] ---
 
-    /** Unsafe version of: {@link #rpposix_memalign posix_memalign} */
     public static native int nrpposix_memalign(long memptr, long alignment, long size);
 
-    /** Allocates a memory block of at least the given size and alignment. */
     public static int rpposix_memalign(@NativeType("void **") PointerBuffer memptr, @NativeType("size_t") long alignment, @NativeType("size_t") long size) {
         if (CHECKS) {
             check(memptr, 1);
@@ -296,46 +261,38 @@ public class RPmalloc {
 
     // --- [ rpmalloc_usable_size ] ---
 
-    /** Unsafe version of: {@link #rpmalloc_usable_size malloc_usable_size} */
     public static native long nrpmalloc_usable_size(long ptr);
 
-    /** Queries the usable size of the given memory block (from given pointer to the end of block). */
     @NativeType("size_t")
     public static long rpmalloc_usable_size(@NativeType("void *") ByteBuffer ptr) {
         return nrpmalloc_usable_size(memAddress(ptr));
     }
 
-    /** Queries the usable size of the given memory block (from given pointer to the end of block). */
     @NativeType("size_t")
     public static long rpmalloc_usable_size(@NativeType("void *") ShortBuffer ptr) {
         return nrpmalloc_usable_size(memAddress(ptr));
     }
 
-    /** Queries the usable size of the given memory block (from given pointer to the end of block). */
     @NativeType("size_t")
     public static long rpmalloc_usable_size(@NativeType("void *") IntBuffer ptr) {
         return nrpmalloc_usable_size(memAddress(ptr));
     }
 
-    /** Queries the usable size of the given memory block (from given pointer to the end of block). */
     @NativeType("size_t")
     public static long rpmalloc_usable_size(@NativeType("void *") LongBuffer ptr) {
         return nrpmalloc_usable_size(memAddress(ptr));
     }
 
-    /** Queries the usable size of the given memory block (from given pointer to the end of block). */
     @NativeType("size_t")
     public static long rpmalloc_usable_size(@NativeType("void *") FloatBuffer ptr) {
         return nrpmalloc_usable_size(memAddress(ptr));
     }
 
-    /** Queries the usable size of the given memory block (from given pointer to the end of block). */
     @NativeType("size_t")
     public static long rpmalloc_usable_size(@NativeType("void *") DoubleBuffer ptr) {
         return nrpmalloc_usable_size(memAddress(ptr));
     }
 
-    /** Queries the usable size of the given memory block (from given pointer to the end of block). */
     @NativeType("size_t")
     public static long rpmalloc_usable_size(@NativeType("void *") PointerBuffer ptr) {
         return nrpmalloc_usable_size(memAddress(ptr));

@@ -17,11 +17,11 @@ import static org.lwjgl.system.MemoryUtil.*;
 /**
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct nk_config_stack_vec2 {
  *     int head;
  *     {@link NkConfigStackVec2Element struct nk_config_stack_vec2_element} elements[16];
- * }</code></pre>
+ * }</pre></code>
  */
 @NativeType("struct nk_config_stack_vec2")
 class NkConfigStackVec2 extends Struct {
@@ -29,7 +29,6 @@ class NkConfigStackVec2 extends Struct {
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */
@@ -113,7 +112,8 @@ class NkConfigStackVec2 extends Struct {
     public static NkConfigStackVec2Element.Buffer nelements(long struct) { return NkConfigStackVec2Element.create(struct + NkConfigStackVec2.ELEMENTS, 16); }
     /** Unsafe version of {@link #elements(int) elements}. */
     public static NkConfigStackVec2Element nelements(long struct, int index) {
-        return NkConfigStackVec2Element.create(struct + NkConfigStackVec2.ELEMENTS + check(index, 16) * NkConfigStackVec2Element.SIZEOF);
+        if (CHECKS) { check(index, 16); }
+        return NkConfigStackVec2Element.create(struct + NkConfigStackVec2.ELEMENTS + index * NkConfigStackVec2Element.SIZEOF);
     }
 
     // -----------------------------------

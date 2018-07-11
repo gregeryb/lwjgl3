@@ -65,7 +65,7 @@ public class NVInternalformatSampleQuery {
         nglGetInternalformatSampleivNV(target, internalformat, samples, pname, params.remaining(), memAddress(params));
     }
 
-    /** Array version of: {@link #glGetInternalformatSampleivNV GetInternalformatSampleivNV} */
+    /** register Array version of: {@link #glGetInternalformatSampleivNV GetInternalformatSampleivNV} */
     public static void glGetInternalformatSampleivNV(@NativeType("GLenum") int target, @NativeType("GLenum") int internalformat, @NativeType("GLsizei") int samples, @NativeType("GLenum") int pname, @NativeType("GLint *") int[] params) {
         long __functionAddress = GLES.getICD().glGetInternalformatSampleivNV;
         if (CHECKS) {

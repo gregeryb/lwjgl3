@@ -14,11 +14,11 @@ import static org.lwjgl.system.dyncall.DynCallback.*;
  * 
  * <h3>Type</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * void (*) (
  *     GLFWwindow *window,
  *     int focused
- * )</code></pre>
+ * )</pre></code>
  *
  * @since version 3.0
  */

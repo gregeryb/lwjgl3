@@ -50,14 +50,14 @@ import static org.lwjgl.system.MemoryUtil.*;
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct aiTexture {
  *     unsigned int mWidth;
  *     unsigned int mHeight;
  *     char achFormatHint[4];
  *     {@link AITexel struct aiTexel} * pcData;
  *     {@link AIString struct aiString} mFilename;
- * }</code></pre>
+ * }</pre></code>
  */
 @NativeType("struct aiTexture")
 public class AITexture extends Struct {
@@ -65,7 +65,6 @@ public class AITexture extends Struct {
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */
@@ -134,8 +133,6 @@ public class AITexture extends Struct {
     /** Returns a {@link AIString} view of the {@code mFilename} field. */
     @NativeType("struct aiString")
     public AIString mFilename() { return nmFilename(address()); }
-    /** Passes the {@code mFilename} field to the specified {@link java.util.function.Consumer Consumer}. */
-    public AITexture mFilename(java.util.function.Consumer<AIString> consumer) { consumer.accept(mFilename()); return this; }
 
     // -----------------------------------
 
@@ -249,8 +246,6 @@ public class AITexture extends Struct {
         /** Returns a {@link AIString} view of the {@code mFilename} field. */
         @NativeType("struct aiString")
         public AIString mFilename() { return AITexture.nmFilename(address()); }
-        /** Passes the {@code mFilename} field to the specified {@link java.util.function.Consumer Consumer}. */
-        public AITexture.Buffer mFilename(java.util.function.Consumer<AIString> consumer) { consumer.accept(mFilename()); return this; }
 
     }
 

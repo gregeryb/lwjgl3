@@ -19,15 +19,6 @@ import static org.lwjgl.system.MemoryStack.*;
 /**
  * Structure describing parameters of a queue presentation.
  * 
- * <h5>Description</h5>
- * 
- * <p>Before an application <b>can</b> present an image, the image's layout <b>must</b> be transitioned to the {@link KHRSwapchain#VK_IMAGE_LAYOUT_PRESENT_SRC_KHR IMAGE_LAYOUT_PRESENT_SRC_KHR} layout, or for a shared presentable image the {@link KHRSharedPresentableImage#VK_IMAGE_LAYOUT_SHARED_PRESENT_KHR IMAGE_LAYOUT_SHARED_PRESENT_KHR} layout.</p>
- * 
- * <div style="margin-left: 26px; border-left: 1px solid gray; padding-left: 14px;"><h5>Note</h5>
- * 
- * <p>When transitioning the image to {@link KHRSharedPresentableImage#VK_IMAGE_LAYOUT_SHARED_PRESENT_KHR IMAGE_LAYOUT_SHARED_PRESENT_KHR} or {@link KHRSwapchain#VK_IMAGE_LAYOUT_PRESENT_SRC_KHR IMAGE_LAYOUT_PRESENT_SRC_KHR}, there is no need to delay subsequent processing, or perform any visibility operations (as {@link KHRSwapchain#vkQueuePresentKHR QueuePresentKHR} performs automatic visibility operations). To achieve this, the {@code dstAccessMask} member of the {@link VkImageMemoryBarrier} <b>should</b> be set to 0, and the {@code dstStageMask} parameter <b>should</b> be set to {@link VK10#VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT}.</p>
- * </div>
- * 
  * <h5>Valid Usage</h5>
  * 
  * <ul>
@@ -38,7 +29,7 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <ul>
  * <li>{@code sType} <b>must</b> be {@link KHRSwapchain#VK_STRUCTURE_TYPE_PRESENT_INFO_KHR STRUCTURE_TYPE_PRESENT_INFO_KHR}</li>
- * <li>Each {@code pNext} member of any structure (including this one) in the {@code pNext} chain <b>must</b> be either {@code NULL} or a pointer to a valid instance of {@link VkDeviceGroupPresentInfoKHR}, {@link VkDisplayPresentInfoKHR}, {@link VkPresentRegionsKHR}, or {@link VkPresentTimesInfoGOOGLE}</li>
+ * <li>Each {@code pNext} member of any structure (including this one) in the {@code pNext} chain <b>must</b> be either {@code NULL} or a pointer to a valid instance of {@link VkDeviceGroupPresentInfoKHX}, {@link VkDisplayPresentInfoKHR}, {@link VkPresentRegionsKHR}, or {@link VkPresentTimesInfoGOOGLE}</li>
  * <li>Each {@code sType} member in the {@code pNext} chain <b>must</b> be unique</li>
  * <li>If {@code waitSemaphoreCount} is not 0, {@code pWaitSemaphores} <b>must</b> be a valid pointer to an array of {@code waitSemaphoreCount} valid {@code VkSemaphore} handles</li>
  * <li>{@code pSwapchains} <b>must</b> be a valid pointer to an array of {@code swapchainCount} valid {@code VkSwapchainKHR} handles</li>
@@ -67,24 +58,23 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct VkPresentInfoKHR {
  *     VkStructureType sType;
- *     void const * pNext;
+ *     const void * pNext;
  *     uint32_t waitSemaphoreCount;
- *     VkSemaphore const * pWaitSemaphores;
+ *     const VkSemaphore * pWaitSemaphores;
  *     uint32_t swapchainCount;
- *     VkSwapchainKHR const * pSwapchains;
- *     uint32_t const * pImageIndices;
+ *     const VkSwapchainKHR * pSwapchains;
+ *     const uint32_t * pImageIndices;
  *     VkResult * pResults;
- * }</code></pre>
+ * }</pre></code>
  */
 public class VkPresentInfoKHR extends Struct implements NativeResource {
 
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */
@@ -144,23 +134,23 @@ public class VkPresentInfoKHR extends Struct implements NativeResource {
     @NativeType("VkStructureType")
     public int sType() { return nsType(address()); }
     /** Returns the value of the {@code pNext} field. */
-    @NativeType("void const *")
+    @NativeType("const void *")
     public long pNext() { return npNext(address()); }
     /** Returns the value of the {@code waitSemaphoreCount} field. */
     @NativeType("uint32_t")
     public int waitSemaphoreCount() { return nwaitSemaphoreCount(address()); }
     /** Returns a {@link LongBuffer} view of the data pointed to by the {@code pWaitSemaphores} field. */
     @Nullable
-    @NativeType("VkSemaphore const *")
+    @NativeType("const VkSemaphore *")
     public LongBuffer pWaitSemaphores() { return npWaitSemaphores(address()); }
     /** Returns the value of the {@code swapchainCount} field. */
     @NativeType("uint32_t")
     public int swapchainCount() { return nswapchainCount(address()); }
     /** Returns a {@link LongBuffer} view of the data pointed to by the {@code pSwapchains} field. */
-    @NativeType("VkSwapchainKHR const *")
+    @NativeType("const VkSwapchainKHR *")
     public LongBuffer pSwapchains() { return npSwapchains(address()); }
     /** Returns a {@link IntBuffer} view of the data pointed to by the {@code pImageIndices} field. */
-    @NativeType("uint32_t const *")
+    @NativeType("const uint32_t *")
     public IntBuffer pImageIndices() { return npImageIndices(address()); }
     /** Returns a {@link IntBuffer} view of the data pointed to by the {@code pResults} field. */
     @Nullable
@@ -170,15 +160,15 @@ public class VkPresentInfoKHR extends Struct implements NativeResource {
     /** Sets the specified value to the {@code sType} field. */
     public VkPresentInfoKHR sType(@NativeType("VkStructureType") int value) { nsType(address(), value); return this; }
     /** Sets the specified value to the {@code pNext} field. */
-    public VkPresentInfoKHR pNext(@NativeType("void const *") long value) { npNext(address(), value); return this; }
+    public VkPresentInfoKHR pNext(@NativeType("const void *") long value) { npNext(address(), value); return this; }
     /** Sets the address of the specified {@link LongBuffer} to the {@code pWaitSemaphores} field. */
-    public VkPresentInfoKHR pWaitSemaphores(@Nullable @NativeType("VkSemaphore const *") LongBuffer value) { npWaitSemaphores(address(), value); return this; }
+    public VkPresentInfoKHR pWaitSemaphores(@Nullable @NativeType("const VkSemaphore *") LongBuffer value) { npWaitSemaphores(address(), value); return this; }
     /** Sets the specified value to the {@code swapchainCount} field. */
     public VkPresentInfoKHR swapchainCount(@NativeType("uint32_t") int value) { nswapchainCount(address(), value); return this; }
     /** Sets the address of the specified {@link LongBuffer} to the {@code pSwapchains} field. */
-    public VkPresentInfoKHR pSwapchains(@NativeType("VkSwapchainKHR const *") LongBuffer value) { npSwapchains(address(), value); return this; }
+    public VkPresentInfoKHR pSwapchains(@NativeType("const VkSwapchainKHR *") LongBuffer value) { npSwapchains(address(), value); return this; }
     /** Sets the address of the specified {@link IntBuffer} to the {@code pImageIndices} field. */
-    public VkPresentInfoKHR pImageIndices(@NativeType("uint32_t const *") IntBuffer value) { npImageIndices(address(), value); return this; }
+    public VkPresentInfoKHR pImageIndices(@NativeType("const uint32_t *") IntBuffer value) { npImageIndices(address(), value); return this; }
     /** Sets the address of the specified {@link IntBuffer} to the {@code pResults} field. */
     public VkPresentInfoKHR pResults(@Nullable @NativeType("VkResult *") IntBuffer value) { npResults(address(), value); return this; }
 
@@ -186,11 +176,11 @@ public class VkPresentInfoKHR extends Struct implements NativeResource {
     public VkPresentInfoKHR set(
         int sType,
         long pNext,
-        @Nullable LongBuffer pWaitSemaphores,
+        LongBuffer pWaitSemaphores,
         int swapchainCount,
         LongBuffer pSwapchains,
         IntBuffer pImageIndices,
-        @Nullable IntBuffer pResults
+        IntBuffer pResults
     ) {
         sType(sType);
         pNext(pNext);
@@ -465,23 +455,23 @@ public class VkPresentInfoKHR extends Struct implements NativeResource {
         @NativeType("VkStructureType")
         public int sType() { return VkPresentInfoKHR.nsType(address()); }
         /** Returns the value of the {@code pNext} field. */
-        @NativeType("void const *")
+        @NativeType("const void *")
         public long pNext() { return VkPresentInfoKHR.npNext(address()); }
         /** Returns the value of the {@code waitSemaphoreCount} field. */
         @NativeType("uint32_t")
         public int waitSemaphoreCount() { return VkPresentInfoKHR.nwaitSemaphoreCount(address()); }
         /** Returns a {@link LongBuffer} view of the data pointed to by the {@code pWaitSemaphores} field. */
         @Nullable
-        @NativeType("VkSemaphore const *")
+        @NativeType("const VkSemaphore *")
         public LongBuffer pWaitSemaphores() { return VkPresentInfoKHR.npWaitSemaphores(address()); }
         /** Returns the value of the {@code swapchainCount} field. */
         @NativeType("uint32_t")
         public int swapchainCount() { return VkPresentInfoKHR.nswapchainCount(address()); }
         /** Returns a {@link LongBuffer} view of the data pointed to by the {@code pSwapchains} field. */
-        @NativeType("VkSwapchainKHR const *")
+        @NativeType("const VkSwapchainKHR *")
         public LongBuffer pSwapchains() { return VkPresentInfoKHR.npSwapchains(address()); }
         /** Returns a {@link IntBuffer} view of the data pointed to by the {@code pImageIndices} field. */
-        @NativeType("uint32_t const *")
+        @NativeType("const uint32_t *")
         public IntBuffer pImageIndices() { return VkPresentInfoKHR.npImageIndices(address()); }
         /** Returns a {@link IntBuffer} view of the data pointed to by the {@code pResults} field. */
         @Nullable
@@ -491,15 +481,15 @@ public class VkPresentInfoKHR extends Struct implements NativeResource {
         /** Sets the specified value to the {@code sType} field. */
         public VkPresentInfoKHR.Buffer sType(@NativeType("VkStructureType") int value) { VkPresentInfoKHR.nsType(address(), value); return this; }
         /** Sets the specified value to the {@code pNext} field. */
-        public VkPresentInfoKHR.Buffer pNext(@NativeType("void const *") long value) { VkPresentInfoKHR.npNext(address(), value); return this; }
+        public VkPresentInfoKHR.Buffer pNext(@NativeType("const void *") long value) { VkPresentInfoKHR.npNext(address(), value); return this; }
         /** Sets the address of the specified {@link LongBuffer} to the {@code pWaitSemaphores} field. */
-        public VkPresentInfoKHR.Buffer pWaitSemaphores(@Nullable @NativeType("VkSemaphore const *") LongBuffer value) { VkPresentInfoKHR.npWaitSemaphores(address(), value); return this; }
+        public VkPresentInfoKHR.Buffer pWaitSemaphores(@Nullable @NativeType("const VkSemaphore *") LongBuffer value) { VkPresentInfoKHR.npWaitSemaphores(address(), value); return this; }
         /** Sets the specified value to the {@code swapchainCount} field. */
         public VkPresentInfoKHR.Buffer swapchainCount(@NativeType("uint32_t") int value) { VkPresentInfoKHR.nswapchainCount(address(), value); return this; }
         /** Sets the address of the specified {@link LongBuffer} to the {@code pSwapchains} field. */
-        public VkPresentInfoKHR.Buffer pSwapchains(@NativeType("VkSwapchainKHR const *") LongBuffer value) { VkPresentInfoKHR.npSwapchains(address(), value); return this; }
+        public VkPresentInfoKHR.Buffer pSwapchains(@NativeType("const VkSwapchainKHR *") LongBuffer value) { VkPresentInfoKHR.npSwapchains(address(), value); return this; }
         /** Sets the address of the specified {@link IntBuffer} to the {@code pImageIndices} field. */
-        public VkPresentInfoKHR.Buffer pImageIndices(@NativeType("uint32_t const *") IntBuffer value) { VkPresentInfoKHR.npImageIndices(address(), value); return this; }
+        public VkPresentInfoKHR.Buffer pImageIndices(@NativeType("const uint32_t *") IntBuffer value) { VkPresentInfoKHR.npImageIndices(address(), value); return this; }
         /** Sets the address of the specified {@link IntBuffer} to the {@code pResults} field. */
         public VkPresentInfoKHR.Buffer pResults(@Nullable @NativeType("VkResult *") IntBuffer value) { VkPresentInfoKHR.npResults(address(), value); return this; }
 

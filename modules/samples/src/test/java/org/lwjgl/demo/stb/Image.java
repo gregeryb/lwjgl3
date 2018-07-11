@@ -17,6 +17,7 @@ import static org.lwjgl.demo.glfw.GLFWUtil.*;
 import static org.lwjgl.demo.util.IOUtil.*;
 import static org.lwjgl.glfw.Callbacks.*;
 import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL12.*;
 import static org.lwjgl.stb.STBImage.*;
 import static org.lwjgl.stb.STBImageResize.*;
@@ -326,8 +327,6 @@ public final class Image {
     }
 
     private void destroy() {
-        GL.setCapabilities(null);
-
         if (debugProc != null) {
             debugProc.free();
         }

@@ -15,7 +15,7 @@ import static org.lwjgl.system.Checks.*;
 import static org.lwjgl.system.MemoryStack.*;
 import static org.lwjgl.system.MemoryUtil.*;
 
-/** Native bindings to &lt;dlfcn.h&gt;. */
+/** Native bindings to <dlfcn.h>. */
 public class DynamicLinkLoader {
 
     /** The {@code mode} argument to {@link #dlopen} contains one of the following. */
@@ -102,7 +102,7 @@ public class DynamicLinkLoader {
      *             </ul>
      */
     @NativeType("void *")
-    public static long dlopen(@Nullable @NativeType("char const *") ByteBuffer path, int mode) {
+    public static long dlopen(@Nullable @NativeType("const char *") ByteBuffer path, int mode) {
         if (CHECKS) {
             checkNT1Safe(path);
         }
@@ -168,7 +168,7 @@ public class DynamicLinkLoader {
      *             </ul>
      */
     @NativeType("void *")
-    public static long dlopen(@Nullable @NativeType("char const *") CharSequence path, int mode) {
+    public static long dlopen(@Nullable @NativeType("const char *") CharSequence path, int mode) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
             ByteBuffer pathEncoded = stack.ASCIISafe(path);
@@ -193,7 +193,7 @@ public class DynamicLinkLoader {
      * Subsequent calls to {@code dlerror} in the same thread with no calls to {@link #dlopen}, {@link #dlsym}, or {@link #dlclose}, return {@code NULL}.</p>
      */
     @Nullable
-    @NativeType("char const *")
+    @NativeType("const char *")
     public static String dlerror() {
         long __result = ndlerror();
         return memASCIISafe(__result);
@@ -210,7 +210,7 @@ public class DynamicLinkLoader {
      * <p>The value of handle specifies what images this function searches for to locate the symbol specified by the symbol parameter. The following table
      * describes the possible values for the handle parameter:</p>
      * 
-     * <table class=striped>
+     * <table class=lwjgl>
      * <tr><th>Handle value</th><th>Search scope</th></tr>
      * <tr><td>{@code dlopen} handle</td><td>Image associated with the {@link #dlopen} handle.</td></tr>
      * <tr><td>{@link #RTLD_DEFAULT}</td><td>Every dependent library or {@link #RTLD_GLOBAL}–opened library in the current process, in the order they were loaded.</td></tr>
@@ -224,7 +224,7 @@ public class DynamicLinkLoader {
      * @param name   the null-terminated character string containing the C name of the symbol being sought
      */
     @NativeType("void *")
-    public static long dlsym(@NativeType("void *") long handle, @NativeType("char const *") ByteBuffer name) {
+    public static long dlsym(@NativeType("void *") long handle, @NativeType("const char *") ByteBuffer name) {
         if (CHECKS) {
             check(handle);
             checkNT1(name);
@@ -238,7 +238,7 @@ public class DynamicLinkLoader {
      * <p>The value of handle specifies what images this function searches for to locate the symbol specified by the symbol parameter. The following table
      * describes the possible values for the handle parameter:</p>
      * 
-     * <table class=striped>
+     * <table class=lwjgl>
      * <tr><th>Handle value</th><th>Search scope</th></tr>
      * <tr><td>{@code dlopen} handle</td><td>Image associated with the {@link #dlopen} handle.</td></tr>
      * <tr><td>{@link #RTLD_DEFAULT}</td><td>Every dependent library or {@link #RTLD_GLOBAL}–opened library in the current process, in the order they were loaded.</td></tr>
@@ -252,7 +252,7 @@ public class DynamicLinkLoader {
      * @param name   the null-terminated character string containing the C name of the symbol being sought
      */
     @NativeType("void *")
-    public static long dlsym(@NativeType("void *") long handle, @NativeType("char const *") CharSequence name) {
+    public static long dlsym(@NativeType("void *") long handle, @NativeType("const char *") CharSequence name) {
         if (CHECKS) {
             check(handle);
         }

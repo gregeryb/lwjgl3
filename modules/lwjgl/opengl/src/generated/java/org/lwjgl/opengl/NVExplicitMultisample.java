@@ -89,7 +89,7 @@ public class NVExplicitMultisample {
 
     public static native void glTexRenderbufferNV(@NativeType("GLenum") int target, @NativeType("GLuint") int renderbuffer);
 
-    /** Array version of: {@link #glGetMultisamplefvNV GetMultisamplefvNV} */
+    /** register Array version of: {@link #glGetMultisamplefvNV GetMultisamplefvNV} */
     public static void glGetMultisamplefvNV(@NativeType("GLenum") int pname, @NativeType("GLuint") int index, @NativeType("GLfloat *") float[] val) {
         long __functionAddress = GL.getICD().glGetMultisamplefvNV;
         if (CHECKS) {

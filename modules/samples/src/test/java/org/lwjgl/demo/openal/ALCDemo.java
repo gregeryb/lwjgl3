@@ -15,6 +15,7 @@ import java.util.*;
 import static org.lwjgl.demo.openal.OpenALInfo.*;
 import static org.lwjgl.demo.util.IOUtil.*;
 import static org.lwjgl.openal.AL10.*;
+import static org.lwjgl.openal.ALC10.*;
 import static org.lwjgl.openal.ALC11.*;
 import static org.lwjgl.openal.EXTThreadLocalContext.*;
 import static org.lwjgl.stb.STBVorbis.*;
@@ -94,22 +95,19 @@ public final class ALCDemo {
         alSourcei(source, AL_BUFFER, buffer);
         checkALError();
 
-        //play source
+        //lets loop the sound
+        alSourcei(source, AL_LOOPING, AL_TRUE);
+        checkALError();
+
+        //play source 0
         alSourcePlay(source);
         checkALError();
 
-        //wait
-        System.out.println("Waiting for sound to complete...");
-        while (true) {
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException ignored) {
-                break;
-            }
-            if (alGetSourcei(source, AL_SOURCE_STATE) == AL_STOPPED) {
-                break;
-            }
-            System.out.println(".");
+        //wait 5 secs
+        try {
+            System.out.println("Waiting 5 seconds for sound to complete");
+            Thread.sleep(5000);
+        } catch (InterruptedException ignored) {
         }
 
         //stop source 0
@@ -142,9 +140,11 @@ public final class ALCDemo {
 
         int channels = info.channels();
 
-        ShortBuffer pcm = BufferUtils.createShortBuffer(stb_vorbis_stream_length_in_samples(decoder) * channels);
+        int lengthSamples = stb_vorbis_stream_length_in_samples(decoder);
 
-        stb_vorbis_get_samples_short_interleaved(decoder, channels, pcm);
+        ShortBuffer pcm = BufferUtils.createShortBuffer(lengthSamples);
+
+        pcm.limit(stb_vorbis_get_samples_short_interleaved(decoder, channels, pcm) * channels);
         stb_vorbis_close(decoder);
 
         return pcm;

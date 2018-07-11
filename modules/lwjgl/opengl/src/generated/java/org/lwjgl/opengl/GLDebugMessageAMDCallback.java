@@ -16,15 +16,15 @@ import static org.lwjgl.system.MemoryUtil.*;
  * 
  * <h3>Type</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * void (*) (
  *     GLuint id,
  *     GLenum category,
  *     GLenum severity,
  *     GLsizei length,
- *     GLchar const *message,
+ *     const GLchar *message,
  *     void *userParam
- * )</code></pre>
+ * )</pre></code>
  */
 public abstract class GLDebugMessageAMDCallback extends Callback implements GLDebugMessageAMDCallbackI {
 

@@ -51,19 +51,18 @@ import static org.lwjgl.system.MemoryUtil.*;
  * since it will play nicer with system's memory, by re-using already allocated memory. Use one separate {@code ZSTD_CStream} per thread for parallel
  * execution.</p>
  * 
- * <p>Start a new compression by initializing {@code ZSTD_CStream} context. Use {@link #ZSTD_initCStream initCStream} to start a new compression operation.</p>
+ * <p>Start a new compression by initializing {@code ZSTD_CStream}. Use {@link #ZSTD_initCStream initCStream} to start a new compression operation. Use
+ * {@code ZSTD_initCStream_usingDict()} or {@code ZSTD_initCStream_usingCDict()} for a compression which requires a dictionary (experimental section).</p>
  * 
- * <p>Use {@link #ZSTD_compressStream compressStream} as many times as necessary to consume input stream. The function will automatically update both {@code pos} fields within
- * {@code input} and {@code output}. Note that the function may not consume the entire input, for example, because the output buffer is already full, in
- * which case {@code input.pos < input.size}. The caller must check if input has been entirely consumed. If not, the caller must make some room to receive
- * more compressed data, typically by emptying output buffer, or allocating a new output buffer, and then present again remaining input data.</p>
+ * <p>Use {@link #ZSTD_compressStream compressStream} repetitively to consume input stream. The function will automatically update both {@code pos} fields. Note that it may not
+ * consume the entire input, in which case {@code pos < size}, and it's up to the caller to present again remaining data.</p>
  * 
- * <p>At any moment, it's possible to flush whatever data might remain stuck within internal buffer, using {@link #ZSTD_flushStream flushStream}. {@code output->pos} will be
- * updated. Note that, if {@code output->size} is too small, a single invocation of {@code ZSTD_flushStream()} might not be enough (return code &gt; 0).
- * In which case, make some room to receive more compressed data, and call again {@code ZSTD_flushStream()}.</p>
+ * <p>At any moment, it's possible to flush whatever data remains within internal buffer, using {@link #ZSTD_flushStream flushStream}. {@code output->pos} will be updated. Note
+ * that some content might still be left within internal buffer if {@code output->size} is too small.</p>
  * 
  * <p>{@link #ZSTD_endStream endStream} instructs to finish a frame. It will perform a flush and write frame epilogue. The epilogue is required for decoders to consider a frame
- * completed. {@code flush()} operation is the same, and follows same rules as {@code ZSTD_flushStream()}.</p>
+ * completed. {@link #ZSTD_endStream endStream} may not be able to flush full data if {output->size} is too small. In which case, call again {@link #ZSTD_endStream endStream} to complete the
+ * flush.</p>
  * 
  * <h3>Streaming decompression - HowTo</h3>
  * 
@@ -83,7 +82,7 @@ public class Zstd {
     public static final int
         ZSTD_VERSION_MAJOR   = 1,
         ZSTD_VERSION_MINOR   = 3,
-        ZSTD_VERSION_RELEASE = 5;
+        ZSTD_VERSION_RELEASE = 4;
 
     /** Version number. */
     public static final int ZSTD_VERSION_NUMBER = (ZSTD_VERSION_MAJOR *100*100 + ZSTD_VERSION_MINOR *100 + ZSTD_VERSION_RELEASE);
@@ -117,7 +116,7 @@ public class Zstd {
     public static native long nZSTD_versionString();
 
     /** Returns the version string. */
-    @NativeType("char const *")
+    @NativeType("const char *")
     public static String ZSTD_versionString() {
         long __result = nZSTD_versionString();
         return memASCII(__result);
@@ -133,10 +132,14 @@ public class Zstd {
      * 
      * <p>Hint: compression runs faster if {@code dstCapacity} &ge; {@link #ZSTD_compressBound compressBound}{@code (srcSize)}</p>
      *
+     * @param dst              
+     * @param src              
+     * @param compressionLevel 
+     *
      * @return compressed size written into {@code dst} (&le; {@code dstCapacity}), or an error code if it fails (which can be tested using {@link #ZSTD_isError isError}).
      */
     @NativeType("size_t")
-    public static long ZSTD_compress(@NativeType("void *") ByteBuffer dst, @NativeType("void const *") ByteBuffer src, int compressionLevel) {
+    public static long ZSTD_compress(@NativeType("void *") ByteBuffer dst, @NativeType("const void *") ByteBuffer src, int compressionLevel) {
         return nZSTD_compress(memAddress(dst), dst.remaining(), memAddress(src), src.remaining(), compressionLevel);
     }
 
@@ -152,11 +155,14 @@ public class Zstd {
     public static native long nZSTD_decompress(long dst, long dstCapacity, long src, long compressedSize);
 
     /**
+     * @param dst 
+     * @param src 
+     *
      * @return the number of bytes decompressed into {@code dst} (&le; {@code dstCapacity}), or an {@code errorCode} if it fails (which can be tested using
      *         {@link #ZSTD_isError isError}).
      */
     @NativeType("size_t")
-    public static long ZSTD_decompress(@NativeType("void *") ByteBuffer dst, @NativeType("void const *") ByteBuffer src) {
+    public static long ZSTD_decompress(@NativeType("void *") ByteBuffer dst, @NativeType("const void *") ByteBuffer src) {
         return nZSTD_decompress(memAddress(dst), dst.remaining(), memAddress(src), src.remaining());
     }
 
@@ -176,10 +182,8 @@ public class Zstd {
      * <li>a 0 return value means the frame is valid but "empty"</li>
      * <li>decompressed size is an optional field, it may not be present, typically in streaming mode. When {@code return==ZSTD_CONTENTSIZE_UNKNOWN}, data to
      * decompress could be any size. In which case, it's necessary to use streaming mode to decompress data. Optionally, application can rely on some
-     * implicit limit, as {@link #ZSTD_decompress decompress} only needs an upper bound of decompressed size. (For example, data could be necessarily cut into blocks &le; 16
-     * KB).</li>
-     * <li>decompressed size is always present when compression is completed using single-pass functions, such as {@link #ZSTD_compress compress}, {@link #ZSTD_compressCCtx compressCCtx},
-     * {@link #ZSTD_compress_usingDict compress_usingDict} or {@link #ZSTD_compress_usingCDict compress_usingCDict}.</li>
+     * implicit limit, as {@link #ZSTD_decompress decompress} only needs an upper bound of decompressed size. (For example, data could be necessarily cut into blocks <= 16 KB).</li>
+     * <li>decompressed size is always present when compression is done with {@link #ZSTD_compress compress}</li>
      * <li>decompressed size can be very large (64-bits value), potentially larger than what local system can handle as a single memory segment. In which
      * case, it's necessary to use streaming mode to decompress data.</li>
      * <li>If source is untrusted, decompressed size could be wrong or intentionally modified. Always ensure return value fits within application's authorized
@@ -188,7 +192,7 @@ public class Zstd {
      *
      * @param src should point to the start of a ZSTD encoded frame
      *
-     * @return decompressed size of {@code src} frame content, if known
+     * @return decompressed size of the frame in {@code src}, if known
      *         
      *         <ul>
      *         <li>{@link #ZSTD_CONTENTSIZE_UNKNOWN CONTENTSIZE_UNKNOWN} if the size cannot be determined</li>
@@ -196,13 +200,17 @@ public class Zstd {
      *         </ul>
      */
     @NativeType("unsigned long long")
-    public static long ZSTD_getFrameContentSize(@NativeType("void const *") ByteBuffer src) {
+    public static long ZSTD_getFrameContentSize(@NativeType("const void *") ByteBuffer src) {
         return nZSTD_getFrameContentSize(memAddress(src), src.remaining());
     }
 
     // --- [ ZSTD_compressBound ] ---
 
-    /** Returns the maximum compressed size in worst case single-pass scenario. */
+    /**
+     * Returns the maximum compressed size in worst case single-pass scenario.
+     *
+     * @param srcSize 
+     */
     @NativeType("size_t")
     public static native long ZSTD_compressBound(@NativeType("size_t") long srcSize);
 
@@ -211,7 +219,11 @@ public class Zstd {
     /** Unsafe version of: {@link #ZSTD_isError isError} */
     public static native int nZSTD_isError(long code);
 
-    /** Tells if a {@code size_t} function result is an error code. */
+    /**
+     * Tells if a {@code size_t} function result is an error code.
+     *
+     * @param code 
+     */
     @NativeType("unsigned int")
     public static boolean ZSTD_isError(@NativeType("size_t") long code) {
         return nZSTD_isError(code) != 0;
@@ -222,8 +234,12 @@ public class Zstd {
     /** Unsafe version of: {@link #ZSTD_getErrorName getErrorName} */
     public static native long nZSTD_getErrorName(long code);
 
-    /** Provides readable string from an error code. */
-    @NativeType("char const *")
+    /**
+     * Provides readable string from an error code.
+     *
+     * @param code 
+     */
+    @NativeType("const char *")
     public static String ZSTD_getErrorName(@NativeType("size_t") long code) {
         long __result = nZSTD_getErrorName(code);
         return memASCII(__result);
@@ -250,7 +266,11 @@ public class Zstd {
     /** Unsafe version of: {@link #ZSTD_freeCCtx freeCCtx} */
     public static native long nZSTD_freeCCtx(long cctx);
 
-    /** Frees memory allocated by {@link #ZSTD_createCCtx createCCtx}. */
+    /**
+     * Frees memory allocated by {@link #ZSTD_createCCtx createCCtx}.
+     *
+     * @param cctx 
+     */
     @NativeType("size_t")
     public static long ZSTD_freeCCtx(@NativeType("ZSTD_CCtx *") long cctx) {
         if (CHECKS) {
@@ -264,9 +284,16 @@ public class Zstd {
     /** Unsafe version of: {@link #ZSTD_compressCCtx compressCCtx} */
     public static native long nZSTD_compressCCtx(long ctx, long dst, long dstCapacity, long src, long srcSize, int compressionLevel);
 
-    /** Same as {@link #ZSTD_compress compress}, requires an allocated {@code ZSTD_CCtx} (see {@link #ZSTD_createCCtx createCCtx}). */
+    /**
+     * Same as {@link #ZSTD_compress compress}, requires an allocated {@code ZSTD_CCtx} (see {@link #ZSTD_createCCtx createCCtx}).
+     *
+     * @param ctx              
+     * @param dst              
+     * @param src              
+     * @param compressionLevel 
+     */
     @NativeType("size_t")
-    public static long ZSTD_compressCCtx(@NativeType("ZSTD_CCtx *") long ctx, @NativeType("void *") ByteBuffer dst, @NativeType("void const *") ByteBuffer src, int compressionLevel) {
+    public static long ZSTD_compressCCtx(@NativeType("ZSTD_CCtx *") long ctx, @NativeType("void *") ByteBuffer dst, @NativeType("const void *") ByteBuffer src, int compressionLevel) {
         if (CHECKS) {
             check(ctx);
         }
@@ -289,7 +316,11 @@ public class Zstd {
     /** Unsafe version of: {@link #ZSTD_freeDCtx freeDCtx} */
     public static native long nZSTD_freeDCtx(long dctx);
 
-    /** Frees memory allocated by {@link #ZSTD_createDCtx createDCtx}. */
+    /**
+     * Frees memory allocated by {@link #ZSTD_createDCtx createDCtx}.
+     *
+     * @param dctx 
+     */
     @NativeType("size_t")
     public static long ZSTD_freeDCtx(@NativeType("ZSTD_DCtx *") long dctx) {
         if (CHECKS) {
@@ -303,9 +334,15 @@ public class Zstd {
     /** Unsafe version of: {@link #ZSTD_decompressDCtx decompressDCtx} */
     public static native long nZSTD_decompressDCtx(long ctx, long dst, long dstCapacity, long src, long srcSize);
 
-    /** Same as {@link #ZSTD_decompress decompress}, requires an allocated {@code ZSTD_DCtx} (see {@link #ZSTD_createDCtx createDCtx}). */
+    /**
+     * Same as {@link #ZSTD_decompress decompress}, requires an allocated {@code ZSTD_DCtx} (see {@link #ZSTD_createDCtx createDCtx}).
+     *
+     * @param ctx 
+     * @param dst 
+     * @param src 
+     */
     @NativeType("size_t")
-    public static long ZSTD_decompressDCtx(@NativeType("ZSTD_DCtx *") long ctx, @NativeType("void *") ByteBuffer dst, @NativeType("void const *") ByteBuffer src) {
+    public static long ZSTD_decompressDCtx(@NativeType("ZSTD_DCtx *") long ctx, @NativeType("void *") ByteBuffer dst, @NativeType("const void *") ByteBuffer src) {
         if (CHECKS) {
             check(ctx);
         }
@@ -323,9 +360,15 @@ public class Zstd {
      * <p>This function loads the dictionary, resulting in significant startup delay.</p>
      * 
      * <p>When {@code dict == NULL || dictSize < 8} no dictionary is used.</p>
+     *
+     * @param ctx              
+     * @param dst              
+     * @param src              
+     * @param dict             
+     * @param compressionLevel 
      */
     @NativeType("size_t")
-    public static long ZSTD_compress_usingDict(@NativeType("ZSTD_CCtx *") long ctx, @NativeType("void *") ByteBuffer dst, @NativeType("void const *") ByteBuffer src, @Nullable @NativeType("void const *") ByteBuffer dict, int compressionLevel) {
+    public static long ZSTD_compress_usingDict(@NativeType("ZSTD_CCtx *") long ctx, @NativeType("void *") ByteBuffer dst, @NativeType("const void *") ByteBuffer src, @Nullable @NativeType("const void *") ByteBuffer dict, int compressionLevel) {
         if (CHECKS) {
             check(ctx);
         }
@@ -343,9 +386,14 @@ public class Zstd {
      * <p>This function loads the dictionary, resulting in significant startup delay.</p>
      * 
      * <p>When {@code dict == NULL || dictSize < 8} no dictionary is used.</p>
+     *
+     * @param dctx 
+     * @param dst  
+     * @param src  
+     * @param dict 
      */
     @NativeType("size_t")
-    public static long ZSTD_decompress_usingDict(@NativeType("ZSTD_DCtx *") long dctx, @NativeType("void *") ByteBuffer dst, @NativeType("void const *") ByteBuffer src, @Nullable @NativeType("void const *") ByteBuffer dict) {
+    public static long ZSTD_decompress_usingDict(@NativeType("ZSTD_DCtx *") long dctx, @NativeType("void *") ByteBuffer dst, @NativeType("const void *") ByteBuffer src, @Nullable @NativeType("const void *") ByteBuffer dict) {
         if (CHECKS) {
             check(dctx);
         }
@@ -364,9 +412,12 @@ public class Zstd {
      * can be created once and shared by multiple threads concurrently, since its usage is read-only.</p>
      * 
      * <p>{@code dictBuffer} can be released after {@code ZSTD_CDict} creation, since its content is copied within CDict.</p>
+     *
+     * @param dictBuffer       
+     * @param compressionLevel 
      */
     @NativeType("ZSTD_CDict *")
-    public static long ZSTD_createCDict(@NativeType("void const *") ByteBuffer dictBuffer, int compressionLevel) {
+    public static long ZSTD_createCDict(@NativeType("const void *") ByteBuffer dictBuffer, int compressionLevel) {
         return nZSTD_createCDict(memAddress(dictBuffer), dictBuffer.remaining(), compressionLevel);
     }
 
@@ -375,7 +426,11 @@ public class Zstd {
     /** Unsafe version of: {@link #ZSTD_freeCDict freeCDict} */
     public static native long nZSTD_freeCDict(long CDict);
 
-    /** Frees memory allocated by {@link #ZSTD_createCDict createCDict}. */
+    /**
+     * Frees memory allocated by {@link #ZSTD_createCDict createCDict}.
+     *
+     * @param CDict 
+     */
     @NativeType("size_t")
     public static long ZSTD_freeCDict(@NativeType("ZSTD_CDict *") long CDict) {
         if (CHECKS) {
@@ -394,9 +449,14 @@ public class Zstd {
      * 
      * <p>Faster startup than {@link #ZSTD_compress_usingDict compress_usingDict}, recommended when same dictionary is used multiple times. Note that compression level is decided during
      * dictionary creation. Frame parameters are hardcoded ({@code dictID=yes, contentSize=yes, checksum=no})</p>
+     *
+     * @param cctx  
+     * @param dst   
+     * @param src   
+     * @param cdict 
      */
     @NativeType("size_t")
-    public static long ZSTD_compress_usingCDict(@NativeType("ZSTD_CCtx *") long cctx, @NativeType("void *") ByteBuffer dst, @NativeType("void const *") ByteBuffer src, @NativeType("ZSTD_CDict const *") long cdict) {
+    public static long ZSTD_compress_usingCDict(@NativeType("ZSTD_CCtx *") long cctx, @NativeType("void *") ByteBuffer dst, @NativeType("const void *") ByteBuffer src, @NativeType("const ZSTD_CDict *") long cdict) {
         if (CHECKS) {
             check(cctx);
             check(cdict);
@@ -413,9 +473,11 @@ public class Zstd {
      * Creates a digested dictionary, ready to start decompression operation without startup delay.
      * 
      * <p>{@code dictBuffer} can be released after {@code DDict} creation, as its content is copied inside {@code DDict}.</p>
+     *
+     * @param dictBuffer 
      */
     @NativeType("ZSTD_DDict *")
-    public static long ZSTD_createDDict(@NativeType("void const *") ByteBuffer dictBuffer) {
+    public static long ZSTD_createDDict(@NativeType("const void *") ByteBuffer dictBuffer) {
         return nZSTD_createDDict(memAddress(dictBuffer), dictBuffer.remaining());
     }
 
@@ -424,7 +486,11 @@ public class Zstd {
     /** Unsafe version of: {@link #ZSTD_freeDDict freeDDict} */
     public static native long nZSTD_freeDDict(long ddict);
 
-    /** Frees memory allocated with {@link #ZSTD_createDDict createDDict}. */
+    /**
+     * Frees memory allocated with {@link #ZSTD_createDDict createDDict}.
+     *
+     * @param ddict 
+     */
     @NativeType("size_t")
     public static long ZSTD_freeDDict(@NativeType("ZSTD_DDict *") long ddict) {
         if (CHECKS) {
@@ -442,9 +508,14 @@ public class Zstd {
      * Decompression using a digested Dictionary.
      * 
      * <p>Faster startup than {@link #ZSTD_decompress_usingDict decompress_usingDict}, recommended when same dictionary is used multiple times.</p>
+     *
+     * @param dctx  
+     * @param dst   
+     * @param src   
+     * @param ddict 
      */
     @NativeType("size_t")
-    public static long ZSTD_decompress_usingDDict(@NativeType("ZSTD_DCtx *") long dctx, @NativeType("void *") ByteBuffer dst, @NativeType("void const *") ByteBuffer src, @NativeType("ZSTD_DDict const *") long ddict) {
+    public static long ZSTD_decompress_usingDDict(@NativeType("ZSTD_DCtx *") long dctx, @NativeType("void *") ByteBuffer dst, @NativeType("const void *") ByteBuffer src, @NativeType("const ZSTD_DDict *") long ddict) {
         if (CHECKS) {
             check(dctx);
             check(ddict);
@@ -462,7 +533,11 @@ public class Zstd {
     /** Unsafe version of: {@link #ZSTD_freeCStream freeCStream} */
     public static native long nZSTD_freeCStream(long zcs);
 
-    /** Frees memory allocated by {@link #ZSTD_createCStream createCStream}. */
+    /**
+     * Frees memory allocated by {@link #ZSTD_createCStream createCStream}.
+     *
+     * @param zcs 
+     */
     @NativeType("size_t")
     public static long ZSTD_freeCStream(@NativeType("ZSTD_CStream *") long zcs) {
         if (CHECKS) {
@@ -489,6 +564,10 @@ public class Zstd {
     public static native long nZSTD_compressStream(long zcs, long output, long input);
 
     /**
+     * @param zcs    
+     * @param output 
+     * @param input  
+     *
      * @return a size hint, preferred {@code nb} of bytes to use as input for next function call or an error code, which can be tested using {@link #ZSTD_isError isError}.
      *         
      *         <p>Notes:</p>
@@ -513,7 +592,12 @@ public class Zstd {
     /** Unsafe version of: {@link #ZSTD_flushStream flushStream} */
     public static native long nZSTD_flushStream(long zcs, long output);
 
-    /** @return {@code nb} of bytes still present within internal buffer (0 if it's empty) or an error code, which can be tested using {@link #ZSTD_isError isError} */
+    /**
+     * @param zcs    
+     * @param output 
+     *
+     * @return {@code nb} of bytes still present within internal buffer (0 if it's empty) or an error code, which can be tested using {@link #ZSTD_isError isError}
+     */
     @NativeType("size_t")
     public static long ZSTD_flushStream(@NativeType("ZSTD_CStream *") long zcs, @NativeType("ZSTD_outBuffer *") ZSTDOutBuffer output) {
         if (CHECKS) {
@@ -529,6 +613,9 @@ public class Zstd {
     public static native long nZSTD_endStream(long zcs, long output);
 
     /**
+     * @param zcs    
+     * @param output 
+     *
      * @return 0 if frame fully completed and fully flushed, or &gt; 0 if some data is still present within internal buffer (value is minimum size estimation for
      *         remaining data to flush, but it could be more) or an error code, which can be tested using {@link #ZSTD_isError isError}
      */
@@ -563,7 +650,11 @@ public class Zstd {
     /** Unsafe version of: {@link #ZSTD_freeDStream freeDStream} */
     public static native long nZSTD_freeDStream(long zds);
 
-    /** Frees memory allocated by {@link #ZSTD_createDStream createDStream}. */
+    /**
+     * Frees memory allocated by {@link #ZSTD_createDStream createDStream}.
+     *
+     * @param zds 
+     */
     @NativeType("size_t")
     public static long ZSTD_freeDStream(@NativeType("ZSTD_DStream *") long zds) {
         if (CHECKS) {
@@ -577,7 +668,11 @@ public class Zstd {
     /** Unsafe version of: {@link #ZSTD_initDStream initDStream} */
     public static native long nZSTD_initDStream(long zds);
 
-    /** @return recommended first input size */
+    /**
+     * @param zds 
+     *
+     * @return recommended first input size
+     */
     @NativeType("size_t")
     public static long ZSTD_initDStream(@NativeType("ZSTD_DStream *") long zds) {
         if (CHECKS) {
@@ -592,6 +687,10 @@ public class Zstd {
     public static native long nZSTD_decompressStream(long zds, long output, long input);
 
     /**
+     * @param zds    
+     * @param output 
+     * @param input  
+     *
      * @return 0 when a frame is completely decoded and fully flushed, an error code, which can be tested using {@link #ZSTD_isError isError}, any other value &gt; 0, which means there
      *         is still some decoding to do to complete current frame. The return value is a suggested next input size (a hint to improve latency) that will never
      *         load more than the current frame.

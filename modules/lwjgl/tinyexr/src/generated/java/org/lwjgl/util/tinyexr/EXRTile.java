@@ -27,7 +27,7 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct EXRTile {
  *     int offset_x;
  *     int offset_y;
@@ -36,14 +36,13 @@ import static org.lwjgl.system.MemoryStack.*;
  *     int width;
  *     int height;
  *     unsigned char ** images;
- * }</code></pre>
+ * }</pre></code>
  */
 public class EXRTile extends Struct implements NativeResource {
 
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */

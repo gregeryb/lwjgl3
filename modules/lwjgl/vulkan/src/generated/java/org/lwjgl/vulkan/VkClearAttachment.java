@@ -32,8 +32,6 @@ import static org.lwjgl.system.MemoryStack.*;
  * <li>If {@code aspectMask} includes {@link VK10#VK_IMAGE_ASPECT_COLOR_BIT IMAGE_ASPECT_COLOR_BIT}, it <b>must</b> not include {@link VK10#VK_IMAGE_ASPECT_DEPTH_BIT IMAGE_ASPECT_DEPTH_BIT} or {@link VK10#VK_IMAGE_ASPECT_STENCIL_BIT IMAGE_ASPECT_STENCIL_BIT}</li>
  * <li>{@code aspectMask} <b>must</b> not include {@link VK10#VK_IMAGE_ASPECT_METADATA_BIT IMAGE_ASPECT_METADATA_BIT}</li>
  * <li>{@code clearValue} <b>must</b> be a valid {@link VkClearValue} union</li>
- * <li>If {@code commandBuffer} is an unprotected command buffer, then the attachment to be cleared <b>must</b> not be a protected image.</li>
- * <li>If {@code commandBuffer} is a protected command buffer, then the attachment to be cleared <b>must</b> not be an unprotected image.</li>
  * </ul>
  * 
  * <h5>Valid Usage (Implicit)</h5>
@@ -57,19 +55,18 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct VkClearAttachment {
  *     VkImageAspectFlags aspectMask;
  *     uint32_t colorAttachment;
  *     {@link VkClearValue VkClearValue} clearValue;
- * }</code></pre>
+ * }</pre></code>
  */
 public class VkClearAttachment extends Struct implements NativeResource {
 
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */
@@ -118,8 +115,6 @@ public class VkClearAttachment extends Struct implements NativeResource {
     public int colorAttachment() { return ncolorAttachment(address()); }
     /** Returns a {@link VkClearValue} view of the {@code clearValue} field. */
     public VkClearValue clearValue() { return nclearValue(address()); }
-    /** Passes the {@code clearValue} field to the specified {@link java.util.function.Consumer Consumer}. */
-    public VkClearAttachment clearValue(java.util.function.Consumer<VkClearValue> consumer) { consumer.accept(clearValue()); return this; }
 
     /** Sets the specified value to the {@code aspectMask} field. */
     public VkClearAttachment aspectMask(@NativeType("VkImageAspectFlags") int value) { naspectMask(address(), value); return this; }
@@ -362,8 +357,6 @@ public class VkClearAttachment extends Struct implements NativeResource {
         public int colorAttachment() { return VkClearAttachment.ncolorAttachment(address()); }
         /** Returns a {@link VkClearValue} view of the {@code clearValue} field. */
         public VkClearValue clearValue() { return VkClearAttachment.nclearValue(address()); }
-        /** Passes the {@code clearValue} field to the specified {@link java.util.function.Consumer Consumer}. */
-        public VkClearAttachment.Buffer clearValue(java.util.function.Consumer<VkClearValue> consumer) { consumer.accept(clearValue()); return this; }
 
         /** Sets the specified value to the {@code aspectMask} field. */
         public VkClearAttachment.Buffer aspectMask(@NativeType("VkImageAspectFlags") int value) { VkClearAttachment.naspectMask(address(), value); return this; }

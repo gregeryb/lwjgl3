@@ -35,8 +35,7 @@ import java.util.function.*
 enum class Module(
     val key: String,
     val packageName: String,
-    internal val callingConvention: CallingConvention = CallingConvention.DEFAULT,
-    internal val arrayOverloads: Boolean = true
+    val arrayOverloads: Boolean = true
 ) {
     CORE("core", "org.lwjgl.system"),
     CORE_DYNCALL("core.dyncall", "org.lwjgl.system.dyncall"),
@@ -44,25 +43,25 @@ enum class Module(
     CORE_LIBC("core.libc", "org.lwjgl.system.libc"),
     CORE_LINUX("core.linux", "org.lwjgl.system.linux"),
     CORE_MACOS("core.macos", "org.lwjgl.system.macosx"),
-    CORE_WINDOWS("core.windows", "org.lwjgl.system.windows", CallingConvention.STDCALL),
+    CORE_WINDOWS("core.windows", "org.lwjgl.system.windows"),
 
     ASSIMP("binding.assimp", "org.lwjgl.assimp"),
     BGFX("binding.bgfx", "org.lwjgl.bgfx"),
-    EGL("binding.egl", "org.lwjgl.egl", CallingConvention.STDCALL),
+    EGL("binding.egl", "org.lwjgl.egl"),
     GLFW("binding.glfw", "org.lwjgl.glfw"),
-    JAWT("binding.jawt", "org.lwjgl.system.jawt", CallingConvention.STDCALL),
+    JAWT("binding.jawt", "org.lwjgl.system.jawt"),
     JEMALLOC("binding.jemalloc", "org.lwjgl.system.jemalloc"),
     LMDB("binding.lmdb", "org.lwjgl.util.lmdb"),
     LZ4("binding.lz4", "org.lwjgl.util.lz4", arrayOverloads = false),
     NANOVG("binding.nanovg", "org.lwjgl.nanovg"),
     NFD("binding.nfd", "org.lwjgl.util.nfd"),
     NUKLEAR("binding.nuklear", "org.lwjgl.nuklear"),
-    ODBC("binding.odbc", "org.lwjgl.odbc", CallingConvention.STDCALL, arrayOverloads = false),
+    ODBC("binding.odbc", "org.lwjgl.odbc", arrayOverloads = false),
     OPENAL("binding.openal", "org.lwjgl.openal"),
-    OPENCL("binding.opencl", "org.lwjgl.opencl", CallingConvention.STDCALL),
-    OPENGL("binding.opengl", "org.lwjgl.opengl", CallingConvention.STDCALL),
-    OPENGLES("binding.opengles", "org.lwjgl.opengles", CallingConvention.STDCALL),
-    OPENVR("binding.openvr", "org.lwjgl.openvr", CallingConvention.STDCALL, arrayOverloads = false),
+    OPENCL("binding.opencl", "org.lwjgl.opencl"),
+    OPENGL("binding.opengl", "org.lwjgl.opengl"),
+    OPENGLES("binding.opengles", "org.lwjgl.opengles"),
+    OPENVR("binding.openvr", "org.lwjgl.openvr", arrayOverloads = false),
     OVR("binding.ovr", "org.lwjgl.ovr"),
     PAR("binding.par", "org.lwjgl.util.par"),
     REMOTERY("binding.remotery", "org.lwjgl.util.remotery", arrayOverloads = false),
@@ -72,18 +71,17 @@ enum class Module(
     TINYEXR("binding.tinyexr", "org.lwjgl.util.tinyexr", arrayOverloads = false),
     TINYFD("binding.tinyfd", "org.lwjgl.util.tinyfd"),
     TOOTLE("binding.tootle", "org.lwjgl.util.tootle", arrayOverloads = false),
-    VMA("binding.vma", "org.lwjgl.util.vma", arrayOverloads = false),
-    VULKAN("binding.vulkan", "org.lwjgl.vulkan", CallingConvention.STDCALL),
+    VULKAN("binding.vulkan", "org.lwjgl.vulkan"),
     XXHASH("binding.xxhash", "org.lwjgl.util.xxhash"),
     YOGA("binding.yoga", "org.lwjgl.util.yoga", arrayOverloads = false),
     ZSTD("binding.zstd", "org.lwjgl.util.zstd", arrayOverloads = false);
 
     companion object {
-        internal val CHECKS = !System.getProperty("binding.DISABLE_CHECKS", "false")!!.toBoolean()
+        internal val CHECKS = !System.getProperty("binding.DISABLE_CHECKS", "false").toBoolean()
     }
 
     val enabled
-        get() = key.startsWith("core") || System.getProperty(key, "false")!!.toBoolean()
+        get() = key.startsWith("core") || System.getProperty(key, "false").toBoolean()
 
     internal val java
         get() = name.let {
@@ -102,11 +100,6 @@ enum class Module(
                 it.toLowerCase()
             }
         }
-
-    @Suppress("LeakingThis")
-    private val CALLBACK_RECEIVER = ANONYMOUS.nativeClass(this)
-
-    fun callback(init: NativeClass.() -> CallbackType) = CALLBACK_RECEIVER.init()
 }
 
 fun String.dependsOn(vararg modules: Module): String? = if (modules.any { it.enabled }) this else null
@@ -180,11 +173,6 @@ fun main(args: Array<String>) {
                 submit { generateRegistered("callback", Generator.callbacks) }
                 submit { generateRegistered("custom class", Generator.customClasses) }
 
-                Generator.callbacks.forEach {
-                    if (it.module.enabled)
-                        JNI.register(it)
-                }
-
                 submit { generateSimple(JNI) }
 
                 latch.await()
@@ -230,15 +218,14 @@ class Generator(private val moduleRoot: String) {
             return customClass
         }
 
-        fun registerLibraryInit(module: Module, className: String, libraryName: String, setupAllocator: Boolean = false, cpp: Boolean = false) {
+        fun registerLibraryInit(module: Module, className: String, libraryName: String, setupAllocator: Boolean = false) {
             if (!module.enabled)
                 return
 
             Generator.register(object : GeneratorTargetNative(module, className) {
                 init {
-                    this.access = Access.INTERNAL
-                    this.cpp = cpp
-                    this.documentation = "Initializes the $libraryName shared library."
+                    access = Access.INTERNAL
+                    documentation = "Initializes the $libraryName shared library."
                     javaImport("org.lwjgl.system.*")
                     if (setupAllocator)
                         javaImport("static org.lwjgl.system.MemoryUtil.*")
@@ -255,7 +242,7 @@ class Generator(private val moduleRoot: String) {
         String libName = Platform.mapLibraryNameBundled("lwjgl_$libraryName");
         Library.loadSystem(System::load, System::loadLibrary, $className.class, libName);${if (setupAllocator) """
 
-        MemoryAllocator allocator = getAllocator(Configuration.DEBUG_MEMORY_ALLOCATOR_INTERNAL.get(true));
+        MemoryAllocator allocator = getAllocator();
         setupMalloc(
             allocator.getMalloc(),
             allocator.getCalloc(),
@@ -334,7 +321,7 @@ class Generator(private val moduleRoot: String) {
 
     internal fun generateModule(module: Module) {
         val packageKotlin = module.packageKotlin
-        val pathKotlin = "$moduleRoot/${module.java}/src/templates/kotlin/${packageKotlin.replace('.', '/')}"
+        val pathKotlin = "$moduleRoot/${module.java}/src/main/kotlin/${packageKotlin.replace('.', '/')}"
 
         val moduleLastModified = Paths.get(pathKotlin).lastModified(maxDepth = 1)
         moduleLastModifiedMap[module] = moduleLastModified
@@ -433,7 +420,7 @@ class Generator(private val moduleRoot: String) {
     internal fun generateSimple(target: GeneratorTarget) {
         val modulePath = "$moduleRoot/${target.module.java}"
         val packageKotlin = target.module.packageKotlin
-        val pathKotlin = "$modulePath/src/templates/kotlin/${packageKotlin.replace('.', '/')}"
+        val pathKotlin = "$modulePath/src/main/kotlin/${packageKotlin.replace('.', '/')}"
 
         val outputJava = Paths.get("$modulePath/src/generated/java/${target.packageName.replace('.', '/')}/${target.className}.java")
 

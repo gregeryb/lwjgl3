@@ -33,7 +33,7 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct aiMemoryInfo {
  *     unsigned int textures;
  *     unsigned int materials;
@@ -43,7 +43,7 @@ import static org.lwjgl.system.MemoryStack.*;
  *     unsigned int cameras;
  *     unsigned int lights;
  *     unsigned int total;
- * }</code></pre>
+ * }</pre></code>
  */
 @NativeType("struct aiMemoryInfo")
 public class AIMemoryInfo extends Struct implements NativeResource {
@@ -51,7 +51,6 @@ public class AIMemoryInfo extends Struct implements NativeResource {
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */

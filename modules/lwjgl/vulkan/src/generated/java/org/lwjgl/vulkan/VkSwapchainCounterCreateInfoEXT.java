@@ -28,6 +28,7 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <ul>
  * <li>{@code sType} <b>must</b> be {@link EXTDisplayControl#VK_STRUCTURE_TYPE_SWAPCHAIN_COUNTER_CREATE_INFO_EXT STRUCTURE_TYPE_SWAPCHAIN_COUNTER_CREATE_INFO_EXT}</li>
+ * <li>{@code pNext} <b>must</b> be {@code NULL}</li>
  * <li>{@code surfaceCounters} <b>must</b> be a valid combination of {@code VkSurfaceCounterFlagBitsEXT} values</li>
  * </ul>
  * 
@@ -41,19 +42,18 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct VkSwapchainCounterCreateInfoEXT {
  *     VkStructureType sType;
- *     void const * pNext;
+ *     const void * pNext;
  *     VkSurfaceCounterFlagsEXT surfaceCounters;
- * }</code></pre>
+ * }</pre></code>
  */
 public class VkSwapchainCounterCreateInfoEXT extends Struct implements NativeResource {
 
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */
@@ -98,7 +98,7 @@ public class VkSwapchainCounterCreateInfoEXT extends Struct implements NativeRes
     @NativeType("VkStructureType")
     public int sType() { return nsType(address()); }
     /** Returns the value of the {@code pNext} field. */
-    @NativeType("void const *")
+    @NativeType("const void *")
     public long pNext() { return npNext(address()); }
     /** Returns the value of the {@code surfaceCounters} field. */
     @NativeType("VkSurfaceCounterFlagsEXT")
@@ -107,7 +107,7 @@ public class VkSwapchainCounterCreateInfoEXT extends Struct implements NativeRes
     /** Sets the specified value to the {@code sType} field. */
     public VkSwapchainCounterCreateInfoEXT sType(@NativeType("VkStructureType") int value) { nsType(address(), value); return this; }
     /** Sets the specified value to the {@code pNext} field. */
-    public VkSwapchainCounterCreateInfoEXT pNext(@NativeType("void const *") long value) { npNext(address(), value); return this; }
+    public VkSwapchainCounterCreateInfoEXT pNext(@NativeType("const void *") long value) { npNext(address(), value); return this; }
     /** Sets the specified value to the {@code surfaceCounters} field. */
     public VkSwapchainCounterCreateInfoEXT surfaceCounters(@NativeType("VkSurfaceCounterFlagsEXT") int value) { nsurfaceCounters(address(), value); return this; }
 
@@ -341,7 +341,7 @@ public class VkSwapchainCounterCreateInfoEXT extends Struct implements NativeRes
         @NativeType("VkStructureType")
         public int sType() { return VkSwapchainCounterCreateInfoEXT.nsType(address()); }
         /** Returns the value of the {@code pNext} field. */
-        @NativeType("void const *")
+        @NativeType("const void *")
         public long pNext() { return VkSwapchainCounterCreateInfoEXT.npNext(address()); }
         /** Returns the value of the {@code surfaceCounters} field. */
         @NativeType("VkSurfaceCounterFlagsEXT")
@@ -350,7 +350,7 @@ public class VkSwapchainCounterCreateInfoEXT extends Struct implements NativeRes
         /** Sets the specified value to the {@code sType} field. */
         public VkSwapchainCounterCreateInfoEXT.Buffer sType(@NativeType("VkStructureType") int value) { VkSwapchainCounterCreateInfoEXT.nsType(address(), value); return this; }
         /** Sets the specified value to the {@code pNext} field. */
-        public VkSwapchainCounterCreateInfoEXT.Buffer pNext(@NativeType("void const *") long value) { VkSwapchainCounterCreateInfoEXT.npNext(address(), value); return this; }
+        public VkSwapchainCounterCreateInfoEXT.Buffer pNext(@NativeType("const void *") long value) { VkSwapchainCounterCreateInfoEXT.npNext(address(), value); return this; }
         /** Sets the specified value to the {@code surfaceCounters} field. */
         public VkSwapchainCounterCreateInfoEXT.Buffer surfaceCounters(@NativeType("VkSurfaceCounterFlagsEXT") int value) { VkSwapchainCounterCreateInfoEXT.nsurfaceCounters(address(), value); return this; }
 

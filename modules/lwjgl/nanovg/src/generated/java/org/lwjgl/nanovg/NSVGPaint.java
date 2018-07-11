@@ -16,14 +16,14 @@ import static org.lwjgl.system.MemoryUtil.*;
 /**
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct NSVGpaint {
  *     char type;
  *     union {
  *         unsigned int color;
  *         {@link NSVGGradient NSVGgradient} * gradient;
  *     };
- * }</code></pre>
+ * }</pre></code>
  */
 @NativeType("struct NSVGpaint")
 public class NSVGPaint extends Struct {
@@ -31,7 +31,6 @@ public class NSVGPaint extends Struct {
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */

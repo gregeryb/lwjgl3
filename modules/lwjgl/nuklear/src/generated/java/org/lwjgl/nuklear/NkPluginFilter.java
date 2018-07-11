@@ -16,11 +16,11 @@ import static org.lwjgl.system.MemoryUtil.*;
  * 
  * <h3>Type</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * int (*) (
- *     struct nk_text_edit const *edit,
+ *     const struct nk_text_edit *edit,
  *     nk_rune unicode
- * )</code></pre>
+ * )</pre></code>
  */
 public abstract class NkPluginFilter extends Callback implements NkPluginFilterI {
 

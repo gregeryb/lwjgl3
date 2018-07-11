@@ -89,7 +89,7 @@ public class SOFTHRTF {
      * @param index     an index between 0 (inclusive) and the previously-queried HRTF count (exclusive)
      */
     @Nullable
-    @NativeType("ALCchar const *")
+    @NativeType("const ALCchar *")
     public static String alcGetStringiSOFT(@NativeType("ALCdevice *") long device, @NativeType("ALCenum") int paramName, @NativeType("ALCsizei") int index) {
         long __result = nalcGetStringiSOFT(device, paramName, index);
         return memUTF8Safe(__result);
@@ -119,16 +119,16 @@ public class SOFTHRTF {
      *         device using {@link ALC10#alcGetIntegerv GetIntegerv} with the relevant attributes.
      */
     @NativeType("ALCboolean")
-    public static boolean alcResetDeviceSOFT(@NativeType("ALCdevice *") long device, @Nullable @NativeType("ALCint const *") IntBuffer attrList) {
+    public static boolean alcResetDeviceSOFT(@NativeType("ALCdevice *") long device, @Nullable @NativeType("const ALCint *") IntBuffer attrList) {
         if (CHECKS) {
             checkNTSafe(attrList);
         }
         return nalcResetDeviceSOFT(device, memAddressSafe(attrList));
     }
 
-    /** Array version of: {@link #alcResetDeviceSOFT ResetDeviceSOFT} */
+    /** register Array version of: {@link #alcResetDeviceSOFT ResetDeviceSOFT} */
     @NativeType("ALCboolean")
-    public static boolean alcResetDeviceSOFT(@NativeType("ALCdevice *") long device, @Nullable @NativeType("ALCint const *") int[] attrList) {
+    public static boolean alcResetDeviceSOFT(@NativeType("ALCdevice *") long device, @Nullable @NativeType("const ALCint *") int[] attrList) {
 		long __functionAddress = ALC.getICD().alcResetDeviceSOFT;
         if (CHECKS) {
             check(__functionAddress);

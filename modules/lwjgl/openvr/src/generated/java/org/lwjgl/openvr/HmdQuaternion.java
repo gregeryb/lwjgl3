@@ -18,13 +18,13 @@ import static org.lwjgl.system.MemoryStack.*;
 /**
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct HmdQuaternion_t {
  *     double w;
  *     double x;
  *     double y;
  *     double z;
- * }</code></pre>
+ * }</pre></code>
  */
 @NativeType("struct HmdQuaternion_t")
 public class HmdQuaternion extends Struct implements NativeResource {
@@ -32,7 +32,6 @@ public class HmdQuaternion extends Struct implements NativeResource {
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */

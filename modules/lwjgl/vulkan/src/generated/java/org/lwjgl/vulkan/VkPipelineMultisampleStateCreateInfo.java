@@ -49,8 +49,8 @@ import static org.lwjgl.system.MemoryStack.*;
  * <li>{@code pNext} &ndash; {@code NULL} or a pointer to an extension-specific structure.</li>
  * <li>{@code flags} &ndash; reserved for future use.</li>
  * <li>{@code rasterizationSamples} &ndash; a {@code VkSampleCountFlagBits} specifying the number of samples per pixel used in rasterization.</li>
- * <li>{@code sampleShadingEnable} &ndash; <b>can</b> be used to enable <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#primsrast-sampleshading">Sample Shading</a>.</li>
- * <li>{@code minSampleShading} &ndash; specifies a minimum fraction of sample shading if {@code sampleShadingEnable} is set to {@link VK10#VK_TRUE TRUE}.</li>
+ * <li>{@code sampleShadingEnable} &ndash; specifies that fragment shading executes per-sample if {@link VK10#VK_TRUE TRUE}, or per-fragment if {@link VK10#VK_FALSE FALSE}, as described in <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#primsrast-sampleshading">Sample Shading</a>.</li>
+ * <li>{@code minSampleShading} &ndash; the minimum fraction of sample shading, as described in <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#primsrast-sampleshading">Sample Shading</a>.</li>
  * <li>{@code pSampleMask} &ndash; a bitmask of static coverage information that is ANDed with the coverage information generated during rasterization, as described in <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fragops-samplemask">Sample Mask</a>.</li>
  * <li>{@code alphaToCoverageEnable} &ndash; controls whether a temporary coverage value is generated based on the alpha component of the fragment&#8217;s first color output as specified in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fragops-covg">Multisample Coverage</a> section.</li>
  * <li>{@code alphaToOneEnable} &ndash; controls whether the alpha component of the fragment&#8217;s first color output is replaced with one as described in <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fragops-covg">Multisample Coverage</a>.</li>
@@ -58,25 +58,24 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct VkPipelineMultisampleStateCreateInfo {
  *     VkStructureType sType;
- *     void const * pNext;
+ *     const void * pNext;
  *     VkPipelineMultisampleStateCreateFlags flags;
  *     VkSampleCountFlagBits rasterizationSamples;
  *     VkBool32 sampleShadingEnable;
  *     float minSampleShading;
- *     VkSampleMask const * pSampleMask;
+ *     const VkSampleMask * pSampleMask;
  *     VkBool32 alphaToCoverageEnable;
  *     VkBool32 alphaToOneEnable;
- * }</code></pre>
+ * }</pre></code>
  */
 public class VkPipelineMultisampleStateCreateInfo extends Struct implements NativeResource {
 
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */
@@ -139,7 +138,7 @@ public class VkPipelineMultisampleStateCreateInfo extends Struct implements Nati
     @NativeType("VkStructureType")
     public int sType() { return nsType(address()); }
     /** Returns the value of the {@code pNext} field. */
-    @NativeType("void const *")
+    @NativeType("const void *")
     public long pNext() { return npNext(address()); }
     /** Returns the value of the {@code flags} field. */
     @NativeType("VkPipelineMultisampleStateCreateFlags")
@@ -158,7 +157,7 @@ public class VkPipelineMultisampleStateCreateInfo extends Struct implements Nati
      * @param capacity the number of elements in the returned buffer
      */
     @Nullable
-    @NativeType("VkSampleMask const *")
+    @NativeType("const VkSampleMask *")
     public IntBuffer pSampleMask(int capacity) { return npSampleMask(address(), capacity); }
     /** Returns the value of the {@code alphaToCoverageEnable} field. */
     @NativeType("VkBool32")
@@ -170,7 +169,7 @@ public class VkPipelineMultisampleStateCreateInfo extends Struct implements Nati
     /** Sets the specified value to the {@code sType} field. */
     public VkPipelineMultisampleStateCreateInfo sType(@NativeType("VkStructureType") int value) { nsType(address(), value); return this; }
     /** Sets the specified value to the {@code pNext} field. */
-    public VkPipelineMultisampleStateCreateInfo pNext(@NativeType("void const *") long value) { npNext(address(), value); return this; }
+    public VkPipelineMultisampleStateCreateInfo pNext(@NativeType("const void *") long value) { npNext(address(), value); return this; }
     /** Sets the specified value to the {@code flags} field. */
     public VkPipelineMultisampleStateCreateInfo flags(@NativeType("VkPipelineMultisampleStateCreateFlags") int value) { nflags(address(), value); return this; }
     /** Sets the specified value to the {@code rasterizationSamples} field. */
@@ -180,7 +179,7 @@ public class VkPipelineMultisampleStateCreateInfo extends Struct implements Nati
     /** Sets the specified value to the {@code minSampleShading} field. */
     public VkPipelineMultisampleStateCreateInfo minSampleShading(float value) { nminSampleShading(address(), value); return this; }
     /** Sets the address of the specified {@link IntBuffer} to the {@code pSampleMask} field. */
-    public VkPipelineMultisampleStateCreateInfo pSampleMask(@Nullable @NativeType("VkSampleMask const *") IntBuffer value) { npSampleMask(address(), value); return this; }
+    public VkPipelineMultisampleStateCreateInfo pSampleMask(@Nullable @NativeType("const VkSampleMask *") IntBuffer value) { npSampleMask(address(), value); return this; }
     /** Sets the specified value to the {@code alphaToCoverageEnable} field. */
     public VkPipelineMultisampleStateCreateInfo alphaToCoverageEnable(@NativeType("VkBool32") boolean value) { nalphaToCoverageEnable(address(), value ? 1 : 0); return this; }
     /** Sets the specified value to the {@code alphaToOneEnable} field. */
@@ -194,7 +193,7 @@ public class VkPipelineMultisampleStateCreateInfo extends Struct implements Nati
         int rasterizationSamples,
         boolean sampleShadingEnable,
         float minSampleShading,
-        @Nullable IntBuffer pSampleMask,
+        IntBuffer pSampleMask,
         boolean alphaToCoverageEnable,
         boolean alphaToOneEnable
     ) {
@@ -452,7 +451,7 @@ public class VkPipelineMultisampleStateCreateInfo extends Struct implements Nati
         @NativeType("VkStructureType")
         public int sType() { return VkPipelineMultisampleStateCreateInfo.nsType(address()); }
         /** Returns the value of the {@code pNext} field. */
-        @NativeType("void const *")
+        @NativeType("const void *")
         public long pNext() { return VkPipelineMultisampleStateCreateInfo.npNext(address()); }
         /** Returns the value of the {@code flags} field. */
         @NativeType("VkPipelineMultisampleStateCreateFlags")
@@ -471,7 +470,7 @@ public class VkPipelineMultisampleStateCreateInfo extends Struct implements Nati
          * @param capacity the number of elements in the returned buffer
          */
         @Nullable
-        @NativeType("VkSampleMask const *")
+        @NativeType("const VkSampleMask *")
         public IntBuffer pSampleMask(int capacity) { return VkPipelineMultisampleStateCreateInfo.npSampleMask(address(), capacity); }
         /** Returns the value of the {@code alphaToCoverageEnable} field. */
         @NativeType("VkBool32")
@@ -483,7 +482,7 @@ public class VkPipelineMultisampleStateCreateInfo extends Struct implements Nati
         /** Sets the specified value to the {@code sType} field. */
         public VkPipelineMultisampleStateCreateInfo.Buffer sType(@NativeType("VkStructureType") int value) { VkPipelineMultisampleStateCreateInfo.nsType(address(), value); return this; }
         /** Sets the specified value to the {@code pNext} field. */
-        public VkPipelineMultisampleStateCreateInfo.Buffer pNext(@NativeType("void const *") long value) { VkPipelineMultisampleStateCreateInfo.npNext(address(), value); return this; }
+        public VkPipelineMultisampleStateCreateInfo.Buffer pNext(@NativeType("const void *") long value) { VkPipelineMultisampleStateCreateInfo.npNext(address(), value); return this; }
         /** Sets the specified value to the {@code flags} field. */
         public VkPipelineMultisampleStateCreateInfo.Buffer flags(@NativeType("VkPipelineMultisampleStateCreateFlags") int value) { VkPipelineMultisampleStateCreateInfo.nflags(address(), value); return this; }
         /** Sets the specified value to the {@code rasterizationSamples} field. */
@@ -493,7 +492,7 @@ public class VkPipelineMultisampleStateCreateInfo extends Struct implements Nati
         /** Sets the specified value to the {@code minSampleShading} field. */
         public VkPipelineMultisampleStateCreateInfo.Buffer minSampleShading(float value) { VkPipelineMultisampleStateCreateInfo.nminSampleShading(address(), value); return this; }
         /** Sets the address of the specified {@link IntBuffer} to the {@code pSampleMask} field. */
-        public VkPipelineMultisampleStateCreateInfo.Buffer pSampleMask(@Nullable @NativeType("VkSampleMask const *") IntBuffer value) { VkPipelineMultisampleStateCreateInfo.npSampleMask(address(), value); return this; }
+        public VkPipelineMultisampleStateCreateInfo.Buffer pSampleMask(@Nullable @NativeType("const VkSampleMask *") IntBuffer value) { VkPipelineMultisampleStateCreateInfo.npSampleMask(address(), value); return this; }
         /** Sets the specified value to the {@code alphaToCoverageEnable} field. */
         public VkPipelineMultisampleStateCreateInfo.Buffer alphaToCoverageEnable(@NativeType("VkBool32") boolean value) { VkPipelineMultisampleStateCreateInfo.nalphaToCoverageEnable(address(), value ? 1 : 0); return this; }
         /** Sets the specified value to the {@code alphaToOneEnable} field. */

@@ -115,8 +115,6 @@ public class EGLDemo {
             glfwSwapBuffers(window);
         }
 
-        GLES.setCapabilities(null);
-
         glfwFreeCallbacks(window);
         glfwTerminate();
     }

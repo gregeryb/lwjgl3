@@ -23,10 +23,7 @@ private val KEYWORDS = setOf(
     // NativeResource
     "free",
     // Struct
-    "create", "callocStack", "calloc", "isNull", "malloc", "mallocStack", "sizeof"
-)
-
-private val BUFFER_KEYWORDS = setOf(
+    "create", "callocStack", "calloc", "isNull", "malloc", "mallocStack", "sizeof",
     // Iterable
     "iterator", "forEach", "spliterator",
     // CustomBuffer
@@ -37,7 +34,7 @@ private val BUFFER_KEYWORDS = setOf(
 )
 
 open class StructMember(
-    val nativeType: DataType,
+    val nativeType: NativeType,
     val name: String,
     val documentation: String
 ) : ModifierTarget<StructMemberModifier>() {
@@ -54,19 +51,20 @@ open class StructMember(
             "${parentField}_$offsetField"
     }
 
-    /** hidden if false, contributes to layout only */
-    internal var public = true
-    fun private(): StructMember {
-        public = false
-        return this
-    }
+    internal fun field(parentMember: String) = if (parentMember.isEmpty())
+        if (KEYWORDS.contains(name)) "$name\$" else name
+    else
+        "${parentMember}_$name"
 
+    internal fun fieldName(parentMember: String) = if (parentMember.isEmpty())
+        name
+    else
+        "$parentMember.$name"
+
+    /** hidden if false, contributes to layout only */
+    var public = true
     /** mutable if true, even if the parent struct is not mutable */
-    internal var mutable = false
-    fun mutable(): StructMember {
-        mutable = true
-        return this
-    }
+    var mutable = false
 
     internal var links: String = ""
     internal var linkMode: LinkMode = LinkMode.SINGLE
@@ -78,13 +76,13 @@ open class StructMember(
 }
 
 internal class StructMemberBuffer(
-    nativeType: PointerType<*>,
+    nativeType: PointerType,
     name: String,
     documentation: String
 ) : StructMember(nativeType, name, documentation)
 
 private open class StructMemberArray(
-    nativeType: DataType,
+    nativeType: NativeType,
     name: String,
     documentation: String,
     /** Number of elements in the array. */
@@ -94,7 +92,7 @@ private open class StructMemberArray(
 ) : StructMember(nativeType, name, documentation) {
 
     val primitiveMapping get() = this.nativeType.let {
-        if (it is PointerType<*>) PrimitiveMapping.POINTER else it.mapping as PrimitiveMapping
+        if (it is PointerType) PrimitiveMapping.POINTER else it.mapping as PrimitiveMapping
     }
 
 }
@@ -133,12 +131,10 @@ class Struct(
     private val virtual: Boolean,
     /** when false, setters methods will not be generated. */
     private val mutable: Boolean,
-    /** if specified, this struct aliases it. */
-    private val alias: Struct?,
+    /** if specified, is the super-type of this struct. */
+    private val extends: Struct?,
     /** when true, the struct layout will be built using native code. */
-    private val nativeLayout: Boolean,
-    /** when true, a nested StructBuffer subclass will be generated as well. */
-    private val generateBuffer: Boolean
+    private val nativeLayout: Boolean
 ) : GeneratorTargetNative(module, className, nativeSubPath) {
 
     companion object {
@@ -186,8 +182,6 @@ class Struct(
         static = expression
     }
 
-    private val customMethods = ArrayList<String>()
-
     private val members = ArrayList<StructMember>()
 
     private val visibleMembers
@@ -220,18 +214,21 @@ class Struct(
     }
 
     // Plain field
-    fun DataType.member(name: String, documentation: String) = add(StructMember(this, name, documentation))
+    fun NativeType.member(name: String, documentation: String) = add(StructMember(this, name, documentation))
 
     // Points to an array of structs, not a single struct
-    fun PointerType<StructType>.buffer(name: String, documentation: String): StructMember {
+    fun PointerType.buffer(name: String, documentation: String): StructMember {
+        if (this.elementType !is StructType)
+            throw IllegalArgumentException("Only pointer-to-struct types can be used as buffer struct members")
+
         return add(StructMemberBuffer(this, name, documentation))
     }
 
     // Array field
-    fun DataType.array(name: String, documentation: String, size: Int, validSize: Int = size)
+    fun NativeType.array(name: String, documentation: String, size: Int, validSize: Int = size)
         = array(name, documentation, size.toString(), validSize.toString())
 
-    fun DataType.array(name: String, documentation: String, size: String, validSize: String = size)
+    fun NativeType.array(name: String, documentation: String, size: String, validSize: String = size)
         = add(StructMemberArray(this, name, documentation, size, validSize))
 
     // CharSequence special-case
@@ -247,7 +244,7 @@ class Struct(
 
     /** Nested member struct definition. */
     fun struct(name: String, documentation: String, init: Struct.() -> Unit): StructMember {
-        val struct = Struct(module, ANONYMOUS, "", ANONYMOUS, false, false, mutable, null, false, false)
+        val struct = Struct(module, ANONYMOUS, "", ANONYMOUS, false, false, mutable, null, false)
         struct.init()
         return StructType(struct).member(name, documentation)
     }
@@ -257,21 +254,9 @@ class Struct(
 
     /** Nested member union definition. */
     fun union(name: String, documentation: String, init: Struct.() -> Unit): StructMember {
-        val struct = Struct(module, ANONYMOUS, "", ANONYMOUS, true, false, mutable, null, false, false)
+        val struct = Struct(module, ANONYMOUS, "", ANONYMOUS, true, false, mutable, null, false)
         struct.init()
         return StructType(struct).member(name, documentation)
-    }
-
-    fun customMethod(method: String) {
-        customMethods.add(method.trim())
-    }
-
-    private fun PrintWriter.printCustomMethods(static: Boolean) {
-        customMethods
-            .filter { it.startsWith("static {") == static }
-            .forEach {
-                println("\n$t$it")
-            }
     }
 
     /** The nested struct's members are embedded in the parent struct. */
@@ -289,16 +274,6 @@ class Struct(
         it.isNestedStruct && (it.nativeType as StructType).let { it.name === ANONYMOUS && it.definition.containsUnion }
     }
 
-    private fun StructMember.field(parentMember: String) = if (parentMember.isEmpty())
-        if (KEYWORDS.contains(name) || (generateBuffer && BUFFER_KEYWORDS.contains(name))) "$name\$" else name
-    else
-        "${parentMember}_$name"
-
-    private fun StructMember.fieldName(parentMember: String) = if (parentMember.isEmpty())
-        name
-    else
-        "$parentMember.$name"
-
     internal val validations: Sequence<String> by lazy(LazyThreadSafetyMode.NONE) {
         if (union)
             return@lazy emptySequence<String>()
@@ -314,7 +289,7 @@ class Struct(
                     """${
                     if (hasPointer) "" else "${indent}long ${m.name} = $STRUCT + $className.${m.offsetField};\n"
                     }${indent}for (int i = 0; i < ${getReferenceMember<AutoSizeMember>(m.name)?.name ?: m.size}; i++) {${
-                    if (m is PointerType<*>) {
+                    if (m is PointerType) {
                         if (m.validSize == m.size)
                             "\n$indent   check(memGetAddress(${m.name}));"
                         else
@@ -380,7 +355,7 @@ $indent}"""
                     else
                         "$t$t${m.nativeType.javaMethodType}.validate($STRUCT + $className.${m.offsetField});"
                 )
-            } else if (m.nativeType is PointerType<*> && getReferenceMember<AutoSizeMember>(m.name)?.get<AutoSizeMember>().let { it == null || !it.optional }) {
+            } else if (m.nativeType is PointerType && getReferenceMember<AutoSizeMember>(m.name)?.get<AutoSizeMember>().let { it == null || !it.optional }) {
                 if (m.nativeType.hasStructValidation) {
                     validations.add(
                         if (m.has(nullable)) {
@@ -449,17 +424,17 @@ ${members.joinToString("\n$memberIndentation", prefix = memberIndentation) {memb
                     .let {
                         when {
                             it is CallbackType && anonymous -> it.function.nativeType(member.name)
+                            it is PointerType && !it.includesPointer -> "${it.name}${if (!it.name.endsWith('*')) " " else ""}*"
                             else -> it.name
                         }
                     }
                     .let {
-                        var elementType: NativeType = member.nativeType
+                        var elementType = member.nativeType
                         while (true) {
-                            if (elementType !is PointerType<*> || elementType.elementType is OpaqueType) {
+                            if (elementType !is PointerType || elementType.elementType == null)
                                 break
-                            }
 
-                            elementType = elementType.elementType
+                            elementType = elementType.elementType!!
                         }
                         when {
                             elementType is CallbackType && anonymous                 -> it.replace(
@@ -474,7 +449,7 @@ ${members.joinToString("\n$memberIndentation", prefix = memberIndentation) {memb
                         }
                     }
                     .let {
-                        "$it${if (anonymous) "" else " ${member.name}"}${if (member is StructMemberArray) "[${member.size}]" else ""};"
+                        "${if (member has ConstMember) "const " else ""}$it${if (anonymous) "" else " ${member.name}"}${if (member is StructMemberArray) "[${member.size}]" else ""};"
                     }
 
             }
@@ -507,7 +482,7 @@ $indentation}"""
     private fun validate(mallocable: Boolean) {
         if (mallocable) {
             members.forEach {
-                if (it.nativeType is PointerType<*> && it.nativeType.elementType is StructType)
+                if (it.nativeType is PointerType && it.nativeType.elementType is StructType)
                     it.nativeType.elementType.definition.hasUsageInput()
             }
         }
@@ -521,13 +496,13 @@ $indentation}"""
                     it.error("Reference does not exist: AutoSize($reference)")
                 else {
                     if (bufferParam !is StructMemberArray) {
-                        if (bufferParam.nativeType !is PointerType<*>)
+                        if (bufferParam.nativeType !is PointerType)
                             it.error("Reference must be a pointer type: AutoSize($reference)")
 
                         if (!bufferParam.nativeType.isPointerData)
                             it.error("Reference must not be a opaque pointer: AutoSize($reference)")
 
-                        if ((bufferParam.nativeType as PointerType<*>).elementType is StructType && bufferParam !is StructMemberBuffer)
+                        if ((bufferParam.nativeType as PointerType).elementType is StructType && bufferParam !is StructMemberBuffer)
                             it.error("Reference must be a struct buffer: AutoSize($reference)")
                     } else if (autoSize.optional || autoSize.atLeastOne)
                         it.error("Optional cannot be used with array references: AutoSize($reference)")
@@ -540,12 +515,6 @@ $indentation}"""
     }
 
     override fun PrintWriter.generateJava() {
-        if (alias != null) {
-            usageInput = usageInput or alias.usageInput
-            usageOutput = usageOutput or alias.usageOutput
-            usageResultPointer = usageResultPointer or alias.usageResultPointer
-        }
-
         val mallocable = mutable || usageOutput || (usageInput && !usageResultPointer)
         validate(mallocable)
 
@@ -561,7 +530,7 @@ $indentation}"""
         println("import java.nio.*;\n")
 
         if (mallocable || members.any { m -> m.nativeType.let {
-            (it.mapping === PointerMapping.DATA_POINTER && it is PointerType<*> && (it.elementType !is StructType || m is StructMemberArray)) ||
+            (it.mapping === PointerMapping.DATA_POINTER && it is PointerType && (it.elementType !is StructType || m is StructMemberArray)) ||
             (it.mapping === PrimitiveMapping.POINTER && m is StructMemberArray && it !is StructType)
         } })
             println("import org.lwjgl.*;")
@@ -574,7 +543,7 @@ $indentation}"""
                 (
                     it is StructMemberArray ||
                     it.nativeType is CharSequenceType ||
-                    (it.nativeType is PointerType<*> && !it.has(NullableMember))
+                    (it.nativeType is PointerType && !it.has(NullableMember))
                 )
             ) ||
             it.isNestedStructDefinition && (it.nativeType as StructType).definition.hasChecks()
@@ -594,113 +563,88 @@ $indentation}"""
             println("@NativeType(\"$nativeNameQualified\")")
         }
         print("${access.modifier}class $className extends ")
-        print(alias?.className ?: "Struct${if (mallocable) " implements NativeResource" else ""}")
-        println(" {")
+        print(extends?.className ?: "Struct${if (mallocable) " implements NativeResource" else ""}"
+        )
 
-        if (alias == null) {
-            print("""
+        print(""" {
+
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
-"""
-            )
+""")
 
-            if (members.isNotEmpty() && (!nativeLayout || visibleMembers.any())) {
-                val memberCount = getMemberCount(members)
+        if (members.isNotEmpty() && (!nativeLayout || visibleMembers.any())) {
+            val memberCount = getMemberCount(members)
 
-                // Member offset fields
+            // Member offset fields
 
-                if (visibleMembers.any()) {
-                    print(
-                        """
+            if (visibleMembers.any()) {
+                print("""
     /** The struct member offsets. */
     public static final int
-"""
-                    )
-                    generateOffsetFields(visibleMembers)
-                    println(";")
-                }
+""")
+                generateOffsetFields(visibleMembers)
+                println(";")
+            }
 
-                print(
-                    """
-    static {"""
-                )
-                if (static != null)
-                    print(
-                        """
+            print("""
+    static {""")
+            if (static != null)
+                print("""
         $static
-"""
-                    )
+""")
 
-                // Member offset initialization
+            // Member offset initialization
 
-                if (nativeLayout) {
-                    print(
-                        """
+            if (nativeLayout) {
+                print("""
         try (MemoryStack stack = stackPush()) {
             IntBuffer offsets = stack.mallocInt(${memberCount + 1});
             SIZEOF = offsets(memAddress(offsets));
 
-"""
-                    )
-                    generateOffsetInit(members, indentation = "$t$t$t")
-                    println(
-                        """
+""")
+                generateOffsetInit(members, indentation = "$t$t$t")
+                println("""
             ALIGNOF = offsets.get($memberCount);
-        }"""
-                    )
-                } else {
-                    print(
-                        """
-        Layout layout = """
-                    )
-                    generateLayout(this@Struct)
-                    print(
-                        """;
+        }""")
+            } else {
+                print("""
+        Layout layout = """)
+                generateLayout(this@Struct)
+                print(""";
 
         SIZEOF = layout.getSize();
         ALIGNOF = layout.getAlignment();
 
-"""
-                    )
-                    generateOffsetInit(members)
-                }
+""")
+                generateOffsetInit(members)
+            }
 
-                println("$t}")
-            } else {
-                print(
-                    """
-    static {"""
-                )
-                if (static != null)
-                    print(
-                        """
+            print("$t}")
+        } else {
+            print("""
+    static {""")
+            if (static != null)
+                print("""
         $static
-"""
-                    )
-                println(
-                    """
+""")
+            print("""
         try (MemoryStack stack = stackPush()) {
             IntBuffer offsets = stack.mallocInt(1);
             SIZEOF = offsets(memAddress(offsets));
             ALIGNOF = offsets.get(0);
         }
-    }"""
-                )
-            }
-
-            if (nativeLayout)
-                println(
-                    """
-    private static native int offsets(long buffer);"""
-                )
+    }""")
         }
 
-        printCustomMethods(static = true)
+        if (nativeLayout)
+            print("""
+
+    private static native int offsets(long buffer);""")
 
         print("""
+
     $className(long address, @Nullable ByteBuffer container) {
         super(address, container);
     }
@@ -714,21 +658,15 @@ $indentation}"""
     ${access.modifier}$className(ByteBuffer container) {
         this(memAddress(container), __checkContainer(container, SIZEOF));
     }
-""")
 
-        if (alias == null) {
-            print("""
     @Override
     public int sizeof() { return SIZEOF; }
 """)
-        }
 
         var members = publicMembers
         if (members.any()) {
-            if (alias == null) {
-                println()
-                generateGetters(AccessMode.INSTANCE, members)
-            }
+            println()
+            generateGetters(AccessMode.INSTANCE, members)
 
             if (hasMutableMembers()) {
                 println()
@@ -794,9 +732,8 @@ $indentation}"""
         return address == NULL ? null : create(address);
     }
 """)
-        if (generateBuffer) {
-            if (mallocable) {
-                print("""
+        if (mallocable) {
+            print("""
     /**
      * Returns a new {@link $className.Buffer} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed.
      *
@@ -824,9 +761,9 @@ $indentation}"""
         return new Buffer(__create($BUFFER_CAPACITY_PARAM, SIZEOF));
     }
 """)
-            }
+        }
 
-            print("""
+        print("""
     /**
      * Create a {@link $className.Buffer} instance at the specified memory.
      *
@@ -843,7 +780,6 @@ $indentation}"""
         return address == NULL ? null : create(address, $BUFFER_CAPACITY_PARAM);
     }
 """)
-        }
 
         if (mallocable) {
             print("""
@@ -876,9 +812,7 @@ $indentation}"""
     public static $className callocStack(MemoryStack stack) {
         return create(stack.ncalloc(ALIGNOF, 1, SIZEOF));
     }
-""")
-            if (generateBuffer) {
-                print("""
+
     /**
      * Returns a new {@link $className.Buffer} instance allocated on the thread-local {@link MemoryStack}.
      *
@@ -917,27 +851,25 @@ $indentation}"""
         return create(stack.ncalloc(ALIGNOF, $BUFFER_CAPACITY_PARAM, SIZEOF), $BUFFER_CAPACITY_PARAM);
     }
 """)
-            }
         }
 
-        if (alias == null) {
-            print("""
+        print("""
     // -----------------------------------
+
 """)
 
-            members = visibleMembers
-            if (members.any()) {
+        members = visibleMembers
+        if (members.any()) {
+            generateStaticGetters(members)
+            println()
+
+            if (hasMutableMembers(visibleMembers)) {
+                generateStaticSetters(mutableMembers(visibleMembers))
                 println()
-                generateStaticGetters(members)
 
-                if (hasMutableMembers(visibleMembers)) {
-                    println()
-                    generateStaticSetters(mutableMembers(visibleMembers))
-
-                    if (Module.CHECKS && validations.any()) {
-                        println(
-                            """
-    /**
+                if (Module.CHECKS && validations.any()) {
+                    println(
+                        """    /**
      * Validates pointer members that should not be {@code NULL}.
      *
      * @param $STRUCT the struct to validate
@@ -956,28 +888,25 @@ ${validations.joinToString("\n")}
         for (int i = 0; i < count; i++) {
             validate(array + i * SIZEOF);
         }
-    }""")
-                    }
+    }
+""")
                 }
             }
         }
 
-        printCustomMethods(static = false)
+        println("$t// -----------------------------------")
 
-        if (generateBuffer) {
-            println("\n$t// -----------------------------------")
-
-            print("""
+        print("""
     /** An array of {@link $className} structs. */
     public static class Buffer extends """)
 
-            print(if (alias == null)
-                "StructBuffer<$className, Buffer>${if (mallocable) " implements NativeResource" else ""}"
-            else
-                "${alias.className}.Buffer"
-            )
+        print(if (extends == null)
+            "StructBuffer<$className, Buffer>${if (mallocable) " implements NativeResource" else ""}"
+        else
+            "${extends.className}.Buffer"
+        )
 
-            print(""" {
+        print(""" {
 
         /**
          * Creates a new {@link $className.Buffer} instance backed by the specified container.
@@ -989,18 +918,22 @@ ${validations.joinToString("\n")}
          * <p>The created buffer instance holds a strong reference to the container object.</p>
          */""")
 
-            print(if (alias == null)
+        print(if (extends == null)
             """
         public Buffer(ByteBuffer container) {
             super(container, container.remaining() / SIZEOF);
         }"""
-            else
+        else
             """
         public Buffer(ByteBuffer container) {
-            super(container);
+            this(container, container.remaining() / SIZEOF);
+        }
+
+        private Buffer(ByteBuffer container, int remaining) {
+            super(memAddress(container), container, -1, 0, remaining, remaining);
         }""")
 
-            print("""
+        print("""
 
         public Buffer(long address, int cap) {
             super(address, null, -1, 0, cap, cap);
@@ -1024,34 +957,26 @@ ${validations.joinToString("\n")}
         protected $className newInstance(long address) {
             return new $className(address, container);
         }
-""")
 
-            if (alias == null) {
-                print("""
         @Override
         public int sizeof() {
             return SIZEOF;
         }
 """)
-            }
-            members = publicMembers
-            if (members.any()) {
-                if (alias == null) {
-                    println()
-                    generateGetters(AccessMode.FLYWEIGHT, members)
-                }
+        members = publicMembers
+        if (members.any()) {
+            println()
+            generateGetters(AccessMode.FLYWEIGHT, members)
 
-                if (hasMutableMembers()) {
-                    println()
-                    generateSetters(AccessMode.FLYWEIGHT, settableMembers)
-                }
+            if (hasMutableMembers()) {
+                println()
+                generateSetters(AccessMode.FLYWEIGHT, settableMembers)
             }
-
-            print("""
-    }
-""")
         }
+
         print("""
+    }
+
 }""")
     }
 
@@ -1140,7 +1065,7 @@ ${validations.joinToString("\n")}
                     size = "${it.nativeType.javaMethodType}.SIZEOF"
                     alignment = "${it.nativeType.javaMethodType}.ALIGNOF"
                 } else {
-                    size = if (it.nativeType.isPointer)
+                    size = if (it.nativeType is PointerType || it.nativeType.mapping === PrimitiveMapping.POINTER)
                         "POINTER_SIZE"
                     else
                         (it.nativeType.mapping as PrimitiveMapping).bytes.toString()
@@ -1164,12 +1089,7 @@ ${validations.joinToString("\n")}
         mode: MultiSetterMode = MultiSetterMode.NORMAL
     ) {
         print("""
-    /** $javaDoc */""")
-        if (alias != null) {
-            print("""
-    @Override""")
-        }
-        print("""
+    /** $javaDoc */
     public $className set(
 """)
         generateParameters(this@Struct, this, members, "", mode, false)
@@ -1237,24 +1157,28 @@ ${validations.joinToString("\n")}
                 if (more)
                     println(",")
 
+                print("$t$t")
+
+                val param = it.field(parentMember)
                 print(
-                    "$t$t${it.nullable(
-                        (if (it is StructMemberArray) {
-                            if (it is StructMemberCharArray) {
-                                "ByteBuffer"
-                            } else if (it.nativeType is StructType)
-                                "${it.nativeType.javaMethodType}.Buffer"
-                            else
-                                it.primitiveMapping.toPointer.javaMethodName
-                        } else if (it.nativeType is PointerType<*> && it.nativeType.elementType is StructType) {
-                            val structType = it.nativeType.javaMethodType
-                            if (it is StructMemberBuffer)
-                                "$structType.Buffer"
-                            else
-                                structType
-                        } else
-                            it.nativeType.javaMethodType)
-                    )} ${it.field(parentMember)}"
+                    if (it is StructMemberArray) {
+                        if (it is StructMemberCharArray) {
+                            when (mode) {
+                                MultiSetterMode.NORMAL,
+                                MultiSetterMode.ALTER -> "ByteBuffer $param"
+                            }
+                        } else if (it.nativeType is StructType)
+                            "${it.nativeType.javaMethodType}.Buffer $param"
+                        else
+                            "${it.primitiveMapping.toPointer.javaMethodName} $param"
+                    } else if (it.nativeType is PointerType && it.nativeType.elementType is StructType) {
+                        val structType = it.nativeType.javaMethodType
+                        if (it is StructMemberBuffer)
+                            "$structType.Buffer $param"
+                        else
+                            "$structType $param"
+                    } else
+                        "${it.nativeType.javaMethodType} $param"
                 )
             }
         }
@@ -1297,7 +1221,7 @@ ${validations.joinToString("\n")}
             if (!type.unsigned)
                 it
             else {
-                val mapping = type.mapping
+                val mapping = type.mapping as PrimitiveMapping
                 when (mapping.bytes) {
                     1    -> "Byte.toUnsignedInt($it)"
                     2    -> "Short.toUnsignedInt($it)"
@@ -1402,7 +1326,7 @@ ${validations.joinToString("\n")}
                 if (it is StructMemberArray) {
                     if (it.nativeType.dereference is StructType) {
                         val structType = it.nativeType.javaMethodType
-                        if (it.nativeType is PointerType<*>) {
+                        if (it.nativeType is PointerType) {
                             if (it.public)
                                 println("$t/** Unsafe version of {@link #$setter(PointerBuffer) $setter}. */")
                             println("${t}public static void n$setter(long $STRUCT, PointerBuffer value) {")
@@ -1415,7 +1339,9 @@ ${validations.joinToString("\n")}
                             if (it.public)
                                 println("$t/** Unsafe version of {@link #$setter(int, $structTypeIndexed) $setter}. */")
                             println("${t}public static void n$setter(long $STRUCT, int index, ${it.nullable(structTypeIndexed, isArray = false)} value) {")
-                            println("$t${t}memPutAddress($STRUCT + $field + check(index, ${it.size}) * POINTER_SIZE, ${it.addressValue});")
+                            if (Module.CHECKS)
+                                println("$t${t}if (CHECKS) { check(index, ${it.size}); }")
+                            println("$t${t}memPutAddress($STRUCT + $field + index * POINTER_SIZE, ${it.addressValue});")
                             println("$t}")
                         } else {
                             if (it.public)
@@ -1429,7 +1355,9 @@ ${validations.joinToString("\n")}
                             if (it.public)
                                 println("$t/** Unsafe version of {@link #$setter(int, $structType) $setter}. */")
                             println("${t}public static void n$setter(long $STRUCT, int index, $structType value) {")
-                            println("$t${t}memCopy(value.$ADDRESS, $STRUCT + $field + check(index, ${it.size}) * $structType.SIZEOF, $structType.SIZEOF);")
+                            if (Module.CHECKS)
+                                println("$t${t}if (CHECKS) { check(index, ${it.size}); }")
+                            println("$t${t}memCopy(value.$ADDRESS, $STRUCT + $field + index * $structType.SIZEOF, $structType.SIZEOF);")
                             println("$t}")
                         }
                     } else if (it is StructMemberCharArray) {
@@ -1467,7 +1395,9 @@ ${validations.joinToString("\n")}
                         if (it.public)
                             println("$t/** Unsafe version of {@link #$setter(int, $javaType) $setter}. */")
                         println("${t}public static void n$setter(long $STRUCT, int index, $javaType value) {")
-                        println("$t${t}memPut${getBufferMethod(it, javaType)}($STRUCT + $field + check(index, ${it.size}) * $bytesPerElement, value);")
+                        if (Module.CHECKS)
+                            println("$t${t}if (CHECKS) { check(index, ${it.size}); }")
+                        println("$t${t}memPut${getBufferMethod(it, javaType)}($STRUCT + $field + index * $bytesPerElement, value);")
                         println("$t}")
                     }
                 } else if (it.nativeType is CharSequenceType) {
@@ -1506,7 +1436,7 @@ ${validations.joinToString("\n")}
         }
     }
 
-    private fun StructMember.annotate(type: String, arraySize: String? = null) = nativeType.annotate(type, arraySize).let {
+    private fun StructMember.annotate(type: String, arraySize: String? = null) = nativeType.annotate(type, has(const), arraySize).let {
         if (arraySize == null)
             nullable(it, false)
         else
@@ -1544,7 +1474,7 @@ ${validations.joinToString("\n")}
             val member = it.fieldName(parentMember)
 
             val indent = accessMode.indent
-            val overrides = alias != null && alias.members.any { parentMember -> parentMember.name == it.name }
+            val overrides = extends != null && extends.members.any { parentMember -> parentMember.name == it.name }
 
             val returnType = if (accessMode === AccessMode.INSTANCE)
                 className
@@ -1579,7 +1509,7 @@ ${validations.joinToString("\n")}
                 if (it is StructMemberArray) {
                     if (it.nativeType.dereference is StructType) {
                         val structType = it.nativeType.javaMethodType
-                        if (it.nativeType is PointerType<*>) {
+                        if (it.nativeType is PointerType) {
                             println("$indent/** Copies the specified {@link PointerBuffer} to the {@code $member} field. */")
                             if (overrides) println("$indent@Override")
                             println("${indent}public $returnType $setter(${it.annotate("PointerBuffer", it.size)} value) { $n$setter($ADDRESS, value); return this; }")
@@ -1674,7 +1604,7 @@ ${validations.joinToString("\n")}
                     if (it.nativeType.dereference is StructType) {
                         val nestedStruct = it.nativeType.javaMethodType
                         val size = getReferenceMember<AutoSizeMember>(it.name)?.autoSize ?: it.size
-                        if (it.nativeType is PointerType<*>) {
+                        if (it.nativeType is PointerType) {
                             val autoSizeIndirect = getReferenceMember<AutoSizeIndirect>(it.name)
 
                             if (it.public)
@@ -1683,7 +1613,9 @@ ${validations.joinToString("\n")}
                             if (it.public)
                                 println("$t/** Unsafe version of {@link #$getter(int) $getter}. */")
                             println("$t${it.nullable("public", isArray = false)} static $nestedStruct${if (autoSizeIndirect == null) "" else ".Buffer"} n$getter(long $STRUCT, int index) {")
-                            println("$t${t}return ${it.construct(nestedStruct)}(memGetAddress($STRUCT + $field + check(index, $size) * POINTER_SIZE)${autoSizeIndirect.let {
+                            if (Module.CHECKS)
+                                println("$t${t}if (CHECKS) { check(index, $size); }")
+                            println("$t${t}return ${it.construct(nestedStruct)}(memGetAddress($STRUCT + $field + index * POINTER_SIZE)${autoSizeIndirect.let {
                                 if (it == null) "" else ", n${it.name}($STRUCT)"
                             }});")
                             println("$t}")
@@ -1694,7 +1626,9 @@ ${validations.joinToString("\n")}
                             if (it.public)
                                 println("$t/** Unsafe version of {@link #$getter(int) $getter}. */")
                             println("$t${it.nullable("public")} static $nestedStruct n$getter(long $STRUCT, int index) {")
-                            println("$t${t}return ${it.construct(nestedStruct)}($STRUCT + $field + check(index, $size) * $nestedStruct.SIZEOF);")
+                            if (Module.CHECKS)
+                                println("$t${t}if (CHECKS) { check(index, $size); }")
+                            println("$t${t}return ${it.construct(nestedStruct)}($STRUCT + $field + index * $nestedStruct.SIZEOF);")
                             println("$t}")
                         }
                     } else if (it is StructMemberCharArray) {
@@ -1722,7 +1656,9 @@ ${validations.joinToString("\n")}
                         if (it.public)
                             println("$t/** Unsafe version of {@link #$getter(int) $getter}. */")
                         println("${t}public static $javaType n$getter(long $STRUCT, int index) {")
-                        print("$t${t}return memGet${getBufferMethod(it, javaType)}($STRUCT + $field + check(index, ${it.size}) * $bytesPerElement)")
+                        if (Module.CHECKS)
+                            println("$t${t}if (CHECKS) { check(index, ${it.size}); }")
+                        print("$t${t}return memGet${getBufferMethod(it, javaType)}($STRUCT + $field + index * $bytesPerElement)")
                         if (it.nativeType.mapping === PrimitiveMapping.BOOLEAN)
                             print(" != 0")
                         println(";\n$t}")
@@ -1766,11 +1702,12 @@ ${validations.joinToString("\n")}
         }
     }
 
-    private fun PrintWriter.generateGetterAnnotations(indent: String, member: StructMember, type: String, arraySize: String? = null) {
+    private fun PrintWriter.generateGetterAnnotations(indent: String, overrides: Boolean, member: StructMember, type: String, arraySize: String? = null) {
+        if (overrides) println("$indent@Override")
         if (arraySize == null && member.nativeType.isReference && member.isNullable) {
             println("$indent@Nullable")
         }
-        member.nativeType.annotation(type, arraySize).let {
+        member.nativeType.annotation(type, member.has(const), arraySize).let {
             if (it != null)
                 println("$indent$it")
         }
@@ -1788,6 +1725,7 @@ ${validations.joinToString("\n")}
             val member = it.fieldName(parentMember)
 
             val indent = accessMode.indent
+            val overrides = extends != null && extends.members.any { parentMember -> parentMember.name == it.name }
 
             if (it.isNestedStruct) {
                 val nestedStruct = (it.nativeType as StructType).definition
@@ -1801,12 +1739,8 @@ ${validations.joinToString("\n")}
                     )
                 else {
                     println("$indent/** Returns a {@link $structType} view of the {@code $member} field. */")
-                    generateGetterAnnotations(indent, it, structType)
+                    generateGetterAnnotations(indent, overrides, it, structType)
                     println("${indent}public $structType $getter() { return $n$getter($ADDRESS); }")
-                    if (nestedStruct.mutable) {
-                        println("$indent/** Passes the {@code $member} field to the specified {@link java.util.function.Consumer Consumer}. */")
-                        println("${indent}public $className${if (accessMode === AccessMode.INSTANCE) "" else ".Buffer"} $getter(java.util.function.Consumer<$structType> consumer) { consumer.accept($getter()); return this; }")
-                    }
                 }
             } else {
                 // Getter
@@ -1818,7 +1752,7 @@ ${validations.joinToString("\n")}
                         else            -> it.nativeType.javaMethodType
                     }
                     println("$indent/** Returns the value of the {@code $member} field. */")
-                    generateGetterAnnotations(indent, it, returnType)
+                    generateGetterAnnotations(indent, overrides, it, returnType)
                     println("${indent}public $returnType $getter() { return $n$getter($ADDRESS)${if (it.nativeType.mapping === PrimitiveMapping.BOOLEAN4) " != 0" else ""}; }")
                 }
 
@@ -1827,45 +1761,45 @@ ${validations.joinToString("\n")}
                 if (it is StructMemberArray) {
                     if (it.nativeType.dereference is StructType) {
                         val structType = it.nativeType.javaMethodType
-                        if (it.nativeType is PointerType<*>) {
+                        if (it.nativeType is PointerType) {
                             println("$indent/** Returns a {@link PointerBuffer} view of the {@code $member} field. */")
-                            generateGetterAnnotations(indent, it, "PointerBuffer", it.size)
+                            generateGetterAnnotations(indent, overrides, it, "PointerBuffer", it.size)
                             println("${indent}public PointerBuffer $getter() { return $n$getter($ADDRESS); }")
 
                             val retType = "$structType${if (getReferenceMember<AutoSizeIndirect>(it.name) == null) "" else ".Buffer"}"
                             println("$indent/** Returns a {@link $structType} view of the pointer at the specified index of the {@code $member} field. */")
-                            generateGetterAnnotations(indent, it, retType)
+                            generateGetterAnnotations(indent, overrides, it, retType)
                             println("${indent}public $retType $getter(int index) { return $n$getter($ADDRESS, index); }")
                         } else {
                             println("$indent/** Returns a {@link $structType}.Buffer view of the {@code $member} field. */")
-                            generateGetterAnnotations(indent, it, "$structType.Buffer", it.size)
+                            generateGetterAnnotations(indent, overrides, it, "$structType.Buffer", it.size)
                             println("${indent}public $structType.Buffer $getter() { return $n$getter($ADDRESS); }")
                             println("$indent/** Returns a {@link $structType} view of the struct at the specified index of the {@code $member} field. */")
-                            generateGetterAnnotations(indent, it, structType)
+                            generateGetterAnnotations(indent, overrides, it, structType)
                             println("${indent}public $structType $getter(int index) { return $n$getter($ADDRESS, index); }")
                         }
                     } else if (it is StructMemberCharArray) {
                         println("$indent/** Returns a {@link ByteBuffer} view of the {@code $member} field. */")
-                        generateGetterAnnotations(indent, it, "ByteBuffer", it.size)
+                        generateGetterAnnotations(indent, overrides, it, "ByteBuffer", it.size)
                         println("${indent}public ByteBuffer $getter() { return $n$getter($ADDRESS); }")
                         println("$indent/** Decodes the null-terminated string stored in the {@code $member} field. */")
-                        generateGetterAnnotations(indent, it, "String", it.size)
+                        generateGetterAnnotations(indent, overrides, it, "String", it.size)
                         println("${indent}public String ${getter}String() { return $n${getter}String($ADDRESS); }")
                     } else {
                         val bufferType = it.primitiveMapping.toPointer.javaMethodName
                         println("$indent/** Returns a {@link $bufferType} view of the {@code $member} field. */")
-                        generateGetterAnnotations(indent, it, bufferType, it.size)
+                        generateGetterAnnotations(indent, overrides, it, bufferType, it.size)
                         println("${indent}public $bufferType $getter() { return $n$getter($ADDRESS); }")
                         println("$indent/** Returns the value at the specified index of the {@code $member} field. */")
-                        generateGetterAnnotations(indent, it, it.nativeType.nativeMethodType)
+                        generateGetterAnnotations(indent, overrides, it, it.nativeType.nativeMethodType)
                         println("${indent}public ${it.nativeType.nativeMethodType} $getter(int index) { return $n$getter($ADDRESS, index); }")
                     }
                 } else if (it.nativeType is CharSequenceType) {
                     println("$indent/** Returns a {@link ByteBuffer} view of the null-terminated string pointed to by the {@code $member} field. */")
-                    generateGetterAnnotations(indent, it, "ByteBuffer")
+                    generateGetterAnnotations(indent, overrides, it, "ByteBuffer")
                     println("${indent}public ByteBuffer $getter() { return $n$getter($ADDRESS); }")
                     println("$indent/** Decodes the null-terminated string pointed to by the {@code $member} field. */")
-                    generateGetterAnnotations(indent, it, "String")
+                    generateGetterAnnotations(indent, overrides, it, "String")
                     println("${indent}public String ${getter}String() { return $n${getter}String($ADDRESS); }")
                 } else if (it.nativeType.isPointerData) {
                     val returnType = it.nativeType.javaMethodType
@@ -1877,16 +1811,16 @@ $indent * Returns a {@link $returnType.Buffer} view of the struct array pointed 
 $indent *
 $indent * @param $BUFFER_CAPACITY_PARAM the number of elements in the returned buffer
 $indent */""")
-                                generateGetterAnnotations(indent, it, "$returnType.Buffer")
+                                generateGetterAnnotations(indent, overrides, it, "$returnType.Buffer")
                                 println("${indent}public $returnType.Buffer $getter(int $BUFFER_CAPACITY_PARAM) { return $n$getter($ADDRESS, $BUFFER_CAPACITY_PARAM); }")
                             } else {
                                 println("$indent/** Returns a {@link $returnType.Buffer} view of the struct array pointed to by the {@code $member} field. */")
-                                generateGetterAnnotations(indent, it, "$returnType.Buffer")
+                                generateGetterAnnotations(indent, overrides, it, "$returnType.Buffer")
                                 println("${indent}public $returnType.Buffer $getter() { return $n$getter($ADDRESS); }")
                             }
                         } else {
                             println("$indent/** Returns a {@link $returnType} view of the struct pointed to by the {@code $member} field. */")
-                            generateGetterAnnotations(indent, it, returnType)
+                            generateGetterAnnotations(indent, overrides, it, returnType)
                             println("${indent}public $returnType $getter() { return $n$getter($ADDRESS); }")
                         }
                     } else {
@@ -1897,11 +1831,11 @@ $indent * Returns a {@link $returnType} view of the data pointed to by the {@cod
 $indent *
 $indent * @param $BUFFER_CAPACITY_PARAM the number of elements in the returned buffer
 $indent */""")
-                            generateGetterAnnotations(indent, it, returnType)
+                            generateGetterAnnotations(indent, overrides, it, returnType)
                             println("${indent}public $returnType $getter(int $BUFFER_CAPACITY_PARAM) { return $n$getter($ADDRESS, $BUFFER_CAPACITY_PARAM); }")
                         } else {
                             println("$indent/** Returns a {@link $returnType} view of the data pointed to by the {@code $member} field. */")
-                            generateGetterAnnotations(indent, it, returnType)
+                            generateGetterAnnotations(indent, overrides, it, returnType)
                             println("${indent}public $returnType $getter() { return $n$getter($ADDRESS); }")
                         }
                     }
@@ -1944,6 +1878,11 @@ JNIEXPORT jint JNICALL Java_${nativeFileNameJNI}_offsets(JNIEnv *$JNIENV, jclass
             println("${t}typedef struct $nativeName {")
             for (m in members) {
                 print("$t$t${m.nativeType.name}")
+                if (m.nativeType is PointerType && !m.nativeType.includesPointer) {
+                    if (!m.nativeType.name.endsWith('*'))
+                        print(' ')
+                    print('*')
+                }
                 println(" ${m.name};")
             }
             println("$t} $nativeName;\n")
@@ -1983,32 +1922,16 @@ EXTERN_C_EXIT""")
         return index
     }
 
-    fun AutoSize(reference: String, vararg dependent: String, optional: Boolean = false, atLeastOne: Boolean = false) =
-        AutoSizeMember(reference, *dependent, optional = optional, atLeastOne = atLeastOne)
-
-    fun AutoSize(div: Int, reference: String, vararg dependent: String, optional: Boolean = false, atLeastOne: Boolean = false) =
-        when {
-            div < 1                    -> throw IllegalArgumentException()
-            div == 1                   -> AutoSizeMember(reference, *dependent, optional = optional, atLeastOne = atLeastOne)
-            Integer.bitCount(div) == 1 -> AutoSizeShr(Integer.numberOfTrailingZeros(div).toString(), reference, *dependent, optional = optional, atLeastOne = atLeastOne)
-            else                       -> AutoSizeDiv(div.toString(), reference, *dependent, optional = optional, atLeastOne = atLeastOne)
-        }
-
-    fun AutoSizeDiv(expression: String, reference: String, vararg dependent: String, optional: Boolean = false, atLeastOne: Boolean = false) =
-        AutoSizeMember(reference, *dependent, factor = AutoSizeFactor.div(expression), optional = optional, atLeastOne = atLeastOne)
-
-    fun AutoSizeMul(expression: String, reference: String, vararg dependent: String, optional: Boolean = false, atLeastOne: Boolean = false) =
-        AutoSizeMember(reference, *dependent, factor = AutoSizeFactor.mul(expression), optional = optional, atLeastOne = atLeastOne)
-
-    fun AutoSizeShr(expression: String, reference: String, vararg dependent: String, optional: Boolean = false, atLeastOne: Boolean = false) =
-        AutoSizeMember(reference, *dependent, factor = AutoSizeFactor.shr(expression), optional = optional, atLeastOne = atLeastOne)
-
-    fun AutoSizeShl(expression: String, reference: String, vararg dependent: String, optional: Boolean = false, atLeastOne: Boolean = false) =
-        AutoSizeMember(reference, *dependent, factor = AutoSizeFactor.shl(expression), optional = optional, atLeastOne = atLeastOne)
-
-    /** Marks a pointer member as nullable. */
-    val nullable get() = NullableMember
 }
+
+private val NativeType?.toStruct: Struct? get() = if (this == null)
+    null
+else if (this is StructType)
+    this.definition
+else if (this is PointerType && this.elementType != null)
+    this.elementType.toStruct
+else
+    throw IllegalStateException("Invalid struct parent type specified.")
 
 fun struct(
     module: Module,
@@ -2017,12 +1940,11 @@ fun struct(
     nativeName: String = className,
     virtual: Boolean = false,
     mutable: Boolean = true,
-    alias: StructType? = null,
+    extends: NativeType? = null,
     nativeLayout: Boolean = false,
-    skipBuffer: Boolean = false,
     init: (Struct.() -> Unit)? = null
 ): StructType {
-    val struct = Struct(module, className, nativeSubPath, nativeName, false, virtual, mutable, alias?.definition, nativeLayout, !skipBuffer)
+    val struct = Struct(module, className, nativeSubPath, nativeName, false, virtual, mutable, extends.toStruct, nativeLayout)
     if (init != null) {
         struct.init()
         Generator.register(struct)
@@ -2037,15 +1959,33 @@ fun union(
     nativeName: String = className,
     virtual: Boolean = false,
     mutable: Boolean = true,
-    alias: StructType? = null,
+    extends: NativeType? = null,
     nativeLayout: Boolean = false,
-    skipBuffer: Boolean = false,
     init: (Struct.() -> Unit)? = null
 ): StructType {
-    val struct = Struct(module, className, nativeSubPath, nativeName, true, virtual, mutable, alias?.definition, nativeLayout, !skipBuffer)
+    val struct = Struct(module, className, nativeSubPath, nativeName, true, virtual, mutable, extends.toStruct, nativeLayout)
     if (init != null) {
         struct.init()
         Generator.register(struct)
     }
     return struct.nativeType
 }
+
+// Hack that allows use of function modifiers that alias with struct modifiers, inside struct definitions
+object GSCOPE
+
+fun <T> global(block: GSCOPE.() -> T) = GSCOPE.block()
+
+val GSCOPE.const get() = org.lwjgl.generator.const
+val GSCOPE.nullable get() = org.lwjgl.generator.nullable
+fun GSCOPE.AutoSize(div: Int, reference: String, vararg dependent: String) = org.lwjgl.generator.AutoSize(div, reference, *dependent)
+fun GSCOPE.AutoSize(reference: String, vararg dependent: String, factor: AutoSizeFactor? = null) =
+    org.lwjgl.generator.AutoSize(reference, *dependent, factor = factor)
+fun GSCOPE.AutoSizeDiv(expression: String, reference: String, vararg dependent: String) =
+    org.lwjgl.generator.AutoSizeDiv(expression, reference, *dependent)
+fun GSCOPE.AutoSizeMul(expression: String, reference: String, vararg dependent: String) =
+    org.lwjgl.generator.AutoSizeMul(expression, reference, *dependent)
+fun GSCOPE.AutoSizeShr(expression: String, reference: String, vararg dependent: String) =
+    org.lwjgl.generator.AutoSizeShr(expression, reference, *dependent)
+fun GSCOPE.AutoSizeShl(expression: String, reference: String, vararg dependent: String) =
+    org.lwjgl.generator.AutoSizeShl(expression, reference, *dependent)

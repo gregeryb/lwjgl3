@@ -54,10 +54,10 @@ NVGLUframebuffer* EXT(nvgluCreateFramebuffer)(NVGcontext* ctx, int w, int h, int
 	GLint defaultRBO;
 	NVGLUframebuffer* fb = NULL;
 
-	glGetIntegerv(GL_FRAMEBUFFER_BINDING, &defaultFBO);
-	glGetIntegerv(GL_RENDERBUFFER_BINDING, &defaultRBO);
+	gl->GetIntegerv(GL_FRAMEBUFFER_BINDING, &defaultFBO);
+	gl->GetIntegerv(GL_RENDERBUFFER_BINDING, &defaultRBO);
 
-	fb = (NVGLUframebuffer*)NVG_MALLOC(sizeof(NVGLUframebuffer));
+	fb = (NVGLUframebuffer*)malloc(sizeof(NVGLUframebuffer));
 	if (fb == NULL) goto error;
 	memset(fb, 0, sizeof(NVGLUframebuffer));
 
@@ -66,37 +66,37 @@ NVGLUframebuffer* EXT(nvgluCreateFramebuffer)(NVGcontext* ctx, int w, int h, int
 	fb->texture = EXT(nvglImageHandle)(ctx, fb->image);
 
 	// frame buffer object
-	glGenFramebuffers(1, &fb->fbo);
-	glBindFramebuffer(GL_FRAMEBUFFER, fb->fbo);
+	gl->GenFramebuffers(1, &fb->fbo);
+	gl->BindFramebuffer(GL_FRAMEBUFFER, fb->fbo);
 
 	// render buffer object
-	glGenRenderbuffers(1, &fb->rbo);
-	glBindRenderbuffer(GL_RENDERBUFFER, fb->rbo);
-	glRenderbufferStorage(GL_RENDERBUFFER, GL_STENCIL_INDEX8, w, h);
+	gl->GenRenderbuffers(1, &fb->rbo);
+	gl->BindRenderbuffer(GL_RENDERBUFFER, fb->rbo);
+	gl->RenderbufferStorage(GL_RENDERBUFFER, GL_STENCIL_INDEX8, w, h);
 
 	// combine all
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, fb->texture, 0);
-	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_RENDERBUFFER, fb->rbo);
+	gl->FramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, fb->texture, 0);
+	gl->FramebufferRenderbuffer(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_RENDERBUFFER, fb->rbo);
 
-	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
+	if (gl->CheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
 #ifdef GL_DEPTH24_STENCIL8
 		// If GL_STENCIL_INDEX8 is not supported, try GL_DEPTH24_STENCIL8 as a fallback.
 		// Some graphics cards require a depth buffer along with a stencil.
-		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, w, h);
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, fb->texture, 0);
-		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_RENDERBUFFER, fb->rbo);
+		gl->RenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, w, h);
+		gl->FramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, fb->texture, 0);
+		gl->FramebufferRenderbuffer(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_RENDERBUFFER, fb->rbo);
 
-		if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+		if (gl->CheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
 #endif // GL_DEPTH24_STENCIL8
 			goto error;
 	}
 
-	glBindFramebuffer(GL_FRAMEBUFFER, defaultFBO);
-	glBindRenderbuffer(GL_RENDERBUFFER, defaultRBO);
+	gl->BindFramebuffer(GL_FRAMEBUFFER, defaultFBO);
+	gl->BindRenderbuffer(GL_RENDERBUFFER, defaultRBO);
 	return fb;
 error:
-	glBindFramebuffer(GL_FRAMEBUFFER, defaultFBO);
-	glBindRenderbuffer(GL_RENDERBUFFER, defaultRBO);
+	gl->BindFramebuffer(GL_FRAMEBUFFER, defaultFBO);
+	gl->BindRenderbuffer(GL_RENDERBUFFER, defaultRBO);
 	EXT(nvgluDeleteFramebuffer)(ctx, fb);
 	return NULL;
 }
@@ -104,8 +104,8 @@ error:
 void EXT(nvgluBindFramebuffer)(NVGcontext* ctx, NVGLUframebuffer* fb)
 {
 	GLNVGcontext* gl = (GLNVGcontext*)((NVGparams*)ctx)->userPtr;
-	if (defaultFBO == -1) glGetIntegerv(GL_FRAMEBUFFER_BINDING, &defaultFBO);
-	glBindFramebuffer(GL_FRAMEBUFFER, fb != NULL ? fb->fbo : defaultFBO);
+	if (defaultFBO == -1) gl->GetIntegerv(GL_FRAMEBUFFER_BINDING, &defaultFBO);
+	gl->BindFramebuffer(GL_FRAMEBUFFER, fb != NULL ? fb->fbo : (GLuint)defaultFBO);
 }
 
 void EXT(nvgluDeleteFramebuffer)(NVGcontext* ctx, NVGLUframebuffer* fb)
@@ -113,16 +113,16 @@ void EXT(nvgluDeleteFramebuffer)(NVGcontext* ctx, NVGLUframebuffer* fb)
 	GLNVGcontext* gl = (GLNVGcontext*)((NVGparams*)ctx)->userPtr;
 	if (fb == NULL) return;
 	if (fb->fbo != 0)
-		glDeleteFramebuffers(1, &fb->fbo);
+		gl->DeleteFramebuffers(1, &fb->fbo);
 	if (fb->rbo != 0)
-		glDeleteRenderbuffers(1, &fb->rbo);
+		gl->DeleteRenderbuffers(1, &fb->rbo);
 	if (fb->image >= 0)
 		nvgDeleteImage(ctx, fb->image);
 	fb->fbo = 0;
 	fb->rbo = 0;
 	fb->texture = 0;
 	fb->image = -1;
-	NVG_FREE(fb);
+	free(fb);
 }
 
 #endif // NANOVG_GL_IMPLEMENTATION

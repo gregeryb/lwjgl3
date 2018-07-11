@@ -19,7 +19,7 @@ import static org.lwjgl.system.Checks.*;
  */
 public class EXTMemoryObjectFD {
 
-    /** Accepted by the {@code handleType} parameter of {@link #glImportMemoryFdEXT ImportMemoryFdEXT} */
+    /** Accepted by the {@code handleType} parameter of ImportMemoryFdEXT() or ImportSemaphoreFdEXT(). */
     public static final int GL_HANDLE_TYPE_OPAQUE_FD_EXT = 0x9586;
 
     static { GL.initialize(); }
@@ -28,14 +28,18 @@ public class EXTMemoryObjectFD {
         throw new UnsupportedOperationException();
     }
 
-    static boolean isAvailable(GLCapabilities caps) {
+    static boolean isAvailable(GLCapabilities caps, java.util.Set<String> ext) {
         return checkFunctions(
-            caps.glImportMemoryFdEXT
+            ext.contains("GL_EXT_memory_object_fd") ? caps.glImportMemoryFdEXT : -1L, ext.contains("GL_EXT_semaphore_fd") ? caps.glImportSemaphoreFdEXT : -1L
         );
     }
 
     // --- [ glImportMemoryFdEXT ] ---
 
     public static native void glImportMemoryFdEXT(@NativeType("GLuint") int memory, @NativeType("GLuint64") long size, @NativeType("GLenum") int handleType, @NativeType("GLint") int fd);
+
+    // --- [ glImportSemaphoreFdEXT ] ---
+
+    public static native void glImportSemaphoreFdEXT(@NativeType("GLuint") int semaphore, @NativeType("GLenum") int handleType, @NativeType("GLint") int fd);
 
 }

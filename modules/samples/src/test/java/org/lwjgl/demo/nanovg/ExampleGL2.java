@@ -13,7 +13,7 @@ import static org.lwjgl.glfw.Callbacks.*;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.nanovg.NanoVG.*;
 import static org.lwjgl.nanovg.NanoVGGL2.*;
-import static org.lwjgl.opengl.GL11C.*;
+import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryUtil.*;
 
 /*
@@ -147,8 +147,6 @@ public final class ExampleGL2 extends Demo {
         freeDemoData(vg, data);
 
         nvgDelete(vg);
-
-        GL.setCapabilities(null);
 
         glfwFreeCallbacks(window);
         glfwTerminate();

@@ -19,11 +19,11 @@ import static org.lwjgl.system.MemoryStack.*;
 /**
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct AppOverrideKeys_t {
  *     char * pchKey;
  *     char * pchValue;
- * }</code></pre>
+ * }</pre></code>
  */
 @NativeType("struct AppOverrideKeys_t")
 public class AppOverrideKeys extends Struct implements NativeResource {
@@ -31,7 +31,6 @@ public class AppOverrideKeys extends Struct implements NativeResource {
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */

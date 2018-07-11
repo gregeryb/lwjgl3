@@ -17,11 +17,11 @@ import static org.lwjgl.system.MemoryUtil.*;
 /**
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct nk_config_stack_user_font {
  *     int head;
  *     {@link NkConfigStackUserFontElement struct nk_config_stack_user_font_element} elements[8];
- * }</code></pre>
+ * }</pre></code>
  */
 @NativeType("struct nk_config_stack_user_font")
 class NkConfigStackUserFont extends Struct {
@@ -29,7 +29,6 @@ class NkConfigStackUserFont extends Struct {
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */
@@ -113,7 +112,8 @@ class NkConfigStackUserFont extends Struct {
     public static NkConfigStackUserFontElement.Buffer nelements(long struct) { return NkConfigStackUserFontElement.create(struct + NkConfigStackUserFont.ELEMENTS, 8); }
     /** Unsafe version of {@link #elements(int) elements}. */
     public static NkConfigStackUserFontElement nelements(long struct, int index) {
-        return NkConfigStackUserFontElement.create(struct + NkConfigStackUserFont.ELEMENTS + check(index, 8) * NkConfigStackUserFontElement.SIZEOF);
+        if (CHECKS) { check(index, 8); }
+        return NkConfigStackUserFontElement.create(struct + NkConfigStackUserFont.ELEMENTS + index * NkConfigStackUserFontElement.SIZEOF);
     }
 
     // -----------------------------------

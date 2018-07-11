@@ -16,18 +16,68 @@ import static org.lwjgl.system.MemoryUtil.*;
 import static org.lwjgl.system.MemoryStack.*;
 
 /**
- * See {@link VkPhysicalDeviceProperties2}.
+ * Structure specifying physical device properties.
+ * 
+ * <h5>Description</h5>
+ * 
+ * <p>The {@code pNext} chain of this structure is used to extend the structure with properties defined by extensions.</p>
+ * 
+ * <h5>Valid Usage (Implicit)</h5>
+ * 
+ * <ul>
+ * <li>{@code sType} <b>must</b> be {@link KHRGetPhysicalDeviceProperties2#VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PROPERTIES_2_KHR STRUCTURE_TYPE_PHYSICAL_DEVICE_PROPERTIES_2_KHR}</li>
+ * <li>Each {@code pNext} member of any structure (including this one) in the {@code pNext} chain <b>must</b> be either {@code NULL} or a pointer to a valid instance of {@link VkPhysicalDeviceBlendOperationAdvancedPropertiesEXT}, {@link VkPhysicalDeviceConservativeRasterizationPropertiesEXT}, {@link VkPhysicalDeviceDiscardRectanglePropertiesEXT}, {@link VkPhysicalDeviceExternalMemoryHostPropertiesEXT}, {@link VkPhysicalDeviceIDPropertiesKHR}, {@link VkPhysicalDeviceMultiviewPerViewAttributesPropertiesNVX}, {@link VkPhysicalDeviceMultiviewPropertiesKHX}, {@link VkPhysicalDevicePointClippingPropertiesKHR}, {@link VkPhysicalDevicePushDescriptorPropertiesKHR}, {@link VkPhysicalDeviceSampleLocationsPropertiesEXT}, or {@link VkPhysicalDeviceSamplerFilterMinmaxPropertiesEXT}</li>
+ * <li>Each {@code sType} member in the {@code pNext} chain <b>must</b> be unique</li>
+ * </ul>
+ * 
+ * <h5>See Also</h5>
+ * 
+ * <p>{@link VkPhysicalDeviceProperties}, {@link KHRGetPhysicalDeviceProperties2#vkGetPhysicalDeviceProperties2KHR GetPhysicalDeviceProperties2KHR}</p>
+ * 
+ * <h3>Member documentation</h3>
+ * 
+ * <ul>
+ * <li>{@code sType} &ndash; the type of this structure.</li>
+ * <li>{@code pNext} &ndash; {@code NULL} or a pointer to an extension-specific structure.</li>
+ * <li>{@code properties} &ndash; a structure of type {@link VkPhysicalDeviceProperties} describing the properties of the physical device. This structure is written with the same values as if it were written by {@link VK10#vkGetPhysicalDeviceProperties GetPhysicalDeviceProperties}.</li>
+ * </ul>
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct VkPhysicalDeviceProperties2KHR {
  *     VkStructureType sType;
  *     void * pNext;
  *     {@link VkPhysicalDeviceProperties VkPhysicalDeviceProperties} properties;
- * }</code></pre>
+ * }</pre></code>
  */
-public class VkPhysicalDeviceProperties2KHR extends VkPhysicalDeviceProperties2 {
+public class VkPhysicalDeviceProperties2KHR extends Struct implements NativeResource {
+
+    /** The struct size in bytes. */
+    public static final int SIZEOF;
+
+    public static final int ALIGNOF;
+
+    /** The struct member offsets. */
+    public static final int
+        STYPE,
+        PNEXT,
+        PROPERTIES;
+
+    static {
+        Layout layout = __struct(
+            __member(4),
+            __member(POINTER_SIZE),
+            __member(VkPhysicalDeviceProperties.SIZEOF, VkPhysicalDeviceProperties.ALIGNOF)
+        );
+
+        SIZEOF = layout.getSize();
+        ALIGNOF = layout.getAlignment();
+
+        STYPE = layout.offsetof(0);
+        PNEXT = layout.offsetof(1);
+        PROPERTIES = layout.offsetof(2);
+    }
 
     VkPhysicalDeviceProperties2KHR(long address, @Nullable ByteBuffer container) {
         super(address, container);
@@ -43,36 +93,17 @@ public class VkPhysicalDeviceProperties2KHR extends VkPhysicalDeviceProperties2 
         this(memAddress(container), __checkContainer(container, SIZEOF));
     }
 
-    /** Sets the specified value to the {@code sType} field. */
     @Override
-    public VkPhysicalDeviceProperties2KHR sType(@NativeType("VkStructureType") int value) { nsType(address(), value); return this; }
-    /** Sets the specified value to the {@code pNext} field. */
-    @Override
-    public VkPhysicalDeviceProperties2KHR pNext(@NativeType("void *") long value) { npNext(address(), value); return this; }
+    public int sizeof() { return SIZEOF; }
 
-    /** Initializes this struct with the specified values. */
-    @Override
-    public VkPhysicalDeviceProperties2KHR set(
-        int sType,
-        long pNext
-    ) {
-        sType(sType);
-        pNext(pNext);
-
-        return this;
-    }
-
-    /**
-     * Copies the specified struct data to this struct.
-     *
-     * @param src the source struct
-     *
-     * @return this struct
-     */
-    public VkPhysicalDeviceProperties2KHR set(VkPhysicalDeviceProperties2KHR src) {
-        memCopy(src.address(), address(), SIZEOF);
-        return this;
-    }
+    /** Returns the value of the {@code sType} field. */
+    @NativeType("VkStructureType")
+    public int sType() { return nsType(address()); }
+    /** Returns the value of the {@code pNext} field. */
+    @NativeType("void *")
+    public long pNext() { return npNext(address()); }
+    /** Returns a {@link VkPhysicalDeviceProperties} view of the {@code properties} field. */
+    public VkPhysicalDeviceProperties properties() { return nproperties(address()); }
 
     // -----------------------------------
 
@@ -215,8 +246,17 @@ public class VkPhysicalDeviceProperties2KHR extends VkPhysicalDeviceProperties2 
 
     // -----------------------------------
 
+    /** Unsafe version of {@link #sType}. */
+    public static int nsType(long struct) { return memGetInt(struct + VkPhysicalDeviceProperties2KHR.STYPE); }
+    /** Unsafe version of {@link #pNext}. */
+    public static long npNext(long struct) { return memGetAddress(struct + VkPhysicalDeviceProperties2KHR.PNEXT); }
+    /** Unsafe version of {@link #properties}. */
+    public static VkPhysicalDeviceProperties nproperties(long struct) { return VkPhysicalDeviceProperties.create(struct + VkPhysicalDeviceProperties2KHR.PROPERTIES); }
+
+    // -----------------------------------
+
     /** An array of {@link VkPhysicalDeviceProperties2KHR} structs. */
-    public static class Buffer extends VkPhysicalDeviceProperties2.Buffer {
+    public static class Buffer extends StructBuffer<VkPhysicalDeviceProperties2KHR, Buffer> implements NativeResource {
 
         /**
          * Creates a new {@link VkPhysicalDeviceProperties2KHR.Buffer} instance backed by the specified container.
@@ -228,7 +268,7 @@ public class VkPhysicalDeviceProperties2KHR extends VkPhysicalDeviceProperties2 
          * <p>The created buffer instance holds a strong reference to the container object.</p>
          */
         public Buffer(ByteBuffer container) {
-            super(container);
+            super(container, container.remaining() / SIZEOF);
         }
 
         public Buffer(long address, int cap) {
@@ -254,12 +294,19 @@ public class VkPhysicalDeviceProperties2KHR extends VkPhysicalDeviceProperties2 
             return new VkPhysicalDeviceProperties2KHR(address, container);
         }
 
-        /** Sets the specified value to the {@code sType} field. */
         @Override
-        public VkPhysicalDeviceProperties2KHR.Buffer sType(@NativeType("VkStructureType") int value) { VkPhysicalDeviceProperties2KHR.nsType(address(), value); return this; }
-        /** Sets the specified value to the {@code pNext} field. */
-        @Override
-        public VkPhysicalDeviceProperties2KHR.Buffer pNext(@NativeType("void *") long value) { VkPhysicalDeviceProperties2KHR.npNext(address(), value); return this; }
+        public int sizeof() {
+            return SIZEOF;
+        }
+
+        /** Returns the value of the {@code sType} field. */
+        @NativeType("VkStructureType")
+        public int sType() { return VkPhysicalDeviceProperties2KHR.nsType(address()); }
+        /** Returns the value of the {@code pNext} field. */
+        @NativeType("void *")
+        public long pNext() { return VkPhysicalDeviceProperties2KHR.npNext(address()); }
+        /** Returns a {@link VkPhysicalDeviceProperties} view of the {@code properties} field. */
+        public VkPhysicalDeviceProperties properties() { return VkPhysicalDeviceProperties2KHR.nproperties(address()); }
 
     }
 

@@ -124,7 +124,7 @@ public class KHRGLSharing {
      *         host.</p>
      */
     @NativeType("cl_int")
-    public static int clGetGLContextInfoKHR(@NativeType("cl_context_properties const *") PointerBuffer properties, @NativeType("cl_gl_context_info") int param_name, @Nullable @NativeType("void *") ByteBuffer param_value, @Nullable @NativeType("size_t *") PointerBuffer param_value_size_ret) {
+    public static int clGetGLContextInfoKHR(@NativeType("const cl_context_properties *") PointerBuffer properties, @NativeType("cl_gl_context_info") int param_name, @Nullable @NativeType("void *") ByteBuffer param_value, @Nullable @NativeType("size_t *") PointerBuffer param_value_size_ret) {
         if (CHECKS) {
             checkNT(properties);
             checkSafe(param_value_size_ret, 1);
@@ -187,12 +187,12 @@ public class KHRGLSharing {
      *         host.</p>
      */
     @NativeType("cl_int")
-    public static int clGetGLContextInfoKHR(@NativeType("cl_context_properties const *") PointerBuffer properties, @NativeType("cl_gl_context_info") int param_name, @Nullable @NativeType("void *") PointerBuffer param_value, @Nullable @NativeType("size_t *") PointerBuffer param_value_size_ret) {
+    public static int clGetGLContextInfoKHR(@NativeType("const cl_context_properties *") PointerBuffer properties, @NativeType("cl_gl_context_info") int param_name, @Nullable @NativeType("void *") PointerBuffer param_value, @Nullable @NativeType("size_t *") PointerBuffer param_value_size_ret) {
         if (CHECKS) {
             checkNT(properties);
             checkSafe(param_value_size_ret, 1);
         }
-        return nclGetGLContextInfoKHR(memAddress(properties), param_name, Integer.toUnsignedLong(remainingSafe(param_value)) << POINTER_SHIFT, memAddressSafe(param_value), memAddressSafe(param_value_size_ret));
+        return nclGetGLContextInfoKHR(memAddress(properties), param_name, remainingSafe(param_value) << POINTER_SHIFT, memAddressSafe(param_value), memAddressSafe(param_value_size_ret));
     }
 
 }

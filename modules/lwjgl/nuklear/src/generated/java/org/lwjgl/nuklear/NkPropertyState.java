@@ -19,7 +19,7 @@ import static org.lwjgl.nuklear.Nuklear.NK_MAX_NUMBER_BUFFER;
 /**
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct nk_property_state {
  *     int active;
  *     int prev;
@@ -32,7 +32,7 @@ import static org.lwjgl.nuklear.Nuklear.NK_MAX_NUMBER_BUFFER;
  *     unsigned int seq;
  *     unsigned int old;
  *     int state;
- * }</code></pre>
+ * }</pre></code>
  */
 @NativeType("struct nk_property_state")
 public class NkPropertyState extends Struct {
@@ -40,7 +40,6 @@ public class NkPropertyState extends Struct {
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */
@@ -174,7 +173,8 @@ public class NkPropertyState extends Struct {
     public static ByteBuffer nbuffer(long struct) { return memByteBuffer(struct + NkPropertyState.BUFFER, NK_MAX_NUMBER_BUFFER); }
     /** Unsafe version of {@link #buffer(int) buffer}. */
     public static byte nbuffer(long struct, int index) {
-        return memGetByte(struct + NkPropertyState.BUFFER + check(index, NK_MAX_NUMBER_BUFFER) * 1);
+        if (CHECKS) { check(index, NK_MAX_NUMBER_BUFFER); }
+        return memGetByte(struct + NkPropertyState.BUFFER + index * 1);
     }
     /** Unsafe version of {@link #length}. */
     public static int nlength(long struct) { return memGetInt(struct + NkPropertyState.LENGTH); }

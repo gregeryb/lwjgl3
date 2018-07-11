@@ -20,6 +20,7 @@ import static org.lwjgl.demo.glfw.GLFWUtil.*;
 import static org.lwjgl.glfw.Callbacks.*;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.nanovg.NanoSVG.*;
+import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL12.*;
 import static org.lwjgl.stb.STBImageResize.*;
 import static org.lwjgl.system.MemoryUtil.*;
@@ -343,8 +344,6 @@ public class SVGDemo {
     }
 
     private void destroy() {
-        GL.setCapabilities(null);
-
         if (debugProc != null) {
             debugProc.free();
         }

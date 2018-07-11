@@ -187,7 +187,7 @@ public class APPLESync {
         }
     }
 
-    /** Array version of: {@link #glGetInteger64vAPPLE GetInteger64vAPPLE} */
+    /** register Array version of: {@link #glGetInteger64vAPPLE GetInteger64vAPPLE} */
     public static void glGetInteger64vAPPLE(@NativeType("GLenum") int pname, @NativeType("GLint64 *") long[] params) {
         long __functionAddress = GLES.getICD().glGetInteger64vAPPLE;
         if (CHECKS) {
@@ -197,7 +197,7 @@ public class APPLESync {
         callPV(__functionAddress, pname, params);
     }
 
-    /** Array version of: {@link #glGetSyncivAPPLE GetSyncivAPPLE} */
+    /** register Array version of: {@link #glGetSyncivAPPLE GetSyncivAPPLE} */
     public static void glGetSyncivAPPLE(@NativeType("GLsync") long sync, @NativeType("GLenum") int pname, @Nullable @NativeType("GLsizei *") int[] length, @NativeType("GLint *") int[] values) {
         long __functionAddress = GLES.getICD().glGetSyncivAPPLE;
         if (CHECKS) {

@@ -59,11 +59,11 @@ public class NVFence {
 
     public static native void nglDeleteFencesNV(int n, long fences);
 
-    public static void glDeleteFencesNV(@NativeType("GLuint const *") IntBuffer fences) {
+    public static void glDeleteFencesNV(@NativeType("const GLuint *") IntBuffer fences) {
         nglDeleteFencesNV(fences.remaining(), memAddress(fences));
     }
 
-    public static void glDeleteFencesNV(@NativeType("GLuint const *") int fence) {
+    public static void glDeleteFencesNV(@NativeType("const GLuint *") int fence) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
             IntBuffer fences = stack.ints(fence);
@@ -134,8 +134,8 @@ public class NVFence {
 
     public static native void glSetFenceNV(@NativeType("GLuint") int fence, @NativeType("GLenum") int condition);
 
-    /** Array version of: {@link #glDeleteFencesNV DeleteFencesNV} */
-    public static void glDeleteFencesNV(@NativeType("GLuint const *") int[] fences) {
+    /** register Array version of: {@link #glDeleteFencesNV DeleteFencesNV} */
+    public static void glDeleteFencesNV(@NativeType("const GLuint *") int[] fences) {
         long __functionAddress = GL.getICD().glDeleteFencesNV;
         if (CHECKS) {
             check(__functionAddress);
@@ -143,7 +143,7 @@ public class NVFence {
         callPV(__functionAddress, fences.length, fences);
     }
 
-    /** Array version of: {@link #glGenFencesNV GenFencesNV} */
+    /** register Array version of: {@link #glGenFencesNV GenFencesNV} */
     public static void glGenFencesNV(@NativeType("GLuint *") int[] fences) {
         long __functionAddress = GL.getICD().glGenFencesNV;
         if (CHECKS) {
@@ -152,7 +152,7 @@ public class NVFence {
         callPV(__functionAddress, fences.length, fences);
     }
 
-    /** Array version of: {@link #glGetFenceivNV GetFenceivNV} */
+    /** register Array version of: {@link #glGetFenceivNV GetFenceivNV} */
     public static void glGetFenceivNV(@NativeType("GLuint") int fence, @NativeType("GLenum") int pname, @NativeType("GLint *") int[] params) {
         long __functionAddress = GL.getICD().glGetFenceivNV;
         if (CHECKS) {

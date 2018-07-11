@@ -16,13 +16,13 @@ import static org.lwjgl.system.MemoryUtil.*;
  * 
  * <h3>Type</h3>
  * 
- * <pre><code>
- * unsigned char * (*) (
+ * <code><pre>
+ * unsigned char* (*) (
  *     unsigned char *data,
  *     int data_len,
  *     int *out_len,
  *     int quality
- * )</code></pre>
+ * )</pre></code>
  */
 public abstract class STBIZlibCompress extends Callback implements STBIZlibCompressI {
 

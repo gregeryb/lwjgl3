@@ -14,11 +14,11 @@ import static org.lwjgl.system.MemoryUtil.*;
 /**
  * <h3>Type</h3>
  * 
- * <pre><code>
- * void * (*) (
+ * <code><pre>
+ * void* (*) (
  *     void *mm_context,
  *     void *ptr
- * )</code></pre>
+ * )</pre></code>
  */
 public abstract class RMTFree extends Callback implements RMTFreeI {
 

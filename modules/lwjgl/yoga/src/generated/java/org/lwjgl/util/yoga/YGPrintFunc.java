@@ -14,10 +14,10 @@ import static org.lwjgl.system.MemoryUtil.*;
 /**
  * <h3>Type</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * void (*) (
  *     YGNodeRef node
- * )</code></pre>
+ * )</pre></code>
  */
 public abstract class YGPrintFunc extends Callback implements YGPrintFuncI {
 

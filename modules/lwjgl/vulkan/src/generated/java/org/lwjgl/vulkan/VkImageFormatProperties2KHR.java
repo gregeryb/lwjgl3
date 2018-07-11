@@ -16,18 +16,73 @@ import static org.lwjgl.system.MemoryUtil.*;
 import static org.lwjgl.system.MemoryStack.*;
 
 /**
- * See {@link VkImageFormatProperties2}.
+ * Structure specifying a image format properties.
+ * 
+ * <h5>Description</h5>
+ * 
+ * <p>If the combination of parameters to {@link KHRGetPhysicalDeviceProperties2#vkGetPhysicalDeviceImageFormatProperties2KHR GetPhysicalDeviceImageFormatProperties2KHR} is not supported by the implementation for use in {@link VK10#vkCreateImage CreateImage}, then all members of {@code imageFormatProperties} will be filled with zero.</p>
+ * 
+ * <div style="margin-left: 26px; border-left: 1px solid gray; padding-left: 14px;"><h5>Note</h5>
+ * 
+ * <p>Filling {@code imageFormatProperties} with zero for unsupported formats is an exception to the usual rule that output structures have undefined contents on error. This exception was unintentional, but is preserved for backwards compatibility. This exeption only applies to {@code imageFormatProperties}, not {@code sType}, {@code pNext}, or any structures chained from {@code pNext}.</p>
+ * </div>
+ * 
+ * <h5>Valid Usage (Implicit)</h5>
+ * 
+ * <ul>
+ * <li>{@code sType} <b>must</b> be {@link KHRGetPhysicalDeviceProperties2#VK_STRUCTURE_TYPE_IMAGE_FORMAT_PROPERTIES_2_KHR STRUCTURE_TYPE_IMAGE_FORMAT_PROPERTIES_2_KHR}</li>
+ * <li>Each {@code pNext} member of any structure (including this one) in the {@code pNext} chain <b>must</b> be either {@code NULL} or a pointer to a valid instance of {@link VkExternalImageFormatPropertiesKHR}, {@link VkSamplerYcbcrConversionImageFormatPropertiesKHR}, or {@link VkTextureLODGatherFormatPropertiesAMD}</li>
+ * <li>Each {@code sType} member in the {@code pNext} chain <b>must</b> be unique</li>
+ * </ul>
+ * 
+ * <h5>See Also</h5>
+ * 
+ * <p>{@link VkImageFormatProperties}, {@link KHRGetPhysicalDeviceProperties2#vkGetPhysicalDeviceImageFormatProperties2KHR GetPhysicalDeviceImageFormatProperties2KHR}</p>
+ * 
+ * <h3>Member documentation</h3>
+ * 
+ * <ul>
+ * <li>{@code sType} &ndash; the type of this structure.</li>
+ * <li>{@code pNext} &ndash; {@code NULL} or a pointer to an extension-specific structure. The {@code pNext} chain of {@link VkImageFormatProperties2KHR} is used to allow the specification of additional capabilities to be returned from {@link KHRGetPhysicalDeviceProperties2#vkGetPhysicalDeviceImageFormatProperties2KHR GetPhysicalDeviceImageFormatProperties2KHR}.</li>
+ * <li>{@code imageFormatProperties} &ndash; an instance of a {@link VkImageFormatProperties} structure in which capabilities are returned.</li>
+ * </ul>
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct VkImageFormatProperties2KHR {
  *     VkStructureType sType;
  *     void * pNext;
  *     {@link VkImageFormatProperties VkImageFormatProperties} imageFormatProperties;
- * }</code></pre>
+ * }</pre></code>
  */
-public class VkImageFormatProperties2KHR extends VkImageFormatProperties2 {
+public class VkImageFormatProperties2KHR extends Struct implements NativeResource {
+
+    /** The struct size in bytes. */
+    public static final int SIZEOF;
+
+    public static final int ALIGNOF;
+
+    /** The struct member offsets. */
+    public static final int
+        STYPE,
+        PNEXT,
+        IMAGEFORMATPROPERTIES;
+
+    static {
+        Layout layout = __struct(
+            __member(4),
+            __member(POINTER_SIZE),
+            __member(VkImageFormatProperties.SIZEOF, VkImageFormatProperties.ALIGNOF)
+        );
+
+        SIZEOF = layout.getSize();
+        ALIGNOF = layout.getAlignment();
+
+        STYPE = layout.offsetof(0);
+        PNEXT = layout.offsetof(1);
+        IMAGEFORMATPROPERTIES = layout.offsetof(2);
+    }
 
     VkImageFormatProperties2KHR(long address, @Nullable ByteBuffer container) {
         super(address, container);
@@ -43,36 +98,17 @@ public class VkImageFormatProperties2KHR extends VkImageFormatProperties2 {
         this(memAddress(container), __checkContainer(container, SIZEOF));
     }
 
-    /** Sets the specified value to the {@code sType} field. */
     @Override
-    public VkImageFormatProperties2KHR sType(@NativeType("VkStructureType") int value) { nsType(address(), value); return this; }
-    /** Sets the specified value to the {@code pNext} field. */
-    @Override
-    public VkImageFormatProperties2KHR pNext(@NativeType("void *") long value) { npNext(address(), value); return this; }
+    public int sizeof() { return SIZEOF; }
 
-    /** Initializes this struct with the specified values. */
-    @Override
-    public VkImageFormatProperties2KHR set(
-        int sType,
-        long pNext
-    ) {
-        sType(sType);
-        pNext(pNext);
-
-        return this;
-    }
-
-    /**
-     * Copies the specified struct data to this struct.
-     *
-     * @param src the source struct
-     *
-     * @return this struct
-     */
-    public VkImageFormatProperties2KHR set(VkImageFormatProperties2KHR src) {
-        memCopy(src.address(), address(), SIZEOF);
-        return this;
-    }
+    /** Returns the value of the {@code sType} field. */
+    @NativeType("VkStructureType")
+    public int sType() { return nsType(address()); }
+    /** Returns the value of the {@code pNext} field. */
+    @NativeType("void *")
+    public long pNext() { return npNext(address()); }
+    /** Returns a {@link VkImageFormatProperties} view of the {@code imageFormatProperties} field. */
+    public VkImageFormatProperties imageFormatProperties() { return nimageFormatProperties(address()); }
 
     // -----------------------------------
 
@@ -215,8 +251,17 @@ public class VkImageFormatProperties2KHR extends VkImageFormatProperties2 {
 
     // -----------------------------------
 
+    /** Unsafe version of {@link #sType}. */
+    public static int nsType(long struct) { return memGetInt(struct + VkImageFormatProperties2KHR.STYPE); }
+    /** Unsafe version of {@link #pNext}. */
+    public static long npNext(long struct) { return memGetAddress(struct + VkImageFormatProperties2KHR.PNEXT); }
+    /** Unsafe version of {@link #imageFormatProperties}. */
+    public static VkImageFormatProperties nimageFormatProperties(long struct) { return VkImageFormatProperties.create(struct + VkImageFormatProperties2KHR.IMAGEFORMATPROPERTIES); }
+
+    // -----------------------------------
+
     /** An array of {@link VkImageFormatProperties2KHR} structs. */
-    public static class Buffer extends VkImageFormatProperties2.Buffer {
+    public static class Buffer extends StructBuffer<VkImageFormatProperties2KHR, Buffer> implements NativeResource {
 
         /**
          * Creates a new {@link VkImageFormatProperties2KHR.Buffer} instance backed by the specified container.
@@ -228,7 +273,7 @@ public class VkImageFormatProperties2KHR extends VkImageFormatProperties2 {
          * <p>The created buffer instance holds a strong reference to the container object.</p>
          */
         public Buffer(ByteBuffer container) {
-            super(container);
+            super(container, container.remaining() / SIZEOF);
         }
 
         public Buffer(long address, int cap) {
@@ -254,12 +299,19 @@ public class VkImageFormatProperties2KHR extends VkImageFormatProperties2 {
             return new VkImageFormatProperties2KHR(address, container);
         }
 
-        /** Sets the specified value to the {@code sType} field. */
         @Override
-        public VkImageFormatProperties2KHR.Buffer sType(@NativeType("VkStructureType") int value) { VkImageFormatProperties2KHR.nsType(address(), value); return this; }
-        /** Sets the specified value to the {@code pNext} field. */
-        @Override
-        public VkImageFormatProperties2KHR.Buffer pNext(@NativeType("void *") long value) { VkImageFormatProperties2KHR.npNext(address(), value); return this; }
+        public int sizeof() {
+            return SIZEOF;
+        }
+
+        /** Returns the value of the {@code sType} field. */
+        @NativeType("VkStructureType")
+        public int sType() { return VkImageFormatProperties2KHR.nsType(address()); }
+        /** Returns the value of the {@code pNext} field. */
+        @NativeType("void *")
+        public long pNext() { return VkImageFormatProperties2KHR.npNext(address()); }
+        /** Returns a {@link VkImageFormatProperties} view of the {@code imageFormatProperties} field. */
+        public VkImageFormatProperties imageFormatProperties() { return VkImageFormatProperties2KHR.nimageFormatProperties(address()); }
 
     }
 

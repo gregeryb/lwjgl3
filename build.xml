@@ -33,6 +33,60 @@
         <taskdef resource="testngtasks" classpath="${lib}/java/testng.jar"/>
     </target>
 
+    <target name="init-generated" description="Initializes the lwjgl3-generated git repository. [Optional]">
+        <local name="input"/>
+        <input
+            message="This action will create a separated git repository at ../lwjgl3-generated/. The repository root will be under modules/lwjgl/. Continue?"
+            validargs="y,n"
+            defaultvalue="n"
+            addproperty="input"
+        />
+        <fail message="Cancelled.">
+            <condition>
+                <equals arg1="n" arg2="${input}"/>
+            </condition>
+        </fail>
+
+        <local name="lwjgl3-generated.exists"/>
+
+        <available file="${module.lwjgl}/.git" property="lwjgl3-generated.exists"/>
+        <fail if="lwjgl3-generated-exists" message="The lwjgl3-generated repository is already initialized." />
+        <available file="../lwjgl3-generated" type="dir" property="lwjgl3-generated.exists"/>
+
+        <!-- Initialize repository -->
+        <exec dir="${module.lwjgl}" executable="git" failonerror="true">
+            <arg value="init"/>
+            <arg value="--separate-git-dir=../../../lwjgl3-generated"/>
+        </exec>
+
+        <!-- Add clone-specific ignore rules -->
+        <concat
+            destfile="../lwjgl3-generated/info/exclude"
+            append="true" outputencoding="UTF-8" fixlastline="true" eol="lf"
+            unless:set="lwjgl3-generated.exists"
+        >touch.txt
+*_license.txt
+**/main/**
+**/test/**</concat>
+
+        <!-- Setup remote & fetch -->
+        <exec dir="${module.lwjgl}" executable="git" failonerror="true">
+            <arg value="remote"/>
+            <arg value="add"/>
+            <arg line="-t master"/>
+            <arg line="-m master"/>
+            <arg value="-f"/>
+            <arg value="origin"/>
+            <arg value="https://github.com/LWJGL/lwjgl3-generated.git"/>
+        </exec>
+
+        <!-- Checkout master -->
+        <exec dir="${module.lwjgl}" executable="git" failonerror="true">
+            <arg value="checkout"/>
+            <arg line="master"/>
+        </exec>
+    </target>
+
     <target name="init-wiki" description="Initializes the lwjgl3-wiki git repository in /wiki. [Optional]">
         <confirm-replace dir="wiki" msg="The wiki directory contents will be replaced with a fresh clone of the lwjgl3-wiki repository. Continue?"/>
 
@@ -194,7 +248,7 @@
         </condition>
 
         <local name="core.kotlin.path"/>
-        <property name="core.kotlin.path" value="${module.lwjgl}/core/src/templates/kotlin/core"/>
+        <property name="core.kotlin.path" value="${module.lwjgl}/core/src/main/kotlin/core"/>
 
         <echo message="Compiling Kotlin templates. This will take 1-2 minutes..." level="info" taskname="Templates" unless:set="templates-uptodate"/>
         <mkdir dir="${bin.templates}"/>
@@ -218,14 +272,14 @@
 
             <src path="${module.templatepath}"/>
 
-            <src path="${module.lwjgl}/egl/src/templates/kotlin/egl/EGLTypes.kt" if:set="egl_types"/>
-            <src path="${module.lwjgl}/opencl/src/templates/kotlin/opencl/CLTypes.kt" if:set="opencl_types"/>
-            <src path="${module.lwjgl}/opengl/src/templates/kotlin/opengl/GLTypes.kt" if:set="opengl_types"/>
-            <src path="${module.lwjgl}/opengl/src/templates/kotlin/opengl/GLXTypes.kt" if:set="opengl_types"/>
-            <src path="${module.lwjgl}/opengl/src/templates/kotlin/opengl/WGLTypes.kt" if:set="opengl_types"/>
-            <src path="${module.lwjgl}/vulkan/src/templates/kotlin/vulkan/VKBase.kt" if:set="vulkan_types"/>
-            <src path="${module.lwjgl}/vulkan/src/templates/kotlin/vulkan/VKTypes.kt" if:set="vulkan_types"/>
-            <src path="${module.lwjgl}/vulkan/src/templates/kotlin/vulkan/ExtensionTypes.kt" if:set="vulkan_types"/>
+            <src path="${module.lwjgl}/egl/src/main/kotlin/egl/EGLTypes.kt" if:set="egl_types"/>
+            <src path="${module.lwjgl}/opencl/src/main/kotlin/opencl/CLTypes.kt" if:set="opencl_types"/>
+            <src path="${module.lwjgl}/opengl/src/main/kotlin/opengl/GLTypes.kt" if:set="opengl_types"/>
+            <src path="${module.lwjgl}/opengl/src/main/kotlin/opengl/GLXTypes.kt" if:set="opengl_types"/>
+            <src path="${module.lwjgl}/opengl/src/main/kotlin/opengl/WGLTypes.kt" if:set="opengl_types"/>
+            <src path="${module.lwjgl}/vulkan/src/main/kotlin/vulkan/VKBase.kt" if:set="vulkan_types"/>
+            <src path="${module.lwjgl}/vulkan/src/main/kotlin/vulkan/VKTypes.kt" if:set="vulkan_types"/>
+            <src path="${module.lwjgl}/vulkan/src/main/kotlin/vulkan/ExtensionTypes.kt" if:set="vulkan_types"/>
         </kotlinc>
         <touch file="${bin.templates}/touch.txt" unless:set="templates-uptodate"/>
     </target>
@@ -337,19 +391,6 @@
             <compilerarg value="-XDignore.symbol.file=true"/>
         </lwjgl.javac>
 
-        <mkdir dir="${bin.lwjgl}/core/META-INF/versions/9" if:set="jdk9"/>
-        <delete file="${bin.lwjgl}/core/META-INF/versions/9/module-info.class" quiet="true" if:set="jdk9"/>
-        <lwjgl.javac9
-            destdir="${bin.lwjgl}/core/META-INF/versions/9"
-            classpath="${bin.lwjgl}/core"
-
-            srcdir="${module.lwjgl}/core/src/main/java9"
-            includes="**"
-
-            taskname="javac: Core - Java 9"
-            if:set="jdk9"
-        />
-
         <parallel threadsPerProcessor="1">
             <compileBinding binding="assimp"/>
             <compileBinding binding="bgfx"/>
@@ -391,9 +432,6 @@
                 <pathelement path="${bin.lwjgl}/vulkan"/>
             </compileBinding>
             <compileBinding binding="ovr">
-                <pathelement path="${bin.lwjgl}/vulkan"/>
-            </compileBinding>
-            <compileBinding binding="vma">
                 <pathelement path="${bin.lwjgl}/vulkan"/>
             </compileBinding>
         </parallel>
@@ -612,7 +650,6 @@
     <target name="tests" description="Runs the LWJGL test suite" depends="compile-tests, compile-native">
         <testng outputDir="${bin.test.html}" taskname="Tests">
             <classpath>
-                <pathelement path="${bin.lwjgl}/core/META-INF/versions/9" if:set="core.java9"/>
                 <pathelement path="${module.classpath}"/>
                 <pathelement path="${bin.test}"/>
                 <pathelement path="${lib}/java/jcommander.jar"/>
@@ -646,9 +683,7 @@
 
         <java classname="${class}" fork="true" failonerror="${failonerror}" spawn="${spawn}" taskname="Demo">
             <classpath>
-                <pathelement path="${bin.lwjgl}/core/META-INF/versions/9" if:set="core.java9"/>
                 <pathelement path="${module.classpath}"/>
-                <pathelement path="${bin.test}"/>
                 <pathelement path="${bin.samples}"/>
                 <pathelement path="${test.resources}"/>
                 <pathelement path="${lib}/java/testng.jar"/>
@@ -679,7 +714,7 @@
 
     <!-- Includes all modules for javadoc.lwjgl.org -->
     <target name="javadoc" description="Generates the LWJGL JavaDoc" depends="-compile-generator,-build-version">
-        <echo message="It is recommended to generate JavaDoc on JDK 10 or higher." unless:set="jdk10" taskname="Warning"/>
+        <echo message="It is recommended to generate JavaDoc on JDK 9 or higher." unless:set="jdk9" taskname="Warning"/>
         <delete dir="bin/javadoc"/>
 
         <path id="javadoc.sources">
@@ -689,7 +724,7 @@
         <javadoc
             destdir="bin/javadoc"
             sourcepathref="javadoc.sources"
-            source="9"
+            source="1.8"
             windowtitle="LWJGL ${build.version}"
             encoding="UTF-8"
             docencoding="UTF-8"
@@ -699,6 +734,8 @@
             notree="true"
             public="true"
             Splitindex="true"
+            doclet="org.lwjgl.system.ExcludeDoclet"
+            docletpath="${bin.generator}"
             maxmemory="1G"
             failonerror="true"
         >
@@ -711,13 +748,14 @@
 
             <arg value="-XDignore.symbol.file=true"/> <!-- Supresses internal API (e.g. Unsafe) usage warnings -->
 
-            <arg line="-Xdoclint:html,reference,syntax"/>
-            <arg line="-Xmaxerrs 1000 -Xmaxwarns 1000"/>
+            <arg value="-Xdoclint"/>
+            <arg line="-Xmaxwarns 1000"/>
             <arg value="-html5" if:set="jdk9"/>
+            <arg value="-stylesheetfile ${config}/javadoc.css" if:set="jdk9"/>
             <arg line="-J-Dfile.encoding=UTF8"/>
             <arg line="--add-exports jdk.javadoc/com.sun.tools.doclets=ALL-UNNAMED" if:set="jdk9"/>
         </javadoc>
-        <get-quiet name="favicon" url="https://www.lwjgl.org/favicon.ico" dest="bin/javadoc"/>
+        <!-- <get-quiet name="favicon" url="https://www.lwjgl.org/favicon.ico" dest="bin/javadoc"/> -->
 
         <java classname="org.lwjgl.system.JavadocPostProcess" failonerror="true">
             <classpath path="${bin.generator}"/>
@@ -725,71 +763,7 @@
             <arg value="bin/javadoc/org/lwjgl"/>
         </java>
     </target>
-
-    <target name="upload-native" description="Uploads native build artifacts to build.lwjgl.org" depends="compile-native">
-        <fail message="AWS credentials not configured.">
-            <condition>
-                <not>
-                    <or>
-                        <and>
-                            <isset property="env.AWS_ACCESS_KEY_ID"/>
-                            <isset property="env.AWS_SECRET_ACCESS_KEY"/>
-                        </and>
-                        <isset property="env.AWS_CONFIG_FILE"/>
-                    </or>
-                </not>
-            </condition>
-        </fail>
-
-        <local name="revision"/>
-        <property name="revision" value="liblwjgl.so.git" if:set="platform.linux"/>
-        <property name="revision" value="liblwjgl.dylib.git" if:set="platform.macos"/>
-        <condition property="revision" value="lwjgl.dll.git" else="lwjgl32.dll.git" if:set="platform.windows">
-            <equals arg1="${build.arch}" arg2="x64"/>
-        </condition>
-
-        <exec executable="git" failonerror="true" output="${lib}/${revision}" taskname="Git revision">
-            <arg value="log"/>
-            <arg value="--first-parent"/>
-            <arg value="--pretty=format:%H"/>
-            <arg value="HEAD~2..HEAD~1"/> <!-- Skip the CI commit -->
-        </exec>
-
-        <local name="libraries"/>
-        <property name="libraries" value="liblwjgl*" unless:set="platform.windows"/>
-        <condition property="libraries" value="lwjgl*" else="lwjgl*32.*" if:set="platform.windows">
-            <equals arg1="${build.arch}" arg2="x64"/>
-        </condition>
-
-        <local name="exclude_libraries"/>
-        <condition property="exclude_libraries" value="lwjgl*32.*" if:set="platform.windows">
-            <equals arg1="${build.arch}" arg2="x64"/>
-        </condition>
-
-        <apply executable="aws" failonerror="true" relative="true" taskname="S3 upload">
-            <arg value="s3"/>
-            <arg value="cp"/>
-
-            <srcfile/>
-
-            <arg value="s3://build.lwjgl.org/${build.type}/${platform.remote}/${build.arch}/"/>
-            <arg line='--acl public-read --storage-class REDUCED_REDUNDANCY --cache-control "public, must-revalidate, proxy-revalidate, max-age=0"'/>
-
-            <fileset dir=".">
-                <include name="${lib}/${libraries}"/>
-                <exclude name="${lib}/${exclude_libraries}" if:set="exclude_libraries"/>
-            </fileset>
-        </apply>
-    </target>
-
-    <macrodef name="get-release">
-        <attribute name="url"/>
-
-        <sequential>
-            <get src="https://build.lwjgl.org/${build.type}/@{url}" dest="${release}/${module}/native" verbose="false" usetimestamp="true"/>
-        </sequential>
-    </macrodef>
-
+ 
     <macrodef name="lwjgl-jar">
         <attribute name="destfile"/>
         <attribute name="title"/>
@@ -807,27 +781,6 @@
                 </manifest>
                 <content/>
             </jar>
-        </sequential>
-    </macrodef>
-
-    <macrodef name="natives-jar">
-        <attribute name="name"/>
-        <attribute name="title"/>
-        <attribute name="platform"/>
-        <attribute name="extension"/>
-        <element name="content" optional="true" implicit="true"/>
-        <sequential>
-            <local name="platform.skip"/>
-            <condition property="platform.skip">
-                <resourcecount when="eq" count="0">
-                    <fileset dir="${release}/${module}/native" includes="*@{extension}"/>
-                </resourcecount>
-            </condition>
-
-            <lwjgl-jar destfile="${release}/${module}/${module}-natives-@{platform}.jar" title="@{title}" unless:set="platform.skip">
-                <fileset dir="${release}/${module}/native" includes="*@{extension}*"/>
-                <fileset dir="${bin.lwjgl}/@{name}.natives" includes="META-INF/versions/9/module-info.class" if:set="jdk9"/>
-            </lwjgl-jar>
         </sequential>
     </macrodef>
 
@@ -852,33 +805,23 @@
                     <matches pattern="^lwjgl_.+" string="@{native-library}"/>
                 </not>
             </condition>
-
-            <parallel threadsPerProcessor="4" failonany="true">
-                <get-release url="linux/x64/lib@{native-library}.so" if:set="auto-natives"/>
-                <get-release url="macosx/x64/lib@{native-library}.dylib" if:set="auto-natives"/>
-                <get-release url="windows/x64/@{native-library}.dll" if:set="auto-natives"/>
-                <get-release url="windows/x86/@{native-library}32.dll" if:set="auto-natives"/>
-
-                <get-release url="linux/x64/lib@{native-library}.so.git" if:set="git-revision"/>
-                <get-release url="macosx/x64/lib@{native-library}.dylib.git" if:set="git-revision"/>
-                <get-release url="windows/x64/@{native-library}.dll.git" if:set="git-revision"/>
-                <get-release url="windows/x86/@{native-library}32.dll.git" if:set="git-revision"/>
-
-                <content/>
-            </parallel>
-
-            <checksum algorithm="SHA-1" fileext=".sha1">
-                <fileset dir="${release}/${module}/native">
-                    <include name="*.dll"/>
-                    <include name="*.dylib"/>
-                    <include name="*.so"/>
-                </fileset>
-            </checksum>
+ 
 
             <parallel threadsPerProcessor="1" failonany="true">
-                <natives-jar name="@{name}" title="@{title}" platform="linux" extension=".so"/>
-                <natives-jar name="@{name}" title="@{title}" platform="macos" extension=".dylib"/>
-                <natives-jar name="@{name}" title="@{title}" platform="windows" extension=".dll"/>
+                <lwjgl-jar destfile="${release}/${module}/${module}-natives-linux.jar" title="@{title}">
+                    <fileset dir="${release}/${module}/native" includes="*.so*"/>
+                    <fileset dir="${bin.lwjgl}/@{name}.natives" includes="META-INF/versions/9/module-info.class" if:set="jdk9"/>
+                </lwjgl-jar>
+
+                <lwjgl-jar destfile="${release}/${module}/${module}-natives-macos.jar" title="@{title}">
+                    <fileset dir="${release}/${module}/native" includes="*.dylib*"/>
+                    <fileset dir="${bin.lwjgl}/@{name}.natives" includes="META-INF/versions/9/module-info.class" if:set="jdk9"/>
+                </lwjgl-jar>
+
+                <lwjgl-jar destfile="${release}/${module}/${module}-natives-windows.jar" title="@{title}">
+                    <fileset dir="${release}/${module}/native" includes="*.dll*"/>
+                    <fileset dir="${bin.lwjgl}/@{name}.natives" includes="META-INF/versions/9/module-info.class" if:set="jdk9"/>
+                </lwjgl-jar>
             </parallel>
         </sequential>
     </macrodef>
@@ -920,7 +863,7 @@
             <mkdir dir="${release}/${module}/javadoc"/>
             <javadoc
                 destdir="${release}/${module}/javadoc"
-                source="9"
+                source="1.8"
                 windowtitle="LWJGL ${build.version} - @{title}"
                 encoding="UTF-8"
                 docencoding="UTF-8"
@@ -929,6 +872,8 @@
                 nohelp="true"
                 notree="true"
                 public="true"
+                doclet="org.lwjgl.system.ExcludeDoclet"
+                docletpath="${bin.generator}"
                 failonerror="true"
             >
                 <doctitle><![CDATA[<h1>LWJGL - @{title}</h1>]]></doctitle>
@@ -944,13 +889,14 @@
 
                 <arg value="-XDignore.symbol.file=true"/> <!-- Supresses internal API (e.g. Unsafe) usage warnings -->
 
-                <arg line="-Xdoclint:html,reference,syntax"/>
-                <arg line="-Xmaxerrs 1000 -Xmaxwarns 1000"/>
+                <arg value="-Xdoclint:none"/>
+                <arg line="-Xmaxwarns 1"/>
                 <arg value="-html5" if:set="jdk9"/>
+                <arg value="-stylesheetfile ${config}/javadoc.css" if:set="jdk9"/>
                 <arg line="-J-Dfile.encoding=UTF8"/>
                 <arg line="--add-exports jdk.javadoc/com.sun.tools.doclets=ALL-UNNAMED" if:set="jdk9"/>
             </javadoc>
-            <get-quiet name="favicon" url="https://www.lwjgl.org/favicon.ico" dest="${release}/${module}/javadoc"/>
+          <!--  <get-quiet name="favicon" url="https://www.lwjgl.org/favicon.ico" dest="${release}/${module}/javadoc"/> -->
 
             <java classname="org.lwjgl.system.JavadocPostProcess" failonerror="true">
                 <classpath path="${bin.generator}"/>
@@ -980,6 +926,28 @@
         </sequential>
     </macrodef>
 
+    <target name="-multi-release-9" depends="-compile-generator">
+        <mkdir dir="${bin.lwjgl}/core/META-INF/versions/9"/>
+        <lwjgl.javac9
+            destdir="${bin.lwjgl}/core/META-INF/versions/9"
+
+            srcdir="${module.lwjgl}/core/src/main/java9"
+            includes="**"
+
+            taskname="javac: Core - Java 9"
+        />
+
+        <java
+            classpath="bin/classes/generator"
+            classname="org.lwjgl.generator.util.ModuleInfoGen"
+            failonerror="true"
+            taskname="module-info-gen"
+        >
+            <arg value="${module.list}"/>
+            <arg value="${module.list.java-only}"/>
+        </java>
+    </target>
+
     <target name="-check-release-jdk">
         <fail message="The JAVA8_HOME environment variable is not set." if:set="jdk9">
             <condition>
@@ -989,11 +957,11 @@
 
         <local name="input"/>
         <input
-            message="It is recommended to build LWJGL releases on JDK 10 or higher. Continue with current JDK?"
+            message="It is recommended to build LWJGL releases on JDK 9 or higher. Continue with JDK 8?"
             validargs="y,n"
             defaultvalue="n"
             addproperty="input"
-            unless:set="jdk10"
+            unless:set="jdk9"
         />
         <fail message="Cancelled" unless:set="jdk9">
             <condition>
@@ -1018,17 +986,7 @@
         <echo file="${release}/build.txt" if:set="build.revision">LWJGL ${build.version} ${revision}</echo>
         <echo file="${release}/build.txt" unless:set="build.revision">LWJGL ${build.version}</echo>
 
-        <!-- Generate module-info classes -->
-        <java
-            classpath="bin/classes/generator"
-            classname="org.lwjgl.generator.util.ModuleInfoGen"
-            failonerror="true"
-            taskname="module-info-gen"
-            if:set="jdk9"
-        >
-            <arg value="${module.list}"/>
-            <arg value="${module.list.java-only}"/>
-        </java>
+        <antcall target="-multi-release-9" if:set="jdk9"/>
 
         <parallel threadcount="4" failonany="true">
 
@@ -1090,17 +1048,7 @@
 
         <!-- OpenAL -->
         <release-module package="org.lwjgl.openal" name="openal" title="OpenAL" if:true="${binding.openal}">
-            <natives>
-                <get-release url="linux/x64/libopenal.so"/>
-                <get-release url="macosx/x64/libopenal.dylib"/>
-                <get-release url="windows/x64/OpenAL.dll"/>
-                <get-release url="windows/x86/OpenAL32.dll"/>
-
-                <get-release url="linux/x64/libopenal.so.git"/>
-                <get-release url="macosx/x64/libopenal.dylib.git"/>
-                <get-release url="windows/x64/OpenAL.dll.git"/>
-                <get-release url="windows/x86/OpenAL32.dll.git"/>
-            </natives>
+ 
         </release-module>
 
         <!-- OpenCL -->
@@ -1114,22 +1062,7 @@
 
         <!-- OpenVR -->
         <release-module package="org.lwjgl.openvr" name="openvr" title="OpenVR" if:true="${binding.openvr}">
-            <natives>
-                <get-release url="linux/x64/liblwjgl_openvr.so"/>
-                <get-release url="macosx/x64/liblwjgl_openvr.dylib"/>
-                <get-release url="windows/x64/lwjgl_openvr.dll"/>
-                <get-release url="windows/x86/lwjgl_openvr32.dll"/>
-
-                <get-release url="linux/x64/libopenvr_api.so"/>
-                <get-release url="macosx/x64/libopenvr_api.dylib"/>
-                <get-release url="windows/x64/openvr_api.dll"/>
-                <get-release url="windows/x86/openvr_api32.dll"/>
-
-                <get-release url="linux/x64/libopenvr_api.so.git"/>
-                <get-release url="macosx/x64/libopenvr_api.dylib.git"/>
-                <get-release url="windows/x64/openvr_api.dll.git"/>
-                <get-release url="windows/x86/openvr_api32.dll.git"/>
-            </natives>
+ 
         </release-module>
 
         <!-- LibOVR -->
@@ -1164,16 +1097,8 @@
         <!-- AMD Tootle -->
         <release-module package="org.lwjgl.util.tootle" name="tootle" native-library="lwjgl_tootle" title="tootle" if:true="${binding.tootle}"/>
 
-        <!-- Vulkan Memory Allocator -->
-        <release-module package="org.lwjgl.util.vma" name="vma" native-library="lwjgl_vma" title="vma" if:true="${binding.vma}"/>
-
         <!-- Vulkan -->
-        <release-module package="org.lwjgl.vulkan" name="vulkan" title="Vulkan" license="khronos" if:true="${binding.vulkan}">
-            <natives>
-                <get-release url="macosx/x64/libMoltenVK.dylib"/>
-                <get-release url="macosx/x64/libMoltenVK.dylib.git"/>
-            </natives>
-        </release-module>
+        <release-module package="org.lwjgl.vulkan" name="vulkan" title="Vulkan" license="khronos" if:true="${binding.vulkan}"/>
 
         <!-- xxHash -->
         <release-module package="org.lwjgl.util.xxhash" name="xxhash" native-library="lwjgl_xxhash" title="xxHash" if:true="${binding.xxhash}"/>

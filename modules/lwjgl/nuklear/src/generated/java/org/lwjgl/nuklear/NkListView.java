@@ -18,7 +18,7 @@ import static org.lwjgl.system.MemoryStack.*;
 /**
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct nk_list_view {
  *     int begin;
  *     int end;
@@ -27,7 +27,7 @@ import static org.lwjgl.system.MemoryStack.*;
  *     {@link NkContext struct nk_context} * ctx;
  *     nk_uint * scroll_pointer;
  *     nk_uint scroll_value;
- * }</code></pre>
+ * }</pre></code>
  */
 @NativeType("struct nk_list_view")
 public class NkListView extends Struct implements NativeResource {
@@ -35,7 +35,6 @@ public class NkListView extends Struct implements NativeResource {
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */

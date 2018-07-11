@@ -53,21 +53,20 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct VkMappedMemoryRange {
  *     VkStructureType sType;
- *     void const * pNext;
+ *     const void * pNext;
  *     VkDeviceMemory memory;
  *     VkDeviceSize offset;
  *     VkDeviceSize size;
- * }</code></pre>
+ * }</pre></code>
  */
 public class VkMappedMemoryRange extends Struct implements NativeResource {
 
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */
@@ -118,7 +117,7 @@ public class VkMappedMemoryRange extends Struct implements NativeResource {
     @NativeType("VkStructureType")
     public int sType() { return nsType(address()); }
     /** Returns the value of the {@code pNext} field. */
-    @NativeType("void const *")
+    @NativeType("const void *")
     public long pNext() { return npNext(address()); }
     /** Returns the value of the {@code memory} field. */
     @NativeType("VkDeviceMemory")
@@ -133,7 +132,7 @@ public class VkMappedMemoryRange extends Struct implements NativeResource {
     /** Sets the specified value to the {@code sType} field. */
     public VkMappedMemoryRange sType(@NativeType("VkStructureType") int value) { nsType(address(), value); return this; }
     /** Sets the specified value to the {@code pNext} field. */
-    public VkMappedMemoryRange pNext(@NativeType("void const *") long value) { npNext(address(), value); return this; }
+    public VkMappedMemoryRange pNext(@NativeType("const void *") long value) { npNext(address(), value); return this; }
     /** Sets the specified value to the {@code memory} field. */
     public VkMappedMemoryRange memory(@NativeType("VkDeviceMemory") long value) { nmemory(address(), value); return this; }
     /** Sets the specified value to the {@code offset} field. */
@@ -383,7 +382,7 @@ public class VkMappedMemoryRange extends Struct implements NativeResource {
         @NativeType("VkStructureType")
         public int sType() { return VkMappedMemoryRange.nsType(address()); }
         /** Returns the value of the {@code pNext} field. */
-        @NativeType("void const *")
+        @NativeType("const void *")
         public long pNext() { return VkMappedMemoryRange.npNext(address()); }
         /** Returns the value of the {@code memory} field. */
         @NativeType("VkDeviceMemory")
@@ -398,7 +397,7 @@ public class VkMappedMemoryRange extends Struct implements NativeResource {
         /** Sets the specified value to the {@code sType} field. */
         public VkMappedMemoryRange.Buffer sType(@NativeType("VkStructureType") int value) { VkMappedMemoryRange.nsType(address(), value); return this; }
         /** Sets the specified value to the {@code pNext} field. */
-        public VkMappedMemoryRange.Buffer pNext(@NativeType("void const *") long value) { VkMappedMemoryRange.npNext(address(), value); return this; }
+        public VkMappedMemoryRange.Buffer pNext(@NativeType("const void *") long value) { VkMappedMemoryRange.npNext(address(), value); return this; }
         /** Sets the specified value to the {@code memory} field. */
         public VkMappedMemoryRange.Buffer memory(@NativeType("VkDeviceMemory") long value) { VkMappedMemoryRange.nmemory(address(), value); return this; }
         /** Sets the specified value to the {@code offset} field. */

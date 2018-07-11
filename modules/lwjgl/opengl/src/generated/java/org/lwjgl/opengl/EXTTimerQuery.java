@@ -94,7 +94,7 @@ public class EXTTimerQuery {
         }
     }
 
-    /** Array version of: {@link #glGetQueryObjecti64vEXT GetQueryObjecti64vEXT} */
+    /** register Array version of: {@link #glGetQueryObjecti64vEXT GetQueryObjecti64vEXT} */
     public static void glGetQueryObjecti64vEXT(@NativeType("GLuint") int id, @NativeType("GLenum") int pname, @NativeType("GLint64 *") long[] params) {
         long __functionAddress = GL.getICD().glGetQueryObjecti64vEXT;
         if (CHECKS) {
@@ -104,7 +104,7 @@ public class EXTTimerQuery {
         callPV(__functionAddress, id, pname, params);
     }
 
-    /** Array version of: {@link #glGetQueryObjectui64vEXT GetQueryObjectui64vEXT} */
+    /** register Array version of: {@link #glGetQueryObjectui64vEXT GetQueryObjectui64vEXT} */
     public static void glGetQueryObjectui64vEXT(@NativeType("GLuint") int id, @NativeType("GLenum") int pname, @NativeType("GLuint64 *") long[] params) {
         long __functionAddress = GL.getICD().glGetQueryObjectui64vEXT;
         if (CHECKS) {

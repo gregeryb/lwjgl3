@@ -140,7 +140,7 @@ class NativeName(val nativeName: String) : FunctionModifier {
 }
 
 /** Marks reused functions. */
-class Reuse(val source: NativeClass) : FunctionModifier {
+object Reuse : FunctionModifier {
     override val isSpecial = false
 }
 
@@ -156,11 +156,10 @@ class MapPointer(
 ) : FunctionModifier {
     override val isSpecial = true
     override fun validate(func: Func) {
-        val returnType = func.returns.nativeType
-        if (returnType !is PointerType<*>)
+        if (func.returns.nativeType !is PointerType)
             throw IllegalArgumentException("The MapPointer modifier can only be applied on functions with pointer return types.")
 
-        if (returnType.elementType !is VoidType)
+        if (func.returns.nativeType.mapping != PointerMapping.DATA)
             throw IllegalArgumentException("The MapPointer modifier can only be applied on function with void pointer return types.")
     }
 }
@@ -186,7 +185,7 @@ object Nonnull : FunctionModifier {
     override val isSpecial = false
 
     override fun validate(func: Func) {
-        if (func.returns.nativeType !is PointerType<*> && func.returns.nativeType !is JObjectType)
+        if (func.returns.nativeType !is PointerType && func.returns.nativeType !is JObjectType)
             throw IllegalArgumentException("The Nonnull modifier can only be applied on functions with pointer or Java instance return types.")
     }
 

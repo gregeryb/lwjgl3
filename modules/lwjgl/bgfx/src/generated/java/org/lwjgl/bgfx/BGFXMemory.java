@@ -28,11 +28,11 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct bgfx_memory_t {
  *     uint8_t * data;
  *     uint32_t size;
- * }</code></pre>
+ * }</pre></code>
  */
 @NativeType("struct bgfx_memory_t")
 public class BGFXMemory extends Struct implements NativeResource {
@@ -40,7 +40,6 @@ public class BGFXMemory extends Struct implements NativeResource {
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */

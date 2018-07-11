@@ -56,9 +56,7 @@ public class ARBTextureStorage {
      * @param internalformat the sized internal format to be used to store texture image data
      * @param width          the width of the texture, in texels
      */
-    public static void glTexStorage1D(@NativeType("GLenum") int target, @NativeType("GLsizei") int levels, @NativeType("GLenum") int internalformat, @NativeType("GLsizei") int width) {
-        GL42C.glTexStorage1D(target, levels, internalformat, width);
-    }
+    public static native void glTexStorage1D(@NativeType("GLenum") int target, @NativeType("GLsizei") int levels, @NativeType("GLenum") int internalformat, @NativeType("GLsizei") int width);
 
     // --- [ glTexStorage2D ] ---
 
@@ -71,9 +69,7 @@ public class ARBTextureStorage {
      * @param width          the width of the texture, in texels
      * @param height         the height of the texture, in texels
      */
-    public static void glTexStorage2D(@NativeType("GLenum") int target, @NativeType("GLsizei") int levels, @NativeType("GLenum") int internalformat, @NativeType("GLsizei") int width, @NativeType("GLsizei") int height) {
-        GL42C.glTexStorage2D(target, levels, internalformat, width, height);
-    }
+    public static native void glTexStorage2D(@NativeType("GLenum") int target, @NativeType("GLsizei") int levels, @NativeType("GLenum") int internalformat, @NativeType("GLsizei") int width, @NativeType("GLsizei") int height);
 
     // --- [ glTexStorage3D ] ---
 
@@ -87,9 +83,7 @@ public class ARBTextureStorage {
      * @param height         the height of the texture, in texels
      * @param depth          the depth of the texture, in texels
      */
-    public static void glTexStorage3D(@NativeType("GLenum") int target, @NativeType("GLsizei") int levels, @NativeType("GLenum") int internalformat, @NativeType("GLsizei") int width, @NativeType("GLsizei") int height, @NativeType("GLsizei") int depth) {
-        GL42C.glTexStorage3D(target, levels, internalformat, width, height, depth);
-    }
+    public static native void glTexStorage3D(@NativeType("GLenum") int target, @NativeType("GLsizei") int levels, @NativeType("GLenum") int internalformat, @NativeType("GLsizei") int width, @NativeType("GLsizei") int height, @NativeType("GLsizei") int depth);
 
     // --- [ glTextureStorage1DEXT ] ---
 

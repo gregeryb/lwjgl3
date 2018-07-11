@@ -55,7 +55,7 @@ public class EXTSwapBuffersWithDamage {
         return neglSwapBuffersWithDamageEXT(dpy, surface, memAddressSafe(rects), remainingSafe(rects)) != 0;
     }
 
-    /** Array version of: {@link #eglSwapBuffersWithDamageEXT SwapBuffersWithDamageEXT} */
+    /** register Array version of: {@link #eglSwapBuffersWithDamageEXT SwapBuffersWithDamageEXT} */
     @NativeType("EGLBoolean")
     public static boolean eglSwapBuffersWithDamageEXT(@NativeType("EGLDisplay") long dpy, @NativeType("EGLSurface") long surface, @Nullable @NativeType("EGLint *") int[] rects) {
         long __functionAddress = EGL.getCapabilities().eglSwapBuffersWithDamageEXT;

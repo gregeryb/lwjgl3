@@ -63,92 +63,88 @@ public class EXTDisjointTimerQuery {
 
     static boolean isAvailable(GLESCapabilities caps) {
         return checkFunctions(
-            caps.glGenQueriesEXT, caps.glDeleteQueriesEXT, caps.glIsQueryEXT, caps.glBeginQueryEXT, caps.glEndQueryEXT, caps.glGetQueryivEXT, 
-            caps.glGetQueryObjectuivEXT, caps.glQueryCounterEXT, caps.glGetQueryObjecti64vEXT, caps.glGetQueryObjectui64vEXT
+            caps.glGenQueriesEXT, caps.glDeleteQueriesEXT, caps.glIsQueryEXT, caps.glBeginQueryEXT, caps.glEndQueryEXT, caps.glQueryCounterEXT, 
+            caps.glGetQueryivEXT, caps.glGetQueryObjectuivEXT, caps.glGetQueryObjecti64vEXT, caps.glGetQueryObjectui64vEXT
         );
     }
 
     // --- [ glGenQueriesEXT ] ---
 
-    public static void nglGenQueriesEXT(int n, long ids) {
-        EXTOcclusionQueryBoolean.nglGenQueriesEXT(n, ids);
-    }
+    public static native void nglGenQueriesEXT(int n, long ids);
 
     public static void glGenQueriesEXT(@NativeType("GLuint *") IntBuffer ids) {
-        EXTOcclusionQueryBoolean.glGenQueriesEXT(ids);
+        nglGenQueriesEXT(ids.remaining(), memAddress(ids));
     }
 
     @NativeType("void")
     public static int glGenQueriesEXT() {
-        return EXTOcclusionQueryBoolean.glGenQueriesEXT();
+        MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
+        try {
+            IntBuffer ids = stack.callocInt(1);
+            nglGenQueriesEXT(1, memAddress(ids));
+            return ids.get(0);
+        } finally {
+            stack.setPointer(stackPointer);
+        }
     }
 
     // --- [ glDeleteQueriesEXT ] ---
 
-    public static void nglDeleteQueriesEXT(int n, long ids) {
-        EXTOcclusionQueryBoolean.nglDeleteQueriesEXT(n, ids);
+    public static native void nglDeleteQueriesEXT(int n, long ids);
+
+    public static void glDeleteQueriesEXT(@NativeType("const GLuint *") IntBuffer ids) {
+        nglDeleteQueriesEXT(ids.remaining(), memAddress(ids));
     }
 
-    public static void glDeleteQueriesEXT(@NativeType("GLuint const *") IntBuffer ids) {
-        EXTOcclusionQueryBoolean.glDeleteQueriesEXT(ids);
-    }
-
-    public static void glDeleteQueriesEXT(@NativeType("GLuint const *") int id) {
-        EXTOcclusionQueryBoolean.glDeleteQueriesEXT(id);
+    public static void glDeleteQueriesEXT(@NativeType("const GLuint *") int id) {
+        MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
+        try {
+            IntBuffer ids = stack.ints(id);
+            nglDeleteQueriesEXT(1, memAddress(ids));
+        } finally {
+            stack.setPointer(stackPointer);
+        }
     }
 
     // --- [ glIsQueryEXT ] ---
 
     @NativeType("GLboolean")
-    public static boolean glIsQueryEXT(@NativeType("GLuint") int id) {
-        return EXTOcclusionQueryBoolean.glIsQueryEXT(id);
-    }
+    public static native boolean glIsQueryEXT(@NativeType("GLuint") int id);
 
     // --- [ glBeginQueryEXT ] ---
 
-    public static void glBeginQueryEXT(@NativeType("GLenum") int target, @NativeType("GLuint") int id) {
-        EXTOcclusionQueryBoolean.glBeginQueryEXT(target, id);
-    }
+    public static native void glBeginQueryEXT(@NativeType("GLenum") int target, @NativeType("GLuint") int id);
 
     // --- [ glEndQueryEXT ] ---
 
-    public static void glEndQueryEXT(@NativeType("GLenum") int target) {
-        EXTOcclusionQueryBoolean.glEndQueryEXT(target);
-    }
-
-    // --- [ glGetQueryivEXT ] ---
-
-    public static void nglGetQueryivEXT(int target, int pname, long params) {
-        EXTOcclusionQueryBoolean.nglGetQueryivEXT(target, pname, params);
-    }
-
-    public static void glGetQueryivEXT(@NativeType("GLenum") int target, @NativeType("GLenum") int pname, @NativeType("GLint *") IntBuffer params) {
-        EXTOcclusionQueryBoolean.glGetQueryivEXT(target, pname, params);
-    }
-
-    @NativeType("void")
-    public static int glGetQueryiEXT(@NativeType("GLenum") int target, @NativeType("GLenum") int pname) {
-        return EXTOcclusionQueryBoolean.glGetQueryiEXT(target, pname);
-    }
-
-    // --- [ glGetQueryObjectuivEXT ] ---
-
-    public static void nglGetQueryObjectuivEXT(int id, int pname, long params) {
-        EXTOcclusionQueryBoolean.nglGetQueryObjectuivEXT(id, pname, params);
-    }
-
-    public static void glGetQueryObjectuivEXT(@NativeType("GLuint") int id, @NativeType("GLenum") int pname, @NativeType("GLuint *") IntBuffer params) {
-        EXTOcclusionQueryBoolean.glGetQueryObjectuivEXT(id, pname, params);
-    }
-
-    @NativeType("void")
-    public static int glGetQueryObjectuiEXT(@NativeType("GLuint") int id, @NativeType("GLenum") int pname) {
-        return EXTOcclusionQueryBoolean.glGetQueryObjectuiEXT(id, pname);
-    }
+    public static native void glEndQueryEXT(@NativeType("GLenum") int target);
 
     // --- [ glQueryCounterEXT ] ---
 
     public static native void glQueryCounterEXT(@NativeType("GLuint") int id, @NativeType("GLenum") int target);
+
+    // --- [ glGetQueryivEXT ] ---
+
+    public static native void nglGetQueryivEXT(int target, int pname, long params);
+
+    public static void glGetQueryivEXT(@NativeType("GLenum") int target, @NativeType("GLenum") int pname, @NativeType("GLint *") IntBuffer params) {
+        if (CHECKS) {
+            check(params, 1);
+        }
+        nglGetQueryivEXT(target, pname, memAddress(params));
+    }
+
+    @NativeType("void")
+    public static int glGetQueryiEXT(@NativeType("GLenum") int target, @NativeType("GLenum") int pname) {
+        MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
+        try {
+            IntBuffer params = stack.callocInt(1);
+            nglGetQueryivEXT(target, pname, memAddress(params));
+            return params.get(0);
+        } finally {
+            stack.setPointer(stackPointer);
+        }
+    }
 
     // --- [ glGetQueryObjectivEXT ] ---
 
@@ -167,6 +163,29 @@ public class EXTDisjointTimerQuery {
         try {
             IntBuffer params = stack.callocInt(1);
             nglGetQueryObjectivEXT(id, pname, memAddress(params));
+            return params.get(0);
+        } finally {
+            stack.setPointer(stackPointer);
+        }
+    }
+
+    // --- [ glGetQueryObjectuivEXT ] ---
+
+    public static native void nglGetQueryObjectuivEXT(int id, int pname, long params);
+
+    public static void glGetQueryObjectuivEXT(@NativeType("GLuint") int id, @NativeType("GLenum") int pname, @NativeType("GLuint *") IntBuffer params) {
+        if (CHECKS) {
+            check(params, 1);
+        }
+        nglGetQueryObjectuivEXT(id, pname, memAddress(params));
+    }
+
+    @NativeType("void")
+    public static int glGetQueryObjectuiEXT(@NativeType("GLuint") int id, @NativeType("GLenum") int pname) {
+        MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
+        try {
+            IntBuffer params = stack.callocInt(1);
+            nglGetQueryObjectuivEXT(id, pname, memAddress(params));
             return params.get(0);
         } finally {
             stack.setPointer(stackPointer);
@@ -219,27 +238,35 @@ public class EXTDisjointTimerQuery {
         }
     }
 
-    /** Array version of: {@link #glGenQueriesEXT GenQueriesEXT} */
+    /** register Array version of: {@link #glGenQueriesEXT GenQueriesEXT} */
     public static void glGenQueriesEXT(@NativeType("GLuint *") int[] ids) {
-        EXTOcclusionQueryBoolean.glGenQueriesEXT(ids);
+        long __functionAddress = GLES.getICD().glGenQueriesEXT;
+        if (CHECKS) {
+            check(__functionAddress);
+        }
+        callPV(__functionAddress, ids.length, ids);
     }
 
-    /** Array version of: {@link #glDeleteQueriesEXT DeleteQueriesEXT} */
-    public static void glDeleteQueriesEXT(@NativeType("GLuint const *") int[] ids) {
-        EXTOcclusionQueryBoolean.glDeleteQueriesEXT(ids);
+    /** register Array version of: {@link #glDeleteQueriesEXT DeleteQueriesEXT} */
+    public static void glDeleteQueriesEXT(@NativeType("const GLuint *") int[] ids) {
+        long __functionAddress = GLES.getICD().glDeleteQueriesEXT;
+        if (CHECKS) {
+            check(__functionAddress);
+        }
+        callPV(__functionAddress, ids.length, ids);
     }
 
-    /** Array version of: {@link #glGetQueryivEXT GetQueryivEXT} */
+    /** register Array version of: {@link #glGetQueryivEXT GetQueryivEXT} */
     public static void glGetQueryivEXT(@NativeType("GLenum") int target, @NativeType("GLenum") int pname, @NativeType("GLint *") int[] params) {
-        EXTOcclusionQueryBoolean.glGetQueryivEXT(target, pname, params);
+        long __functionAddress = GLES.getICD().glGetQueryivEXT;
+        if (CHECKS) {
+            check(__functionAddress);
+            check(params, 1);
+        }
+        callPV(__functionAddress, target, pname, params);
     }
 
-    /** Array version of: {@link #glGetQueryObjectuivEXT GetQueryObjectuivEXT} */
-    public static void glGetQueryObjectuivEXT(@NativeType("GLuint") int id, @NativeType("GLenum") int pname, @NativeType("GLuint *") int[] params) {
-        EXTOcclusionQueryBoolean.glGetQueryObjectuivEXT(id, pname, params);
-    }
-
-    /** Array version of: {@link #glGetQueryObjectivEXT GetQueryObjectivEXT} */
+    /** register Array version of: {@link #glGetQueryObjectivEXT GetQueryObjectivEXT} */
     public static void glGetQueryObjectivEXT(@NativeType("GLuint") int id, @NativeType("GLenum") int pname, @NativeType("GLint *") int[] params) {
         long __functionAddress = GLES.getICD().glGetQueryObjectivEXT;
         if (CHECKS) {
@@ -249,7 +276,17 @@ public class EXTDisjointTimerQuery {
         callPV(__functionAddress, id, pname, params);
     }
 
-    /** Array version of: {@link #glGetQueryObjecti64vEXT GetQueryObjecti64vEXT} */
+    /** register Array version of: {@link #glGetQueryObjectuivEXT GetQueryObjectuivEXT} */
+    public static void glGetQueryObjectuivEXT(@NativeType("GLuint") int id, @NativeType("GLenum") int pname, @NativeType("GLuint *") int[] params) {
+        long __functionAddress = GLES.getICD().glGetQueryObjectuivEXT;
+        if (CHECKS) {
+            check(__functionAddress);
+            check(params, 1);
+        }
+        callPV(__functionAddress, id, pname, params);
+    }
+
+    /** register Array version of: {@link #glGetQueryObjecti64vEXT GetQueryObjecti64vEXT} */
     public static void glGetQueryObjecti64vEXT(@NativeType("GLuint") int id, @NativeType("GLenum") int pname, @NativeType("GLint64 *") long[] params) {
         long __functionAddress = GLES.getICD().glGetQueryObjecti64vEXT;
         if (CHECKS) {
@@ -259,7 +296,7 @@ public class EXTDisjointTimerQuery {
         callPV(__functionAddress, id, pname, params);
     }
 
-    /** Array version of: {@link #glGetQueryObjectui64vEXT GetQueryObjectui64vEXT} */
+    /** register Array version of: {@link #glGetQueryObjectui64vEXT GetQueryObjectui64vEXT} */
     public static void glGetQueryObjectui64vEXT(@NativeType("GLuint") int id, @NativeType("GLenum") int pname, @NativeType("GLuint64 *") long[] params) {
         long __functionAddress = GLES.getICD().glGetQueryObjectui64vEXT;
         if (CHECKS) {

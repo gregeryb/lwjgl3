@@ -32,7 +32,7 @@ import static org.lwjgl.system.JNI.*;
  * </ul></dd>
  * <dt><b>Contact</b></dt>
  * <dd><ul>
- * <li>Daniel Rakos @drakos-amd</li>
+ * <li>Daniel Rakos @aqnuep</li>
  * </ul></dd>
  * <dt><b>Last Modified Date</b></dt>
  * <dd>2017-08-02</dd>
@@ -86,15 +86,15 @@ public class EXTSampleLocations {
         throw new UnsupportedOperationException();
     }
 
-    static boolean checkCapsInstance(FunctionProvider provider, java.util.Map<String, Long> caps, java.util.Set<String> ext) {
-        return ext.contains("VK_EXT_sample_locations") && VK.checkExtension("VK_EXT_sample_locations",
-               VK.isSupported(provider, "vkGetPhysicalDeviceMultisamplePropertiesEXT", caps)
+    static boolean isAvailable(VKCapabilitiesInstance caps) {
+        return checkFunctions(
+            caps.vkGetPhysicalDeviceMultisamplePropertiesEXT
         );
     }
 
-    static boolean checkCapsDevice(FunctionProvider provider, java.util.Map<String, Long> caps, java.util.Set<String> ext) {
-        return ext.contains("VK_EXT_sample_locations") && VK.checkExtension("VK_EXT_sample_locations",
-               VK.isSupported(provider, "vkCmdSetSampleLocationsEXT", caps)
+    static boolean isAvailable(VKCapabilitiesInstance capsInstance, VKCapabilitiesDevice caps) {
+        return isAvailable(capsInstance) && checkFunctions(
+            caps.vkCmdSetSampleLocationsEXT
         );
     }
 
@@ -115,20 +115,20 @@ public class EXTSampleLocations {
      * 
      * <h5>C Specification</h5>
      * 
-     * <p>The custom sample locations used for rasterization when {@link VkPipelineSampleLocationsStateCreateInfoEXT}{@code ::sampleLocationsEnable} is {@link VK10#VK_TRUE TRUE} are specified by the {@link VkPipelineSampleLocationsStateCreateInfoEXT}{@code ::sampleLocationsInfo} property of the bound graphics pipeline, if the pipeline was not created with {@link #VK_DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT} enabled.</p>
+     * <p>The custom sample locations used for rasterization when {@link VkPipelineSampleLocationsStateCreateInfoEXT}{@code ::sampleLocationsEnable} is {@link VK10#VK_TRUE TRUE} are specified by the {@link VkPipelineSampleLocationsStateCreateInfoEXT}{@code ::sampleLocationsInfo} property of the currently bound graphics pipeline, if the pipeline was not created with {@link #VK_DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT} enabled.</p>
      * 
      * <p>Otherwise, the sample locations used for rasterization are set by calling {@link #vkCmdSetSampleLocationsEXT CmdSetSampleLocationsEXT}:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * void vkCmdSetSampleLocationsEXT(
      *     VkCommandBuffer                             commandBuffer,
-     *     const VkSampleLocationsInfoEXT*             pSampleLocationsInfo);</code></pre>
+     *     const VkSampleLocationsInfoEXT*             pSampleLocationsInfo);</pre></code>
      * 
      * <h5>Valid Usage</h5>
      * 
      * <ul>
-     * <li>The bound graphics pipeline <b>must</b> have been created with the {@link #VK_DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT} dynamic state enabled</li>
-     * <li>The {@code sampleLocationsPerPixel} member of {@code pSampleLocationsInfo} <b>must</b> equal the {@code rasterizationSamples} member of the {@link VkPipelineMultisampleStateCreateInfo} structure the bound graphics pipeline has been created with</li>
+     * <li>The currently bound graphics pipeline <b>must</b> have been created with the {@link #VK_DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT} dynamic state enabled</li>
+     * <li>The {@code sampleLocationsPerPixel} member of {@code pSampleLocationsInfo} <b>must</b> equal the {@code rasterizationSamples} member of the {@link VkPipelineMultisampleStateCreateInfo} structure the currently bound graphics pipeline has been created with</li>
      * <li>If {@link VkPhysicalDeviceSampleLocationsPropertiesEXT}{@code ::variableSampleLocations} is {@link VK10#VK_FALSE FALSE} then the current render pass <b>must</b> have been begun by specifying a {@link VkRenderPassSampleLocationsBeginInfoEXT} structure whose {@code pPostSubpassSampleLocations} member contains an element with a {@code subpassIndex} matching the current subpass index and the {@code sampleLocationsInfo} member of that element <b>must</b> match the sample locations state pointed to by {@code pSampleLocationsInfo}</li>
      * </ul>
      * 
@@ -162,7 +162,7 @@ public class EXTSampleLocations {
      * @param commandBuffer        the command buffer into which the command will be recorded.
      * @param pSampleLocationsInfo the sample locations state to set.
      */
-    public static void vkCmdSetSampleLocationsEXT(VkCommandBuffer commandBuffer, @NativeType("VkSampleLocationsInfoEXT const *") VkSampleLocationsInfoEXT pSampleLocationsInfo) {
+    public static void vkCmdSetSampleLocationsEXT(VkCommandBuffer commandBuffer, @NativeType("const VkSampleLocationsInfoEXT *") VkSampleLocationsInfoEXT pSampleLocationsInfo) {
         nvkCmdSetSampleLocationsEXT(commandBuffer, pSampleLocationsInfo.address());
     }
 
@@ -186,11 +186,11 @@ public class EXTSampleLocations {
      * 
      * <p>To query additional sample count specific multisampling capabilities, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * void vkGetPhysicalDeviceMultisamplePropertiesEXT(
      *     VkPhysicalDevice                            physicalDevice,
      *     VkSampleCountFlagBits                       samples,
-     *     VkMultisamplePropertiesEXT*                 pMultisampleProperties);</code></pre>
+     *     VkMultisamplePropertiesEXT*                 pMultisampleProperties);</pre></code>
      * 
      * <h5>Valid Usage (Implicit)</h5>
      * 

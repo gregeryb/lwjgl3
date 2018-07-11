@@ -6,13 +6,13 @@
 package org.lwjgl.vulkan;
 
 /**
- * {@code VK_IMG_filter_cubic} adds an additional, high quality cubic filtering mode to Vulkan, using a Catmull-Rom bicubic filter. Performing this kind of filtering can be done in a shader by using 16 samples and a number of instructions, but this can be inefficient. The cubic filter mode exposes an optimized high quality texture sampling using fixed texture sampling functionality.
+ * {@code VK_IMG_filter_cubic} adds an additional, high quality cubic filtering mode to Vulkan, using a Catmull-Rom bicubic filter. Performing this kind of filtering can be done in a shader by using 16 samples and a number of instructions, but this can be inefficient. The cubic filter mode exposes an optimized high quality texture sampling using fixed texture sampling hardware.
  * 
  * <h5>Example</h5>
  * 
  * <p>Creating a sampler with the new filter for both magnification and minification</p>
  * 
- * <pre><code>
+ * <code><pre>
  *     VkSamplerCreateInfo createInfo =
  *     {
  *         VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO // sType
@@ -25,8 +25,8 @@ package org.lwjgl.vulkan;
  *     VkSampler sampler;
  *     VkResult result = vkCreateSampler(
  *         device,
- *         &amp;createInfo,
- *         &amp;sampler);</code></pre>
+ *         &createInfo,
+ *         &sampler);</pre></code>
  * 
  * <dl>
  * <dt><b>Name String</b></dt>
@@ -43,7 +43,7 @@ package org.lwjgl.vulkan;
  * </ul></dd>
  * <dt><b>Contact</b></dt>
  * <dd><ul>
- * <li>Tobias Hector @tobski</li>
+ * <li>Tobias Hector @tobias</li>
  * </ul></dd>
  * <dt><b>Last Modified Date</b></dt>
  * <dd>2016-02-23</dd>

@@ -27,7 +27,7 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct stbrp_context {
  *     int width;
  *     int height;
@@ -38,7 +38,7 @@ import static org.lwjgl.system.MemoryStack.*;
  *     {@link STBRPNode stbrp_node} * active_head;
  *     {@link STBRPNode stbrp_node} * free_head;
  *     {@link STBRPNode stbrp_node} extra[2];
- * }</code></pre>
+ * }</pre></code>
  */
 @NativeType("struct stbrp_context")
 public class STBRPContext extends Struct implements NativeResource {
@@ -46,7 +46,6 @@ public class STBRPContext extends Struct implements NativeResource {
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */
@@ -293,7 +292,8 @@ public class STBRPContext extends Struct implements NativeResource {
     public static STBRPNode.Buffer nextra(long struct) { return STBRPNode.create(struct + STBRPContext.EXTRA, 2); }
     /** Unsafe version of {@link #extra(int) extra}. */
     public static STBRPNode nextra(long struct, int index) {
-        return STBRPNode.create(struct + STBRPContext.EXTRA + check(index, 2) * STBRPNode.SIZEOF);
+        if (CHECKS) { check(index, 2); }
+        return STBRPNode.create(struct + STBRPContext.EXTRA + index * STBRPNode.SIZEOF);
     }
 
     // -----------------------------------

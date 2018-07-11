@@ -16,11 +16,11 @@ import static org.lwjgl.system.MemoryUtil.*;
 /**
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct nk_buffer_marker {
  *     int active;
  *     nk_size offset;
- * }</code></pre>
+ * }</pre></code>
  */
 @NativeType("struct nk_buffer_marker")
 public class NkBufferMarker extends Struct {
@@ -28,7 +28,6 @@ public class NkBufferMarker extends Struct {
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */

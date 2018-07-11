@@ -44,15 +44,15 @@ public class AMDSamplePositions {
 
     public static native void nglSetMultisamplefvAMD(int pname, int index, long val);
 
-    public static void glSetMultisamplefvAMD(@NativeType("GLenum") int pname, @NativeType("GLuint") int index, @NativeType("GLfloat const *") FloatBuffer val) {
+    public static void glSetMultisamplefvAMD(@NativeType("GLenum") int pname, @NativeType("GLuint") int index, @NativeType("const GLfloat *") FloatBuffer val) {
         if (CHECKS) {
             check(val, 2);
         }
         nglSetMultisamplefvAMD(pname, index, memAddress(val));
     }
 
-    /** Array version of: {@link #glSetMultisamplefvAMD SetMultisamplefvAMD} */
-    public static void glSetMultisamplefvAMD(@NativeType("GLenum") int pname, @NativeType("GLuint") int index, @NativeType("GLfloat const *") float[] val) {
+    /** register Array version of: {@link #glSetMultisamplefvAMD SetMultisamplefvAMD} */
+    public static void glSetMultisamplefvAMD(@NativeType("GLenum") int pname, @NativeType("GLuint") int index, @NativeType("const GLfloat *") float[] val) {
         long __functionAddress = GL.getICD().glSetMultisamplefvAMD;
         if (CHECKS) {
             check(__functionAddress);

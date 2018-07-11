@@ -18,19 +18,18 @@ import static org.lwjgl.system.MemoryStack.*;
 /**
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct SQL_DATE_STRUCT {
  *     SQLSMALLINT year;
  *     SQLUSMALLINT month;
  *     SQLUSMALLINT day;
- * }</code></pre>
+ * }</pre></code>
  */
 public class SQL_DATE_STRUCT extends Struct implements NativeResource {
 
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */

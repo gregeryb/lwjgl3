@@ -217,7 +217,7 @@ public class EXTTextureInteger {
         }
     }
 
-    /** Array version of: {@link #glTexParameterIivEXT TexParameterIivEXT} */
+    /** register Array version of: {@link #glTexParameterIivEXT TexParameterIivEXT} */
     public static void glTexParameterIivEXT(@NativeType("GLenum") int target, @NativeType("GLenum") int pname, @NativeType("GLint *") int[] params) {
         long __functionAddress = GL.getICD().glTexParameterIivEXT;
         if (CHECKS) {
@@ -227,7 +227,7 @@ public class EXTTextureInteger {
         callPV(__functionAddress, target, pname, params);
     }
 
-    /** Array version of: {@link #glTexParameterIuivEXT TexParameterIuivEXT} */
+    /** register Array version of: {@link #glTexParameterIuivEXT TexParameterIuivEXT} */
     public static void glTexParameterIuivEXT(@NativeType("GLenum") int target, @NativeType("GLenum") int pname, @NativeType("GLuint *") int[] params) {
         long __functionAddress = GL.getICD().glTexParameterIuivEXT;
         if (CHECKS) {
@@ -237,7 +237,7 @@ public class EXTTextureInteger {
         callPV(__functionAddress, target, pname, params);
     }
 
-    /** Array version of: {@link #glGetTexParameterIivEXT GetTexParameterIivEXT} */
+    /** register Array version of: {@link #glGetTexParameterIivEXT GetTexParameterIivEXT} */
     public static void glGetTexParameterIivEXT(@NativeType("GLenum") int target, @NativeType("GLenum") int pname, @NativeType("GLint *") int[] params) {
         long __functionAddress = GL.getICD().glGetTexParameterIivEXT;
         if (CHECKS) {
@@ -247,7 +247,7 @@ public class EXTTextureInteger {
         callPV(__functionAddress, target, pname, params);
     }
 
-    /** Array version of: {@link #glGetTexParameterIuivEXT GetTexParameterIuivEXT} */
+    /** register Array version of: {@link #glGetTexParameterIuivEXT GetTexParameterIuivEXT} */
     public static void glGetTexParameterIuivEXT(@NativeType("GLenum") int target, @NativeType("GLenum") int pname, @NativeType("GLuint *") int[] params) {
         long __functionAddress = GL.getICD().glGetTexParameterIuivEXT;
         if (CHECKS) {

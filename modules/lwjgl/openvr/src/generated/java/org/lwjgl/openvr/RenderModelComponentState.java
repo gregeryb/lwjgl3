@@ -27,12 +27,12 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct RenderModel_ComponentState_t {
  *     {@link HmdMatrix34 HmdMatrix34_t} mTrackingToComponentRenderModel;
  *     {@link HmdMatrix34 HmdMatrix34_t} mTrackingToComponentLocal;
  *     VRComponentProperties uProperties;
- * }</code></pre>
+ * }</pre></code>
  */
 @NativeType("struct RenderModel_ComponentState_t")
 public class RenderModelComponentState extends Struct implements NativeResource {
@@ -40,7 +40,6 @@ public class RenderModelComponentState extends Struct implements NativeResource 
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */
@@ -84,13 +83,9 @@ public class RenderModelComponentState extends Struct implements NativeResource 
     /** Returns a {@link HmdMatrix34} view of the {@code mTrackingToComponentRenderModel} field. */
     @NativeType("HmdMatrix34_t")
     public HmdMatrix34 mTrackingToComponentRenderModel() { return nmTrackingToComponentRenderModel(address()); }
-    /** Passes the {@code mTrackingToComponentRenderModel} field to the specified {@link java.util.function.Consumer Consumer}. */
-    public RenderModelComponentState mTrackingToComponentRenderModel(java.util.function.Consumer<HmdMatrix34> consumer) { consumer.accept(mTrackingToComponentRenderModel()); return this; }
     /** Returns a {@link HmdMatrix34} view of the {@code mTrackingToComponentLocal} field. */
     @NativeType("HmdMatrix34_t")
     public HmdMatrix34 mTrackingToComponentLocal() { return nmTrackingToComponentLocal(address()); }
-    /** Passes the {@code mTrackingToComponentLocal} field to the specified {@link java.util.function.Consumer Consumer}. */
-    public RenderModelComponentState mTrackingToComponentLocal(java.util.function.Consumer<HmdMatrix34> consumer) { consumer.accept(mTrackingToComponentLocal()); return this; }
     /** Returns the value of the {@code uProperties} field. */
     @NativeType("VRComponentProperties")
     public int uProperties() { return nuProperties(address()); }
@@ -292,13 +287,9 @@ public class RenderModelComponentState extends Struct implements NativeResource 
         /** Returns a {@link HmdMatrix34} view of the {@code mTrackingToComponentRenderModel} field. */
         @NativeType("HmdMatrix34_t")
         public HmdMatrix34 mTrackingToComponentRenderModel() { return RenderModelComponentState.nmTrackingToComponentRenderModel(address()); }
-        /** Passes the {@code mTrackingToComponentRenderModel} field to the specified {@link java.util.function.Consumer Consumer}. */
-        public RenderModelComponentState.Buffer mTrackingToComponentRenderModel(java.util.function.Consumer<HmdMatrix34> consumer) { consumer.accept(mTrackingToComponentRenderModel()); return this; }
         /** Returns a {@link HmdMatrix34} view of the {@code mTrackingToComponentLocal} field. */
         @NativeType("HmdMatrix34_t")
         public HmdMatrix34 mTrackingToComponentLocal() { return RenderModelComponentState.nmTrackingToComponentLocal(address()); }
-        /** Passes the {@code mTrackingToComponentLocal} field to the specified {@link java.util.function.Consumer Consumer}. */
-        public RenderModelComponentState.Buffer mTrackingToComponentLocal(java.util.function.Consumer<HmdMatrix34> consumer) { consumer.accept(mTrackingToComponentLocal()); return this; }
         /** Returns the value of the {@code uProperties} field. */
         @NativeType("VRComponentProperties")
         public int uProperties() { return RenderModelComponentState.nuProperties(address()); }

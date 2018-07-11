@@ -20,17 +20,19 @@ import static org.lwjgl.system.MemoryStack.*;
  * <h3>Member documentation</h3>
  * 
  * <ul>
- * <li>{@code stableDst} &ndash; pledges that last 64KB decompressed data will remain available unmodified. This optimization skips storage operations in tmp buffers.</li>
+ * <li>{@code stableDst} &ndash; 
+ * pledge that at least {@code 64KB+64Bytes} of previously decompressed data remain unmodifed where it was decoded. This optimization skips storage
+ * operations in {@code tmp} buffers</li>
  * <li>{@code reserved} &ndash; must be set to zero for forward compatibility</li>
  * </ul>
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct LZ4F_decompressOptions_t {
  *     unsigned stableDst;
  *     unsigned reserved[3];
- * }</code></pre>
+ * }</pre></code>
  */
 @NativeType("struct LZ4F_decompressOptions_t")
 public class LZ4FDecompressOptions extends Struct implements NativeResource {
@@ -38,7 +40,6 @@ public class LZ4FDecompressOptions extends Struct implements NativeResource {
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */
@@ -263,7 +264,8 @@ public class LZ4FDecompressOptions extends Struct implements NativeResource {
     public static IntBuffer nreserved(long struct) { return memIntBuffer(struct + LZ4FDecompressOptions.RESERVED, 3); }
     /** Unsafe version of {@link #reserved(int) reserved}. */
     public static int nreserved(long struct, int index) {
-        return memGetInt(struct + LZ4FDecompressOptions.RESERVED + check(index, 3) * 4);
+        if (CHECKS) { check(index, 3); }
+        return memGetInt(struct + LZ4FDecompressOptions.RESERVED + index * 4);
     }
 
     /** Unsafe version of {@link #stableDst(int) stableDst}. */
@@ -275,7 +277,8 @@ public class LZ4FDecompressOptions extends Struct implements NativeResource {
     }
     /** Unsafe version of {@link #reserved(int, int) reserved}. */
     public static void nreserved(long struct, int index, int value) {
-        memPutInt(struct + LZ4FDecompressOptions.RESERVED + check(index, 3) * 4, value);
+        if (CHECKS) { check(index, 3); }
+        memPutInt(struct + LZ4FDecompressOptions.RESERVED + index * 4, value);
     }
 
     // -----------------------------------

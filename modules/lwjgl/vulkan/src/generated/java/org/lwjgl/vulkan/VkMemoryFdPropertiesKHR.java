@@ -28,19 +28,18 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct VkMemoryFdPropertiesKHR {
  *     VkStructureType sType;
  *     void * pNext;
  *     uint32_t memoryTypeBits;
- * }</code></pre>
+ * }</pre></code>
  */
 public class VkMemoryFdPropertiesKHR extends Struct implements NativeResource {
 
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */
@@ -90,34 +89,6 @@ public class VkMemoryFdPropertiesKHR extends Struct implements NativeResource {
     /** Returns the value of the {@code memoryTypeBits} field. */
     @NativeType("uint32_t")
     public int memoryTypeBits() { return nmemoryTypeBits(address()); }
-
-    /** Sets the specified value to the {@code sType} field. */
-    public VkMemoryFdPropertiesKHR sType(@NativeType("VkStructureType") int value) { nsType(address(), value); return this; }
-    /** Sets the specified value to the {@code pNext} field. */
-    public VkMemoryFdPropertiesKHR pNext(@NativeType("void *") long value) { npNext(address(), value); return this; }
-
-    /** Initializes this struct with the specified values. */
-    public VkMemoryFdPropertiesKHR set(
-        int sType,
-        long pNext
-    ) {
-        sType(sType);
-        pNext(pNext);
-
-        return this;
-    }
-
-    /**
-     * Copies the specified struct data to this struct.
-     *
-     * @param src the source struct
-     *
-     * @return this struct
-     */
-    public VkMemoryFdPropertiesKHR set(VkMemoryFdPropertiesKHR src) {
-        memCopy(src.address(), address(), SIZEOF);
-        return this;
-    }
 
     // -----------------------------------
 
@@ -267,11 +238,6 @@ public class VkMemoryFdPropertiesKHR extends Struct implements NativeResource {
     /** Unsafe version of {@link #memoryTypeBits}. */
     public static int nmemoryTypeBits(long struct) { return memGetInt(struct + VkMemoryFdPropertiesKHR.MEMORYTYPEBITS); }
 
-    /** Unsafe version of {@link #sType(int) sType}. */
-    public static void nsType(long struct, int value) { memPutInt(struct + VkMemoryFdPropertiesKHR.STYPE, value); }
-    /** Unsafe version of {@link #pNext(long) pNext}. */
-    public static void npNext(long struct, long value) { memPutAddress(struct + VkMemoryFdPropertiesKHR.PNEXT, value); }
-
     // -----------------------------------
 
     /** An array of {@link VkMemoryFdPropertiesKHR} structs. */
@@ -327,11 +293,6 @@ public class VkMemoryFdPropertiesKHR extends Struct implements NativeResource {
         /** Returns the value of the {@code memoryTypeBits} field. */
         @NativeType("uint32_t")
         public int memoryTypeBits() { return VkMemoryFdPropertiesKHR.nmemoryTypeBits(address()); }
-
-        /** Sets the specified value to the {@code sType} field. */
-        public VkMemoryFdPropertiesKHR.Buffer sType(@NativeType("VkStructureType") int value) { VkMemoryFdPropertiesKHR.nsType(address(), value); return this; }
-        /** Sets the specified value to the {@code pNext} field. */
-        public VkMemoryFdPropertiesKHR.Buffer pNext(@NativeType("void *") long value) { VkMemoryFdPropertiesKHR.npNext(address(), value); return this; }
 
     }
 

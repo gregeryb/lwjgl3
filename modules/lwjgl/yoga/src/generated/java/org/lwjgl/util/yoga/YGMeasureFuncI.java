@@ -12,14 +12,14 @@ import static org.lwjgl.system.dyncall.DynCallback.*;
 /**
  * <h3>Type</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * uint64_t (*) (
  *     YGNodeRef node,
  *     float width,
  *     YGMeasureMode widthMode,
  *     float height,
  *     YGMeasureMode heightMode
- * )</code></pre>
+ * )</pre></code>
  */
 @FunctionalInterface
 @NativeType("YGMeasureFunc")
@@ -41,7 +41,15 @@ public interface YGMeasureFuncI extends CallbackI.J {
         );
     }
 
-    /** Use {@link YGMeasureFunc#toLong toLong} to create the return value. */
+    /**
+     * Use {@link YGMeasureFunc#toLong toLong} to create the return value.
+     *
+     * @param node       
+     * @param width      
+     * @param widthMode  
+     * @param height     
+     * @param heightMode 
+     */
     @NativeType("uint64_t") long invoke(@NativeType("YGNodeRef") long node, float width, @NativeType("YGMeasureMode") int widthMode, float height, @NativeType("YGMeasureMode") int heightMode);
 
 }

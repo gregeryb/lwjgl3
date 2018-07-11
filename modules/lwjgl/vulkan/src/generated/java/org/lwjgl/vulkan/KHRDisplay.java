@@ -22,7 +22,7 @@ import static org.lwjgl.system.MemoryUtil.*;
  * 
  * <div style="margin-left: 26px; border-left: 1px solid gray; padding-left: 14px;"><h5>Note</h5>
  * 
- * <p>The example code for the {@code VK_KHR_display} and {@link KHRDisplaySwapchain VK_KHR_display_swapchain} extensions was removed from the appendix after revision 1.0.43. The display enumeration example code was ported to the cube demo that is shipped with the official Khronos SDK, and is being kept up-to-date in that location (see: https://github.com/KhronosGroup/Vulkan-Tools/blob/master/cube/cube.c).</p>
+ * <p>The example code for the {@code VK_KHR_display} and {@link KHRDisplaySwapchain VK_KHR_display_swapchain} extensions was removed from the appendix after revision 1.0.43. The display enumeration example code was ported to the cube demo that is shipped with the official Khronos SDK, and is being kept up-to-date in that location (see: https://github.com/KhronosGroup/Vulkan-LoaderAndValidationLayers/blob/master/demos/cube.c).</p>
  * </div>
  * 
  * <dl>
@@ -118,15 +118,10 @@ public class KHRDisplay {
         throw new UnsupportedOperationException();
     }
 
-    static boolean checkCapsInstance(FunctionProvider provider, java.util.Map<String, Long> caps, java.util.Set<String> ext) {
-        return ext.contains("VK_KHR_display") && VK.checkExtension("VK_KHR_display",
-               VK.isSupported(provider, "vkGetPhysicalDeviceDisplayPropertiesKHR", caps)
-            && VK.isSupported(provider, "vkGetPhysicalDeviceDisplayPlanePropertiesKHR", caps)
-            && VK.isSupported(provider, "vkGetDisplayPlaneSupportedDisplaysKHR", caps)
-            && VK.isSupported(provider, "vkGetDisplayModePropertiesKHR", caps)
-            && VK.isSupported(provider, "vkCreateDisplayModeKHR", caps)
-            && VK.isSupported(provider, "vkGetDisplayPlaneCapabilitiesKHR", caps)
-            && VK.isSupported(provider, "vkCreateDisplayPlaneSurfaceKHR", caps)
+    static boolean isAvailable(VKCapabilitiesInstance caps) {
+        return checkFunctions(
+            caps.vkGetPhysicalDeviceDisplayPropertiesKHR, caps.vkGetPhysicalDeviceDisplayPlanePropertiesKHR, caps.vkGetDisplayPlaneSupportedDisplaysKHR, 
+            caps.vkGetDisplayModePropertiesKHR, caps.vkCreateDisplayModeKHR, caps.vkGetDisplayPlaneCapabilitiesKHR, caps.vkCreateDisplayPlaneSurfaceKHR
         );
     }
 
@@ -152,11 +147,11 @@ public class KHRDisplay {
      * 
      * <p>Various functions are provided for enumerating the available display devices present on a Vulkan physical device. To query information about the available displays, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * VkResult vkGetPhysicalDeviceDisplayPropertiesKHR(
      *     VkPhysicalDevice                            physicalDevice,
      *     uint32_t*                                   pPropertyCount,
-     *     VkDisplayPropertiesKHR*                     pProperties);</code></pre>
+     *     VkDisplayPropertiesKHR*                     pProperties);</pre></code>
      * 
      * <h5>Description</h5>
      * 
@@ -224,11 +219,11 @@ public class KHRDisplay {
      * 
      * <p>Images are presented to individual planes on a display. Devices <b>must</b> support at least one plane on each display. Planes <b>can</b> be stacked and blended to composite multiple images on one display. Devices <b>may</b> support only a fixed stacking order and fixed mapping between planes and displays, or they <b>may</b> allow arbitrary application specified stacking orders and mappings between planes and displays. To query the properties of device display planes, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * VkResult vkGetPhysicalDeviceDisplayPlanePropertiesKHR(
      *     VkPhysicalDevice                            physicalDevice,
      *     uint32_t*                                   pPropertyCount,
-     *     VkDisplayPlanePropertiesKHR*                pProperties);</code></pre>
+     *     VkDisplayPlanePropertiesKHR*                pProperties);</pre></code>
      * 
      * <h5>Description</h5>
      * 
@@ -296,12 +291,12 @@ public class KHRDisplay {
      * 
      * <p>To determine which displays a plane is usable with, call</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * VkResult vkGetDisplayPlaneSupportedDisplaysKHR(
      *     VkPhysicalDevice                            physicalDevice,
      *     uint32_t                                    planeIndex,
      *     uint32_t*                                   pDisplayCount,
-     *     VkDisplayKHR*                               pDisplays);</code></pre>
+     *     VkDisplayKHR*                               pDisplays);</pre></code>
      * 
      * <h5>Description</h5>
      * 
@@ -372,12 +367,12 @@ public class KHRDisplay {
      * 
      * <p>Each display has one or more supported modes associated with it by default. These built-in modes are queried by calling:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * VkResult vkGetDisplayModePropertiesKHR(
      *     VkPhysicalDevice                            physicalDevice,
      *     VkDisplayKHR                                display,
      *     uint32_t*                                   pPropertyCount,
-     *     VkDisplayModePropertiesKHR*                 pProperties);</code></pre>
+     *     VkDisplayModePropertiesKHR*                 pProperties);</pre></code>
      * 
      * <h5>Description</h5>
      * 
@@ -444,13 +439,13 @@ public class KHRDisplay {
      * 
      * <p>Additional modes <b>may</b> also be created by calling:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * VkResult vkCreateDisplayModeKHR(
      *     VkPhysicalDevice                            physicalDevice,
      *     VkDisplayKHR                                display,
      *     const VkDisplayModeCreateInfoKHR*           pCreateInfo,
      *     const VkAllocationCallbacks*                pAllocator,
-     *     VkDisplayModeKHR*                           pMode);</code></pre>
+     *     VkDisplayModeKHR*                           pMode);</pre></code>
      * 
      * <h5>Valid Usage (Implicit)</h5>
      * 
@@ -494,7 +489,7 @@ public class KHRDisplay {
      * @param pMode          returns the handle of the mode created.
      */
     @NativeType("VkResult")
-    public static int vkCreateDisplayModeKHR(VkPhysicalDevice physicalDevice, @NativeType("VkDisplayKHR") long display, @NativeType("VkDisplayModeCreateInfoKHR const *") VkDisplayModeCreateInfoKHR pCreateInfo, @Nullable @NativeType("VkAllocationCallbacks const *") VkAllocationCallbacks pAllocator, @NativeType("VkDisplayModeKHR *") LongBuffer pMode) {
+    public static int vkCreateDisplayModeKHR(VkPhysicalDevice physicalDevice, @NativeType("VkDisplayKHR") long display, @NativeType("const VkDisplayModeCreateInfoKHR *") VkDisplayModeCreateInfoKHR pCreateInfo, @Nullable @NativeType("const VkAllocationCallbacks *") VkAllocationCallbacks pAllocator, @NativeType("VkDisplayModeKHR *") LongBuffer pMode) {
         if (CHECKS) {
             check(pMode, 1);
         }
@@ -519,12 +514,12 @@ public class KHRDisplay {
      * 
      * <p>Applications that wish to present directly to a display <b>must</b> select which layer, or "{@code plane}" of the display they wish to target, and a mode to use with the display. Each display supports at least one plane. The capabilities of a given mode and plane combination are determined by calling:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * VkResult vkGetDisplayPlaneCapabilitiesKHR(
      *     VkPhysicalDevice                            physicalDevice,
      *     VkDisplayModeKHR                            mode,
      *     uint32_t                                    planeIndex,
-     *     VkDisplayPlaneCapabilitiesKHR*              pCapabilities);</code></pre>
+     *     VkDisplayPlaneCapabilitiesKHR*              pCapabilities);</pre></code>
      * 
      * <h5>Valid Usage (Implicit)</h5>
      * 
@@ -587,12 +582,12 @@ public class KHRDisplay {
      * 
      * <p>A complete display configuration includes a mode, one or more display planes and any parameters describing their behavior, and parameters describing some aspects of the images associated with those planes. Display surfaces describe the configuration of a single plane within a complete display configuration. To create a {@code VkSurfaceKHR} structure for a display surface, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * VkResult vkCreateDisplayPlaneSurfaceKHR(
      *     VkInstance                                  instance,
      *     const VkDisplaySurfaceCreateInfoKHR*        pCreateInfo,
      *     const VkAllocationCallbacks*                pAllocator,
-     *     VkSurfaceKHR*                               pSurface);</code></pre>
+     *     VkSurfaceKHR*                               pSurface);</pre></code>
      * 
      * <h5>Valid Usage (Implicit)</h5>
      * 
@@ -627,14 +622,14 @@ public class KHRDisplay {
      * @param pSurface    points to a {@code VkSurfaceKHR} handle in which the created surface is returned.
      */
     @NativeType("VkResult")
-    public static int vkCreateDisplayPlaneSurfaceKHR(VkInstance instance, @NativeType("VkDisplaySurfaceCreateInfoKHR const *") VkDisplaySurfaceCreateInfoKHR pCreateInfo, @Nullable @NativeType("VkAllocationCallbacks const *") VkAllocationCallbacks pAllocator, @NativeType("VkSurfaceKHR *") LongBuffer pSurface) {
+    public static int vkCreateDisplayPlaneSurfaceKHR(VkInstance instance, @NativeType("const VkDisplaySurfaceCreateInfoKHR *") VkDisplaySurfaceCreateInfoKHR pCreateInfo, @Nullable @NativeType("const VkAllocationCallbacks *") VkAllocationCallbacks pAllocator, @NativeType("VkSurfaceKHR *") LongBuffer pSurface) {
         if (CHECKS) {
             check(pSurface, 1);
         }
         return nvkCreateDisplayPlaneSurfaceKHR(instance, pCreateInfo.address(), memAddressSafe(pAllocator), memAddress(pSurface));
     }
 
-    /** Array version of: {@link #vkGetPhysicalDeviceDisplayPropertiesKHR GetPhysicalDeviceDisplayPropertiesKHR} */
+    /** register Array version of: {@link #vkGetPhysicalDeviceDisplayPropertiesKHR GetPhysicalDeviceDisplayPropertiesKHR} */
     @NativeType("VkResult")
     public static int vkGetPhysicalDeviceDisplayPropertiesKHR(VkPhysicalDevice physicalDevice, @NativeType("uint32_t *") int[] pPropertyCount, @Nullable @NativeType("VkDisplayPropertiesKHR *") VkDisplayPropertiesKHR.Buffer pProperties) {
         long __functionAddress = physicalDevice.getCapabilities().vkGetPhysicalDeviceDisplayPropertiesKHR;
@@ -646,7 +641,7 @@ public class KHRDisplay {
         return callPPPI(__functionAddress, physicalDevice.address(), pPropertyCount, memAddressSafe(pProperties));
     }
 
-    /** Array version of: {@link #vkGetPhysicalDeviceDisplayPlanePropertiesKHR GetPhysicalDeviceDisplayPlanePropertiesKHR} */
+    /** register Array version of: {@link #vkGetPhysicalDeviceDisplayPlanePropertiesKHR GetPhysicalDeviceDisplayPlanePropertiesKHR} */
     @NativeType("VkResult")
     public static int vkGetPhysicalDeviceDisplayPlanePropertiesKHR(VkPhysicalDevice physicalDevice, @NativeType("uint32_t *") int[] pPropertyCount, @Nullable @NativeType("VkDisplayPlanePropertiesKHR *") VkDisplayPlanePropertiesKHR.Buffer pProperties) {
         long __functionAddress = physicalDevice.getCapabilities().vkGetPhysicalDeviceDisplayPlanePropertiesKHR;
@@ -658,7 +653,7 @@ public class KHRDisplay {
         return callPPPI(__functionAddress, physicalDevice.address(), pPropertyCount, memAddressSafe(pProperties));
     }
 
-    /** Array version of: {@link #vkGetDisplayPlaneSupportedDisplaysKHR GetDisplayPlaneSupportedDisplaysKHR} */
+    /** register Array version of: {@link #vkGetDisplayPlaneSupportedDisplaysKHR GetDisplayPlaneSupportedDisplaysKHR} */
     @NativeType("VkResult")
     public static int vkGetDisplayPlaneSupportedDisplaysKHR(VkPhysicalDevice physicalDevice, @NativeType("uint32_t") int planeIndex, @NativeType("uint32_t *") int[] pDisplayCount, @Nullable @NativeType("VkDisplayKHR *") long[] pDisplays) {
         long __functionAddress = physicalDevice.getCapabilities().vkGetDisplayPlaneSupportedDisplaysKHR;
@@ -670,7 +665,7 @@ public class KHRDisplay {
         return callPPPI(__functionAddress, physicalDevice.address(), planeIndex, pDisplayCount, pDisplays);
     }
 
-    /** Array version of: {@link #vkGetDisplayModePropertiesKHR GetDisplayModePropertiesKHR} */
+    /** register Array version of: {@link #vkGetDisplayModePropertiesKHR GetDisplayModePropertiesKHR} */
     @NativeType("VkResult")
     public static int vkGetDisplayModePropertiesKHR(VkPhysicalDevice physicalDevice, @NativeType("VkDisplayKHR") long display, @NativeType("uint32_t *") int[] pPropertyCount, @Nullable @NativeType("VkDisplayModePropertiesKHR *") VkDisplayModePropertiesKHR.Buffer pProperties) {
         long __functionAddress = physicalDevice.getCapabilities().vkGetDisplayModePropertiesKHR;
@@ -682,9 +677,9 @@ public class KHRDisplay {
         return callPJPPI(__functionAddress, physicalDevice.address(), display, pPropertyCount, memAddressSafe(pProperties));
     }
 
-    /** Array version of: {@link #vkCreateDisplayModeKHR CreateDisplayModeKHR} */
+    /** register Array version of: {@link #vkCreateDisplayModeKHR CreateDisplayModeKHR} */
     @NativeType("VkResult")
-    public static int vkCreateDisplayModeKHR(VkPhysicalDevice physicalDevice, @NativeType("VkDisplayKHR") long display, @NativeType("VkDisplayModeCreateInfoKHR const *") VkDisplayModeCreateInfoKHR pCreateInfo, @Nullable @NativeType("VkAllocationCallbacks const *") VkAllocationCallbacks pAllocator, @NativeType("VkDisplayModeKHR *") long[] pMode) {
+    public static int vkCreateDisplayModeKHR(VkPhysicalDevice physicalDevice, @NativeType("VkDisplayKHR") long display, @NativeType("const VkDisplayModeCreateInfoKHR *") VkDisplayModeCreateInfoKHR pCreateInfo, @Nullable @NativeType("const VkAllocationCallbacks *") VkAllocationCallbacks pAllocator, @NativeType("VkDisplayModeKHR *") long[] pMode) {
         long __functionAddress = physicalDevice.getCapabilities().vkCreateDisplayModeKHR;
         if (CHECKS) {
             check(__functionAddress);
@@ -694,9 +689,9 @@ public class KHRDisplay {
         return callPJPPPI(__functionAddress, physicalDevice.address(), display, pCreateInfo.address(), memAddressSafe(pAllocator), pMode);
     }
 
-    /** Array version of: {@link #vkCreateDisplayPlaneSurfaceKHR CreateDisplayPlaneSurfaceKHR} */
+    /** register Array version of: {@link #vkCreateDisplayPlaneSurfaceKHR CreateDisplayPlaneSurfaceKHR} */
     @NativeType("VkResult")
-    public static int vkCreateDisplayPlaneSurfaceKHR(VkInstance instance, @NativeType("VkDisplaySurfaceCreateInfoKHR const *") VkDisplaySurfaceCreateInfoKHR pCreateInfo, @Nullable @NativeType("VkAllocationCallbacks const *") VkAllocationCallbacks pAllocator, @NativeType("VkSurfaceKHR *") long[] pSurface) {
+    public static int vkCreateDisplayPlaneSurfaceKHR(VkInstance instance, @NativeType("const VkDisplaySurfaceCreateInfoKHR *") VkDisplaySurfaceCreateInfoKHR pCreateInfo, @Nullable @NativeType("const VkAllocationCallbacks *") VkAllocationCallbacks pAllocator, @NativeType("VkSurfaceKHR *") long[] pSurface) {
         long __functionAddress = instance.getCapabilities().vkCreateDisplayPlaneSurfaceKHR;
         if (CHECKS) {
             check(__functionAddress);

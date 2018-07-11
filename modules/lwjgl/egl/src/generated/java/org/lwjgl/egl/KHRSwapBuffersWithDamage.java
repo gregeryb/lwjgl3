@@ -55,7 +55,7 @@ public class KHRSwapBuffersWithDamage {
         return neglSwapBuffersWithDamageKHR(dpy, surface, memAddressSafe(rects), remainingSafe(rects)) != 0;
     }
 
-    /** Array version of: {@link #eglSwapBuffersWithDamageKHR SwapBuffersWithDamageKHR} */
+    /** register Array version of: {@link #eglSwapBuffersWithDamageKHR SwapBuffersWithDamageKHR} */
     @NativeType("EGLBoolean")
     public static boolean eglSwapBuffersWithDamageKHR(@NativeType("EGLDisplay") long dpy, @NativeType("EGLSurface") long surface, @Nullable @NativeType("EGLint *") int[] rects) {
         long __functionAddress = EGL.getCapabilities().eglSwapBuffersWithDamageKHR;

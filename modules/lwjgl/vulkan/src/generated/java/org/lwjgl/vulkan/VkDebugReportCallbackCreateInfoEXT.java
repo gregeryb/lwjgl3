@@ -37,6 +37,7 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <ul>
  * <li>{@code sType} <b>must</b> be {@link EXTDebugReport#VK_STRUCTURE_TYPE_DEBUG_REPORT_CALLBACK_CREATE_INFO_EXT STRUCTURE_TYPE_DEBUG_REPORT_CALLBACK_CREATE_INFO_EXT}</li>
+ * <li>{@code pNext} <b>must</b> be {@code NULL}</li>
  * <li>{@code flags} <b>must</b> be a valid combination of {@code VkDebugReportFlagBitsEXT} values</li>
  * </ul>
  * 
@@ -56,21 +57,20 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct VkDebugReportCallbackCreateInfoEXT {
  *     VkStructureType sType;
- *     void const * pNext;
+ *     const void * pNext;
  *     VkDebugReportFlagsEXT flags;
  *     {@link VkDebugReportCallbackEXTI PFN_vkDebugReportCallbackEXT} pfnCallback;
  *     void * pUserData;
- * }</code></pre>
+ * }</pre></code>
  */
 public class VkDebugReportCallbackCreateInfoEXT extends Struct implements NativeResource {
 
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */
@@ -121,7 +121,7 @@ public class VkDebugReportCallbackCreateInfoEXT extends Struct implements Native
     @NativeType("VkStructureType")
     public int sType() { return nsType(address()); }
     /** Returns the value of the {@code pNext} field. */
-    @NativeType("void const *")
+    @NativeType("const void *")
     public long pNext() { return npNext(address()); }
     /** Returns the value of the {@code flags} field. */
     @NativeType("VkDebugReportFlagsEXT")
@@ -136,7 +136,7 @@ public class VkDebugReportCallbackCreateInfoEXT extends Struct implements Native
     /** Sets the specified value to the {@code sType} field. */
     public VkDebugReportCallbackCreateInfoEXT sType(@NativeType("VkStructureType") int value) { nsType(address(), value); return this; }
     /** Sets the specified value to the {@code pNext} field. */
-    public VkDebugReportCallbackCreateInfoEXT pNext(@NativeType("void const *") long value) { npNext(address(), value); return this; }
+    public VkDebugReportCallbackCreateInfoEXT pNext(@NativeType("const void *") long value) { npNext(address(), value); return this; }
     /** Sets the specified value to the {@code flags} field. */
     public VkDebugReportCallbackCreateInfoEXT flags(@NativeType("VkDebugReportFlagsEXT") int value) { nflags(address(), value); return this; }
     /** Sets the specified value to the {@code pfnCallback} field. */
@@ -407,7 +407,7 @@ public class VkDebugReportCallbackCreateInfoEXT extends Struct implements Native
         @NativeType("VkStructureType")
         public int sType() { return VkDebugReportCallbackCreateInfoEXT.nsType(address()); }
         /** Returns the value of the {@code pNext} field. */
-        @NativeType("void const *")
+        @NativeType("const void *")
         public long pNext() { return VkDebugReportCallbackCreateInfoEXT.npNext(address()); }
         /** Returns the value of the {@code flags} field. */
         @NativeType("VkDebugReportFlagsEXT")
@@ -422,7 +422,7 @@ public class VkDebugReportCallbackCreateInfoEXT extends Struct implements Native
         /** Sets the specified value to the {@code sType} field. */
         public VkDebugReportCallbackCreateInfoEXT.Buffer sType(@NativeType("VkStructureType") int value) { VkDebugReportCallbackCreateInfoEXT.nsType(address(), value); return this; }
         /** Sets the specified value to the {@code pNext} field. */
-        public VkDebugReportCallbackCreateInfoEXT.Buffer pNext(@NativeType("void const *") long value) { VkDebugReportCallbackCreateInfoEXT.npNext(address(), value); return this; }
+        public VkDebugReportCallbackCreateInfoEXT.Buffer pNext(@NativeType("const void *") long value) { VkDebugReportCallbackCreateInfoEXT.npNext(address(), value); return this; }
         /** Sets the specified value to the {@code flags} field. */
         public VkDebugReportCallbackCreateInfoEXT.Buffer flags(@NativeType("VkDebugReportFlagsEXT") int value) { VkDebugReportCallbackCreateInfoEXT.nflags(address(), value); return this; }
         /** Sets the specified value to the {@code pfnCallback} field. */

@@ -10,6 +10,9 @@ import java.nio.*;
 import org.lwjgl.system.*;
 
 import static org.lwjgl.system.Checks.*;
+import static org.lwjgl.system.JNI.*;
+import static org.lwjgl.system.MemoryStack.*;
+import static org.lwjgl.system.MemoryUtil.*;
 
 /**
  * Native bindings to the <a target="_blank" href="https://www.khronos.org/registry/OpenGL/extensions/ARB/ARB_texture_multisample.txt">ARB_texture_multisample</a> extension.
@@ -92,7 +95,7 @@ public class ARBTextureMultisample {
     /**
      * Establishes the data storage, format, dimensions, and number of samples of a 2D multisample texture's image.
      *
-     * @param target               the target of the operation. One of:<br><table><tr><td>{@link GL32C#GL_TEXTURE_2D_MULTISAMPLE TEXTURE_2D_MULTISAMPLE}</td><td>{@link GL32C#GL_PROXY_TEXTURE_2D_MULTISAMPLE PROXY_TEXTURE_2D_MULTISAMPLE}</td></tr></table>
+     * @param target               the target of the operation. One of:<br><table><tr><td>{@link GL32#GL_TEXTURE_2D_MULTISAMPLE TEXTURE_2D_MULTISAMPLE}</td><td>{@link GL32#GL_PROXY_TEXTURE_2D_MULTISAMPLE PROXY_TEXTURE_2D_MULTISAMPLE}</td></tr></table>
      * @param samples              the number of samples in the multisample texture's image
      * @param internalformat       the internal format to be used to store the multisample texture's image. {@code internalformat} must specify a color-renderable, depth-renderable,
      *                             or stencil-renderable format.
@@ -101,16 +104,14 @@ public class ARBTextureMultisample {
      * @param fixedsamplelocations whether the image will use identical sample locations and the same number of samples for all texels in the image, and the sample locations will not
      *                             depend on the internal format or size of the image
      */
-    public static void glTexImage2DMultisample(@NativeType("GLenum") int target, @NativeType("GLsizei") int samples, @NativeType("GLint") int internalformat, @NativeType("GLsizei") int width, @NativeType("GLsizei") int height, @NativeType("GLboolean") boolean fixedsamplelocations) {
-        GL32C.glTexImage2DMultisample(target, samples, internalformat, width, height, fixedsamplelocations);
-    }
+    public static native void glTexImage2DMultisample(@NativeType("GLenum") int target, @NativeType("GLsizei") int samples, @NativeType("GLint") int internalformat, @NativeType("GLsizei") int width, @NativeType("GLsizei") int height, @NativeType("GLboolean") boolean fixedsamplelocations);
 
     // --- [ glTexImage3DMultisample ] ---
 
     /**
      * Establishes the data storage, format, dimensions, and number of samples of a 3D multisample texture's image.
      *
-     * @param target               the target of the operation. One of:<br><table><tr><td>{@link GL32C#GL_TEXTURE_2D_MULTISAMPLE_ARRAY TEXTURE_2D_MULTISAMPLE_ARRAY}</td><td>{@link GL32C#GL_PROXY_TEXTURE_2D_MULTISAMPLE_ARRAY PROXY_TEXTURE_2D_MULTISAMPLE_ARRAY}</td></tr></table>
+     * @param target               the target of the operation. One of:<br><table><tr><td>{@link GL32#GL_TEXTURE_2D_MULTISAMPLE_ARRAY TEXTURE_2D_MULTISAMPLE_ARRAY}</td><td>{@link GL32#GL_PROXY_TEXTURE_2D_MULTISAMPLE_ARRAY PROXY_TEXTURE_2D_MULTISAMPLE_ARRAY}</td></tr></table>
      * @param samples              the number of samples in the multisample texture's image
      * @param internalformat       the internal format to be used to store the multisample texture's image. {@code internalformat} must specify a color-renderable, depth-renderable,
      *                             or stencil-renderable format.
@@ -120,37 +121,43 @@ public class ARBTextureMultisample {
      * @param fixedsamplelocations whether the image will use identical sample locations and the same number of samples for all texels in the image, and the sample locations will not
      *                             depend on the internal format or size of the image
      */
-    public static void glTexImage3DMultisample(@NativeType("GLenum") int target, @NativeType("GLsizei") int samples, @NativeType("GLint") int internalformat, @NativeType("GLsizei") int width, @NativeType("GLsizei") int height, @NativeType("GLsizei") int depth, @NativeType("GLboolean") boolean fixedsamplelocations) {
-        GL32C.glTexImage3DMultisample(target, samples, internalformat, width, height, depth, fixedsamplelocations);
-    }
+    public static native void glTexImage3DMultisample(@NativeType("GLenum") int target, @NativeType("GLsizei") int samples, @NativeType("GLint") int internalformat, @NativeType("GLsizei") int width, @NativeType("GLsizei") int height, @NativeType("GLsizei") int depth, @NativeType("GLboolean") boolean fixedsamplelocations);
 
     // --- [ glGetMultisamplefv ] ---
 
     /** Unsafe version of: {@link #glGetMultisamplefv GetMultisamplefv} */
-    public static void nglGetMultisamplefv(int pname, int index, long val) {
-        GL32C.nglGetMultisamplefv(pname, index, val);
-    }
+    public static native void nglGetMultisamplefv(int pname, int index, long val);
 
     /**
      * Retrieves the location of a sample.
      *
-     * @param pname the sample parameter name. Must be:<br><table><tr><td>{@link GL32C#GL_SAMPLE_POSITION SAMPLE_POSITION}</td></tr></table>
+     * @param pname the sample parameter name. Must be:<br><table><tr><td>{@link GL32#GL_SAMPLE_POSITION SAMPLE_POSITION}</td></tr></table>
      * @param index the index of the sample whose position to query
      * @param val   an array to receive the position of the sample
      */
     public static void glGetMultisamplefv(@NativeType("GLenum") int pname, @NativeType("GLuint") int index, @NativeType("GLfloat *") FloatBuffer val) {
-        GL32C.glGetMultisamplefv(pname, index, val);
+        if (CHECKS) {
+            check(val, 1);
+        }
+        nglGetMultisamplefv(pname, index, memAddress(val));
     }
 
     /**
      * Retrieves the location of a sample.
      *
-     * @param pname the sample parameter name. Must be:<br><table><tr><td>{@link GL32C#GL_SAMPLE_POSITION SAMPLE_POSITION}</td></tr></table>
+     * @param pname the sample parameter name. Must be:<br><table><tr><td>{@link GL32#GL_SAMPLE_POSITION SAMPLE_POSITION}</td></tr></table>
      * @param index the index of the sample whose position to query
      */
     @NativeType("void")
     public static float glGetMultisamplef(@NativeType("GLenum") int pname, @NativeType("GLuint") int index) {
-        return GL32C.glGetMultisamplef(pname, index);
+        MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
+        try {
+            FloatBuffer val = stack.callocFloat(1);
+            nglGetMultisamplefv(pname, index, memAddress(val));
+            return val.get(0);
+        } finally {
+            stack.setPointer(stackPointer);
+        }
     }
 
     // --- [ glSampleMaski ] ---
@@ -161,13 +168,16 @@ public class ARBTextureMultisample {
      * @param index which 32-bit sub-word of the sample mask to update
      * @param mask  the new value of the mask sub-word
      */
-    public static void glSampleMaski(@NativeType("GLuint") int index, @NativeType("GLbitfield") int mask) {
-        GL32C.glSampleMaski(index, mask);
-    }
+    public static native void glSampleMaski(@NativeType("GLuint") int index, @NativeType("GLbitfield") int mask);
 
-    /** Array version of: {@link #glGetMultisamplefv GetMultisamplefv} */
+    /** register Array version of: {@link #glGetMultisamplefv GetMultisamplefv} */
     public static void glGetMultisamplefv(@NativeType("GLenum") int pname, @NativeType("GLuint") int index, @NativeType("GLfloat *") float[] val) {
-        GL32C.glGetMultisamplefv(pname, index, val);
+        long __functionAddress = GL.getICD().glGetMultisamplefv;
+        if (CHECKS) {
+            check(__functionAddress);
+            check(val, 1);
+        }
+        callPV(__functionAddress, pname, index, val);
     }
 
 }

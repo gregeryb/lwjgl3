@@ -12,6 +12,7 @@ import java.nio.*;
 import java.util.*;
 
 import static java.lang.Math.*;
+import static org.lwjgl.opengles.GLES20.*;
 import static org.lwjgl.opengles.GLES30.*;
 import static org.lwjgl.system.APIUtil.*;
 import static org.lwjgl.system.Checks.*;
@@ -105,15 +106,10 @@ public final class GLES {
 
     private static void create(SharedLibrary GLES) {
         try {
-            FunctionProvider egl = EGL.getFunctionProvider();
-            if (egl == null) {
-                throw new IllegalStateException("The EGL function provider is not available.");
-            }
-
             create((FunctionProvider)new SharedLibrary.Delegate(GLES) {
                 @Override
                 public long getFunctionAddress(ByteBuffer functionName) {
-                    long address = egl.getFunctionAddress(functionName);
+                    long address = EGL.getFunctionProvider().getFunctionAddress(functionName);
                     if (address == NULL) {
                         address = library.getFunctionAddress(functionName);
                         if (address == NULL && DEBUG_FUNCTIONS) {
@@ -141,15 +137,12 @@ public final class GLES {
         }
 
         GLES.functionProvider = functionProvider;
-        ThreadLocalUtil.setFunctionMissingAddresses(GLESCapabilities.class, 3);
     }
     /** Unloads the OpenGL ES native library. */
     public static void destroy() {
         if (functionProvider == null) {
             return;
         }
-
-        ThreadLocalUtil.setFunctionMissingAddresses(null, 3);
 
         if (functionProvider instanceof NativeResource) {
             ((NativeResource)functionProvider).free();
@@ -346,7 +339,7 @@ public final class GLES {
         public void set(@Nullable GLESCapabilities caps) {
             if (tempCaps == null) {
                 tempCaps = caps;
-            } else if (caps != null && caps != tempCaps && ThreadLocalUtil.areCapabilitiesDifferent(tempCaps.addresses, caps.addresses)) {
+            } else if (caps != null && caps != tempCaps && !ThreadLocalUtil.compareCapabilities(tempCaps.addresses, caps.addresses)) {
                 apiLog("[WARNING] Incompatible context detected. Falling back to thread-local lookup for GLES contexts.");
                 icd = GLES::getCapabilities; // fall back to thread/process lookup
             }

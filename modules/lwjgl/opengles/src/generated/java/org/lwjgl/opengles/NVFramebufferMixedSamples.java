@@ -81,15 +81,13 @@ public class NVFramebufferMixedSamples {
 
     // --- [ glRasterSamplesEXT ] ---
 
-    public static void glRasterSamplesEXT(@NativeType("GLuint") int samples, @NativeType("GLboolean") boolean fixedsamplelocations) {
-        EXTRasterMultisample.glRasterSamplesEXT(samples, fixedsamplelocations);
-    }
+    public static native void glRasterSamplesEXT(@NativeType("GLuint") int samples, @NativeType("GLboolean") boolean fixedsamplelocations);
 
     // --- [ glCoverageModulationTableNV ] ---
 
     public static native void nglCoverageModulationTableNV(int n, long v);
 
-    public static void glCoverageModulationTableNV(@NativeType("GLfloat const *") FloatBuffer v) {
+    public static void glCoverageModulationTableNV(@NativeType("const GLfloat *") FloatBuffer v) {
         nglCoverageModulationTableNV(v.remaining(), memAddress(v));
     }
 
@@ -105,8 +103,8 @@ public class NVFramebufferMixedSamples {
 
     public static native void glCoverageModulationNV(@NativeType("GLenum") int components);
 
-    /** Array version of: {@link #glCoverageModulationTableNV CoverageModulationTableNV} */
-    public static void glCoverageModulationTableNV(@NativeType("GLfloat const *") float[] v) {
+    /** register Array version of: {@link #glCoverageModulationTableNV CoverageModulationTableNV} */
+    public static void glCoverageModulationTableNV(@NativeType("const GLfloat *") float[] v) {
         long __functionAddress = GLES.getICD().glCoverageModulationTableNV;
         if (CHECKS) {
             check(__functionAddress);
@@ -114,7 +112,7 @@ public class NVFramebufferMixedSamples {
         callPV(__functionAddress, v.length, v);
     }
 
-    /** Array version of: {@link #glGetCoverageModulationTableNV GetCoverageModulationTableNV} */
+    /** register Array version of: {@link #glGetCoverageModulationTableNV GetCoverageModulationTableNV} */
     public static void glGetCoverageModulationTableNV(@NativeType("GLfloat *") float[] v) {
         long __functionAddress = GLES.getICD().glGetCoverageModulationTableNV;
         if (CHECKS) {

@@ -36,7 +36,7 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct aiFile {
  *     {@link AIFileReadProcI aiFileReadProc} ReadProc;
  *     {@link AIFileWriteProcI aiFileWriteProc} WriteProc;
@@ -45,7 +45,7 @@ import static org.lwjgl.system.MemoryStack.*;
  *     {@link AIFileSeekI aiFileSeek} SeekProc;
  *     {@link AIFileFlushProcI aiFileFlushProc} FlushProc;
  *     aiUserData UserData;
- * }</code></pre>
+ * }</pre></code>
  */
 @NativeType("struct aiFile")
 public class AIFile extends Struct implements NativeResource {
@@ -53,7 +53,6 @@ public class AIFile extends Struct implements NativeResource {
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */
@@ -345,7 +344,7 @@ public class AIFile extends Struct implements NativeResource {
     /** Unsafe version of {@link #FlushProc(AIFileFlushProcI) FlushProc}. */
     public static void nFlushProc(long struct, AIFileFlushProcI value) { memPutAddress(struct + AIFile.FLUSHPROC, value.address()); }
     /** Unsafe version of {@link #UserData(long) UserData}. */
-    public static void nUserData(long struct, long value) { memPutAddress(struct + AIFile.USERDATA, value); }
+    public static void nUserData(long struct, long value) { memPutAddress(struct + AIFile.USERDATA, check(value)); }
 
     /**
      * Validates pointer members that should not be {@code NULL}.
@@ -359,6 +358,7 @@ public class AIFile extends Struct implements NativeResource {
         check(memGetAddress(struct + AIFile.FILESIZEPROC));
         check(memGetAddress(struct + AIFile.SEEKPROC));
         check(memGetAddress(struct + AIFile.FLUSHPROC));
+        check(memGetAddress(struct + AIFile.USERDATA));
     }
 
     /**

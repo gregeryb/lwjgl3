@@ -14,11 +14,11 @@ import static org.lwjgl.system.dyncall.DynCallback.*;
  * 
  * <h3>Type</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * int (*) (
- *     char const *msg,
+ *     const char *msg,
  *     void *ctx
- * )</code></pre>
+ * )</pre></code>
  */
 @FunctionalInterface
 @NativeType("MDB_msg_func *")
@@ -45,6 +45,6 @@ public interface MDBMsgFuncI extends CallbackI.I {
      *
      * @return &lt; 0 on failure, &ge; 0 on success
      */
-    int invoke(@NativeType("char const *") long msg, @NativeType("void *") long ctx);
+    int invoke(@NativeType("const char *") long msg, @NativeType("void *") long ctx);
 
 }

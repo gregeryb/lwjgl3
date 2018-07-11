@@ -48,20 +48,19 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct VkDisplayModeCreateInfoKHR {
  *     VkStructureType sType;
- *     void const * pNext;
+ *     const void * pNext;
  *     VkDisplayModeCreateFlagsKHR flags;
  *     {@link VkDisplayModeParametersKHR VkDisplayModeParametersKHR} parameters;
- * }</code></pre>
+ * }</pre></code>
  */
 public class VkDisplayModeCreateInfoKHR extends Struct implements NativeResource {
 
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */
@@ -109,20 +108,18 @@ public class VkDisplayModeCreateInfoKHR extends Struct implements NativeResource
     @NativeType("VkStructureType")
     public int sType() { return nsType(address()); }
     /** Returns the value of the {@code pNext} field. */
-    @NativeType("void const *")
+    @NativeType("const void *")
     public long pNext() { return npNext(address()); }
     /** Returns the value of the {@code flags} field. */
     @NativeType("VkDisplayModeCreateFlagsKHR")
     public int flags() { return nflags(address()); }
     /** Returns a {@link VkDisplayModeParametersKHR} view of the {@code parameters} field. */
     public VkDisplayModeParametersKHR parameters() { return nparameters(address()); }
-    /** Passes the {@code parameters} field to the specified {@link java.util.function.Consumer Consumer}. */
-    public VkDisplayModeCreateInfoKHR parameters(java.util.function.Consumer<VkDisplayModeParametersKHR> consumer) { consumer.accept(parameters()); return this; }
 
     /** Sets the specified value to the {@code sType} field. */
     public VkDisplayModeCreateInfoKHR sType(@NativeType("VkStructureType") int value) { nsType(address(), value); return this; }
     /** Sets the specified value to the {@code pNext} field. */
-    public VkDisplayModeCreateInfoKHR pNext(@NativeType("void const *") long value) { npNext(address(), value); return this; }
+    public VkDisplayModeCreateInfoKHR pNext(@NativeType("const void *") long value) { npNext(address(), value); return this; }
     /** Sets the specified value to the {@code flags} field. */
     public VkDisplayModeCreateInfoKHR flags(@NativeType("VkDisplayModeCreateFlagsKHR") int value) { nflags(address(), value); return this; }
     /** Copies the specified {@link VkDisplayModeParametersKHR} to the {@code parameters} field. */
@@ -364,20 +361,18 @@ public class VkDisplayModeCreateInfoKHR extends Struct implements NativeResource
         @NativeType("VkStructureType")
         public int sType() { return VkDisplayModeCreateInfoKHR.nsType(address()); }
         /** Returns the value of the {@code pNext} field. */
-        @NativeType("void const *")
+        @NativeType("const void *")
         public long pNext() { return VkDisplayModeCreateInfoKHR.npNext(address()); }
         /** Returns the value of the {@code flags} field. */
         @NativeType("VkDisplayModeCreateFlagsKHR")
         public int flags() { return VkDisplayModeCreateInfoKHR.nflags(address()); }
         /** Returns a {@link VkDisplayModeParametersKHR} view of the {@code parameters} field. */
         public VkDisplayModeParametersKHR parameters() { return VkDisplayModeCreateInfoKHR.nparameters(address()); }
-        /** Passes the {@code parameters} field to the specified {@link java.util.function.Consumer Consumer}. */
-        public VkDisplayModeCreateInfoKHR.Buffer parameters(java.util.function.Consumer<VkDisplayModeParametersKHR> consumer) { consumer.accept(parameters()); return this; }
 
         /** Sets the specified value to the {@code sType} field. */
         public VkDisplayModeCreateInfoKHR.Buffer sType(@NativeType("VkStructureType") int value) { VkDisplayModeCreateInfoKHR.nsType(address(), value); return this; }
         /** Sets the specified value to the {@code pNext} field. */
-        public VkDisplayModeCreateInfoKHR.Buffer pNext(@NativeType("void const *") long value) { VkDisplayModeCreateInfoKHR.npNext(address(), value); return this; }
+        public VkDisplayModeCreateInfoKHR.Buffer pNext(@NativeType("const void *") long value) { VkDisplayModeCreateInfoKHR.npNext(address(), value); return this; }
         /** Sets the specified value to the {@code flags} field. */
         public VkDisplayModeCreateInfoKHR.Buffer flags(@NativeType("VkDisplayModeCreateFlagsKHR") int value) { VkDisplayModeCreateInfoKHR.nflags(address(), value); return this; }
         /** Copies the specified {@link VkDisplayModeParametersKHR} to the {@code parameters} field. */

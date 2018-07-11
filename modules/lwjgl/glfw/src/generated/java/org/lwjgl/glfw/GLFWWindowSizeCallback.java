@@ -18,12 +18,12 @@ import static org.lwjgl.glfw.GLFW.*;
  * 
  * <h3>Type</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * void (*) (
  *     GLFWwindow *window,
  *     int width,
  *     int height
- * )</code></pre>
+ * )</pre></code>
  */
 public abstract class GLFWWindowSizeCallback extends Callback implements GLFWWindowSizeCallbackI {
 

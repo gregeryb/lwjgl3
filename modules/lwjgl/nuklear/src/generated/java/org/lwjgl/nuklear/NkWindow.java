@@ -16,7 +16,7 @@ import static org.lwjgl.system.MemoryUtil.*;
 /**
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct nk_window {
  *     unsigned int seq;
  *     nk_hash name;
@@ -31,12 +31,12 @@ import static org.lwjgl.system.MemoryUtil.*;
  *     {@link NkPopupState struct nk_popup_state} popup;
  *     {@link NkEditState struct nk_edit_state} edit;
  *     unsigned int scrolled;
- *     struct nk_table * tables;
+ *     nk_table * tables;
  *     unsigned int table_count;
  *     {@link NkWindow struct nk_window} * next;
  *     {@link NkWindow struct nk_window} * prev;
  *     {@link NkWindow struct nk_window} * parent;
- * }</code></pre>
+ * }</pre></code>
  */
 @NativeType("struct nk_window")
 public class NkWindow extends Struct {
@@ -44,7 +44,6 @@ public class NkWindow extends Struct {
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */
@@ -148,8 +147,6 @@ public class NkWindow extends Struct {
     /** Returns a {@link NkRect} view of the {@code bounds} field. */
     @NativeType("struct nk_rect")
     public NkRect bounds() { return nbounds(address()); }
-    /** Passes the {@code bounds} field to the specified {@link java.util.function.Consumer Consumer}. */
-    public NkWindow bounds(java.util.function.Consumer<NkRect> consumer) { consumer.accept(bounds()); return this; }
     /** Returns a {@link NkScroll} view of the {@code scrollbar} field. */
     @NativeType("struct nk_scroll")
     public NkScroll scrollbar() { return nscrollbar(address()); }
@@ -174,7 +171,7 @@ public class NkWindow extends Struct {
     @NativeType("unsigned int")
     public int scrolled() { return nscrolled(address()); }
     /** Returns the value of the {@code tables} field. */
-    @NativeType("struct nk_table *")
+    @NativeType("nk_table *")
     public long tables() { return ntables(address()); }
     /** Returns the value of the {@code table_count} field. */
     @NativeType("unsigned int")
@@ -323,8 +320,6 @@ public class NkWindow extends Struct {
         /** Returns a {@link NkRect} view of the {@code bounds} field. */
         @NativeType("struct nk_rect")
         public NkRect bounds() { return NkWindow.nbounds(address()); }
-        /** Passes the {@code bounds} field to the specified {@link java.util.function.Consumer Consumer}. */
-        public NkWindow.Buffer bounds(java.util.function.Consumer<NkRect> consumer) { consumer.accept(bounds()); return this; }
         /** Returns a {@link NkScroll} view of the {@code scrollbar} field. */
         @NativeType("struct nk_scroll")
         public NkScroll scrollbar() { return NkWindow.nscrollbar(address()); }
@@ -349,7 +344,7 @@ public class NkWindow extends Struct {
         @NativeType("unsigned int")
         public int scrolled() { return NkWindow.nscrolled(address()); }
         /** Returns the value of the {@code tables} field. */
-        @NativeType("struct nk_table *")
+        @NativeType("nk_table *")
         public long tables() { return NkWindow.ntables(address()); }
         /** Returns the value of the {@code table_count} field. */
         @NativeType("unsigned int")

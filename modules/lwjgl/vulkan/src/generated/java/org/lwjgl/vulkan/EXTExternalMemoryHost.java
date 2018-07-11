@@ -29,7 +29,7 @@ import static org.lwjgl.system.JNI.*;
  * </ul></dd>
  * <dt><b>Contact</b></dt>
  * <dd><ul>
- * <li>Daniel Rakos @drakos-amd</li>
+ * <li>Daniel Rakos @aqnuep</li>
  * </ul></dd>
  * <dt><b>Last Modified Date</b></dt>
  * <dd>2017-11-10</dd>
@@ -71,7 +71,7 @@ public class EXTExternalMemoryHost {
         VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_MEMORY_HOST_PROPERTIES_EXT = 1000178002;
 
     /**
-     * Extends {@code VkExternalMemoryHandleTypeFlagBits}.
+     * Extends {@code VkExternalMemoryHandleTypeFlagBitsKHR}.
      * 
      * <h5>Enum values:</h5>
      * 
@@ -88,9 +88,9 @@ public class EXTExternalMemoryHost {
         throw new UnsupportedOperationException();
     }
 
-    static boolean checkCapsDevice(FunctionProvider provider, java.util.Map<String, Long> caps, java.util.Set<String> ext) {
-        return ext.contains("VK_EXT_external_memory_host") && VK.checkExtension("VK_EXT_external_memory_host",
-               VK.isSupported(provider, "vkGetMemoryHostPointerPropertiesEXT", caps)
+    static boolean isAvailable(VKCapabilitiesDevice caps) {
+        return checkFunctions(
+            caps.vkGetMemoryHostPointerPropertiesEXT
         );
     }
 
@@ -113,12 +113,12 @@ public class EXTExternalMemoryHost {
      * 
      * <p>To determine the correct parameters to use when importing host pointers, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * VkResult vkGetMemoryHostPointerPropertiesEXT(
      *     VkDevice                                    device,
-     *     VkExternalMemoryHandleTypeFlagBits          handleType,
+     *     VkExternalMemoryHandleTypeFlagBitsKHR       handleType,
      *     const void*                                 pHostPointer,
-     *     VkMemoryHostPointerPropertiesEXT*           pMemoryHostPointerProperties);</code></pre>
+     *     VkMemoryHostPointerPropertiesEXT*           pMemoryHostPointerProperties);</pre></code>
      * 
      * <h5>Valid Usage</h5>
      * 
@@ -133,7 +133,7 @@ public class EXTExternalMemoryHost {
      * 
      * <ul>
      * <li>{@code device} <b>must</b> be a valid {@code VkDevice} handle</li>
-     * <li>{@code handleType} <b>must</b> be a valid {@code VkExternalMemoryHandleTypeFlagBits} value</li>
+     * <li>{@code handleType} <b>must</b> be a valid {@code VkExternalMemoryHandleTypeFlagBitsKHR} value</li>
      * <li>{@code pMemoryHostPointerProperties} <b>must</b> be a valid pointer to a {@link VkMemoryHostPointerPropertiesEXT} structure</li>
      * </ul>
      * 
@@ -146,7 +146,7 @@ public class EXTExternalMemoryHost {
      * </ul></dd>
      * <dt>On failure, this command returns</dt>
      * <dd><ul>
-     * <li>{@link VK11#VK_ERROR_INVALID_EXTERNAL_HANDLE ERROR_INVALID_EXTERNAL_HANDLE}</li>
+     * <li>{@link KHRExternalMemory#VK_ERROR_INVALID_EXTERNAL_HANDLE_KHR ERROR_INVALID_EXTERNAL_HANDLE_KHR}</li>
      * </ul></dd>
      * </dl>
      * 
@@ -154,12 +154,13 @@ public class EXTExternalMemoryHost {
      * 
      * <p>{@link VkMemoryHostPointerPropertiesEXT}</p>
      *
-     * @param device       the logical device that will be importing {@code pHostPointer}.
-     * @param handleType   the type of the handle {@code pHostPointer}.
-     * @param pHostPointer the host pointer to import from.
+     * @param device                       the logical device that will be importing {@code pHostPointer}.
+     * @param handleType                   the type of the handle {@code pHostPointer}.
+     * @param pHostPointer                 the host pointer to import from.
+     * @param pMemoryHostPointerProperties 
      */
     @NativeType("VkResult")
-    public static int vkGetMemoryHostPointerPropertiesEXT(VkDevice device, @NativeType("VkExternalMemoryHandleTypeFlagBits") int handleType, @NativeType("void const *") long pHostPointer, @NativeType("VkMemoryHostPointerPropertiesEXT *") VkMemoryHostPointerPropertiesEXT pMemoryHostPointerProperties) {
+    public static int vkGetMemoryHostPointerPropertiesEXT(VkDevice device, @NativeType("VkExternalMemoryHandleTypeFlagBitsKHR") int handleType, @NativeType("const void *") long pHostPointer, @NativeType("VkMemoryHostPointerPropertiesEXT *") VkMemoryHostPointerPropertiesEXT pMemoryHostPointerProperties) {
         return nvkGetMemoryHostPointerPropertiesEXT(device, handleType, pHostPointer, pMemoryHostPointerProperties.address());
     }
 

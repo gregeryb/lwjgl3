@@ -18,13 +18,13 @@ import static org.lwjgl.glfw.GLFW.*;
  * 
  * <h3>Type</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * void (*) (
  *     GLFWwindow *window,
  *     int button,
  *     int action,
  *     int mods
- * )</code></pre>
+ * )</pre></code>
  */
 public abstract class GLFWMouseButtonCallback extends Callback implements GLFWMouseButtonCallbackI {
 

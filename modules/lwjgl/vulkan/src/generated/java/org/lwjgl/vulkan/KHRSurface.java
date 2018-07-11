@@ -24,7 +24,7 @@ import static org.lwjgl.system.MemoryUtil.*;
  * 
  * <div style="margin-left: 26px; border-left: 1px solid gray; padding-left: 14px;"><h5>Note</h5>
  * 
- * <p>The example code for the {@code VK_KHR_surface} and {@link KHRSwapchain VK_KHR_swapchain} extensions was removed from the appendix after revision 1.0.29. This WSI example code was ported to the cube demo that is shipped with the official Khronos SDK, and is being kept up-to-date in that location (see: https://github.com/KhronosGroup/Vulkan-Tools/blob/master/cube/cube.c).</p>
+ * <p>The example code for the {@code VK_KHR_surface} and {@link KHRSwapchain VK_KHR_swapchain} extensions was removed from the appendix after revision 1.0.29. This WSI example code was ported to the cube demo that is shipped with the official Khronos SDK, and is being kept up-to-date in that location (see: https://github.com/KhronosGroup/Vulkan-LoaderAndValidationLayers/blob/master/demos/cube.c).</p>
  * </div>
  * 
  * <dl>
@@ -42,7 +42,7 @@ import static org.lwjgl.system.MemoryUtil.*;
  * </ul></dd>
  * <dt><b>Contact</b></dt>
  * <dd><ul>
- * <li>James Jones @cubanismo,Ian Elliott @ianelliottus</li>
+ * <li>James Jones @cubanismo,Ian Elliott mailto:ianelliott@google.com[ianelliott@google.com]</li>
  * </ul></dd>
  * <dt><b>Last Modified Date</b></dt>
  * <dd>2016-08-25</dd>
@@ -96,15 +96,15 @@ public class KHRSurface {
      * <h5>Description</h5>
      * 
      * <ul>
-     * <li>{@link #VK_SURFACE_TRANSFORM_IDENTITY_BIT_KHR SURFACE_TRANSFORM_IDENTITY_BIT_KHR} specifies that image content is presented without being transformed.</li>
-     * <li>{@link #VK_SURFACE_TRANSFORM_ROTATE_90_BIT_KHR SURFACE_TRANSFORM_ROTATE_90_BIT_KHR} specifies that image content is rotated 90 degrees clockwise.</li>
-     * <li>{@link #VK_SURFACE_TRANSFORM_ROTATE_180_BIT_KHR SURFACE_TRANSFORM_ROTATE_180_BIT_KHR} specifies that image content is rotated 180 degrees clockwise.</li>
-     * <li>{@link #VK_SURFACE_TRANSFORM_ROTATE_270_BIT_KHR SURFACE_TRANSFORM_ROTATE_270_BIT_KHR} specifies that image content is rotated 270 degrees clockwise.</li>
-     * <li>{@link #VK_SURFACE_TRANSFORM_HORIZONTAL_MIRROR_BIT_KHR SURFACE_TRANSFORM_HORIZONTAL_MIRROR_BIT_KHR} specifies that image content is mirrored horizontally.</li>
-     * <li>{@link #VK_SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_90_BIT_KHR SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_90_BIT_KHR} specifies that image content is mirrored horizontally, then rotated 90 degrees clockwise.</li>
-     * <li>{@link #VK_SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_180_BIT_KHR SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_180_BIT_KHR} specifies that image content is mirrored horizontally, then rotated 180 degrees clockwise.</li>
-     * <li>{@link #VK_SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_270_BIT_KHR SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_270_BIT_KHR} specifies that image content is mirrored horizontally, then rotated 270 degrees clockwise.</li>
-     * <li>{@link #VK_SURFACE_TRANSFORM_INHERIT_BIT_KHR SURFACE_TRANSFORM_INHERIT_BIT_KHR} specifies that the presentation transform is not specified, and is instead determined by platform-specific considerations and mechanisms outside Vulkan.</li>
+     * <li>{@link #VK_SURFACE_TRANSFORM_IDENTITY_BIT_KHR SURFACE_TRANSFORM_IDENTITY_BIT_KHR} indicates that image content is presented without being transformed.</li>
+     * <li>{@link #VK_SURFACE_TRANSFORM_ROTATE_90_BIT_KHR SURFACE_TRANSFORM_ROTATE_90_BIT_KHR} indicates that image content is rotated 90 degrees clockwise.</li>
+     * <li>{@link #VK_SURFACE_TRANSFORM_ROTATE_180_BIT_KHR SURFACE_TRANSFORM_ROTATE_180_BIT_KHR} indicates that image content is rotated 180 degrees clockwise.</li>
+     * <li>{@link #VK_SURFACE_TRANSFORM_ROTATE_270_BIT_KHR SURFACE_TRANSFORM_ROTATE_270_BIT_KHR} indicates that image content is rotated 270 degrees clockwise.</li>
+     * <li>{@link #VK_SURFACE_TRANSFORM_HORIZONTAL_MIRROR_BIT_KHR SURFACE_TRANSFORM_HORIZONTAL_MIRROR_BIT_KHR} indicates that image content is mirrored horizontally.</li>
+     * <li>{@link #VK_SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_90_BIT_KHR SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_90_BIT_KHR} indicates that image content is mirrored horizontally, then rotated 90 degrees clockwise.</li>
+     * <li>{@link #VK_SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_180_BIT_KHR SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_180_BIT_KHR} indicates that image content is mirrored horizontally, then rotated 180 degrees clockwise.</li>
+     * <li>{@link #VK_SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_270_BIT_KHR SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_270_BIT_KHR} indicates that image content is mirrored horizontally, then rotated 270 degrees clockwise.</li>
+     * <li>{@link #VK_SURFACE_TRANSFORM_INHERIT_BIT_KHR SURFACE_TRANSFORM_INHERIT_BIT_KHR} indicates that the presentation transform is not specified, and is instead determined by platform-specific considerations and mechanisms outside Vulkan.</li>
      * </ul>
      * 
      * <h5>See Also</h5>
@@ -152,21 +152,21 @@ public class KHRSurface {
      * <h5>Description</h5>
      * 
      * <ul>
-     * <li>{@link #VK_COLOR_SPACE_SRGB_NONLINEAR_KHR COLOR_SPACE_SRGB_NONLINEAR_KHR} specifies support for the sRGB color space.</li>
-     * <li>{@link EXTSwapchainColorspace#VK_COLOR_SPACE_DISPLAY_P3_NONLINEAR_EXT COLOR_SPACE_DISPLAY_P3_NONLINEAR_EXT} specifies support for the Display-P3 color space and applies an sRGB-like transfer function (defined below).</li>
-     * <li>{@link EXTSwapchainColorspace#VK_COLOR_SPACE_EXTENDED_SRGB_LINEAR_EXT COLOR_SPACE_EXTENDED_SRGB_LINEAR_EXT} specifies support for the extended sRGB color space and applies a linear transfer function.</li>
-     * <li>{@link EXTSwapchainColorspace#VK_COLOR_SPACE_EXTENDED_SRGB_NONLINEAR_EXT COLOR_SPACE_EXTENDED_SRGB_NONLINEAR_EXT} specifies support for the extended sRGB color space and applies an sRGB transfer function.</li>
-     * <li>{@link EXTSwapchainColorspace#VK_COLOR_SPACE_DCI_P3_LINEAR_EXT COLOR_SPACE_DCI_P3_LINEAR_EXT} specifies support for the DCI-P3 color space and applies a linear OETF.</li>
-     * <li>{@link EXTSwapchainColorspace#VK_COLOR_SPACE_DCI_P3_NONLINEAR_EXT COLOR_SPACE_DCI_P3_NONLINEAR_EXT} specifies support for the DCI-P3 color space and applies the Gamma 2.6 OETF.</li>
-     * <li>{@link EXTSwapchainColorspace#VK_COLOR_SPACE_BT709_LINEAR_EXT COLOR_SPACE_BT709_LINEAR_EXT} specifies support for the BT709 color space and applies a linear OETF.</li>
-     * <li>{@link EXTSwapchainColorspace#VK_COLOR_SPACE_BT709_NONLINEAR_EXT COLOR_SPACE_BT709_NONLINEAR_EXT} specifies support for the BT709 color space and applies the SMPTE 170M OETF.</li>
-     * <li>{@link EXTSwapchainColorspace#VK_COLOR_SPACE_BT2020_LINEAR_EXT COLOR_SPACE_BT2020_LINEAR_EXT} specifies support for the BT2020 color space and applies a linear OETF.</li>
-     * <li>{@link EXTSwapchainColorspace#VK_COLOR_SPACE_HDR10_ST2084_EXT COLOR_SPACE_HDR10_ST2084_EXT} specifies support for the HDR10 (BT2020 color) space and applies the SMPTE ST2084 Perceptual Quantizer (PQ) OETF.</li>
-     * <li>{@link EXTSwapchainColorspace#VK_COLOR_SPACE_DOLBYVISION_EXT COLOR_SPACE_DOLBYVISION_EXT} specifies support for the Dolby Vision (BT2020 color space), proprietary encoding, and applies the SMPTE ST2084 OETF.</li>
-     * <li>{@link EXTSwapchainColorspace#VK_COLOR_SPACE_HDR10_HLG_EXT COLOR_SPACE_HDR10_HLG_EXT} specifies support for the HDR10 (BT2020 color space) and applies the Hybrid Log Gamma (HLG) OETF.</li>
-     * <li>{@link EXTSwapchainColorspace#VK_COLOR_SPACE_ADOBERGB_LINEAR_EXT COLOR_SPACE_ADOBERGB_LINEAR_EXT} specifies support for the AdobeRGB color space and applies a linear OETF.</li>
-     * <li>{@link EXTSwapchainColorspace#VK_COLOR_SPACE_ADOBERGB_NONLINEAR_EXT COLOR_SPACE_ADOBERGB_NONLINEAR_EXT} specifies support for the AdobeRGB color space and applies the Gamma 2.2 OETF.</li>
-     * <li>{@link EXTSwapchainColorspace#VK_COLOR_SPACE_PASS_THROUGH_EXT COLOR_SPACE_PASS_THROUGH_EXT} specifies that color components are used “as is”. This is intended to allow applications to supply data for color spaces not described here.</li>
+     * <li>{@link #VK_COLOR_SPACE_SRGB_NONLINEAR_KHR COLOR_SPACE_SRGB_NONLINEAR_KHR} indicates support for the sRGB color space.</li>
+     * <li>{@link EXTSwapchainColorspace#VK_COLOR_SPACE_DISPLAY_P3_NONLINEAR_EXT COLOR_SPACE_DISPLAY_P3_NONLINEAR_EXT} indicates support for the Display-P3 color space and applies an sRGB-like transfer function (defined below).</li>
+     * <li>{@link EXTSwapchainColorspace#VK_COLOR_SPACE_EXTENDED_SRGB_LINEAR_EXT COLOR_SPACE_EXTENDED_SRGB_LINEAR_EXT} indicates support for the extended sRGB color space and applies a linear transfer function.</li>
+     * <li>{@link EXTSwapchainColorspace#VK_COLOR_SPACE_EXTENDED_SRGB_NONLINEAR_EXT COLOR_SPACE_EXTENDED_SRGB_NONLINEAR_EXT} indicates support for the extended sRGB color space and applies an sRGB transfer function.</li>
+     * <li>{@link EXTSwapchainColorspace#VK_COLOR_SPACE_DCI_P3_LINEAR_EXT COLOR_SPACE_DCI_P3_LINEAR_EXT} indicates support for the DCI-P3 color space and applies a linear OETF.</li>
+     * <li>{@link EXTSwapchainColorspace#VK_COLOR_SPACE_DCI_P3_NONLINEAR_EXT COLOR_SPACE_DCI_P3_NONLINEAR_EXT} indicates support for the DCI-P3 color space and applies the Gamma 2.6 OETF.</li>
+     * <li>{@link EXTSwapchainColorspace#VK_COLOR_SPACE_BT709_LINEAR_EXT COLOR_SPACE_BT709_LINEAR_EXT} indicates support for the BT709 color space and applies a linear OETF.</li>
+     * <li>{@link EXTSwapchainColorspace#VK_COLOR_SPACE_BT709_NONLINEAR_EXT COLOR_SPACE_BT709_NONLINEAR_EXT} indicates support for the BT709 color space and applies the SMPTE 170M OETF.</li>
+     * <li>{@link EXTSwapchainColorspace#VK_COLOR_SPACE_BT2020_LINEAR_EXT COLOR_SPACE_BT2020_LINEAR_EXT} indicates support for the BT2020 color space and applies a linear OETF.</li>
+     * <li>{@link EXTSwapchainColorspace#VK_COLOR_SPACE_HDR10_ST2084_EXT COLOR_SPACE_HDR10_ST2084_EXT} indicates support for the HDR10 (BT2020 color) space and applies the SMPTE ST2084 Perceptual Quantizer (PQ) OETF.</li>
+     * <li>{@link EXTSwapchainColorspace#VK_COLOR_SPACE_DOLBYVISION_EXT COLOR_SPACE_DOLBYVISION_EXT} indicates support for the Dolby Vision (BT2020 color space), proprietary encoding, and applies the SMPTE ST2084 OETF.</li>
+     * <li>{@link EXTSwapchainColorspace#VK_COLOR_SPACE_HDR10_HLG_EXT COLOR_SPACE_HDR10_HLG_EXT} indicates support for the HDR10 (BT2020 color space) and applies the Hybrid Log Gamma (HLG) OETF.</li>
+     * <li>{@link EXTSwapchainColorspace#VK_COLOR_SPACE_ADOBERGB_LINEAR_EXT COLOR_SPACE_ADOBERGB_LINEAR_EXT} indicates support for the AdobeRGB color space and applies a linear OETF.</li>
+     * <li>{@link EXTSwapchainColorspace#VK_COLOR_SPACE_ADOBERGB_NONLINEAR_EXT COLOR_SPACE_ADOBERGB_NONLINEAR_EXT} indicates support for the AdobeRGB color space and applies the Gamma 2.2 OETF.</li>
+     * <li>{@link EXTSwapchainColorspace#VK_COLOR_SPACE_PASS_THROUGH_EXT COLOR_SPACE_PASS_THROUGH_EXT} indicates that color components are used “as is”. This is intended to allow applications to supply data for color spaces not described here.</li>
      * </ul>
      * 
      * <p>The color components of Non-linear color space swap chain images have had the appropriate transfer function applied. Vulkan requires that all implementations support the sRGB transfer function when using an SRGB pixel format. Other transfer functions, such as SMPTE 170M or SMPTE2084, <b>must</b> not be performed by the implementation, but <b>can</b> be performed by the application shader. This extension defines enums for {@code VkColorSpaceKHR} that correspond to the following color spaces:</p>
@@ -190,7 +190,7 @@ public class KHRSurface {
      * 
      * <p>For Opto-Electrical Transfer Function (OETF), unless otherwise specified, the values of <code>L</code> and <code>E</code> are defined as:</p>
      * 
-     * <p><code>L</code> - linear luminance of image 0 &le; L &le; 1 for conventional colorimetry</p>
+     * <p><code>L</code> - linear luminance of image 0 &le L &le; 1 for conventional colorimetry</p>
      * 
      * <p><code>E</code> - corresponding electrical signal (value stored in memory)</p>
      * 
@@ -206,12 +206,12 @@ public class KHRSurface {
      * <h5>Description</h5>
      * 
      * <ul>
-     * <li>{@link #VK_PRESENT_MODE_IMMEDIATE_KHR PRESENT_MODE_IMMEDIATE_KHR} specifies that the presentation engine does not wait for a vertical blanking period to update the current image, meaning this mode <b>may</b> result in visible tearing. No internal queuing of presentation requests is needed, as the requests are applied immediately.</li>
-     * <li>{@link #VK_PRESENT_MODE_MAILBOX_KHR PRESENT_MODE_MAILBOX_KHR} specifies that the presentation engine waits for the next vertical blanking period to update the current image. Tearing <b>cannot</b> be observed. An internal single-entry queue is used to hold pending presentation requests. If the queue is full when a new presentation request is received, the new request replaces the existing entry, and any images associated with the prior entry become available for re-use by the application. One request is removed from the queue and processed during each vertical blanking period in which the queue is non-empty.</li>
-     * <li>{@link #VK_PRESENT_MODE_FIFO_KHR PRESENT_MODE_FIFO_KHR} specifies that the presentation engine waits for the next vertical blanking period to update the current image. Tearing <b>cannot</b> be observed. An internal queue is used to hold pending presentation requests. New requests are appended to the end of the queue, and one request is removed from the beginning of the queue and processed during each vertical blanking period in which the queue is non-empty. This is the only value of {@code presentMode} that is required: to be supported.</li>
-     * <li>{@link #VK_PRESENT_MODE_FIFO_RELAXED_KHR PRESENT_MODE_FIFO_RELAXED_KHR} specifies that the presentation engine generally waits for the next vertical blanking period to update the current image. If a vertical blanking period has already passed since the last update of the current image then the presentation engine does not wait for another vertical blanking period for the update, meaning this mode <b>may</b> result in visible tearing in this case. This mode is useful for reducing visual stutter with an application that will mostly present a new image before the next vertical blanking period, but may occasionally be late, and present a new image just after the next vertical blanking period. An internal queue is used to hold pending presentation requests. New requests are appended to the end of the queue, and one request is removed from the beginning of the queue and processed during or after each vertical blanking period in which the queue is non-empty.</li>
-     * <li>{@link KHRSharedPresentableImage#VK_PRESENT_MODE_SHARED_DEMAND_REFRESH_KHR PRESENT_MODE_SHARED_DEMAND_REFRESH_KHR} specifies that the presentation engine and application have concurrent access to a single image, which is referred to as a <em>shared presentable image</em>. The presentation engine is only required to update the current image after a new presentation request is received. Therefore the application <b>must</b> make a presentation request whenever an update is required. However, the presentation engine <b>may</b> update the current image at any point, meaning this mode <b>may</b> result in visible tearing.</li>
-     * <li>{@link KHRSharedPresentableImage#VK_PRESENT_MODE_SHARED_CONTINUOUS_REFRESH_KHR PRESENT_MODE_SHARED_CONTINUOUS_REFRESH_KHR} specifies that the presentation engine and application have concurrent access to a single image, which is referred to as a <em>shared presentable image</em>. The presentation engine periodically updates the current image on its regular refresh cycle. The application is only required to make one initial presentation request, after which the presentation engine <b>must</b> update the current image without any need for further presentation requests. The application <b>can</b> indicate the image contents have been updated by making a presentation request, but this does not guarantee the timing of when it will be updated. This mode <b>may</b> result in visible tearing if rendering to the image is not timed correctly.</li>
+     * <li>{@link #VK_PRESENT_MODE_IMMEDIATE_KHR PRESENT_MODE_IMMEDIATE_KHR} indicates that the presentation engine does not wait for a vertical blanking period to update the current image, meaning this mode <b>may</b> result in visible tearing. No internal queuing of presentation requests is needed, as the requests are applied immediately.</li>
+     * <li>{@link #VK_PRESENT_MODE_MAILBOX_KHR PRESENT_MODE_MAILBOX_KHR} indicates that the presentation engine waits for the next vertical blanking period to update the current image. Tearing <b>cannot</b> be observed. An internal single-entry queue is used to hold pending presentation requests. If the queue is full when a new presentation request is received, the new request replaces the existing entry, and any images associated with the prior entry become available for re-use by the application. One request is removed from the queue and processed during each vertical blanking period in which the queue is non-empty.</li>
+     * <li>{@link #VK_PRESENT_MODE_FIFO_KHR PRESENT_MODE_FIFO_KHR} indicates that the presentation engine waits for the next vertical blanking period to update the current image. Tearing <b>cannot</b> be observed. An internal queue is used to hold pending presentation requests. New requests are appended to the end of the queue, and one request is removed from the beginning of the queue and processed during each vertical blanking period in which the queue is non-empty. This is the only value of {@code presentMode} that is required: to be supported.</li>
+     * <li>{@link #VK_PRESENT_MODE_FIFO_RELAXED_KHR PRESENT_MODE_FIFO_RELAXED_KHR} indicates that the presentation engine generally waits for the next vertical blanking period to update the current image. If a vertical blanking period has already passed since the last update of the current image then the presentation engine does not wait for another vertical blanking period for the update, meaning this mode <b>may</b> result in visible tearing in this case. This mode is useful for reducing visual stutter with an application that will mostly present a new image before the next vertical blanking period, but may occasionally be late, and present a new image just after the next vertical blanking period. An internal queue is used to hold pending presentation requests. New requests are appended to the end of the queue, and one request is removed from the beginning of the queue and processed during or after each vertical blanking period in which the queue is non-empty.</li>
+     * <li>{@link KHRSharedPresentableImage#VK_PRESENT_MODE_SHARED_DEMAND_REFRESH_KHR PRESENT_MODE_SHARED_DEMAND_REFRESH_KHR} indicates that the presentation engine and application have concurrent access to a single image, which is referred to as a <em>shared presentable image</em>. The presentation engine is only required to update the current image after a new presentation request is received. Therefore the application <b>must</b> make a presentation request whenever an update is required. However, the presentation engine <b>may</b> update the current image at any point, meaning this mode <b>may</b> result in visible tearing.</li>
+     * <li>{@link KHRSharedPresentableImage#VK_PRESENT_MODE_SHARED_CONTINUOUS_REFRESH_KHR PRESENT_MODE_SHARED_CONTINUOUS_REFRESH_KHR} indicates that the presentation engine and application have concurrent access to a single image, which is referred to as a <em>shared presentable image</em>. The presentation engine periodically updates the current image on its regular refresh cycle. The application is only required to make one initial presentation request, after which the presentation engine <b>must</b> update the current image without any need for further presentation requests. The application <b>can</b> indicate the image contents have been updated by making a presentation request, but this does not guarantee the timing of when it will be updated. This mode <b>may</b> result in visible tearing if rendering to the image is not timed correctly.</li>
      * </ul>
      * 
      * <p>The supported {@code VkImageUsageFlagBits} of the presentable images of a swapchain created for a surface <b>may</b> differ depending on the presentation mode, and can be determined as per the table below:</p>
@@ -249,13 +249,10 @@ public class KHRSurface {
         throw new UnsupportedOperationException();
     }
 
-    static boolean checkCapsInstance(FunctionProvider provider, java.util.Map<String, Long> caps, java.util.Set<String> ext) {
-        return ext.contains("VK_KHR_surface") && VK.checkExtension("VK_KHR_surface",
-               VK.isSupported(provider, "vkDestroySurfaceKHR", caps)
-            && VK.isSupported(provider, "vkGetPhysicalDeviceSurfaceSupportKHR", caps)
-            && VK.isSupported(provider, "vkGetPhysicalDeviceSurfaceCapabilitiesKHR", caps)
-            && VK.isSupported(provider, "vkGetPhysicalDeviceSurfaceFormatsKHR", caps)
-            && VK.isSupported(provider, "vkGetPhysicalDeviceSurfacePresentModesKHR", caps)
+    static boolean isAvailable(VKCapabilitiesInstance caps) {
+        return checkFunctions(
+            caps.vkDestroySurfaceKHR, caps.vkGetPhysicalDeviceSurfaceSupportKHR, caps.vkGetPhysicalDeviceSurfaceCapabilitiesKHR, 
+            caps.vkGetPhysicalDeviceSurfaceFormatsKHR, caps.vkGetPhysicalDeviceSurfacePresentModesKHR
         );
     }
 
@@ -278,11 +275,11 @@ public class KHRSurface {
      * 
      * <p>To destroy a {@code VkSurfaceKHR} object, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * void vkDestroySurfaceKHR(
      *     VkInstance                                  instance,
      *     VkSurfaceKHR                                surface,
-     *     const VkAllocationCallbacks*                pAllocator);</code></pre>
+     *     const VkAllocationCallbacks*                pAllocator);</pre></code>
      * 
      * <h5>Description</h5>
      * 
@@ -319,7 +316,7 @@ public class KHRSurface {
      * @param surface    the surface to destroy.
      * @param pAllocator the allocator used for host memory allocated for the surface object when there is no more specific allocator available (see <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation">Memory Allocation</a>).
      */
-    public static void vkDestroySurfaceKHR(VkInstance instance, @NativeType("VkSurfaceKHR") long surface, @Nullable @NativeType("VkAllocationCallbacks const *") VkAllocationCallbacks pAllocator) {
+    public static void vkDestroySurfaceKHR(VkInstance instance, @NativeType("VkSurfaceKHR") long surface, @Nullable @NativeType("const VkAllocationCallbacks *") VkAllocationCallbacks pAllocator) {
         nvkDestroySurfaceKHR(instance, surface, memAddressSafe(pAllocator));
     }
 
@@ -341,12 +338,12 @@ public class KHRSurface {
      * 
      * <p>To determine whether a queue family of a physical device supports presentation to a given surface, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * VkResult vkGetPhysicalDeviceSurfaceSupportKHR(
      *     VkPhysicalDevice                            physicalDevice,
      *     uint32_t                                    queueFamilyIndex,
      *     VkSurfaceKHR                                surface,
-     *     VkBool32*                                   pSupported);</code></pre>
+     *     VkBool32*                                   pSupported);</pre></code>
      * 
      * <h5>Valid Usage</h5>
      * 
@@ -409,11 +406,11 @@ public class KHRSurface {
      * 
      * <p>To query the basic capabilities of a surface, needed in order to create a swapchain, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * VkResult vkGetPhysicalDeviceSurfaceCapabilitiesKHR(
      *     VkPhysicalDevice                            physicalDevice,
      *     VkSurfaceKHR                                surface,
-     *     VkSurfaceCapabilitiesKHR*                   pSurfaceCapabilities);</code></pre>
+     *     VkSurfaceCapabilitiesKHR*                   pSurfaceCapabilities);</pre></code>
      * 
      * <h5>Valid Usage (Implicit)</h5>
      * 
@@ -474,12 +471,12 @@ public class KHRSurface {
      * 
      * <p>To query the supported swapchain format-color space pairs for a surface, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * VkResult vkGetPhysicalDeviceSurfaceFormatsKHR(
      *     VkPhysicalDevice                            physicalDevice,
      *     VkSurfaceKHR                                surface,
      *     uint32_t*                                   pSurfaceFormatCount,
-     *     VkSurfaceFormatKHR*                         pSurfaceFormats);</code></pre>
+     *     VkSurfaceFormatKHR*                         pSurfaceFormats);</pre></code>
      * 
      * <h5>Description</h5>
      * 
@@ -551,12 +548,12 @@ public class KHRSurface {
      * 
      * <p>To query the supported presentation modes for a surface, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * VkResult vkGetPhysicalDeviceSurfacePresentModesKHR(
      *     VkPhysicalDevice                            physicalDevice,
      *     VkSurfaceKHR                                surface,
      *     uint32_t*                                   pPresentModeCount,
-     *     VkPresentModeKHR*                           pPresentModes);</code></pre>
+     *     VkPresentModeKHR*                           pPresentModes);</pre></code>
      * 
      * <h5>Description</h5>
      * 
@@ -602,7 +599,7 @@ public class KHRSurface {
         return nvkGetPhysicalDeviceSurfacePresentModesKHR(physicalDevice, surface, memAddress(pPresentModeCount), memAddressSafe(pPresentModes));
     }
 
-    /** Array version of: {@link #vkGetPhysicalDeviceSurfaceSupportKHR GetPhysicalDeviceSurfaceSupportKHR} */
+    /** register Array version of: {@link #vkGetPhysicalDeviceSurfaceSupportKHR GetPhysicalDeviceSurfaceSupportKHR} */
     @NativeType("VkResult")
     public static int vkGetPhysicalDeviceSurfaceSupportKHR(VkPhysicalDevice physicalDevice, @NativeType("uint32_t") int queueFamilyIndex, @NativeType("VkSurfaceKHR") long surface, @NativeType("VkBool32 *") int[] pSupported) {
         long __functionAddress = physicalDevice.getCapabilities().vkGetPhysicalDeviceSurfaceSupportKHR;
@@ -613,7 +610,7 @@ public class KHRSurface {
         return callPJPI(__functionAddress, physicalDevice.address(), queueFamilyIndex, surface, pSupported);
     }
 
-    /** Array version of: {@link #vkGetPhysicalDeviceSurfaceFormatsKHR GetPhysicalDeviceSurfaceFormatsKHR} */
+    /** register Array version of: {@link #vkGetPhysicalDeviceSurfaceFormatsKHR GetPhysicalDeviceSurfaceFormatsKHR} */
     @NativeType("VkResult")
     public static int vkGetPhysicalDeviceSurfaceFormatsKHR(VkPhysicalDevice physicalDevice, @NativeType("VkSurfaceKHR") long surface, @NativeType("uint32_t *") int[] pSurfaceFormatCount, @Nullable @NativeType("VkSurfaceFormatKHR *") VkSurfaceFormatKHR.Buffer pSurfaceFormats) {
         long __functionAddress = physicalDevice.getCapabilities().vkGetPhysicalDeviceSurfaceFormatsKHR;
@@ -625,7 +622,7 @@ public class KHRSurface {
         return callPJPPI(__functionAddress, physicalDevice.address(), surface, pSurfaceFormatCount, memAddressSafe(pSurfaceFormats));
     }
 
-    /** Array version of: {@link #vkGetPhysicalDeviceSurfacePresentModesKHR GetPhysicalDeviceSurfacePresentModesKHR} */
+    /** register Array version of: {@link #vkGetPhysicalDeviceSurfacePresentModesKHR GetPhysicalDeviceSurfacePresentModesKHR} */
     @NativeType("VkResult")
     public static int vkGetPhysicalDeviceSurfacePresentModesKHR(VkPhysicalDevice physicalDevice, @NativeType("VkSurfaceKHR") long surface, @NativeType("uint32_t *") int[] pPresentModeCount, @Nullable @NativeType("VkPresentModeKHR *") int[] pPresentModes) {
         long __functionAddress = physicalDevice.getCapabilities().vkGetPhysicalDeviceSurfacePresentModesKHR;

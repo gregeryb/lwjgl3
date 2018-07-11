@@ -21,6 +21,31 @@ import static org.lwjgl.system.MemoryUtil.*;
 /** The core Vulkan 1.0 functionality. */
 public class VK10 {
 
+    /** API Constants */
+    public static final int
+        VK_MAX_PHYSICAL_DEVICE_NAME_SIZE = 256,
+        VK_UUID_SIZE                     = 16,
+        VK_LUID_SIZE_KHR                 = 8,
+        VK_MAX_EXTENSION_NAME_SIZE       = 256,
+        VK_MAX_DESCRIPTION_SIZE          = 256,
+        VK_MAX_MEMORY_TYPES              = 32,
+        VK_MAX_MEMORY_HEAPS              = 16,
+        VK_REMAINING_MIP_LEVELS          = (~0),
+        VK_REMAINING_ARRAY_LAYERS        = (~0),
+        VK_ATTACHMENT_UNUSED             = (~0),
+        VK_TRUE                          = 1,
+        VK_FALSE                         = 0,
+        VK_QUEUE_FAMILY_IGNORED          = (~0),
+        VK_QUEUE_FAMILY_EXTERNAL_KHR     = (~0-1),
+        VK_QUEUE_FAMILY_FOREIGN_EXT      = (~0-2),
+        VK_SUBPASS_EXTERNAL              = (~0);
+
+    /** API Constants */
+    public static final float VK_LOD_CLAMP_NONE = 1000.0f;
+
+    /** API Constants */
+    public static final long VK_WHOLE_SIZE = (~0L);
+
     /**
      * VkPipelineCacheHeaderVersion - Encode pipeline cache version
      * 
@@ -63,15 +88,14 @@ public class VK10 {
      * <li>{@link #VK_ERROR_INCOMPATIBLE_DRIVER ERROR_INCOMPATIBLE_DRIVER} The requested version of Vulkan is not supported by the driver or is otherwise incompatible for implementation-specific reasons.</li>
      * <li>{@link #VK_ERROR_TOO_MANY_OBJECTS ERROR_TOO_MANY_OBJECTS} Too many objects of the type have already been created.</li>
      * <li>{@link #VK_ERROR_FORMAT_NOT_SUPPORTED ERROR_FORMAT_NOT_SUPPORTED} A requested format is not supported on this device.</li>
-     * <li>{@link #VK_ERROR_FRAGMENTED_POOL ERROR_FRAGMENTED_POOL} A pool allocation has failed due to fragmentation of the pool&#8217;s memory. This <b>must</b> only be returned if no attempt to allocate host or device memory was made to accomodate the new allocation. This <b>should</b> be returned in preference to {@link VK11#VK_ERROR_OUT_OF_POOL_MEMORY ERROR_OUT_OF_POOL_MEMORY}, but only if the implementation is certain that the pool allocation failure was due to fragmentation.</li>
+     * <li>{@link #VK_ERROR_FRAGMENTED_POOL ERROR_FRAGMENTED_POOL} A pool allocation has failed due to fragmentation of the pool&#8217;s memory. This <b>must</b> only be returned if no attempt to allocate host or device memory was made to accomodate the new allocation. This <b>should</b> be returned in preference to {@link KHRMaintenance1#VK_ERROR_OUT_OF_POOL_MEMORY_KHR ERROR_OUT_OF_POOL_MEMORY_KHR}, but only if the implementation is certain that the pool allocation failure was due to fragmentation.</li>
      * <li>{@link KHRSurface#VK_ERROR_SURFACE_LOST_KHR ERROR_SURFACE_LOST_KHR} A surface is no longer available.</li>
      * <li>{@link KHRSurface#VK_ERROR_NATIVE_WINDOW_IN_USE_KHR ERROR_NATIVE_WINDOW_IN_USE_KHR} The requested window is already in use by Vulkan or another API in a manner which prevents it from being used again.</li>
      * <li>{@link KHRSwapchain#VK_ERROR_OUT_OF_DATE_KHR ERROR_OUT_OF_DATE_KHR} A surface has changed in such a way that it is no longer compatible with the swapchain, and further presentation requests using the swapchain will fail. Applications <b>must</b> query the new surface properties and recreate their swapchain if they wish to continue presenting to the surface.</li>
      * <li>{@link KHRDisplaySwapchain#VK_ERROR_INCOMPATIBLE_DISPLAY_KHR ERROR_INCOMPATIBLE_DISPLAY_KHR} The display used by a swapchain does not use the same presentable image layout, or is incompatible in a way that prevents sharing an image.</li>
      * <li>{@link NVGLSLShader#VK_ERROR_INVALID_SHADER_NV ERROR_INVALID_SHADER_NV} One or more shaders failed to compile or link. More details are reported back to the application via {@link EXTDebugReport VK_EXT_debug_report} if enabled.</li>
-     * <li>{@link VK11#VK_ERROR_OUT_OF_POOL_MEMORY ERROR_OUT_OF_POOL_MEMORY} A pool memory allocation has failed. This <b>must</b> only be returned if no attempt to allocate host or device memory was made to accomodate the new allocation. If the failure was definitely due to fragmentation of the pool, {@link #VK_ERROR_FRAGMENTED_POOL ERROR_FRAGMENTED_POOL} <b>should</b> be returned instead.</li>
-     * <li>{@link VK11#VK_ERROR_INVALID_EXTERNAL_HANDLE ERROR_INVALID_EXTERNAL_HANDLE} An external handle is not a valid handle of the specified type.</li>
-     * <li>{@link EXTDescriptorIndexing#VK_ERROR_FRAGMENTATION_EXT ERROR_FRAGMENTATION_EXT} A descriptor pool creation has failed due to fragmentation.</li>
+     * <li>{@link KHRMaintenance1#VK_ERROR_OUT_OF_POOL_MEMORY_KHR ERROR_OUT_OF_POOL_MEMORY_KHR} A pool memory allocation has failed. This <b>must</b> only be returned if no attempt to allocate host or device memory was made to accomodate the new allocation. If the failure was definitely due to fragmentation of the pool, {@link #VK_ERROR_FRAGMENTED_POOL ERROR_FRAGMENTED_POOL} <b>should</b> be returned instead.</li>
+     * <li>{@link KHRExternalMemory#VK_ERROR_INVALID_EXTERNAL_HANDLE_KHR ERROR_INVALID_EXTERNAL_HANDLE_KHR} An external handle is not a valid handle of the specified type.</li>
      * </ul>
      * 
      * <p>If a command returns a run time error, unless otherwise specified any output parameters will have undefined contents, except that if the output parameter is a structure with {@code sType} and {@code pNext} fields, those fields will be unmodified. Any structures chained from {@code pNext} will also have undefined contents, except that {@code sType} and {@code pNext} will be unmodified.</p>
@@ -111,11 +135,11 @@ public class VK10 {
      * 
      * <p>Each value corresponds to a particular structure with a {@code sType} member with a matching name. As a general rule, the name of each {@code VkStructureType} value is obtained by taking the name of the structure, stripping the leading {@code Vk}, prefixing each capital letter with {@code _}, converting the entire resulting string to upper case, and prefixing it with {@code VK_STRUCTURE_TYPE_}. For example, structures of type {@link VkImageCreateInfo} correspond to a {@code VkStructureType} of {@link #VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO STRUCTURE_TYPE_IMAGE_CREATE_INFO}, and thus its {@code sType} member <b>must</b> equal that when it is passed to the API.</p>
      * 
-     * <p>The values {@link #VK_STRUCTURE_TYPE_LOADER_INSTANCE_CREATE_INFO STRUCTURE_TYPE_LOADER_INSTANCE_CREATE_INFO} and {@link #VK_STRUCTURE_TYPE_LOADER_DEVICE_CREATE_INFO STRUCTURE_TYPE_LOADER_DEVICE_CREATE_INFO} are reserved for internal use by the loader, and do not have corresponding Vulkan structures in this Specification.</p>
+     * <p>The values {@link #VK_STRUCTURE_TYPE_LOADER_INSTANCE_CREATE_INFO STRUCTURE_TYPE_LOADER_INSTANCE_CREATE_INFO} and {@link #VK_STRUCTURE_TYPE_LOADER_DEVICE_CREATE_INFO STRUCTURE_TYPE_LOADER_DEVICE_CREATE_INFO} are reserved for internal use by the loader, and do not have corresponding Vulkan structures in this specification.</p>
      * 
      * <h5>See Also</h5>
      * 
-     * <p>{@link VkAcquireNextImageInfoKHR}, {@link VkApplicationInfo}, {@link VkBaseInStructure}, {@link VkBaseOutStructure}, {@link VkBindBufferMemoryDeviceGroupInfo}, {@link VkBindBufferMemoryInfo}, {@link VkBindImageMemoryDeviceGroupInfo}, {@link VkBindImageMemoryInfo}, {@link VkBindImageMemorySwapchainInfoKHR}, {@link VkBindImagePlaneMemoryInfo}, {@link VkBindSparseInfo}, {@link VkBufferCreateInfo}, {@link VkBufferMemoryBarrier}, {@link VkBufferMemoryRequirementsInfo2}, {@link VkBufferViewCreateInfo}, {@link VkCmdProcessCommandsInfoNVX}, {@link VkCmdReserveSpaceForCommandsInfoNVX}, {@link VkCommandBufferAllocateInfo}, {@link VkCommandBufferBeginInfo}, {@link VkCommandBufferInheritanceInfo}, {@link VkCommandPoolCreateInfo}, {@link VkComputePipelineCreateInfo}, {@link VkCopyDescriptorSet}, {@link VkD3D12FenceSubmitInfoKHR}, {@link VkDebugMarkerMarkerInfoEXT}, {@link VkDebugMarkerObjectNameInfoEXT}, {@link VkDebugMarkerObjectTagInfoEXT}, {@link VkDebugReportCallbackCreateInfoEXT}, {@link VkDebugUtilsLabelEXT}, {@link VkDebugUtilsMessengerCallbackDataEXT}, {@link VkDebugUtilsMessengerCreateInfoEXT}, {@link VkDebugUtilsObjectNameInfoEXT}, {@link VkDebugUtilsObjectTagInfoEXT}, {@link VkDedicatedAllocationBufferCreateInfoNV}, {@link VkDedicatedAllocationImageCreateInfoNV}, {@link VkDedicatedAllocationMemoryAllocateInfoNV}, {@link VkDescriptorPoolCreateInfo}, {@link VkDescriptorSetAllocateInfo}, {@link VkDescriptorSetLayoutBindingFlagsCreateInfoEXT}, {@link VkDescriptorSetLayoutCreateInfo}, {@link VkDescriptorSetLayoutSupport}, {@link VkDescriptorSetVariableDescriptorCountAllocateInfoEXT}, {@link VkDescriptorSetVariableDescriptorCountLayoutSupportEXT}, {@link VkDescriptorUpdateTemplateCreateInfo}, {@link VkDeviceCreateInfo}, {@link VkDeviceEventInfoEXT}, {@link VkDeviceGeneratedCommandsFeaturesNVX}, {@link VkDeviceGeneratedCommandsLimitsNVX}, {@link VkDeviceGroupBindSparseInfo}, {@link VkDeviceGroupCommandBufferBeginInfo}, {@link VkDeviceGroupDeviceCreateInfo}, {@link VkDeviceGroupPresentCapabilitiesKHR}, {@link VkDeviceGroupPresentInfoKHR}, {@link VkDeviceGroupRenderPassBeginInfo}, {@link VkDeviceGroupSubmitInfo}, {@link VkDeviceGroupSwapchainCreateInfoKHR}, {@link VkDeviceQueueCreateInfo}, {@link VkDeviceQueueGlobalPriorityCreateInfoEXT}, {@link VkDeviceQueueInfo2}, {@link VkDisplayEventInfoEXT}, {@link VkDisplayModeCreateInfoKHR}, {@link VkDisplayModeProperties2KHR}, {@link VkDisplayPlaneCapabilities2KHR}, {@link VkDisplayPlaneInfo2KHR}, {@link VkDisplayPlaneProperties2KHR}, {@link VkDisplayPowerInfoEXT}, {@link VkDisplayPresentInfoKHR}, {@link VkDisplayProperties2KHR}, {@link VkDisplaySurfaceCreateInfoKHR}, {@link VkEventCreateInfo}, {@link VkExportFenceCreateInfo}, {@link VkExportFenceWin32HandleInfoKHR}, {@link VkExportMemoryAllocateInfo}, {@link VkExportMemoryAllocateInfoNV}, {@link VkExportMemoryWin32HandleInfoKHR}, {@link VkExportMemoryWin32HandleInfoNV}, {@link VkExportSemaphoreCreateInfo}, {@link VkExportSemaphoreWin32HandleInfoKHR}, {@link VkExternalBufferProperties}, {@link VkExternalFenceProperties}, {@link VkExternalImageFormatProperties}, {@link VkExternalMemoryBufferCreateInfo}, {@link VkExternalMemoryImageCreateInfo}, {@link VkExternalMemoryImageCreateInfoNV}, {@link VkExternalSemaphoreProperties}, {@link VkFenceCreateInfo}, {@link VkFenceGetFdInfoKHR}, {@link VkFenceGetWin32HandleInfoKHR}, {@link VkFormatProperties2}, {@link VkFramebufferCreateInfo}, {@link VkGraphicsPipelineCreateInfo}, {@link VkHdrMetadataEXT}, {@link VkImageCreateInfo}, {@link VkImageFormatListCreateInfoKHR}, {@link VkImageFormatProperties2}, {@link VkImageMemoryBarrier}, {@link VkImageMemoryRequirementsInfo2}, {@link VkImagePlaneMemoryRequirementsInfo}, {@link VkImageSparseMemoryRequirementsInfo2}, {@link VkImageSwapchainCreateInfoKHR}, {@link VkImageViewCreateInfo}, {@link VkImageViewUsageCreateInfo}, {@link VkImportFenceFdInfoKHR}, {@link VkImportFenceWin32HandleInfoKHR}, {@link VkImportMemoryFdInfoKHR}, {@link VkImportMemoryHostPointerInfoEXT}, {@link VkImportMemoryWin32HandleInfoKHR}, {@link VkImportMemoryWin32HandleInfoNV}, {@link VkImportSemaphoreFdInfoKHR}, {@link VkImportSemaphoreWin32HandleInfoKHR}, {@link VkIndirectCommandsLayoutCreateInfoNVX}, {@link VkInstanceCreateInfo}, {@link VkMacOSSurfaceCreateInfoMVK}, {@link VkMappedMemoryRange}, {@link VkMemoryAllocateFlagsInfo}, {@link VkMemoryAllocateInfo}, {@link VkMemoryBarrier}, {@link VkMemoryDedicatedAllocateInfo}, {@link VkMemoryDedicatedRequirements}, {@link VkMemoryFdPropertiesKHR}, {@link VkMemoryGetFdInfoKHR}, {@link VkMemoryGetWin32HandleInfoKHR}, {@link VkMemoryHostPointerPropertiesEXT}, {@link VkMemoryRequirements2}, {@link VkMemoryWin32HandlePropertiesKHR}, {@link VkMultisamplePropertiesEXT}, {@link VkObjectTableCreateInfoNVX}, {@link VkPhysicalDevice16BitStorageFeatures}, {@link VkPhysicalDeviceBlendOperationAdvancedFeaturesEXT}, {@link VkPhysicalDeviceBlendOperationAdvancedPropertiesEXT}, {@link VkPhysicalDeviceConservativeRasterizationPropertiesEXT}, {@link VkPhysicalDeviceDescriptorIndexingFeaturesEXT}, {@link VkPhysicalDeviceDescriptorIndexingPropertiesEXT}, {@link VkPhysicalDeviceDiscardRectanglePropertiesEXT}, {@link VkPhysicalDeviceExternalBufferInfo}, {@link VkPhysicalDeviceExternalFenceInfo}, {@link VkPhysicalDeviceExternalImageFormatInfo}, {@link VkPhysicalDeviceExternalMemoryHostPropertiesEXT}, {@link VkPhysicalDeviceExternalSemaphoreInfo}, {@link VkPhysicalDeviceFeatures2}, {@link VkPhysicalDeviceGroupProperties}, {@link VkPhysicalDeviceIDProperties}, {@link VkPhysicalDeviceImageFormatInfo2}, {@link VkPhysicalDeviceMaintenance3Properties}, {@link VkPhysicalDeviceMemoryProperties2}, {@link VkPhysicalDeviceMultiviewFeatures}, {@link VkPhysicalDeviceMultiviewPerViewAttributesPropertiesNVX}, {@link VkPhysicalDeviceMultiviewProperties}, {@link VkPhysicalDevicePointClippingProperties}, {@link VkPhysicalDeviceProperties2}, {@link VkPhysicalDeviceProtectedMemoryFeatures}, {@link VkPhysicalDeviceProtectedMemoryProperties}, {@link VkPhysicalDevicePushDescriptorPropertiesKHR}, {@link VkPhysicalDeviceSampleLocationsPropertiesEXT}, {@link VkPhysicalDeviceSamplerFilterMinmaxPropertiesEXT}, {@link VkPhysicalDeviceSamplerYcbcrConversionFeatures}, {@link VkPhysicalDeviceShaderCorePropertiesAMD}, {@link VkPhysicalDeviceShaderDrawParameterFeatures}, {@link VkPhysicalDeviceSparseImageFormatInfo2}, {@link VkPhysicalDeviceSubgroupProperties}, {@link VkPhysicalDeviceSurfaceInfo2KHR}, {@link VkPhysicalDeviceVariablePointerFeatures}, {@link VkPhysicalDeviceVertexAttributeDivisorPropertiesEXT}, {@link VkPipelineCacheCreateInfo}, {@link VkPipelineColorBlendAdvancedStateCreateInfoEXT}, {@link VkPipelineColorBlendStateCreateInfo}, {@link VkPipelineCoverageModulationStateCreateInfoNV}, {@link VkPipelineCoverageToColorStateCreateInfoNV}, {@link VkPipelineDepthStencilStateCreateInfo}, {@link VkPipelineDiscardRectangleStateCreateInfoEXT}, {@link VkPipelineDynamicStateCreateInfo}, {@link VkPipelineInputAssemblyStateCreateInfo}, {@link VkPipelineLayoutCreateInfo}, {@link VkPipelineMultisampleStateCreateInfo}, {@link VkPipelineRasterizationConservativeStateCreateInfoEXT}, {@link VkPipelineRasterizationStateCreateInfo}, {@link VkPipelineRasterizationStateRasterizationOrderAMD}, {@link VkPipelineSampleLocationsStateCreateInfoEXT}, {@link VkPipelineShaderStageCreateInfo}, {@link VkPipelineTessellationDomainOriginStateCreateInfo}, {@link VkPipelineTessellationStateCreateInfo}, {@link VkPipelineVertexInputDivisorStateCreateInfoEXT}, {@link VkPipelineVertexInputStateCreateInfo}, {@link VkPipelineViewportStateCreateInfo}, {@link VkPipelineViewportSwizzleStateCreateInfoNV}, {@link VkPipelineViewportWScalingStateCreateInfoNV}, {@link VkPresentInfoKHR}, {@link VkPresentRegionsKHR}, {@link VkPresentTimesInfoGOOGLE}, {@link VkProtectedSubmitInfo}, {@link VkQueryPoolCreateInfo}, {@link VkQueueFamilyProperties2}, {@link VkRenderPassBeginInfo}, {@link VkRenderPassCreateInfo}, {@link VkRenderPassInputAttachmentAspectCreateInfo}, {@link VkRenderPassMultiviewCreateInfo}, {@link VkRenderPassSampleLocationsBeginInfoEXT}, {@link VkSampleLocationsInfoEXT}, {@link VkSamplerCreateInfo}, {@link VkSamplerReductionModeCreateInfoEXT}, {@link VkSamplerYcbcrConversionCreateInfo}, {@link VkSamplerYcbcrConversionImageFormatProperties}, {@link VkSamplerYcbcrConversionInfo}, {@link VkSemaphoreCreateInfo}, {@link VkSemaphoreGetFdInfoKHR}, {@link VkSemaphoreGetWin32HandleInfoKHR}, {@link VkShaderModuleCreateInfo}, {@link VkShaderModuleValidationCacheCreateInfoEXT}, {@link VkSharedPresentSurfaceCapabilitiesKHR}, {@link VkSparseImageFormatProperties2}, {@link VkSparseImageMemoryRequirements2}, {@link VkSubmitInfo}, {@link VkSurfaceCapabilities2EXT}, {@link VkSurfaceCapabilities2KHR}, {@link VkSurfaceFormat2KHR}, {@link VkSwapchainCounterCreateInfoEXT}, {@link VkSwapchainCreateInfoKHR}, {@link VkTextureLODGatherFormatPropertiesAMD}, {@link VkValidationCacheCreateInfoEXT}, {@link VkValidationFlagsEXT}, {@link VkWaylandSurfaceCreateInfoKHR}, {@link VkWin32KeyedMutexAcquireReleaseInfoKHR}, {@link VkWin32KeyedMutexAcquireReleaseInfoNV}, {@link VkWin32SurfaceCreateInfoKHR}, {@link VkWriteDescriptorSet}, {@link VkXlibSurfaceCreateInfoKHR}</p>
+     * <p>{@link VkAcquireNextImageInfoKHX}, {@link VkAndroidSurfaceCreateInfoKHR}, {@link VkApplicationInfo}, {@link VkBindBufferMemoryDeviceGroupInfoKHX}, {@link VkBindBufferMemoryInfoKHR}, {@link VkBindImageMemoryDeviceGroupInfoKHX}, {@link VkBindImageMemoryInfoKHR}, {@link VkBindImageMemorySwapchainInfoKHX}, {@link VkBindImagePlaneMemoryInfoKHR}, {@link VkBindSparseInfo}, {@link VkBufferCreateInfo}, {@link VkBufferMemoryBarrier}, {@link VkBufferMemoryRequirementsInfo2KHR}, {@link VkBufferViewCreateInfo}, {@link VkCmdProcessCommandsInfoNVX}, {@link VkCmdReserveSpaceForCommandsInfoNVX}, {@link VkCommandBufferAllocateInfo}, {@link VkCommandBufferBeginInfo}, {@link VkCommandBufferInheritanceInfo}, {@link VkCommandPoolCreateInfo}, {@link VkComputePipelineCreateInfo}, {@link VkCopyDescriptorSet}, {@link VkD3D12FenceSubmitInfoKHR}, {@link VkDebugMarkerMarkerInfoEXT}, {@link VkDebugMarkerObjectNameInfoEXT}, {@link VkDebugMarkerObjectTagInfoEXT}, {@link VkDebugReportCallbackCreateInfoEXT}, {@link VkDedicatedAllocationBufferCreateInfoNV}, {@link VkDedicatedAllocationImageCreateInfoNV}, {@link VkDedicatedAllocationMemoryAllocateInfoNV}, {@link VkDescriptorPoolCreateInfo}, {@link VkDescriptorSetAllocateInfo}, {@link VkDescriptorSetLayoutCreateInfo}, {@link VkDescriptorUpdateTemplateCreateInfoKHR}, {@link VkDeviceCreateInfo}, {@link VkDeviceEventInfoEXT}, {@link VkDeviceGeneratedCommandsFeaturesNVX}, {@link VkDeviceGeneratedCommandsLimitsNVX}, {@link VkDeviceGroupBindSparseInfoKHX}, {@link VkDeviceGroupCommandBufferBeginInfoKHX}, {@link VkDeviceGroupDeviceCreateInfoKHX}, {@link VkDeviceGroupPresentCapabilitiesKHX}, {@link VkDeviceGroupPresentInfoKHX}, {@link VkDeviceGroupRenderPassBeginInfoKHX}, {@link VkDeviceGroupSubmitInfoKHX}, {@link VkDeviceGroupSwapchainCreateInfoKHX}, {@link VkDeviceQueueCreateInfo}, {@link VkDeviceQueueGlobalPriorityCreateInfoEXT}, {@link VkDisplayEventInfoEXT}, {@link VkDisplayModeCreateInfoKHR}, {@link VkDisplayPowerInfoEXT}, {@link VkDisplayPresentInfoKHR}, {@link VkDisplaySurfaceCreateInfoKHR}, {@link VkEventCreateInfo}, {@link VkExportFenceCreateInfoKHR}, {@link VkExportFenceWin32HandleInfoKHR}, {@link VkExportMemoryAllocateInfoKHR}, {@link VkExportMemoryAllocateInfoNV}, {@link VkExportMemoryWin32HandleInfoKHR}, {@link VkExportMemoryWin32HandleInfoNV}, {@link VkExportSemaphoreCreateInfoKHR}, {@link VkExportSemaphoreWin32HandleInfoKHR}, {@link VkExternalBufferPropertiesKHR}, {@link VkExternalFencePropertiesKHR}, {@link VkExternalImageFormatPropertiesKHR}, {@link VkExternalMemoryBufferCreateInfoKHR}, {@link VkExternalMemoryImageCreateInfoKHR}, {@link VkExternalMemoryImageCreateInfoNV}, {@link VkExternalSemaphorePropertiesKHR}, {@link VkFenceCreateInfo}, {@link VkFenceGetFdInfoKHR}, {@link VkFenceGetWin32HandleInfoKHR}, {@link VkFormatProperties2KHR}, {@link VkFramebufferCreateInfo}, {@link VkGraphicsPipelineCreateInfo}, {@link VkHdrMetadataEXT}, {@link VkIOSSurfaceCreateInfoMVK}, {@link VkImageCreateInfo}, {@link VkImageFormatListCreateInfoKHR}, {@link VkImageFormatProperties2KHR}, {@link VkImageMemoryBarrier}, {@link VkImageMemoryRequirementsInfo2KHR}, {@link VkImagePlaneMemoryRequirementsInfoKHR}, {@link VkImageSparseMemoryRequirementsInfo2KHR}, {@link VkImageSwapchainCreateInfoKHX}, {@link VkImageViewCreateInfo}, {@link VkImageViewUsageCreateInfoKHR}, {@link VkImportFenceFdInfoKHR}, {@link VkImportFenceWin32HandleInfoKHR}, {@link VkImportMemoryFdInfoKHR}, {@link VkImportMemoryHostPointerInfoEXT}, {@link VkImportMemoryWin32HandleInfoKHR}, {@link VkImportMemoryWin32HandleInfoNV}, {@link VkImportSemaphoreFdInfoKHR}, {@link VkImportSemaphoreWin32HandleInfoKHR}, {@link VkIndirectCommandsLayoutCreateInfoNVX}, {@link VkInstanceCreateInfo}, {@link VkMacOSSurfaceCreateInfoMVK}, {@link VkMappedMemoryRange}, {@link VkMemoryAllocateFlagsInfoKHX}, {@link VkMemoryAllocateInfo}, {@link VkMemoryBarrier}, {@link VkMemoryDedicatedAllocateInfoKHR}, {@link VkMemoryDedicatedRequirementsKHR}, {@link VkMemoryFdPropertiesKHR}, {@link VkMemoryGetFdInfoKHR}, {@link VkMemoryGetWin32HandleInfoKHR}, {@link VkMemoryHostPointerPropertiesEXT}, {@link VkMemoryRequirements2KHR}, {@link VkMemoryWin32HandlePropertiesKHR}, {@link VkMirSurfaceCreateInfoKHR}, {@link VkMultisamplePropertiesEXT}, {@link VkObjectTableCreateInfoNVX}, {@link VkPhysicalDevice16BitStorageFeaturesKHR}, {@link VkPhysicalDeviceBlendOperationAdvancedFeaturesEXT}, {@link VkPhysicalDeviceBlendOperationAdvancedPropertiesEXT}, {@link VkPhysicalDeviceConservativeRasterizationPropertiesEXT}, {@link VkPhysicalDeviceDiscardRectanglePropertiesEXT}, {@link VkPhysicalDeviceExternalBufferInfoKHR}, {@link VkPhysicalDeviceExternalFenceInfoKHR}, {@link VkPhysicalDeviceExternalImageFormatInfoKHR}, {@link VkPhysicalDeviceExternalMemoryHostPropertiesEXT}, {@link VkPhysicalDeviceExternalSemaphoreInfoKHR}, {@link VkPhysicalDeviceFeatures2KHR}, {@link VkPhysicalDeviceGroupPropertiesKHX}, {@link VkPhysicalDeviceIDPropertiesKHR}, {@link VkPhysicalDeviceImageFormatInfo2KHR}, {@link VkPhysicalDeviceMemoryProperties2KHR}, {@link VkPhysicalDeviceMultiviewFeaturesKHX}, {@link VkPhysicalDeviceMultiviewPerViewAttributesPropertiesNVX}, {@link VkPhysicalDeviceMultiviewPropertiesKHX}, {@link VkPhysicalDevicePointClippingPropertiesKHR}, {@link VkPhysicalDeviceProperties2KHR}, {@link VkPhysicalDevicePushDescriptorPropertiesKHR}, {@link VkPhysicalDeviceSampleLocationsPropertiesEXT}, {@link VkPhysicalDeviceSamplerFilterMinmaxPropertiesEXT}, {@link VkPhysicalDeviceSamplerYcbcrConversionFeaturesKHR}, {@link VkPhysicalDeviceSparseImageFormatInfo2KHR}, {@link VkPhysicalDeviceSurfaceInfo2KHR}, {@link VkPhysicalDeviceVariablePointerFeaturesKHR}, {@link VkPipelineCacheCreateInfo}, {@link VkPipelineColorBlendAdvancedStateCreateInfoEXT}, {@link VkPipelineColorBlendStateCreateInfo}, {@link VkPipelineCoverageModulationStateCreateInfoNV}, {@link VkPipelineCoverageToColorStateCreateInfoNV}, {@link VkPipelineDepthStencilStateCreateInfo}, {@link VkPipelineDiscardRectangleStateCreateInfoEXT}, {@link VkPipelineDynamicStateCreateInfo}, {@link VkPipelineInputAssemblyStateCreateInfo}, {@link VkPipelineLayoutCreateInfo}, {@link VkPipelineMultisampleStateCreateInfo}, {@link VkPipelineRasterizationConservativeStateCreateInfoEXT}, {@link VkPipelineRasterizationStateCreateInfo}, {@link VkPipelineRasterizationStateRasterizationOrderAMD}, {@link VkPipelineSampleLocationsStateCreateInfoEXT}, {@link VkPipelineShaderStageCreateInfo}, {@link VkPipelineTessellationDomainOriginStateCreateInfoKHR}, {@link VkPipelineTessellationStateCreateInfo}, {@link VkPipelineVertexInputStateCreateInfo}, {@link VkPipelineViewportStateCreateInfo}, {@link VkPipelineViewportSwizzleStateCreateInfoNV}, {@link VkPipelineViewportWScalingStateCreateInfoNV}, {@link VkPresentInfoKHR}, {@link VkPresentRegionsKHR}, {@link VkPresentTimesInfoGOOGLE}, {@link VkQueryPoolCreateInfo}, {@link VkQueueFamilyProperties2KHR}, {@link VkRenderPassBeginInfo}, {@link VkRenderPassCreateInfo}, {@link VkRenderPassInputAttachmentAspectCreateInfoKHR}, {@link VkRenderPassMultiviewCreateInfoKHX}, {@link VkRenderPassSampleLocationsBeginInfoEXT}, {@link VkSampleLocationsInfoEXT}, {@link VkSamplerCreateInfo}, {@link VkSamplerReductionModeCreateInfoEXT}, {@link VkSamplerYcbcrConversionCreateInfoKHR}, {@link VkSamplerYcbcrConversionImageFormatPropertiesKHR}, {@link VkSamplerYcbcrConversionInfoKHR}, {@link VkSemaphoreCreateInfo}, {@link VkSemaphoreGetFdInfoKHR}, {@link VkSemaphoreGetWin32HandleInfoKHR}, {@link VkShaderModuleCreateInfo}, {@link VkShaderModuleValidationCacheCreateInfoEXT}, {@link VkSharedPresentSurfaceCapabilitiesKHR}, {@link VkSparseImageFormatProperties2KHR}, {@link VkSparseImageMemoryRequirements2KHR}, {@link VkSubmitInfo}, {@link VkSurfaceCapabilities2EXT}, {@link VkSurfaceCapabilities2KHR}, {@link VkSurfaceFormat2KHR}, {@link VkSwapchainCounterCreateInfoEXT}, {@link VkSwapchainCreateInfoKHR}, {@link VkTextureLODGatherFormatPropertiesAMD}, {@link VkValidationCacheCreateInfoEXT}, {@link VkValidationFlagsEXT}, {@link VkViSurfaceCreateInfoNN}, {@link VkWaylandSurfaceCreateInfoKHR}, {@link VkWin32KeyedMutexAcquireReleaseInfoKHR}, {@link VkWin32KeyedMutexAcquireReleaseInfoNV}, {@link VkWin32SurfaceCreateInfoKHR}, {@link VkWriteDescriptorSet}, {@link VkXcbSurfaceCreateInfoKHR}, {@link VkXlibSurfaceCreateInfoKHR}</p>
      * 
      * <h5>Enum values:</h5>
      * 
@@ -277,7 +301,7 @@ public class VK10 {
      * <h5>Description</h5>
      * 
      * <ul>
-     * <li>{@link #VK_FORMAT_UNDEFINED FORMAT_UNDEFINED} specifies that the format is not specified.</li>
+     * <li>{@link #VK_FORMAT_UNDEFINED FORMAT_UNDEFINED} indicates that the format is not specified.</li>
      * <li>{@link #VK_FORMAT_R4G4_UNORM_PACK8 FORMAT_R4G4_UNORM_PACK8} specifies a two-component, 8-bit packed unsigned normalized format that has a 4-bit R component in bits 4..7, and a 4-bit G component in bits 0..3.</li>
      * <li>{@link #VK_FORMAT_R4G4B4A4_UNORM_PACK16 FORMAT_R4G4B4A4_UNORM_PACK16} specifies a four-component, 16-bit packed unsigned normalized format that has a 4-bit R component in bits 12..15, a 4-bit G component in bits 8..11, a 4-bit B component in bits 4..7, and a 4-bit A component in bits 0..3.</li>
      * <li>{@link #VK_FORMAT_B4G4R4A4_UNORM_PACK16 FORMAT_B4G4R4A4_UNORM_PACK16} specifies a four-component, 16-bit packed unsigned normalized format that has a 4-bit B component in bits 12..15, a 4-bit G component in bits 8..11, a 4-bit R component in bits 4..7, and a 4-bit A component in bits 0..3.</li>
@@ -462,45 +486,45 @@ public class VK10 {
      * <li>{@link #VK_FORMAT_ASTC_12x10_SRGB_BLOCK FORMAT_ASTC_12x10_SRGB_BLOCK} specifies a four-component, ASTC compressed format where each 128-bit compressed texel block encodes a 12×10 rectangle of unsigned normalized RGBA texel data with sRGB nonlinear encoding applied to the RGB components.</li>
      * <li>{@link #VK_FORMAT_ASTC_12x12_UNORM_BLOCK FORMAT_ASTC_12x12_UNORM_BLOCK} specifies a four-component, ASTC compressed format where each 128-bit compressed texel block encodes a 12×12 rectangle of unsigned normalized RGBA texel data.</li>
      * <li>{@link #VK_FORMAT_ASTC_12x12_SRGB_BLOCK FORMAT_ASTC_12x12_SRGB_BLOCK} specifies a four-component, ASTC compressed format where each 128-bit compressed texel block encodes a 12×12 rectangle of unsigned normalized RGBA texel data with sRGB nonlinear encoding applied to the RGB components.</li>
-     * <li>{@link VK11#VK_FORMAT_G8B8G8R8_422_UNORM FORMAT_G8B8G8R8_422_UNORM} specifies a four-component, 32-bit format containing a pair of G components, an R component, and a B component, collectively encoding a 2×1 rectangle of unsigned normalized RGB texel data. One G value is present at each <em>i</em> coordinate, with the B and R values shared across both G values and thus recorded at half the horizontal resolution of the image. This format has an 8-bit G component for the even <em>i</em> coordinate in byte 0, an 8-bit B component in byte 1, an 8-bit G component for the odd <em>i</em> coordinate in byte 2, and an 8-bit R component in byte 3. Images in this format <b>must</b> be defined with a width that is a multiple of two. For the purposes of the constraints on copy extents, this format is treated as a compressed format with a 2×1 compressed texel block.</li>
-     * <li>{@link VK11#VK_FORMAT_B8G8R8G8_422_UNORM FORMAT_B8G8R8G8_422_UNORM} specifies a four-component, 32-bit format containing a pair of G components, an R component, and a B component, collectively encoding a 2×1 rectangle of unsigned normalized RGB texel data. One G value is present at each <em>i</em> coordinate, with the B and R values shared across both G values and thus recorded at half the horizontal resolution of the image. This format has an 8-bit B component in byte 0, an 8-bit G component for the even <em>i</em> coordinate in byte 1, an 8-bit R component in byte 2, and an 8-bit G component for the odd <em>i</em> coordinate in byte 3. Images in this format <b>must</b> be defined with a width that is a multiple of two. For the purposes of the constraints on copy extents, this format is treated as a compressed format with a 2×1 compressed texel block.</li>
-     * <li>{@link VK11#VK_FORMAT_G8_B8_R8_3PLANE_420_UNORM FORMAT_G8_B8_R8_3PLANE_420_UNORM} specifies a unsigned normalized <em>multi-planar format</em> that has an 8-bit G component in plane 0, an 8-bit B component in plane 1, and an 8-bit R component in plane 2. The horizontal and vertical dimensions of the R and B planes are halved relative to the image dimensions, and each R and B component is shared with the G components for which <code>floor(i<sub>G</sub> &times; 0.5) = i<sub>B</sub> = i<sub>R</sub></code> and <code>floor(j<sub>G</sub> &times; 0.5) = j<sub>B</sub> = j<sub>R</sub></code>. The location of each plane when this image is in linear layout can be determined via {@link #vkGetImageSubresourceLayout GetImageSubresourceLayout}, using {@link VK11#VK_IMAGE_ASPECT_PLANE_0_BIT IMAGE_ASPECT_PLANE_0_BIT} for the G plane, {@link VK11#VK_IMAGE_ASPECT_PLANE_1_BIT IMAGE_ASPECT_PLANE_1_BIT} for the B plane, and {@link VK11#VK_IMAGE_ASPECT_PLANE_2_BIT IMAGE_ASPECT_PLANE_2_BIT} for the R plane. Images in this format <b>must</b> be defined with a width and height that is a multiple of two.</li>
-     * <li>{@link VK11#VK_FORMAT_G8_B8R8_2PLANE_420_UNORM FORMAT_G8_B8R8_2PLANE_420_UNORM} specifies a unsigned normalized <em>multi-planar format</em> that has an 8-bit G component in plane 0, and a two-component, 16-bit BR plane 1 consisting of an 8-bit B component in byte 0 and an 8-bit R component in byte 1. The horizontal and vertical dimensions of the BR plane is halved relative to the image dimensions, and each R and B value is shared with the G components for which <code>floor(i<sub>G</sub> &times; 0.5) = i<sub>B</sub> = i<sub>R</sub></code> and <code>floor(j<sub>G</sub> &times; 0.5) = j<sub>B</sub> = j<sub>R</sub></code>. The location of each plane when this image is in linear layout can be determined via {@link #vkGetImageSubresourceLayout GetImageSubresourceLayout}, using {@link VK11#VK_IMAGE_ASPECT_PLANE_0_BIT IMAGE_ASPECT_PLANE_0_BIT} for the G plane, and {@link VK11#VK_IMAGE_ASPECT_PLANE_1_BIT IMAGE_ASPECT_PLANE_1_BIT} for the BR plane. Images in this format <b>must</b> be defined with a width and height that is a multiple of two.</li>
-     * <li>{@link VK11#VK_FORMAT_G8_B8_R8_3PLANE_422_UNORM FORMAT_G8_B8_R8_3PLANE_422_UNORM} specifies a unsigned normalized <em>multi-planar format</em> that has an 8-bit G component in plane 0, an 8-bit B component in plane 1, and an 8-bit R component in plane 2. The horizontal dimension of the R and B plane is halved relative to the image dimensions, and each R and B value is shared with the G components for which <code>floor(i<sub>G</sub> &times; 0.5) = i<sub>B</sub> = i<sub>R</sub></code>. The location of each plane when this image is in linear layout can be determined via {@link #vkGetImageSubresourceLayout GetImageSubresourceLayout}, using {@link VK11#VK_IMAGE_ASPECT_PLANE_0_BIT IMAGE_ASPECT_PLANE_0_BIT} for the G plane, {@link VK11#VK_IMAGE_ASPECT_PLANE_1_BIT IMAGE_ASPECT_PLANE_1_BIT} for the B plane, and {@link VK11#VK_IMAGE_ASPECT_PLANE_2_BIT IMAGE_ASPECT_PLANE_2_BIT} for the R plane. Images in this format <b>must</b> be defined with a width that is a multiple of two.</li>
-     * <li>{@link VK11#VK_FORMAT_G8_B8R8_2PLANE_422_UNORM FORMAT_G8_B8R8_2PLANE_422_UNORM} specifies a unsigned normalized <em>multi-planar format</em> that has an 8-bit G component in plane 0, and a two-component, 16-bit BR plane 1 consisting of an 8-bit B component in byte 0 and an 8-bit R component in byte 1. The horizontal dimensions of the BR plane is halved relative to the image dimensions, and each R and B value is shared with the G components for which <code>floor(i<sub>G</sub> &times; 0.5) = i<sub>B</sub> = i<sub>R</sub></code>. The location of each plane when this image is in linear layout can be determined via {@link #vkGetImageSubresourceLayout GetImageSubresourceLayout}, using {@link VK11#VK_IMAGE_ASPECT_PLANE_0_BIT IMAGE_ASPECT_PLANE_0_BIT} for the G plane, and {@link VK11#VK_IMAGE_ASPECT_PLANE_1_BIT IMAGE_ASPECT_PLANE_1_BIT} for the BR plane. Images in this format <b>must</b> be defined with a width that is a multiple of two.</li>
-     * <li>{@link VK11#VK_FORMAT_G8_B8_R8_3PLANE_444_UNORM FORMAT_G8_B8_R8_3PLANE_444_UNORM} specifies a unsigned normalized <em>multi-planar format</em> that has an 8-bit G component in plane 0, an 8-bit B component in plane 1, and an 8-bit R component in plane 2. Each plane has the same dimensions and each R, G and B component contributes to a single texel. The location of each plane when this image is in linear layout can be determined via {@link #vkGetImageSubresourceLayout GetImageSubresourceLayout}, using {@link VK11#VK_IMAGE_ASPECT_PLANE_0_BIT IMAGE_ASPECT_PLANE_0_BIT} for the G plane, {@link VK11#VK_IMAGE_ASPECT_PLANE_1_BIT IMAGE_ASPECT_PLANE_1_BIT} for the B plane, and {@link VK11#VK_IMAGE_ASPECT_PLANE_2_BIT IMAGE_ASPECT_PLANE_2_BIT} for the R plane.</li>
-     * <li>{@link VK11#VK_FORMAT_R10X6_UNORM_PACK16 FORMAT_R10X6_UNORM_PACK16} specifies a one-component, 16-bit unsigned normalized format that has a single 10-bit R component in the top 10 bits of a 16-bit word, with the bottom 6 bits set to 0.</li>
-     * <li>{@link VK11#VK_FORMAT_R10X6G10X6_UNORM_2PACK16 FORMAT_R10X6G10X6_UNORM_2PACK16} specifies a two-component, 32-bit unsigned normalized format that has a 10-bit R component in the top 10 bits of the word in bytes 0..1, and a 10-bit G component in the top 10 bits of the word in bytes 2..3, with the bottom 6 bits of each word set to 0.</li>
-     * <li>{@link VK11#VK_FORMAT_R10X6G10X6B10X6A10X6_UNORM_4PACK16 FORMAT_R10X6G10X6B10X6A10X6_UNORM_4PACK16} specifies a four-component, 64-bit unsigned normalized format that has a 10-bit R component in the top 10 bits of the word in bytes 0..1, a 10-bit G component in the top 10 bits of the word in bytes 2..3, a 10-bit B component in the top 10 bits of the word in bytes 4..5, and a 10-bit A component in the top 10 bits of the word in bytes 6..7, with the bottom 6 bits of each word set to 0.</li>
-     * <li>{@link VK11#VK_FORMAT_G10X6B10X6G10X6R10X6_422_UNORM_4PACK16 FORMAT_G10X6B10X6G10X6R10X6_422_UNORM_4PACK16} specifies a four-component, 64-bit format containing a pair of G components, an R component, and a B component, collectively encoding a 2×1 rectangle of unsigned normalized RGB texel data. One G value is present at each <em>i</em> coordinate, with the B and R values shared across both G values and thus recorded at half the horizontal resolution of the image. This format has a 10-bit G component for the even <em>i</em> coordinate in the top 10 bits of the word in bytes 0..1, a 10-bit B component in the top 10 bits of the word in bytes 2..3, a 10-bit G component for the odd <em>i</em> coordinate in the top 10 bits of the word in bytes 4..5, and a 10-bit R component in the top 10 bits of the word in bytes 6..7, with the bottom 6 bits of each word set to 0. Images in this format <b>must</b> be defined with a width that is a multiple of two. For the purposes of the constraints on copy extents, this format is treated as a compressed format with a 2×1 compressed texel block.</li>
-     * <li>{@link VK11#VK_FORMAT_B10X6G10X6R10X6G10X6_422_UNORM_4PACK16 FORMAT_B10X6G10X6R10X6G10X6_422_UNORM_4PACK16} specifies a four-component, 64-bit format containing a pair of G components, an R component, and a B component, collectively encoding a 2×1 rectangle of unsigned normalized RGB texel data. One G value is present at each <em>i</em> coordinate, with the B and R values shared across both G values and thus recorded at half the horizontal resolution of the image. This format has a 10-bit B component in the top 10 bits of the word in bytes 0..1, a 10-bit G component for the even <em>i</em> coordinate in the top 10 bits of the word in bytes 2..3, a 10-bit R component in the top 10 bits of the word in bytes 4..5, and a 10-bit G component for the odd <em>i</em> coordinate in the top 10 bits of the word in bytes 6..7, with the bottom 6 bits of each word set to 0. Images in this format <b>must</b> be defined with a width that is a multiple of two. For the purposes of the constraints on copy extents, this format is treated as a compressed format with a 2×1 compressed texel block.</li>
-     * <li>{@link VK11#VK_FORMAT_G10X6_B10X6_R10X6_3PLANE_420_UNORM_3PACK16 FORMAT_G10X6_B10X6_R10X6_3PLANE_420_UNORM_3PACK16} specifies a unsigned normalized <em>multi-planar format</em> that has a 10-bit G component in the top 10 bits of each 16-bit word of plane 0, a 10-bit B component in the top 10 bits of each 16-bit word of plane 1, and a 10-bit R component in the top 10 bits of each 16-bit word of plane 2, with the bottom 6 bits of each word set to 0. The horizontal and vertical dimensions of the R and B planes are halved relative to the image dimensions, and each R and B component is shared with the G components for which <code>floor(i<sub>G</sub> &times; 0.5) = i<sub>B</sub> = i<sub>R</sub></code> and <code>floor(j<sub>G</sub> &times; 0.5) = j<sub>B</sub> = j<sub>R</sub></code>. The location of each plane when this image is in linear layout can be determined via {@link #vkGetImageSubresourceLayout GetImageSubresourceLayout}, using {@link VK11#VK_IMAGE_ASPECT_PLANE_0_BIT IMAGE_ASPECT_PLANE_0_BIT} for the G plane, {@link VK11#VK_IMAGE_ASPECT_PLANE_1_BIT IMAGE_ASPECT_PLANE_1_BIT} for the B plane, and {@link VK11#VK_IMAGE_ASPECT_PLANE_2_BIT IMAGE_ASPECT_PLANE_2_BIT} for the R plane. Images in this format <b>must</b> be defined with a width and height that is a multiple of two.</li>
-     * <li>{@link VK11#VK_FORMAT_G10X6_B10X6R10X6_2PLANE_420_UNORM_3PACK16 FORMAT_G10X6_B10X6R10X6_2PLANE_420_UNORM_3PACK16} specifies a unsigned normalized <em>multi-planar format</em> that has a 10-bit G component in the top 10 bits of each 16-bit word of plane 0, and a two-component, 32-bit BR plane 1 consisting of a 10-bit B component in the top 10 bits of the word in bytes 0..1, and a 10-bit R component in the top 10 bits of the word in bytes 2..3, the bottom 6 bits of each word set to 0. The horizontal and vertical dimensions of the BR plane is halved relative to the image dimensions, and each R and B value is shared with the G components for which <code>floor(i<sub>G</sub> &times; 0.5) = i<sub>B</sub> = i<sub>R</sub></code> and <code>floor(j<sub>G</sub> &times; 0.5) = j<sub>B</sub> = j<sub>R</sub></code>. The location of each plane when this image is in linear layout can be determined via {@link #vkGetImageSubresourceLayout GetImageSubresourceLayout}, using {@link VK11#VK_IMAGE_ASPECT_PLANE_0_BIT IMAGE_ASPECT_PLANE_0_BIT} for the G plane, and {@link VK11#VK_IMAGE_ASPECT_PLANE_1_BIT IMAGE_ASPECT_PLANE_1_BIT} for the BR plane. Images in this format <b>must</b> be defined with a width and height that is a multiple of two.</li>
-     * <li>{@link VK11#VK_FORMAT_G10X6_B10X6_R10X6_3PLANE_422_UNORM_3PACK16 FORMAT_G10X6_B10X6_R10X6_3PLANE_422_UNORM_3PACK16} specifies a unsigned normalized <em>multi-planar format</em> that has a 10-bit G component in the top 10 bits of each 16-bit word of plane 0, a 10-bit B component in the top 10 bits of each 16-bit word of plane 1, and a 10-bit R component in the top 10 bits of each 16-bit word of plane 2, with the bottom 6 bits of each word set to 0. The horizontal dimension of the R and B plane is halved relative to the image dimensions, and each R and B value is shared with the G components for which <code>floor(i<sub>G</sub> &times; 0.5) = i<sub>B</sub> = i<sub>R</sub></code>. The location of each plane when this image is in linear layout can be determined via {@link #vkGetImageSubresourceLayout GetImageSubresourceLayout}, using {@link VK11#VK_IMAGE_ASPECT_PLANE_0_BIT IMAGE_ASPECT_PLANE_0_BIT} for the G plane, {@link VK11#VK_IMAGE_ASPECT_PLANE_1_BIT IMAGE_ASPECT_PLANE_1_BIT} for the B plane, and {@link VK11#VK_IMAGE_ASPECT_PLANE_2_BIT IMAGE_ASPECT_PLANE_2_BIT} for the R plane. Images in this format <b>must</b> be defined with a width that is a multiple of two.</li>
-     * <li>{@link VK11#VK_FORMAT_G10X6_B10X6R10X6_2PLANE_422_UNORM_3PACK16 FORMAT_G10X6_B10X6R10X6_2PLANE_422_UNORM_3PACK16} specifies a unsigned normalized <em>multi-planar format</em> that has a 10-bit G component in the top 10 bits of each 16-bit word of plane 0, and a two-component, 32-bit BR plane 1 consisting of a 10-bit B component in the top 10 bits of the word in bytes 0..1, and a 10-bit R component in the top 10 bits of the word in bytes 2..3, the bottom 6 bits of each word set to 0. The horizontal dimensions of the BR plane is halved relative to the image dimensions, and each R and B value is shared with the G components for which <code>floor(i<sub>G</sub> &times; 0.5) = i<sub>B</sub> = i<sub>R</sub></code>. The location of each plane when this image is in linear layout can be determined via {@link #vkGetImageSubresourceLayout GetImageSubresourceLayout}, using {@link VK11#VK_IMAGE_ASPECT_PLANE_0_BIT IMAGE_ASPECT_PLANE_0_BIT} for the G plane, and {@link VK11#VK_IMAGE_ASPECT_PLANE_1_BIT IMAGE_ASPECT_PLANE_1_BIT} for the BR plane. Images in this format <b>must</b> be defined with a width that is a multiple of two.</li>
-     * <li>{@link VK11#VK_FORMAT_G10X6_B10X6_R10X6_3PLANE_444_UNORM_3PACK16 FORMAT_G10X6_B10X6_R10X6_3PLANE_444_UNORM_3PACK16} specifies a unsigned normalized <em>multi-planar format</em> that has a 10-bit G component in the top 10 bits of each 16-bit word of plane 0, a 10-bit B component in the top 10 bits of each 16-bit word of plane 1, and a 10-bit R component in the top 10 bits of each 16-bit word of plane 2, with the bottom 6 bits of each word set to 0. Each plane has the same dimensions and each R, G and B component contributes to a single texel. The location of each plane when this image is in linear layout can be determined via {@link #vkGetImageSubresourceLayout GetImageSubresourceLayout}, using {@link VK11#VK_IMAGE_ASPECT_PLANE_0_BIT IMAGE_ASPECT_PLANE_0_BIT} for the G plane, {@link VK11#VK_IMAGE_ASPECT_PLANE_1_BIT IMAGE_ASPECT_PLANE_1_BIT} for the B plane, and {@link VK11#VK_IMAGE_ASPECT_PLANE_2_BIT IMAGE_ASPECT_PLANE_2_BIT} for the R plane.</li>
-     * <li>{@link VK11#VK_FORMAT_R12X4_UNORM_PACK16 FORMAT_R12X4_UNORM_PACK16} specifies a one-component, 16-bit unsigned normalized format that has a single 12-bit R component in the top 12 bits of a 16-bit word, with the bottom 4 bits set to 0.</li>
-     * <li>{@link VK11#VK_FORMAT_R12X4G12X4_UNORM_2PACK16 FORMAT_R12X4G12X4_UNORM_2PACK16} specifies a two-component, 32-bit unsigned normalized format that has a 12-bit R component in the top 12 bits of the word in bytes 0..1, and a 12-bit G component in the top 12 bits of the word in bytes 2..3, with the bottom 4 bits of each word set to 0.</li>
-     * <li>{@link VK11#VK_FORMAT_R12X4G12X4B12X4A12X4_UNORM_4PACK16 FORMAT_R12X4G12X4B12X4A12X4_UNORM_4PACK16} specifies a four-component, 64-bit unsigned normalized format that has a 12-bit R component in the top 12 bits of the word in bytes 0..1, a 12-bit G component in the top 12 bits of the word in bytes 2..3, a 12-bit B component in the top 12 bits of the word in bytes 4..5, and a 12-bit A component in the top 12 bits of the word in bytes 6..7, with the bottom 4 bits of each word set to 0.</li>
-     * <li>{@link VK11#VK_FORMAT_G12X4B12X4G12X4R12X4_422_UNORM_4PACK16 FORMAT_G12X4B12X4G12X4R12X4_422_UNORM_4PACK16} specifies a four-component, 64-bit format containing a pair of G components, an R component, and a B component, collectively encoding a 2×1 rectangle of unsigned normalized RGB texel data. One G value is present at each <em>i</em> coordinate, with the B and R values shared across both G values and thus recorded at half the horizontal resolution of the image. This format has a 12-bit G component for the even <em>i</em> coordinate in the top 12 bits of the word in bytes 0..1, a 12-bit B component in the top 12 bits of the word in bytes 2..3, a 12-bit G component for the odd <em>i</em> coordinate in the top 12 bits of the word in bytes 4..5, and a 12-bit R component in the top 12 bits of the word in bytes 6..7, with the bottom 4 bits of each word set to 0. Images in this format <b>must</b> be defined with a width that is a multiple of two. For the purposes of the constraints on copy extents, this format is treated as a compressed format with a 2×1 compressed texel block.</li>
-     * <li>{@link VK11#VK_FORMAT_B12X4G12X4R12X4G12X4_422_UNORM_4PACK16 FORMAT_B12X4G12X4R12X4G12X4_422_UNORM_4PACK16} specifies a four-component, 64-bit format containing a pair of G components, an R component, and a B component, collectively encoding a 2×1 rectangle of unsigned normalized RGB texel data. One G value is present at each <em>i</em> coordinate, with the B and R values shared across both G values and thus recorded at half the horizontal resolution of the image. This format has a 12-bit B component in the top 12 bits of the word in bytes 0..1, a 12-bit G component for the even <em>i</em> coordinate in the top 12 bits of the word in bytes 2..3, a 12-bit R component in the top 12 bits of the word in bytes 4..5, and a 12-bit G component for the odd <em>i</em> coordinate in the top 12 bits of the word in bytes 6..7, with the bottom 4 bits of each word set to 0. Images in this format <b>must</b> be defined with a width that is a multiple of two. For the purposes of the constraints on copy extents, this format is treated as a compressed format with a 2×1 compressed texel block.</li>
-     * <li>{@link VK11#VK_FORMAT_G12X4_B12X4_R12X4_3PLANE_420_UNORM_3PACK16 FORMAT_G12X4_B12X4_R12X4_3PLANE_420_UNORM_3PACK16} specifies a unsigned normalized <em>multi-planar format</em> that has a 12-bit G component in the top 12 bits of each 16-bit word of plane 0, a 12-bit B component in the top 12 bits of each 16-bit word of plane 1, and a 12-bit R component in the top 12 bits of each 16-bit word of plane 2, with the bottom 4 bits of each word set to 0. The horizontal and vertical dimensions of the R and B planes are halved relative to the image dimensions, and each R and B component is shared with the G components for which <code>floor(i<sub>G</sub> &times; 0.5) = i<sub>B</sub> = i<sub>R</sub></code> and <code>floor(j<sub>G</sub> &times; 0.5) = j<sub>B</sub> = j<sub>R</sub></code>. The location of each plane when this image is in linear layout can be determined via {@link #vkGetImageSubresourceLayout GetImageSubresourceLayout}, using {@link VK11#VK_IMAGE_ASPECT_PLANE_0_BIT IMAGE_ASPECT_PLANE_0_BIT} for the G plane, {@link VK11#VK_IMAGE_ASPECT_PLANE_1_BIT IMAGE_ASPECT_PLANE_1_BIT} for the B plane, and {@link VK11#VK_IMAGE_ASPECT_PLANE_2_BIT IMAGE_ASPECT_PLANE_2_BIT} for the R plane. Images in this format <b>must</b> be defined with a width and height that is a multiple of two.</li>
-     * <li>{@link VK11#VK_FORMAT_G12X4_B12X4R12X4_2PLANE_420_UNORM_3PACK16 FORMAT_G12X4_B12X4R12X4_2PLANE_420_UNORM_3PACK16} specifies a unsigned normalized <em>multi-planar format</em> that has a 12-bit G component in the top 12 bits of each 16-bit word of plane 0, and a two-component, 32-bit BR plane 1 consisting of a 12-bit B component in the top 12 bits of the word in bytes 0..1, and a 12-bit R component in the top 12 bits of the word in bytes 2..3, the bottom 4 bits of each word set to 0. The horizontal and vertical dimensions of the BR plane is halved relative to the image dimensions, and each R and B value is shared with the G components for which <code>floor(i<sub>G</sub> &times; 0.5) = i<sub>B</sub> = i<sub>R</sub></code> and <code>floor(j<sub>G</sub> &times; 0.5) = j<sub>B</sub> = j<sub>R</sub></code>. The location of each plane when this image is in linear layout can be determined via {@link #vkGetImageSubresourceLayout GetImageSubresourceLayout}, using {@link VK11#VK_IMAGE_ASPECT_PLANE_0_BIT IMAGE_ASPECT_PLANE_0_BIT} for the G plane, and {@link VK11#VK_IMAGE_ASPECT_PLANE_1_BIT IMAGE_ASPECT_PLANE_1_BIT} for the BR plane. Images in this format <b>must</b> be defined with a width and height that is a multiple of two.</li>
-     * <li>{@link VK11#VK_FORMAT_G12X4_B12X4_R12X4_3PLANE_422_UNORM_3PACK16 FORMAT_G12X4_B12X4_R12X4_3PLANE_422_UNORM_3PACK16} specifies a unsigned normalized <em>multi-planar format</em> that has a 12-bit G component in the top 12 bits of each 16-bit word of plane 0, a 12-bit B component in the top 12 bits of each 16-bit word of plane 1, and a 12-bit R component in the top 12 bits of each 16-bit word of plane 2, with the bottom 4 bits of each word set to 0. The horizontal dimension of the R and B plane is halved relative to the image dimensions, and each R and B value is shared with the G components for which <code>floor(i<sub>G</sub> &times; 0.5) = i<sub>B</sub> = i<sub>R</sub></code>. The location of each plane when this image is in linear layout can be determined via {@link #vkGetImageSubresourceLayout GetImageSubresourceLayout}, using {@link VK11#VK_IMAGE_ASPECT_PLANE_0_BIT IMAGE_ASPECT_PLANE_0_BIT} for the G plane, {@link VK11#VK_IMAGE_ASPECT_PLANE_1_BIT IMAGE_ASPECT_PLANE_1_BIT} for the B plane, and {@link VK11#VK_IMAGE_ASPECT_PLANE_2_BIT IMAGE_ASPECT_PLANE_2_BIT} for the R plane. Images in this format <b>must</b> be defined with a width that is a multiple of two.</li>
-     * <li>{@link VK11#VK_FORMAT_G12X4_B12X4R12X4_2PLANE_422_UNORM_3PACK16 FORMAT_G12X4_B12X4R12X4_2PLANE_422_UNORM_3PACK16} specifies a unsigned normalized <em>multi-planar format</em> that has a 12-bit G component in the top 12 bits of each 16-bit word of plane 0, and a two-component, 32-bit BR plane 1 consisting of a 12-bit B component in the top 12 bits of the word in bytes 0..1, and a 12-bit R component in the top 12 bits of the word in bytes 2..3, the bottom 4 bits of each word set to 0. The horizontal dimensions of the BR plane is halved relative to the image dimensions, and each R and B value is shared with the G components for which <code>floor(i<sub>G</sub> &times; 0.5) = i<sub>B</sub> = i<sub>R</sub></code>. The location of each plane when this image is in linear layout can be determined via {@link #vkGetImageSubresourceLayout GetImageSubresourceLayout}, using {@link VK11#VK_IMAGE_ASPECT_PLANE_0_BIT IMAGE_ASPECT_PLANE_0_BIT} for the G plane, and {@link VK11#VK_IMAGE_ASPECT_PLANE_1_BIT IMAGE_ASPECT_PLANE_1_BIT} for the BR plane. Images in this format <b>must</b> be defined with a width that is a multiple of two.</li>
-     * <li>{@link VK11#VK_FORMAT_G12X4_B12X4_R12X4_3PLANE_444_UNORM_3PACK16 FORMAT_G12X4_B12X4_R12X4_3PLANE_444_UNORM_3PACK16} specifies a unsigned normalized <em>multi-planar format</em> that has a 12-bit G component in the top 12 bits of each 16-bit word of plane 0, a 12-bit B component in the top 12 bits of each 16-bit word of plane 1, and a 12-bit R component in the top 12 bits of each 16-bit word of plane 2, with the bottom 4 bits of each word set to 0. Each plane has the same dimensions and each R, G and B component contributes to a single texel. The location of each plane when this image is in linear layout can be determined via {@link #vkGetImageSubresourceLayout GetImageSubresourceLayout}, using {@link VK11#VK_IMAGE_ASPECT_PLANE_0_BIT IMAGE_ASPECT_PLANE_0_BIT} for the G plane, {@link VK11#VK_IMAGE_ASPECT_PLANE_1_BIT IMAGE_ASPECT_PLANE_1_BIT} for the B plane, and {@link VK11#VK_IMAGE_ASPECT_PLANE_2_BIT IMAGE_ASPECT_PLANE_2_BIT} for the R plane.</li>
-     * <li>{@link VK11#VK_FORMAT_G16B16G16R16_422_UNORM FORMAT_G16B16G16R16_422_UNORM} specifies a four-component, 64-bit format containing a pair of G components, an R component, and a B component, collectively encoding a 2×1 rectangle of unsigned normalized RGB texel data. One G value is present at each <em>i</em> coordinate, with the B and R values shared across both G values and thus recorded at half the horizontal resolution of the image. This format has a 16-bit G component for the even <em>i</em> coordinate in the word in bytes 0..1, a 16-bit B component in the word in bytes 2..3, a 16-bit G component for the odd <em>i</em> coordinate in the word in bytes 4..5, and a 16-bit R component in the word in bytes 6..7. Images in this format <b>must</b> be defined with a width that is a multiple of two. For the purposes of the constraints on copy extents, this format is treated as a compressed format with a 2×1 compressed texel block.</li>
-     * <li>{@link VK11#VK_FORMAT_B16G16R16G16_422_UNORM FORMAT_B16G16R16G16_422_UNORM} specifies a four-component, 64-bit format containing a pair of G components, an R component, and a B component, collectively encoding a 2×1 rectangle of unsigned normalized RGB texel data. One G value is present at each <em>i</em> coordinate, with the B and R values shared across both G values and thus recorded at half the horizontal resolution of the image. This format has a 16-bit B component in the word in bytes 0..1, a 16-bit G component for the even <em>i</em> coordinate in the word in bytes 2..3, a 16-bit R component in the word in bytes 4..5, and a 16-bit G component for the odd <em>i</em> coordinate in the word in bytes 6..7. Images in this format <b>must</b> be defined with a width that is a multiple of two. For the purposes of the constraints on copy extents, this format is treated as a compressed format with a 2×1 compressed texel block.</li>
-     * <li>{@link VK11#VK_FORMAT_G16_B16_R16_3PLANE_420_UNORM FORMAT_G16_B16_R16_3PLANE_420_UNORM} specifies a unsigned normalized <em>multi-planar format</em> that has a 16-bit G component in each 16-bit word of plane 0, a 16-bit B component in each 16-bit word of plane 1, and a 16-bit R component in each 16-bit word of plane 2. The horizontal and vertical dimensions of the R and B planes are halved relative to the image dimensions, and each R and B component is shared with the G components for which <code>floor(i<sub>G</sub> &times; 0.5) = i<sub>B</sub> = i<sub>R</sub></code> and <code>floor(j<sub>G</sub> &times; 0.5) = j<sub>B</sub> = j<sub>R</sub></code>. The location of each plane when this image is in linear layout can be determined via {@link #vkGetImageSubresourceLayout GetImageSubresourceLayout}, using {@link VK11#VK_IMAGE_ASPECT_PLANE_0_BIT IMAGE_ASPECT_PLANE_0_BIT} for the G plane, {@link VK11#VK_IMAGE_ASPECT_PLANE_1_BIT IMAGE_ASPECT_PLANE_1_BIT} for the B plane, and {@link VK11#VK_IMAGE_ASPECT_PLANE_2_BIT IMAGE_ASPECT_PLANE_2_BIT} for the R plane. Images in this format <b>must</b> be defined with a width and height that is a multiple of two.</li>
-     * <li>{@link VK11#VK_FORMAT_G16_B16R16_2PLANE_420_UNORM FORMAT_G16_B16R16_2PLANE_420_UNORM} specifies a unsigned normalized <em>multi-planar format</em> that has a 16-bit G component in each 16-bit word of plane 0, and a two-component, 32-bit BR plane 1 consisting of a 16-bit B component in the word in bytes 0..1, and a 16-bit R component in the word in bytes 2..3. The horizontal and vertical dimensions of the BR plane is halved relative to the image dimensions, and each R and B value is shared with the G components for which <code>floor(i<sub>G</sub> &times; 0.5) = i<sub>B</sub> = i<sub>R</sub></code> and <code>floor(j<sub>G</sub> &times; 0.5) = j<sub>B</sub> = j<sub>R</sub></code>. The location of each plane when this image is in linear layout can be determined via {@link #vkGetImageSubresourceLayout GetImageSubresourceLayout}, using {@link VK11#VK_IMAGE_ASPECT_PLANE_0_BIT IMAGE_ASPECT_PLANE_0_BIT} for the G plane, and {@link VK11#VK_IMAGE_ASPECT_PLANE_1_BIT IMAGE_ASPECT_PLANE_1_BIT} for the BR plane. Images in this format <b>must</b> be defined with a width and height that is a multiple of two.</li>
-     * <li>{@link VK11#VK_FORMAT_G16_B16_R16_3PLANE_422_UNORM FORMAT_G16_B16_R16_3PLANE_422_UNORM} specifies a unsigned normalized <em>multi-planar format</em> that has a 16-bit G component in each 16-bit word of plane 0, a 16-bit B component in each 16-bit word of plane 1, and a 16-bit R component in each 16-bit word of plane 2. The horizontal dimension of the R and B plane is halved relative to the image dimensions, and each R and B value is shared with the G components for which <code>floor(i<sub>G</sub> &times; 0.5) = i<sub>B</sub> = i<sub>R</sub></code>. The location of each plane when this image is in linear layout can be determined via {@link #vkGetImageSubresourceLayout GetImageSubresourceLayout}, using {@link VK11#VK_IMAGE_ASPECT_PLANE_0_BIT IMAGE_ASPECT_PLANE_0_BIT} for the G plane, {@link VK11#VK_IMAGE_ASPECT_PLANE_1_BIT IMAGE_ASPECT_PLANE_1_BIT} for the B plane, and {@link VK11#VK_IMAGE_ASPECT_PLANE_2_BIT IMAGE_ASPECT_PLANE_2_BIT} for the R plane. Images in this format <b>must</b> be defined with a width that is a multiple of two.</li>
-     * <li>{@link VK11#VK_FORMAT_G16_B16R16_2PLANE_422_UNORM FORMAT_G16_B16R16_2PLANE_422_UNORM} specifies a unsigned normalized <em>multi-planar format</em> that has a 16-bit G component in each 16-bit word of plane 0, and a two-component, 32-bit BR plane 1 consisting of a 16-bit B component in the word in bytes 0..1, and a 16-bit R component in the word in bytes 2..3. The horizontal dimensions of the BR plane is halved relative to the image dimensions, and each R and B value is shared with the G components for which <code>floor(i<sub>G</sub> &times; 0.5) = i<sub>B</sub> = i<sub>R</sub></code>. The location of each plane when this image is in linear layout can be determined via {@link #vkGetImageSubresourceLayout GetImageSubresourceLayout}, using {@link VK11#VK_IMAGE_ASPECT_PLANE_0_BIT IMAGE_ASPECT_PLANE_0_BIT} for the G plane, and {@link VK11#VK_IMAGE_ASPECT_PLANE_1_BIT IMAGE_ASPECT_PLANE_1_BIT} for the BR plane. Images in this format <b>must</b> be defined with a width that is a multiple of two.</li>
-     * <li>{@link VK11#VK_FORMAT_G16_B16_R16_3PLANE_444_UNORM FORMAT_G16_B16_R16_3PLANE_444_UNORM} specifies a unsigned normalized <em>multi-planar format</em> that has a 16-bit G component in each 16-bit word of plane 0, a 16-bit B component in each 16-bit word of plane 1, and a 16-bit R component in each 16-bit word of plane 2. Each plane has the same dimensions and each R, G and B component contributes to a single texel. The location of each plane when this image is in linear layout can be determined via {@link #vkGetImageSubresourceLayout GetImageSubresourceLayout}, using {@link VK11#VK_IMAGE_ASPECT_PLANE_0_BIT IMAGE_ASPECT_PLANE_0_BIT} for the G plane, {@link VK11#VK_IMAGE_ASPECT_PLANE_1_BIT IMAGE_ASPECT_PLANE_1_BIT} for the B plane, and {@link VK11#VK_IMAGE_ASPECT_PLANE_2_BIT IMAGE_ASPECT_PLANE_2_BIT} for the R plane.</li>
+     * <li>{@link KHRSamplerYcbcrConversion#VK_FORMAT_G8B8G8R8_422_UNORM_KHR FORMAT_G8B8G8R8_422_UNORM_KHR} specifies a four-component, 32-bit format containing a pair of G components, an R component, and a B component, collectively encoding a 2×1 rectangle of unsigned normalized RGB texel data. One G value is present at each <em>i</em> coordinate, with the B and R values shared across both G values and thus recorded at half the horizontal resolution of the image. This format has an 8-bit G component for the even <em>i</em> coordinate in byte 0, an 8-bit B component in byte 1, an 8-bit G component for the odd <em>i</em> coordinate in byte 2, and an 8-bit R component in byte 3. Images in this format <b>must</b> be defined with a width that is a multiple of two. For the purposes of the constraints on copy extents, this format is treated as a compressed format with a 2×1 compressed texel block.</li>
+     * <li>{@link KHRSamplerYcbcrConversion#VK_FORMAT_B8G8R8G8_422_UNORM_KHR FORMAT_B8G8R8G8_422_UNORM_KHR} specifies a four-component, 32-bit format containing a pair of G components, an R component, and a B component, collectively encoding a 2×1 rectangle of unsigned normalized RGB texel data. One G value is present at each <em>i</em> coordinate, with the B and R values shared across both G values and thus recorded at half the horizontal resolution of the image. This format has an 8-bit B component in byte 0, an 8-bit G component for the even <em>i</em> coordinate in byte 1, an 8-bit R component in byte 2, and an 8-bit G component for the odd <em>i</em> coordinate in byte 3. Images in this format <b>must</b> be defined with a width that is a multiple of two. For the purposes of the constraints on copy extents, this format is treated as a compressed format with a 2×1 compressed texel block.</li>
+     * <li>{@link KHRSamplerYcbcrConversion#VK_FORMAT_G8_B8_R8_3PLANE_420_UNORM_KHR FORMAT_G8_B8_R8_3PLANE_420_UNORM_KHR} specifies a unsigned normalized <em>multi-planar format</em> that has an 8-bit G component in plane 0, an 8-bit B component in plane 1, and an 8-bit R component in plane 2. The horizontal and vertical dimensions of the R and B planes are halved relative to the image dimensions, and each R and B component is shared with the G components for which <code>floor(i<sub>G</sub> &times; 0.5) = i<sub>B</sub> = i<sub>R</sub></code> and <code>floor(j<sub>G</sub> &times; 0.5) = j<sub>B</sub> = j<sub>R</sub></code>. The location of each plane when this image is in linear layout can be determined via {@link #vkGetImageSubresourceLayout GetImageSubresourceLayout}, using {@link KHRSamplerYcbcrConversion#VK_IMAGE_ASPECT_PLANE_0_BIT_KHR IMAGE_ASPECT_PLANE_0_BIT_KHR} for the G plane, {@link KHRSamplerYcbcrConversion#VK_IMAGE_ASPECT_PLANE_1_BIT_KHR IMAGE_ASPECT_PLANE_1_BIT_KHR} for the B plane, and {@link KHRSamplerYcbcrConversion#VK_IMAGE_ASPECT_PLANE_2_BIT_KHR IMAGE_ASPECT_PLANE_2_BIT_KHR} for the R plane. Images in this format <b>must</b> be defined with a width and height that is a multiple of two.</li>
+     * <li>{@link KHRSamplerYcbcrConversion#VK_FORMAT_G8_B8R8_2PLANE_420_UNORM_KHR FORMAT_G8_B8R8_2PLANE_420_UNORM_KHR} specifies a unsigned normalized <em>multi-planar format</em> that has an 8-bit G component in plane 0, and a two-component, 16-bit BR plane 1 consisting of an 8-bit B component in byte 0 and an 8-bit R component in byte 1. The horizontal and vertical dimensions of the BR plane is halved relative to the image dimensions, and each R and B value is shared with the G components for which <code>floor(i<sub>G</sub> &times; 0.5) = i<sub>B</sub> = i<sub>R</sub></code> and <code>floor(j<sub>G</sub> &times; 0.5) = j<sub>B</sub> = j<sub>R</sub></code>. The location of each plane when this image is in linear layout can be determined via {@link #vkGetImageSubresourceLayout GetImageSubresourceLayout}, using {@link KHRSamplerYcbcrConversion#VK_IMAGE_ASPECT_PLANE_0_BIT_KHR IMAGE_ASPECT_PLANE_0_BIT_KHR} for the G plane, and {@link KHRSamplerYcbcrConversion#VK_IMAGE_ASPECT_PLANE_1_BIT_KHR IMAGE_ASPECT_PLANE_1_BIT_KHR} for the BR plane. Images in this format <b>must</b> be defined with a width and height that is a multiple of two.</li>
+     * <li>{@link KHRSamplerYcbcrConversion#VK_FORMAT_G8_B8_R8_3PLANE_422_UNORM_KHR FORMAT_G8_B8_R8_3PLANE_422_UNORM_KHR} specifies a unsigned normalized <em>multi-planar format</em> that has an 8-bit G component in plane 0, an 8-bit B component in plane 1, and an 8-bit R component in plane 2. The horizontal dimension of the R and B plane is halved relative to the image dimensions, and each R and B value is shared with the G components for which <code>floor(i<sub>G</sub> &times; 0.5) = i<sub>B</sub> = i<sub>R</sub></code>. The location of each plane when this image is in linear layout can be determined via {@link #vkGetImageSubresourceLayout GetImageSubresourceLayout}, using {@link KHRSamplerYcbcrConversion#VK_IMAGE_ASPECT_PLANE_0_BIT_KHR IMAGE_ASPECT_PLANE_0_BIT_KHR} for the G plane, {@link KHRSamplerYcbcrConversion#VK_IMAGE_ASPECT_PLANE_1_BIT_KHR IMAGE_ASPECT_PLANE_1_BIT_KHR} for the B plane, and {@link KHRSamplerYcbcrConversion#VK_IMAGE_ASPECT_PLANE_2_BIT_KHR IMAGE_ASPECT_PLANE_2_BIT_KHR} for the R plane. Images in this format <b>must</b> be defined with a width that is a multiple of two.</li>
+     * <li>{@link KHRSamplerYcbcrConversion#VK_FORMAT_G8_B8R8_2PLANE_422_UNORM_KHR FORMAT_G8_B8R8_2PLANE_422_UNORM_KHR} specifies a unsigned normalized <em>multi-planar format</em> that has an 8-bit G component in plane 0, and a two-component, 16-bit BR plane 1 consisting of an 8-bit B component in byte 0 and an 8-bit R component in byte 1. The horizontal dimensions of the BR plane is halved relative to the image dimensions, and each R and B value is shared with the G components for which <code>floor(i<sub>G</sub> &times; 0.5) = i<sub>B</sub> = i<sub>R</sub></code>. The location of each plane when this image is in linear layout can be determined via {@link #vkGetImageSubresourceLayout GetImageSubresourceLayout}, using {@link KHRSamplerYcbcrConversion#VK_IMAGE_ASPECT_PLANE_0_BIT_KHR IMAGE_ASPECT_PLANE_0_BIT_KHR} for the G plane, and {@link KHRSamplerYcbcrConversion#VK_IMAGE_ASPECT_PLANE_1_BIT_KHR IMAGE_ASPECT_PLANE_1_BIT_KHR} for the BR plane. Images in this format <b>must</b> be defined with a width that is a multiple of two.</li>
+     * <li>{@link KHRSamplerYcbcrConversion#VK_FORMAT_G8_B8_R8_3PLANE_444_UNORM_KHR FORMAT_G8_B8_R8_3PLANE_444_UNORM_KHR} specifies a unsigned normalized <em>multi-planar format</em> that has an 8-bit G component in plane 0, an 8-bit B component in plane 1, and an 8-bit R component in plane 2. Each plane has the same dimensions and each R, G and B component contributes to a single texel. The location of each plane when this image is in linear layout can be determined via {@link #vkGetImageSubresourceLayout GetImageSubresourceLayout}, using {@link KHRSamplerYcbcrConversion#VK_IMAGE_ASPECT_PLANE_0_BIT_KHR IMAGE_ASPECT_PLANE_0_BIT_KHR} for the G plane, {@link KHRSamplerYcbcrConversion#VK_IMAGE_ASPECT_PLANE_1_BIT_KHR IMAGE_ASPECT_PLANE_1_BIT_KHR} for the B plane, and {@link KHRSamplerYcbcrConversion#VK_IMAGE_ASPECT_PLANE_2_BIT_KHR IMAGE_ASPECT_PLANE_2_BIT_KHR} for the R plane.</li>
+     * <li>{@link KHRSamplerYcbcrConversion#VK_FORMAT_R10X6_UNORM_PACK16_KHR FORMAT_R10X6_UNORM_PACK16_KHR} specifies a one-component, 16-bit unsigned normalized format that has a single 10-bit R component in the top 10 bits of a 16-bit word, with the bottom 6 bits set to 0.</li>
+     * <li>{@link KHRSamplerYcbcrConversion#VK_FORMAT_R10X6G10X6_UNORM_2PACK16_KHR FORMAT_R10X6G10X6_UNORM_2PACK16_KHR} specifies a two-component, 32-bit unsigned normalized format that has a 10-bit R component in the top 10 bits of the word in bytes 0..1, and a 10-bit G component in the top 10 bits of the word in bytes 2..3, with the bottom 6 bits of each word set to 0.</li>
+     * <li>{@link KHRSamplerYcbcrConversion#VK_FORMAT_R10X6G10X6B10X6A10X6_UNORM_4PACK16_KHR FORMAT_R10X6G10X6B10X6A10X6_UNORM_4PACK16_KHR} specifies a four-component, 64-bit unsigned normalized format that has a 10-bit R component in the top 10 bits of the word in bytes 0..1, a 10-bit G component in the top 10 bits of the word in bytes 2..3, a 10-bit B component in the top 10 bits of the word in bytes 4..5, and a 10-bit A component in the top 10 bits of the word in bytes 6..7, with the bottom 6 bits of each word set to 0.</li>
+     * <li>{@link KHRSamplerYcbcrConversion#VK_FORMAT_G10X6B10X6G10X6R10X6_422_UNORM_4PACK16_KHR FORMAT_G10X6B10X6G10X6R10X6_422_UNORM_4PACK16_KHR} specifies a four-component, 64-bit format containing a pair of G components, an R component, and a B component, collectively encoding a 2×1 rectangle of unsigned normalized RGB texel data. One G value is present at each <em>i</em> coordinate, with the B and R values shared across both G values and thus recorded at half the horizontal resolution of the image. This format has a 10-bit G component for the even <em>i</em> coordinate in the top 10 bits of the word in bytes 0..1, a 10-bit B component in the top 10 bits of the word in bytes 2..3, a 10-bit G component for the odd <em>i</em> coordinate in the top 10 bits of the word in bytes 4..5, and a 10-bit R component in the top 10 bits of the word in bytes 6..7, with the bottom 6 bits of each word set to 0. Images in this format <b>must</b> be defined with a width that is a multiple of two. For the purposes of the constraints on copy extents, this format is treated as a compressed format with a 2×1 compressed texel block.</li>
+     * <li>{@link KHRSamplerYcbcrConversion#VK_FORMAT_B10X6G10X6R10X6G10X6_422_UNORM_4PACK16_KHR FORMAT_B10X6G10X6R10X6G10X6_422_UNORM_4PACK16_KHR} specifies a four-component, 64-bit format containing a pair of G components, an R component, and a B component, collectively encoding a 2×1 rectangle of unsigned normalized RGB texel data. One G value is present at each <em>i</em> coordinate, with the B and R values shared across both G values and thus recorded at half the horizontal resolution of the image. This format has a 10-bit B component in the top 10 bits of the word in bytes 0..1, a 10-bit G component for the even <em>i</em> coordinate in the top 10 bits of the word in bytes 2..3, a 10-bit R component in the top 10 bits of the word in bytes 4..5, and a 10-bit G component for the odd <em>i</em> coordinate in the top 10 bits of the word in bytes 6..7, with the bottom 6 bits of each word set to 0. Images in this format <b>must</b> be defined with a width that is a multiple of two. For the purposes of the constraints on copy extents, this format is treated as a compressed format with a 2×1 compressed texel block.</li>
+     * <li>{@link KHRSamplerYcbcrConversion#VK_FORMAT_G10X6_B10X6_R10X6_3PLANE_420_UNORM_3PACK16_KHR FORMAT_G10X6_B10X6_R10X6_3PLANE_420_UNORM_3PACK16_KHR} specifies a unsigned normalized <em>multi-planar format</em> that has a 10-bit G component in the top 10 bits of each 16-bit word of plane 0, a 10-bit B component in the top 10 bits of each 16-bit word of plane 1, and a 10-bit R component in the top 10 bits of each 16-bit word of plane 2, with the bottom 6 bits of each word set to 0. The horizontal and vertical dimensions of the R and B planes are halved relative to the image dimensions, and each R and B component is shared with the G components for which <code>floor(i<sub>G</sub> &times; 0.5) = i<sub>B</sub> = i<sub>R</sub></code> and <code>floor(j<sub>G</sub> &times; 0.5) = j<sub>B</sub> = j<sub>R</sub></code>. The location of each plane when this image is in linear layout can be determined via {@link #vkGetImageSubresourceLayout GetImageSubresourceLayout}, using {@link KHRSamplerYcbcrConversion#VK_IMAGE_ASPECT_PLANE_0_BIT_KHR IMAGE_ASPECT_PLANE_0_BIT_KHR} for the G plane, {@link KHRSamplerYcbcrConversion#VK_IMAGE_ASPECT_PLANE_1_BIT_KHR IMAGE_ASPECT_PLANE_1_BIT_KHR} for the B plane, and {@link KHRSamplerYcbcrConversion#VK_IMAGE_ASPECT_PLANE_2_BIT_KHR IMAGE_ASPECT_PLANE_2_BIT_KHR} for the R plane. Images in this format <b>must</b> be defined with a width and height that is a multiple of two.</li>
+     * <li>{@link KHRSamplerYcbcrConversion#VK_FORMAT_G10X6_B10X6R10X6_2PLANE_420_UNORM_3PACK16_KHR FORMAT_G10X6_B10X6R10X6_2PLANE_420_UNORM_3PACK16_KHR} specifies a unsigned normalized <em>multi-planar format</em> that has a 10-bit G component in the top 10 bits of each 16-bit word of plane 0, and a two-component, 32-bit BR plane 1 consisting of a 10-bit B component in the top 10 bits of the word in bytes 0..1, and a 10-bit R component in the top 10 bits of the word in bytes 2..3, the bottom 6 bits of each word set to 0. The horizontal and vertical dimensions of the BR plane is halved relative to the image dimensions, and each R and B value is shared with the G components for which <code>floor(i<sub>G</sub> &times; 0.5) = i<sub>B</sub> = i<sub>R</sub></code> and <code>floor(j<sub>G</sub> &times; 0.5) = j<sub>B</sub> = j<sub>R</sub></code>. The location of each plane when this image is in linear layout can be determined via {@link #vkGetImageSubresourceLayout GetImageSubresourceLayout}, using {@link KHRSamplerYcbcrConversion#VK_IMAGE_ASPECT_PLANE_0_BIT_KHR IMAGE_ASPECT_PLANE_0_BIT_KHR} for the G plane, and {@link KHRSamplerYcbcrConversion#VK_IMAGE_ASPECT_PLANE_1_BIT_KHR IMAGE_ASPECT_PLANE_1_BIT_KHR} for the BR plane. Images in this format <b>must</b> be defined with a width and height that is a multiple of two.</li>
+     * <li>{@link KHRSamplerYcbcrConversion#VK_FORMAT_G10X6_B10X6_R10X6_3PLANE_422_UNORM_3PACK16_KHR FORMAT_G10X6_B10X6_R10X6_3PLANE_422_UNORM_3PACK16_KHR} specifies a unsigned normalized <em>multi-planar format</em> that has a 10-bit G component in the top 10 bits of each 16-bit word of plane 0, a 10-bit B component in the top 10 bits of each 16-bit word of plane 1, and a 10-bit R component in the top 10 bits of each 16-bit word of plane 2, with the bottom 6 bits of each word set to 0. The horizontal dimension of the R and B plane is halved relative to the image dimensions, and each R and B value is shared with the G components for which <code>floor(i<sub>G</sub> &times; 0.5) = i<sub>B</sub> = i<sub>R</sub></code>. The location of each plane when this image is in linear layout can be determined via {@link #vkGetImageSubresourceLayout GetImageSubresourceLayout}, using {@link KHRSamplerYcbcrConversion#VK_IMAGE_ASPECT_PLANE_0_BIT_KHR IMAGE_ASPECT_PLANE_0_BIT_KHR} for the G plane, {@link KHRSamplerYcbcrConversion#VK_IMAGE_ASPECT_PLANE_1_BIT_KHR IMAGE_ASPECT_PLANE_1_BIT_KHR} for the B plane, and {@link KHRSamplerYcbcrConversion#VK_IMAGE_ASPECT_PLANE_2_BIT_KHR IMAGE_ASPECT_PLANE_2_BIT_KHR} for the R plane. Images in this format <b>must</b> be defined with a width that is a multiple of two.</li>
+     * <li>{@link KHRSamplerYcbcrConversion#VK_FORMAT_G10X6_B10X6R10X6_2PLANE_422_UNORM_3PACK16_KHR FORMAT_G10X6_B10X6R10X6_2PLANE_422_UNORM_3PACK16_KHR} specifies a unsigned normalized <em>multi-planar format</em> that has a 10-bit G component in the top 10 bits of each 16-bit word of plane 0, and a two-component, 32-bit BR plane 1 consisting of a 10-bit B component in the top 10 bits of the word in bytes 0..1, and a 10-bit R component in the top 10 bits of the word in bytes 2..3, the bottom 6 bits of each word set to 0. The horizontal dimensions of the BR plane is halved relative to the image dimensions, and each R and B value is shared with the G components for which <code>floor(i<sub>G</sub> &times; 0.5) = i<sub>B</sub> = i<sub>R</sub></code>. The location of each plane when this image is in linear layout can be determined via {@link #vkGetImageSubresourceLayout GetImageSubresourceLayout}, using {@link KHRSamplerYcbcrConversion#VK_IMAGE_ASPECT_PLANE_0_BIT_KHR IMAGE_ASPECT_PLANE_0_BIT_KHR} for the G plane, and {@link KHRSamplerYcbcrConversion#VK_IMAGE_ASPECT_PLANE_1_BIT_KHR IMAGE_ASPECT_PLANE_1_BIT_KHR} for the BR plane. Images in this format <b>must</b> be defined with a width that is a multiple of two.</li>
+     * <li>{@link KHRSamplerYcbcrConversion#VK_FORMAT_G10X6_B10X6_R10X6_3PLANE_444_UNORM_3PACK16_KHR FORMAT_G10X6_B10X6_R10X6_3PLANE_444_UNORM_3PACK16_KHR} specifies a unsigned normalized <em>multi-planar format</em> that has a 10-bit G component in the top 10 bits of each 16-bit word of plane 0, a 10-bit B component in the top 10 bits of each 16-bit word of plane 1, and a 10-bit R component in the top 10 bits of each 16-bit word of plane 2, with the bottom 6 bits of each word set to 0. Each plane has the same dimensions and each R, G and B component contributes to a single texel. The location of each plane when this image is in linear layout can be determined via {@link #vkGetImageSubresourceLayout GetImageSubresourceLayout}, using {@link KHRSamplerYcbcrConversion#VK_IMAGE_ASPECT_PLANE_0_BIT_KHR IMAGE_ASPECT_PLANE_0_BIT_KHR} for the G plane, {@link KHRSamplerYcbcrConversion#VK_IMAGE_ASPECT_PLANE_1_BIT_KHR IMAGE_ASPECT_PLANE_1_BIT_KHR} for the B plane, and {@link KHRSamplerYcbcrConversion#VK_IMAGE_ASPECT_PLANE_2_BIT_KHR IMAGE_ASPECT_PLANE_2_BIT_KHR} for the R plane.</li>
+     * <li>{@link KHRSamplerYcbcrConversion#VK_FORMAT_R12X4_UNORM_PACK16_KHR FORMAT_R12X4_UNORM_PACK16_KHR} specifies a one-component, 16-bit unsigned normalized format that has a single 12-bit R component in the top 12 bits of a 16-bit word, with the bottom 4 bits set to 0.</li>
+     * <li>{@link KHRSamplerYcbcrConversion#VK_FORMAT_R12X4G12X4_UNORM_2PACK16_KHR FORMAT_R12X4G12X4_UNORM_2PACK16_KHR} specifies a two-component, 32-bit unsigned normalized format that has a 12-bit R component in the top 12 bits of the word in bytes 0..1, and a 12-bit G component in the top 12 bits of the word in bytes 2..3, with the bottom 4 bits of each word set to 0.</li>
+     * <li>{@link KHRSamplerYcbcrConversion#VK_FORMAT_R12X4G12X4B12X4A12X4_UNORM_4PACK16_KHR FORMAT_R12X4G12X4B12X4A12X4_UNORM_4PACK16_KHR} specifies a four-component, 64-bit unsigned normalized format that has a 12-bit R component in the top 12 bits of the word in bytes 0..1, a 12-bit G component in the top 12 bits of the word in bytes 2..3, a 12-bit B component in the top 12 bits of the word in bytes 4..5, and a 12-bit A component in the top 12 bits of the word in bytes 6..7, with the bottom 4 bits of each word set to 0.</li>
+     * <li>{@link KHRSamplerYcbcrConversion#VK_FORMAT_G12X4B12X4G12X4R12X4_422_UNORM_4PACK16_KHR FORMAT_G12X4B12X4G12X4R12X4_422_UNORM_4PACK16_KHR} specifies a four-component, 64-bit format containing a pair of G components, an R component, and a B component, collectively encoding a 2×1 rectangle of unsigned normalized RGB texel data. One G value is present at each <em>i</em> coordinate, with the B and R values shared across both G values and thus recorded at half the horizontal resolution of the image. This format has a 12-bit G component for the even <em>i</em> coordinate in the top 12 bits of the word in bytes 0..1, a 12-bit B component in the top 12 bits of the word in bytes 2..3, a 12-bit G component for the odd <em>i</em> coordinate in the top 12 bits of the word in bytes 4..5, and a 12-bit R component in the top 12 bits of the word in bytes 6..7, with the bottom 4 bits of each word set to 0. Images in this format <b>must</b> be defined with a width that is a multiple of two. For the purposes of the constraints on copy extents, this format is treated as a compressed format with a 2×1 compressed texel block.</li>
+     * <li>{@link KHRSamplerYcbcrConversion#VK_FORMAT_B12X4G12X4R12X4G12X4_422_UNORM_4PACK16_KHR FORMAT_B12X4G12X4R12X4G12X4_422_UNORM_4PACK16_KHR} specifies a four-component, 64-bit format containing a pair of G components, an R component, and a B component, collectively encoding a 2×1 rectangle of unsigned normalized RGB texel data. One G value is present at each <em>i</em> coordinate, with the B and R values shared across both G values and thus recorded at half the horizontal resolution of the image. This format has a 12-bit B component in the top 12 bits of the word in bytes 0..1, a 12-bit G component for the even <em>i</em> coordinate in the top 12 bits of the word in bytes 2..3, a 12-bit R component in the top 12 bits of the word in bytes 4..5, and a 12-bit G component for the odd <em>i</em> coordinate in the top 12 bits of the word in bytes 6..7, with the bottom 4 bits of each word set to 0. Images in this format <b>must</b> be defined with a width that is a multiple of two. For the purposes of the constraints on copy extents, this format is treated as a compressed format with a 2×1 compressed texel block.</li>
+     * <li>{@link KHRSamplerYcbcrConversion#VK_FORMAT_G12X4_B12X4_R12X4_3PLANE_420_UNORM_3PACK16_KHR FORMAT_G12X4_B12X4_R12X4_3PLANE_420_UNORM_3PACK16_KHR} specifies a unsigned normalized <em>multi-planar format</em> that has a 12-bit G component in the top 12 bits of each 16-bit word of plane 0, a 12-bit B component in the top 12 bits of each 16-bit word of plane 1, and a 12-bit R component in the top 12 bits of each 16-bit word of plane 2, with the bottom 4 bits of each word set to 0. The horizontal and vertical dimensions of the R and B planes are halved relative to the image dimensions, and each R and B component is shared with the G components for which <code>floor(i<sub>G</sub> &times; 0.5) = i<sub>B</sub> = i<sub>R</sub></code> and <code>floor(j<sub>G</sub> &times; 0.5) = j<sub>B</sub> = j<sub>R</sub></code>. The location of each plane when this image is in linear layout can be determined via {@link #vkGetImageSubresourceLayout GetImageSubresourceLayout}, using {@link KHRSamplerYcbcrConversion#VK_IMAGE_ASPECT_PLANE_0_BIT_KHR IMAGE_ASPECT_PLANE_0_BIT_KHR} for the G plane, {@link KHRSamplerYcbcrConversion#VK_IMAGE_ASPECT_PLANE_1_BIT_KHR IMAGE_ASPECT_PLANE_1_BIT_KHR} for the B plane, and {@link KHRSamplerYcbcrConversion#VK_IMAGE_ASPECT_PLANE_2_BIT_KHR IMAGE_ASPECT_PLANE_2_BIT_KHR} for the R plane. Images in this format <b>must</b> be defined with a width and height that is a multiple of two.</li>
+     * <li>{@link KHRSamplerYcbcrConversion#VK_FORMAT_G12X4_B12X4R12X4_2PLANE_420_UNORM_3PACK16_KHR FORMAT_G12X4_B12X4R12X4_2PLANE_420_UNORM_3PACK16_KHR} specifies a unsigned normalized <em>multi-planar format</em> that has a 12-bit G component in the top 12 bits of each 16-bit word of plane 0, and a two-component, 32-bit BR plane 1 consisting of a 12-bit B component in the top 12 bits of the word in bytes 0..1, and a 12-bit R component in the top 12 bits of the word in bytes 2..3, the bottom 4 bits of each word set to 0. The horizontal and vertical dimensions of the BR plane is halved relative to the image dimensions, and each R and B value is shared with the G components for which <code>floor(i<sub>G</sub> &times; 0.5) = i<sub>B</sub> = i<sub>R</sub></code> and <code>floor(j<sub>G</sub> &times; 0.5) = j<sub>B</sub> = j<sub>R</sub></code>. The location of each plane when this image is in linear layout can be determined via {@link #vkGetImageSubresourceLayout GetImageSubresourceLayout}, using {@link KHRSamplerYcbcrConversion#VK_IMAGE_ASPECT_PLANE_0_BIT_KHR IMAGE_ASPECT_PLANE_0_BIT_KHR} for the G plane, and {@link KHRSamplerYcbcrConversion#VK_IMAGE_ASPECT_PLANE_1_BIT_KHR IMAGE_ASPECT_PLANE_1_BIT_KHR} for the BR plane. Images in this format <b>must</b> be defined with a width and height that is a multiple of two.</li>
+     * <li>{@link KHRSamplerYcbcrConversion#VK_FORMAT_G12X4_B12X4_R12X4_3PLANE_422_UNORM_3PACK16_KHR FORMAT_G12X4_B12X4_R12X4_3PLANE_422_UNORM_3PACK16_KHR} specifies a unsigned normalized <em>multi-planar format</em> that has a 12-bit G component in the top 12 bits of each 16-bit word of plane 0, a 12-bit B component in the top 12 bits of each 16-bit word of plane 1, and a 12-bit R component in the top 12 bits of each 16-bit word of plane 2, with the bottom 4 bits of each word set to 0. The horizontal dimension of the R and B plane is halved relative to the image dimensions, and each R and B value is shared with the G components for which <code>floor(i<sub>G</sub> &times; 0.5) = i<sub>B</sub> = i<sub>R</sub></code>. The location of each plane when this image is in linear layout can be determined via {@link #vkGetImageSubresourceLayout GetImageSubresourceLayout}, using {@link KHRSamplerYcbcrConversion#VK_IMAGE_ASPECT_PLANE_0_BIT_KHR IMAGE_ASPECT_PLANE_0_BIT_KHR} for the G plane, {@link KHRSamplerYcbcrConversion#VK_IMAGE_ASPECT_PLANE_1_BIT_KHR IMAGE_ASPECT_PLANE_1_BIT_KHR} for the B plane, and {@link KHRSamplerYcbcrConversion#VK_IMAGE_ASPECT_PLANE_2_BIT_KHR IMAGE_ASPECT_PLANE_2_BIT_KHR} for the R plane. Images in this format <b>must</b> be defined with a width that is a multiple of two.</li>
+     * <li>{@link KHRSamplerYcbcrConversion#VK_FORMAT_G12X4_B12X4R12X4_2PLANE_422_UNORM_3PACK16_KHR FORMAT_G12X4_B12X4R12X4_2PLANE_422_UNORM_3PACK16_KHR} specifies a unsigned normalized <em>multi-planar format</em> that has a 12-bit G component in the top 12 bits of each 16-bit word of plane 0, and a two-component, 32-bit BR plane 1 consisting of a 12-bit B component in the top 12 bits of the word in bytes 0..1, and a 12-bit R component in the top 12 bits of the word in bytes 2..3, the bottom 4 bits of each word set to 0. The horizontal dimensions of the BR plane is halved relative to the image dimensions, and each R and B value is shared with the G components for which <code>floor(i<sub>G</sub> &times; 0.5) = i<sub>B</sub> = i<sub>R</sub></code>. The location of each plane when this image is in linear layout can be determined via {@link #vkGetImageSubresourceLayout GetImageSubresourceLayout}, using {@link KHRSamplerYcbcrConversion#VK_IMAGE_ASPECT_PLANE_0_BIT_KHR IMAGE_ASPECT_PLANE_0_BIT_KHR} for the G plane, and {@link KHRSamplerYcbcrConversion#VK_IMAGE_ASPECT_PLANE_1_BIT_KHR IMAGE_ASPECT_PLANE_1_BIT_KHR} for the BR plane. Images in this format <b>must</b> be defined with a width that is a multiple of two.</li>
+     * <li>{@link KHRSamplerYcbcrConversion#VK_FORMAT_G12X4_B12X4_R12X4_3PLANE_444_UNORM_3PACK16_KHR FORMAT_G12X4_B12X4_R12X4_3PLANE_444_UNORM_3PACK16_KHR} specifies a unsigned normalized <em>multi-planar format</em> that has a 12-bit G component in the top 12 bits of each 16-bit word of plane 0, a 12-bit B component in the top 12 bits of each 16-bit word of plane 1, and a 12-bit R component in the top 12 bits of each 16-bit word of plane 2, with the bottom 4 bits of each word set to 0. Each plane has the same dimensions and each R, G and B component contributes to a single texel. The location of each plane when this image is in linear layout can be determined via {@link #vkGetImageSubresourceLayout GetImageSubresourceLayout}, using {@link KHRSamplerYcbcrConversion#VK_IMAGE_ASPECT_PLANE_0_BIT_KHR IMAGE_ASPECT_PLANE_0_BIT_KHR} for the G plane, {@link KHRSamplerYcbcrConversion#VK_IMAGE_ASPECT_PLANE_1_BIT_KHR IMAGE_ASPECT_PLANE_1_BIT_KHR} for the B plane, and {@link KHRSamplerYcbcrConversion#VK_IMAGE_ASPECT_PLANE_2_BIT_KHR IMAGE_ASPECT_PLANE_2_BIT_KHR} for the R plane.</li>
+     * <li>{@link KHRSamplerYcbcrConversion#VK_FORMAT_G16B16G16R16_422_UNORM_KHR FORMAT_G16B16G16R16_422_UNORM_KHR} specifies a four-component, 64-bit format containing a pair of G components, an R component, and a B component, collectively encoding a 2×1 rectangle of unsigned normalized RGB texel data. One G value is present at each <em>i</em> coordinate, with the B and R values shared across both G values and thus recorded at half the horizontal resolution of the image. This format has a 16-bit G component for the even <em>i</em> coordinate in the word in bytes 0..1, a 16-bit B component in the word in bytes 2..3, a 16-bit G component for the odd <em>i</em> coordinate in the word in bytes 4..5, and a 16-bit R component in the word in bytes 6..7. Images in this format <b>must</b> be defined with a width that is a multiple of two. For the purposes of the constraints on copy extents, this format is treated as a compressed format with a 2×1 compressed texel block.</li>
+     * <li>{@link KHRSamplerYcbcrConversion#VK_FORMAT_B16G16R16G16_422_UNORM_KHR FORMAT_B16G16R16G16_422_UNORM_KHR} specifies a four-component, 64-bit format containing a pair of G components, an R component, and a B component, collectively encoding a 2×1 rectangle of unsigned normalized RGB texel data. One G value is present at each <em>i</em> coordinate, with the B and R values shared across both G values and thus recorded at half the horizontal resolution of the image. This format has a 16-bit B component in the word in bytes 0..1, a 16-bit G component for the even <em>i</em> coordinate in the word in bytes 2..3, a 16-bit R component in the word in bytes 4..5, and a 16-bit G component for the odd <em>i</em> coordinate in the word in bytes 6..7. Images in this format <b>must</b> be defined with a width that is a multiple of two. For the purposes of the constraints on copy extents, this format is treated as a compressed format with a 2×1 compressed texel block.</li>
+     * <li>{@link KHRSamplerYcbcrConversion#VK_FORMAT_G16_B16_R16_3PLANE_420_UNORM_KHR FORMAT_G16_B16_R16_3PLANE_420_UNORM_KHR} specifies a unsigned normalized <em>multi-planar format</em> that has a 16-bit G component in each 16-bit word of plane 0, a 16-bit B component in each 16-bit word of plane 1, and a 16-bit R component in each 16-bit word of plane 2. The horizontal and vertical dimensions of the R and B planes are halved relative to the image dimensions, and each R and B component is shared with the G components for which <code>floor(i<sub>G</sub> &times; 0.5) = i<sub>B</sub> = i<sub>R</sub></code> and <code>floor(j<sub>G</sub> &times; 0.5) = j<sub>B</sub> = j<sub>R</sub></code>. The location of each plane when this image is in linear layout can be determined via {@link #vkGetImageSubresourceLayout GetImageSubresourceLayout}, using {@link KHRSamplerYcbcrConversion#VK_IMAGE_ASPECT_PLANE_0_BIT_KHR IMAGE_ASPECT_PLANE_0_BIT_KHR} for the G plane, {@link KHRSamplerYcbcrConversion#VK_IMAGE_ASPECT_PLANE_1_BIT_KHR IMAGE_ASPECT_PLANE_1_BIT_KHR} for the B plane, and {@link KHRSamplerYcbcrConversion#VK_IMAGE_ASPECT_PLANE_2_BIT_KHR IMAGE_ASPECT_PLANE_2_BIT_KHR} for the R plane. Images in this format <b>must</b> be defined with a width and height that is a multiple of two.</li>
+     * <li>{@link KHRSamplerYcbcrConversion#VK_FORMAT_G16_B16R16_2PLANE_420_UNORM_KHR FORMAT_G16_B16R16_2PLANE_420_UNORM_KHR} specifies a unsigned normalized <em>multi-planar format</em> that has a 16-bit G component in each 16-bit word of plane 0, and a two-component, 32-bit BR plane 1 consisting of a 16-bit B component in the word in bytes 0..1, and a 16-bit R component in the word in bytes 2..3. The horizontal and vertical dimensions of the BR plane is halved relative to the image dimensions, and each R and B value is shared with the G components for which <code>floor(i<sub>G</sub> &times; 0.5) = i<sub>B</sub> = i<sub>R</sub></code> and <code>floor(j<sub>G</sub> &times; 0.5) = j<sub>B</sub> = j<sub>R</sub></code>. The location of each plane when this image is in linear layout can be determined via {@link #vkGetImageSubresourceLayout GetImageSubresourceLayout}, using {@link KHRSamplerYcbcrConversion#VK_IMAGE_ASPECT_PLANE_0_BIT_KHR IMAGE_ASPECT_PLANE_0_BIT_KHR} for the G plane, and {@link KHRSamplerYcbcrConversion#VK_IMAGE_ASPECT_PLANE_1_BIT_KHR IMAGE_ASPECT_PLANE_1_BIT_KHR} for the BR plane. Images in this format <b>must</b> be defined with a width and height that is a multiple of two.</li>
+     * <li>{@link KHRSamplerYcbcrConversion#VK_FORMAT_G16_B16_R16_3PLANE_422_UNORM_KHR FORMAT_G16_B16_R16_3PLANE_422_UNORM_KHR} specifies a unsigned normalized <em>multi-planar format</em> that has a 16-bit G component in each 16-bit word of plane 0, a 16-bit B component in each 16-bit word of plane 1, and a 16-bit R component in each 16-bit word of plane 2. The horizontal dimension of the R and B plane is halved relative to the image dimensions, and each R and B value is shared with the G components for which <code>floor(i<sub>G</sub> &times; 0.5) = i<sub>B</sub> = i<sub>R</sub></code>. The location of each plane when this image is in linear layout can be determined via {@link #vkGetImageSubresourceLayout GetImageSubresourceLayout}, using {@link KHRSamplerYcbcrConversion#VK_IMAGE_ASPECT_PLANE_0_BIT_KHR IMAGE_ASPECT_PLANE_0_BIT_KHR} for the G plane, {@link KHRSamplerYcbcrConversion#VK_IMAGE_ASPECT_PLANE_1_BIT_KHR IMAGE_ASPECT_PLANE_1_BIT_KHR} for the B plane, and {@link KHRSamplerYcbcrConversion#VK_IMAGE_ASPECT_PLANE_2_BIT_KHR IMAGE_ASPECT_PLANE_2_BIT_KHR} for the R plane. Images in this format <b>must</b> be defined with a width that is a multiple of two.</li>
+     * <li>{@link KHRSamplerYcbcrConversion#VK_FORMAT_G16_B16R16_2PLANE_422_UNORM_KHR FORMAT_G16_B16R16_2PLANE_422_UNORM_KHR} specifies a unsigned normalized <em>multi-planar format</em> that has a 16-bit G component in each 16-bit word of plane 0, and a two-component, 32-bit BR plane 1 consisting of a 16-bit B component in the word in bytes 0..1, and a 16-bit R component in the word in bytes 2..3. The horizontal dimensions of the BR plane is halved relative to the image dimensions, and each R and B value is shared with the G components for which <code>floor(i<sub>G</sub> &times; 0.5) = i<sub>B</sub> = i<sub>R</sub></code>. The location of each plane when this image is in linear layout can be determined via {@link #vkGetImageSubresourceLayout GetImageSubresourceLayout}, using {@link KHRSamplerYcbcrConversion#VK_IMAGE_ASPECT_PLANE_0_BIT_KHR IMAGE_ASPECT_PLANE_0_BIT_KHR} for the G plane, and {@link KHRSamplerYcbcrConversion#VK_IMAGE_ASPECT_PLANE_1_BIT_KHR IMAGE_ASPECT_PLANE_1_BIT_KHR} for the BR plane. Images in this format <b>must</b> be defined with a width that is a multiple of two.</li>
+     * <li>{@link KHRSamplerYcbcrConversion#VK_FORMAT_G16_B16_R16_3PLANE_444_UNORM_KHR FORMAT_G16_B16_R16_3PLANE_444_UNORM_KHR} specifies a unsigned normalized <em>multi-planar format</em> that has a 16-bit G component in each 16-bit word of plane 0, a 16-bit B component in each 16-bit word of plane 1, and a 16-bit R component in each 16-bit word of plane 2. Each plane has the same dimensions and each R, G and B component contributes to a single texel. The location of each plane when this image is in linear layout can be determined via {@link #vkGetImageSubresourceLayout GetImageSubresourceLayout}, using {@link KHRSamplerYcbcrConversion#VK_IMAGE_ASPECT_PLANE_0_BIT_KHR IMAGE_ASPECT_PLANE_0_BIT_KHR} for the G plane, {@link KHRSamplerYcbcrConversion#VK_IMAGE_ASPECT_PLANE_1_BIT_KHR IMAGE_ASPECT_PLANE_1_BIT_KHR} for the B plane, and {@link KHRSamplerYcbcrConversion#VK_IMAGE_ASPECT_PLANE_2_BIT_KHR IMAGE_ASPECT_PLANE_2_BIT_KHR} for the R plane.</li>
      * </ul>
      * 
      * <h5>See Also</h5>
      * 
-     * <p>{@link VkAttachmentDescription}, {@link VkBufferViewCreateInfo}, {@link VkImageCreateInfo}, {@link VkImageFormatListCreateInfoKHR}, {@link VkImageViewCreateInfo}, {@link VkPhysicalDeviceImageFormatInfo2}, {@link VkPhysicalDeviceSparseImageFormatInfo2}, {@link VkSamplerYcbcrConversionCreateInfo}, {@link VkSurfaceFormatKHR}, {@link VkSwapchainCreateInfoKHR}, {@link VkVertexInputAttributeDescription}, {@link NVExternalMemoryCapabilities#vkGetPhysicalDeviceExternalImageFormatPropertiesNV GetPhysicalDeviceExternalImageFormatPropertiesNV}, {@link #vkGetPhysicalDeviceFormatProperties GetPhysicalDeviceFormatProperties}, {@link VK11#vkGetPhysicalDeviceFormatProperties2 GetPhysicalDeviceFormatProperties2}, {@link KHRGetPhysicalDeviceProperties2#vkGetPhysicalDeviceFormatProperties2KHR GetPhysicalDeviceFormatProperties2KHR}, {@link #vkGetPhysicalDeviceImageFormatProperties GetPhysicalDeviceImageFormatProperties}, {@link #vkGetPhysicalDeviceSparseImageFormatProperties GetPhysicalDeviceSparseImageFormatProperties}</p>
+     * <p>{@link VkAttachmentDescription}, {@link VkBufferViewCreateInfo}, {@link VkImageCreateInfo}, {@link VkImageFormatListCreateInfoKHR}, {@link VkImageViewCreateInfo}, {@link VkPhysicalDeviceImageFormatInfo2KHR}, {@link VkPhysicalDeviceSparseImageFormatInfo2KHR}, {@link VkSamplerYcbcrConversionCreateInfoKHR}, {@link VkSurfaceFormatKHR}, {@link VkSwapchainCreateInfoKHR}, {@link VkVertexInputAttributeDescription}, {@link NVExternalMemoryCapabilities#vkGetPhysicalDeviceExternalImageFormatPropertiesNV GetPhysicalDeviceExternalImageFormatPropertiesNV}, {@link #vkGetPhysicalDeviceFormatProperties GetPhysicalDeviceFormatProperties}, {@link KHRGetPhysicalDeviceProperties2#vkGetPhysicalDeviceFormatProperties2KHR GetPhysicalDeviceFormatProperties2KHR}, {@link #vkGetPhysicalDeviceImageFormatProperties GetPhysicalDeviceImageFormatProperties}, {@link #vkGetPhysicalDeviceSparseImageFormatProperties GetPhysicalDeviceSparseImageFormatProperties}</p>
      */
     public static final int
         VK_FORMAT_UNDEFINED                  = 0,
@@ -706,19 +730,19 @@ public class VK10 {
      * <li>{@link #VK_FORMAT_FEATURE_BLIT_SRC_BIT FORMAT_FEATURE_BLIT_SRC_BIT} specifies that an image <b>can</b> be used as {@code srcImage} for the {@link #vkCmdBlitImage CmdBlitImage} command.</li>
      * <li>{@link #VK_FORMAT_FEATURE_BLIT_DST_BIT FORMAT_FEATURE_BLIT_DST_BIT} specifies that an image <b>can</b> be used as {@code dstImage} for the {@link #vkCmdBlitImage CmdBlitImage} command.</li>
      * <li>{@link #VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT} specifies that if {@link #VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT FORMAT_FEATURE_SAMPLED_IMAGE_BIT} is also set, an image view <b>can</b> be used with a sampler that has either of {@code magFilter} or {@code minFilter} set to {@link #VK_FILTER_LINEAR FILTER_LINEAR}, or {@code mipmapMode} set to {@link #VK_SAMPLER_MIPMAP_MODE_LINEAR SAMPLER_MIPMAP_MODE_LINEAR}. If {@link #VK_FORMAT_FEATURE_BLIT_SRC_BIT FORMAT_FEATURE_BLIT_SRC_BIT} is also set, an image can be used as the {@code srcImage} to {@link #vkCmdBlitImage CmdBlitImage} with a {@code filter} of {@link #VK_FILTER_LINEAR FILTER_LINEAR}. This bit <b>must</b> only be exposed for formats that also support the {@link #VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT FORMAT_FEATURE_SAMPLED_IMAGE_BIT} or {@link #VK_FORMAT_FEATURE_BLIT_SRC_BIT FORMAT_FEATURE_BLIT_SRC_BIT}.
-     * If the format being queried is a depth/stencil format, this bit only specifies that the depth aspect (not the stencil aspect) of an image of this format supports linear filtering, and that linear filtering of the depth aspect is supported whether depth compare is enabled in the sampler or not. If this bit is not present, linear filtering with depth compare disabled is unsupported and linear filtering with depth compare enabled is supported, but <b>may</b> compute the filtered value in an implementation-dependent manner which differs from the normal rules of linear filtering. The resulting value <b>must</b> be in the range <code>[0,1]</code> and <b>should</b> be proportional to, or a weighted average of, the number of comparison passes or failures.
+     * If the format being queried is a depth/stencil format, this bit only indicates that the depth aspect (not the stencil aspect) of an image of this format supports linear filtering, and that linear filtering of the depth aspect is supported whether depth compare is enabled in the sampler or not. If this bit is not present, linear filtering with depth compare disabled is unsupported and linear filtering with depth compare enabled is supported, but <b>may</b> compute the filtered value in an implementation-dependent manner which differs from the normal rules of linear filtering. The resulting value <b>must</b> be in the range <code>[0,1]</code> and <b>should</b> be proportional to, or a weighted average of, the number of comparison passes or failures.
      * </li>
-     * <li>{@link VK11#VK_FORMAT_FEATURE_TRANSFER_SRC_BIT FORMAT_FEATURE_TRANSFER_SRC_BIT} specifies that an image <b>can</b> be used as a source image for <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#copies">copy commands</a>.</li>
-     * <li>{@link VK11#VK_FORMAT_FEATURE_TRANSFER_DST_BIT FORMAT_FEATURE_TRANSFER_DST_BIT} specifies that an image <b>can</b> be used as a destination image for <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#copies">copy commands</a> and <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#clears">clear commands</a>.</li>
+     * <li>{@link KHRMaintenance1#VK_FORMAT_FEATURE_TRANSFER_SRC_BIT_KHR FORMAT_FEATURE_TRANSFER_SRC_BIT_KHR} specifies that an image <b>can</b> be used as a source image for <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#copies">copy commands</a>.</li>
+     * <li>{@link KHRMaintenance1#VK_FORMAT_FEATURE_TRANSFER_DST_BIT_KHR FORMAT_FEATURE_TRANSFER_DST_BIT_KHR} specifies that an image <b>can</b> be used as a destination image for <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#copies">copy commands</a> and <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#clears">clear commands</a>.</li>
      * <li>{@link EXTSamplerFilterMinmax#VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_MINMAX_BIT_EXT FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_MINMAX_BIT_EXT} specifies {@code VkImage} <b>can</b> be used as a sampled image with a min or max {@code VkSamplerReductionModeEXT}. This bit <b>must</b> only be exposed for formats that also support the {@link #VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT FORMAT_FEATURE_SAMPLED_IMAGE_BIT}.</li>
-     * <li>{@link IMGFilterCubic#VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_IMG FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_IMG} specifies that {@code VkImage} <b>can</b> be used with a sampler that has either of {@code magFilter} or {@code minFilter} set to {@link IMGFilterCubic#VK_FILTER_CUBIC_IMG FILTER_CUBIC_IMG}, or be the source image for a blit with {@code filter} set to {@link IMGFilterCubic#VK_FILTER_CUBIC_IMG FILTER_CUBIC_IMG}. This bit <b>must</b> only be exposed for formats that also support the {@link #VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT FORMAT_FEATURE_SAMPLED_IMAGE_BIT}. If the format being queried is a depth/stencil format, this only specifies that the depth aspect is cubic filterable.</li>
-     * <li>{@link VK11#VK_FORMAT_FEATURE_MIDPOINT_CHROMA_SAMPLES_BIT FORMAT_FEATURE_MIDPOINT_CHROMA_SAMPLES_BIT} specifies that an application <b>can</b> define a <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#samplers-YCbCr-conversion">sampler Y&#8217;C<sub>B</sub>C<sub>R</sub> conversion</a> using this format as a source, and that an image of this format <b>can</b> be used with a {@link VkSamplerYcbcrConversionCreateInfo} {@code xChromaOffset} and/or {@code yChromaOffset} of {@link VK11#VK_CHROMA_LOCATION_MIDPOINT CHROMA_LOCATION_MIDPOINT}. Otherwise both {@code xChromaOffset} and {@code yChromaOffset} <b>must</b> be {@link VK11#VK_CHROMA_LOCATION_COSITED_EVEN CHROMA_LOCATION_COSITED_EVEN}. If a format does not incorporate chroma downsampling (it is not a “422” or “420” format) but the implementation supports sampler Y&#8217;C<sub>B</sub>C<sub>R</sub> conversion for this format, the implementation <b>must</b> set {@link VK11#VK_FORMAT_FEATURE_MIDPOINT_CHROMA_SAMPLES_BIT FORMAT_FEATURE_MIDPOINT_CHROMA_SAMPLES_BIT}.</li>
-     * <li>{@link VK11#VK_FORMAT_FEATURE_COSITED_CHROMA_SAMPLES_BIT FORMAT_FEATURE_COSITED_CHROMA_SAMPLES_BIT} specifies that an application <b>can</b> define a <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#samplers-YCbCr-conversion">sampler Y&#8217;C<sub>B</sub>C<sub>R</sub> conversion</a> using this format as a source, and that an image of this format <b>can</b> be used with a {@link VkSamplerYcbcrConversionCreateInfo} {@code xChromaOffset} and/or {@code yChromaOffset} of {@link VK11#VK_CHROMA_LOCATION_COSITED_EVEN CHROMA_LOCATION_COSITED_EVEN}. Otherwise both {@code xChromaOffset} and {@code yChromaOffset} <b>must</b> be {@link VK11#VK_CHROMA_LOCATION_MIDPOINT CHROMA_LOCATION_MIDPOINT}. If neither {@link VK11#VK_FORMAT_FEATURE_COSITED_CHROMA_SAMPLES_BIT FORMAT_FEATURE_COSITED_CHROMA_SAMPLES_BIT} nor {@link VK11#VK_FORMAT_FEATURE_MIDPOINT_CHROMA_SAMPLES_BIT FORMAT_FEATURE_MIDPOINT_CHROMA_SAMPLES_BIT} is set, the application <b>must</b> not define a <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#samplers-YCbCr-conversion">sampler Y&#8217;C<sub>B</sub>C<sub>R</sub> conversion</a> using this format as a source.</li>
-     * <li>{@link VK11#VK_FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_LINEAR_FILTER_BIT FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_LINEAR_FILTER_BIT} specifies that the format can do linear sampler filtering (min/magFilter) whilst sampler Y&#8217;C<sub>B</sub>C<sub>R</sub> conversion is enabled.</li>
-     * <li>{@link VK11#VK_FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_SEPARATE_RECONSTRUCTION_FILTER_BIT FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_SEPARATE_RECONSTRUCTION_FILTER_BIT} specifies that the format can have different chroma, min, and mag filters.</li>
-     * <li>{@link VK11#VK_FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_BIT FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_BIT} specifies that reconstruction is explicit, as described in <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#textures-chroma-reconstruction">Chroma Reconstruction</a>. If this bit is not present, reconstruction is implicit by default.</li>
-     * <li>{@link VK11#VK_FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_FORCEABLE_BIT FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_FORCEABLE_BIT} specifies that reconstruction <b>can</b> be forcibly made explicit by setting {@link VkSamplerYcbcrConversionCreateInfo}{@code ::forceExplicitReconstruction} to {@link #VK_TRUE TRUE}.</li>
-     * <li>{@link VK11#VK_FORMAT_FEATURE_DISJOINT_BIT FORMAT_FEATURE_DISJOINT_BIT} specifies that a multi-planar image <b>can</b> have the {@link VK11#VK_IMAGE_CREATE_DISJOINT_BIT IMAGE_CREATE_DISJOINT_BIT} set during image creation. An implementation <b>must</b> not set {@link VK11#VK_FORMAT_FEATURE_DISJOINT_BIT FORMAT_FEATURE_DISJOINT_BIT} for <em>single-plane formats</em>.</li>
+     * <li>{@link IMGFilterCubic#VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_IMG FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_IMG} specifies that {@code VkImage} <b>can</b> be used with a sampler that has either of {@code magFilter} or {@code minFilter} set to {@link IMGFilterCubic#VK_FILTER_CUBIC_IMG FILTER_CUBIC_IMG}, or be the source image for a blit with {@code filter} set to {@link IMGFilterCubic#VK_FILTER_CUBIC_IMG FILTER_CUBIC_IMG}. This bit <b>must</b> only be exposed for formats that also support the {@link #VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT FORMAT_FEATURE_SAMPLED_IMAGE_BIT}. If the format being queried is a depth/stencil format, this only indicates that the depth aspect is cubic filterable.</li>
+     * <li>{@link KHRSamplerYcbcrConversion#VK_FORMAT_FEATURE_MIDPOINT_CHROMA_SAMPLES_BIT_KHR FORMAT_FEATURE_MIDPOINT_CHROMA_SAMPLES_BIT_KHR} specifies that an application <b>can</b> define a <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#samplers-YCbCr-conversion">sampler Y&#8217;C<sub>B</sub>C<sub>R</sub> conversion</a> using this format as a source, and that an image of this format <b>can</b> be used with a {@link VkSamplerYcbcrConversionCreateInfoKHR} {@code xChromaOffset} and/or {@code yChromaOffset} of {@link KHRSamplerYcbcrConversion#VK_CHROMA_LOCATION_MIDPOINT_KHR CHROMA_LOCATION_MIDPOINT_KHR}. Otherwise both {@code xChromaOffset} and {@code yChromaOffset} <b>must</b> be {@link KHRSamplerYcbcrConversion#VK_CHROMA_LOCATION_COSITED_EVEN_KHR CHROMA_LOCATION_COSITED_EVEN_KHR}. If a format does not incorporate chroma downsampling (it is not a “422” or “420” format) but the implementation supports sampler Y&#8217;C<sub>B</sub>C<sub>R</sub> conversion for this format, the implementation <b>must</b> set {@link KHRSamplerYcbcrConversion#VK_FORMAT_FEATURE_MIDPOINT_CHROMA_SAMPLES_BIT_KHR FORMAT_FEATURE_MIDPOINT_CHROMA_SAMPLES_BIT_KHR}.</li>
+     * <li>{@link KHRSamplerYcbcrConversion#VK_FORMAT_FEATURE_COSITED_CHROMA_SAMPLES_BIT_KHR FORMAT_FEATURE_COSITED_CHROMA_SAMPLES_BIT_KHR} specifies that an application <b>can</b> define a <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#samplers-YCbCr-conversion">sampler Y&#8217;C<sub>B</sub>C<sub>R</sub> conversion</a> using this format as a source, and that an image of this format <b>can</b> be used with a {@link VkSamplerYcbcrConversionCreateInfoKHR} {@code xChromaOffset} and/or {@code yChromaOffset} of {@link KHRSamplerYcbcrConversion#VK_CHROMA_LOCATION_COSITED_EVEN_KHR CHROMA_LOCATION_COSITED_EVEN_KHR}. Otherwise both {@code xChromaOffset} and {@code yChromaOffset} <b>must</b> be {@link KHRSamplerYcbcrConversion#VK_CHROMA_LOCATION_MIDPOINT_KHR CHROMA_LOCATION_MIDPOINT_KHR}. If neither {@link KHRSamplerYcbcrConversion#VK_FORMAT_FEATURE_COSITED_CHROMA_SAMPLES_BIT_KHR FORMAT_FEATURE_COSITED_CHROMA_SAMPLES_BIT_KHR} nor {@link KHRSamplerYcbcrConversion#VK_FORMAT_FEATURE_MIDPOINT_CHROMA_SAMPLES_BIT_KHR FORMAT_FEATURE_MIDPOINT_CHROMA_SAMPLES_BIT_KHR} is set, the application <b>must</b> not define a <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#samplers-YCbCr-conversion">sampler Y&#8217;C<sub>B</sub>C<sub>R</sub> conversion</a> using this format as a source.</li>
+     * <li>{@link KHRSamplerYcbcrConversion#VK_FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_LINEAR_FILTER_BIT_KHR FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_LINEAR_FILTER_BIT_KHR} specifies that the format can do linear sampler filtering (min/magFilter) whilst sampler Y&#8217;C<sub>B</sub>C<sub>R</sub> conversion is enabled.</li>
+     * <li>{@link KHRSamplerYcbcrConversion#VK_FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_SEPARATE_RECONSTRUCTION_FILTER_BIT_KHR FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_SEPARATE_RECONSTRUCTION_FILTER_BIT_KHR} specifies that the format can have different chroma, min, and mag filters.</li>
+     * <li>{@link KHRSamplerYcbcrConversion#VK_FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_BIT_KHR FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_BIT_KHR} specifies that reconstruction is explicit, as described in <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#textures-chroma-reconstruction">Chroma Reconstruction</a>. If this bit is not present, reconstruction is implicit by default.</li>
+     * <li>{@link KHRSamplerYcbcrConversion#VK_FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_FORCEABLE_BIT_KHR FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_FORCEABLE_BIT_KHR} specifies that reconstruction <b>can</b> be forcibly made explicit by setting {@link VkSamplerYcbcrConversionCreateInfoKHR}{@code ::forceExplicitReconstruction} to {@link #VK_TRUE TRUE}.</li>
+     * <li>{@link KHRSamplerYcbcrConversion#VK_FORMAT_FEATURE_DISJOINT_BIT_KHR FORMAT_FEATURE_DISJOINT_BIT_KHR} specifies that a multi-planar image <b>can</b> have the {@link KHRSamplerYcbcrConversion#VK_IMAGE_CREATE_DISJOINT_BIT_KHR IMAGE_CREATE_DISJOINT_BIT_KHR} set during image creation. An implementation <b>must</b> not set {@link KHRSamplerYcbcrConversion#VK_FORMAT_FEATURE_DISJOINT_BIT_KHR FORMAT_FEATURE_DISJOINT_BIT_KHR} for <em>single-plane formats</em>.</li>
      * </ul>
      * 
      * <p>The following bits <b>may</b> be set in {@code bufferFeatures}, specifying that the features are supported by <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#VkBuffer">buffers</a> or <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#VkBufferView">buffer views</a> created with the queried {@link #vkGetPhysicalDeviceProperties GetPhysicalDeviceProperties}{@code ::format}:</p>
@@ -762,7 +786,7 @@ public class VK10 {
      * 
      * <h5>See Also</h5>
      * 
-     * <p>{@link VkImageCreateInfo}, {@link VkPhysicalDeviceImageFormatInfo2}, {@link VkPhysicalDeviceSparseImageFormatInfo2}, {@link NVExternalMemoryCapabilities#vkGetPhysicalDeviceExternalImageFormatPropertiesNV GetPhysicalDeviceExternalImageFormatPropertiesNV}, {@link #vkGetPhysicalDeviceImageFormatProperties GetPhysicalDeviceImageFormatProperties}, {@link #vkGetPhysicalDeviceSparseImageFormatProperties GetPhysicalDeviceSparseImageFormatProperties}</p>
+     * <p>{@link VkImageCreateInfo}, {@link VkPhysicalDeviceImageFormatInfo2KHR}, {@link VkPhysicalDeviceSparseImageFormatInfo2KHR}, {@link NVExternalMemoryCapabilities#vkGetPhysicalDeviceExternalImageFormatPropertiesNV GetPhysicalDeviceExternalImageFormatPropertiesNV}, {@link #vkGetPhysicalDeviceImageFormatProperties GetPhysicalDeviceImageFormatProperties}, {@link #vkGetPhysicalDeviceSparseImageFormatProperties GetPhysicalDeviceSparseImageFormatProperties}</p>
      */
     public static final int
         VK_IMAGE_TYPE_1D = 0,
@@ -781,7 +805,7 @@ public class VK10 {
      * 
      * <h5>See Also</h5>
      * 
-     * <p>{@link VkImageCreateInfo}, {@link VkPhysicalDeviceImageFormatInfo2}, {@link VkPhysicalDeviceSparseImageFormatInfo2}, {@link NVExternalMemoryCapabilities#vkGetPhysicalDeviceExternalImageFormatPropertiesNV GetPhysicalDeviceExternalImageFormatPropertiesNV}, {@link #vkGetPhysicalDeviceImageFormatProperties GetPhysicalDeviceImageFormatProperties}, {@link #vkGetPhysicalDeviceSparseImageFormatProperties GetPhysicalDeviceSparseImageFormatProperties}</p>
+     * <p>{@link VkImageCreateInfo}, {@link VkPhysicalDeviceImageFormatInfo2KHR}, {@link VkPhysicalDeviceSparseImageFormatInfo2KHR}, {@link NVExternalMemoryCapabilities#vkGetPhysicalDeviceExternalImageFormatPropertiesNV GetPhysicalDeviceExternalImageFormatPropertiesNV}, {@link #vkGetPhysicalDeviceImageFormatProperties GetPhysicalDeviceImageFormatProperties}, {@link #vkGetPhysicalDeviceSparseImageFormatProperties GetPhysicalDeviceSparseImageFormatProperties}</p>
      */
     public static final int
         VK_IMAGE_TILING_OPTIMAL = 0,
@@ -826,17 +850,18 @@ public class VK10 {
      * <li>{@link #VK_IMAGE_CREATE_SPARSE_BINDING_BIT IMAGE_CREATE_SPARSE_BINDING_BIT} specifies that the image will be backed using sparse memory binding.</li>
      * <li>{@link #VK_IMAGE_CREATE_SPARSE_RESIDENCY_BIT IMAGE_CREATE_SPARSE_RESIDENCY_BIT} specifies that the image <b>can</b> be partially backed using sparse memory binding. Images created with this flag <b>must</b> also be created with the {@link #VK_IMAGE_CREATE_SPARSE_BINDING_BIT IMAGE_CREATE_SPARSE_BINDING_BIT} flag.</li>
      * <li>{@link #VK_IMAGE_CREATE_SPARSE_ALIASED_BIT IMAGE_CREATE_SPARSE_ALIASED_BIT} specifies that the image will be backed using sparse memory binding with memory ranges that might also simultaneously be backing another image (or another portion of the same image). Images created with this flag <b>must</b> also be created with the {@link #VK_IMAGE_CREATE_SPARSE_BINDING_BIT IMAGE_CREATE_SPARSE_BINDING_BIT} flag</li>
-     * <li>{@link #VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT IMAGE_CREATE_MUTABLE_FORMAT_BIT} specifies that the image <b>can</b> be used to create a {@code VkImageView} with a different format from the image. For <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-formats-requiring-sampler-ycbcr-conversion">multi-planar</a> formats, {@link #VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT IMAGE_CREATE_MUTABLE_FORMAT_BIT} specifies that a {@code VkImageView} can be created of a <em>plane</em> of the image.</li>
+     * <li>{@link #VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT IMAGE_CREATE_MUTABLE_FORMAT_BIT} specifies that the image <b>can</b> be used to create a {@code VkImageView} with a different format from the image. For <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-formats-requiring-sampler-ycbcr-conversion">multi-planar</a> formats, {@link #VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT IMAGE_CREATE_MUTABLE_FORMAT_BIT} indicates that a {@code VkImageView} can be created of a <em>plane</em> of the image.</li>
      * <li>{@link #VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT IMAGE_CREATE_CUBE_COMPATIBLE_BIT} specifies that the image <b>can</b> be used to create a {@code VkImageView} of type {@link #VK_IMAGE_VIEW_TYPE_CUBE IMAGE_VIEW_TYPE_CUBE} or {@link #VK_IMAGE_VIEW_TYPE_CUBE_ARRAY IMAGE_VIEW_TYPE_CUBE_ARRAY}.</li>
-     * <li>{@link VK11#VK_IMAGE_CREATE_2D_ARRAY_COMPATIBLE_BIT IMAGE_CREATE_2D_ARRAY_COMPATIBLE_BIT} specifies that the image <b>can</b> be used to create a {@code VkImageView} of type {@link #VK_IMAGE_VIEW_TYPE_2D IMAGE_VIEW_TYPE_2D} or {@link #VK_IMAGE_VIEW_TYPE_2D_ARRAY IMAGE_VIEW_TYPE_2D_ARRAY}.</li>
-     * <li>{@link VK11#VK_IMAGE_CREATE_PROTECTED_BIT IMAGE_CREATE_PROTECTED_BIT} specifies that the image is a protected image.</li>
-     * <li>{@link VK11#VK_IMAGE_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT IMAGE_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT} specifies that the image <b>can</b> be used with a non-zero value of the {@code splitInstanceBindRegionCount} member of a {@link VkBindImageMemoryDeviceGroupInfo} structure passed into {@link VK11#vkBindImageMemory2 BindImageMemory2}. This flag also has the effect of making the image use the standard sparse image block dimensions.</li>
-     * <li>{@link VK11#VK_IMAGE_CREATE_BLOCK_TEXEL_VIEW_COMPATIBLE_BIT IMAGE_CREATE_BLOCK_TEXEL_VIEW_COMPATIBLE_BIT} specifies that the image having a compressed format <b>can</b> be used to create a {@code VkImageView} with an uncompressed format where each texel in the image view corresponds to a compressed texel block of the image.</li>
-     * <li>{@link VK11#VK_IMAGE_CREATE_EXTENDED_USAGE_BIT IMAGE_CREATE_EXTENDED_USAGE_BIT} specifies that the image <b>can</b> be created with usage flags that are not supported for the format the image is created with but are supported for at least one format a {@code VkImageView} created from the image <b>can</b> have.</li>
-     * <li>{@link VK11#VK_IMAGE_CREATE_DISJOINT_BIT IMAGE_CREATE_DISJOINT_BIT} specifies that an image with a <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-formats-requiring-sampler-ycbcr-conversion">multi-planar format</a> <b>must</b> have each plane separately bound to memory, rather than having a single memory binding for the whole image; the presence of this bit distinguishes a <em>disjoint image</em> from an image without this bit set.</li>
-     * <li>{@link VK11#VK_IMAGE_CREATE_ALIAS_BIT IMAGE_CREATE_ALIAS_BIT} specifies that two images created with the same creation parameters and aliased to the same memory <b>can</b> interpret the contents of the memory consistently with each other, subject to the rules described in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#resources-memory-aliasing">Memory Aliasing</a> section. This flag further specifies that each plane of a <em>disjoint</em> image <b>can</b> share an in-memory non-linear representation with single-plane images, and that a single-plane image <b>can</b> share an in-memory non-linear representation with a plane of a multi-planar disjoint image, according to the rules in <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-formats-compatible-planes">the “Compatible formats of planes of multi-planar formats” section</a>. If the {@code pNext} chain includes a {@link VkExternalMemoryImageCreateInfo} or {@link VkExternalMemoryImageCreateInfoNV} structure whose {@code handleTypes} member is not 0, it is as if {@link VK11#VK_IMAGE_CREATE_ALIAS_BIT IMAGE_CREATE_ALIAS_BIT} is set.</li>
+     * <li>{@link KHRMaintenance1#VK_IMAGE_CREATE_2D_ARRAY_COMPATIBLE_BIT_KHR IMAGE_CREATE_2D_ARRAY_COMPATIBLE_BIT_KHR} specifies that the image <b>can</b> be used to create a {@code VkImageView} of type {@link #VK_IMAGE_VIEW_TYPE_2D IMAGE_VIEW_TYPE_2D} or {@link #VK_IMAGE_VIEW_TYPE_2D_ARRAY IMAGE_VIEW_TYPE_2D_ARRAY}.</li>
+     * <li>{@link KHXDeviceGroup#VK_IMAGE_CREATE_BIND_SFR_BIT_KHX IMAGE_CREATE_BIND_SFR_BIT_KHX} specifies that the image <b>can</b> be used with a non-zero value of the {@code SFRRectCount} member of a {@link VkBindImageMemoryDeviceGroupInfoKHX} structure passed into {@link KHRBindMemory2#vkBindImageMemory2KHR BindImageMemory2KHR}. This flag also has the effect of making the image use the standard sparse image block dimensions.</li>
+     * <li>{@link KHRMaintenance2#VK_IMAGE_CREATE_BLOCK_TEXEL_VIEW_COMPATIBLE_BIT_KHR IMAGE_CREATE_BLOCK_TEXEL_VIEW_COMPATIBLE_BIT_KHR} indicates that the image having a compressed format <b>can</b> be used to create a {@code VkImageView} with an uncompressed format where each texel in the image view corresponds to a compressed texel block of the image.</li>
+     * <li>{@link KHRMaintenance2#VK_IMAGE_CREATE_EXTENDED_USAGE_BIT_KHR IMAGE_CREATE_EXTENDED_USAGE_BIT_KHR} indicates that the image <b>can</b> be created with usage flags that are not supported for the format the image is created with but are supported for at least one format a {@code VkImageView} created from the image <b>can</b> have.</li>
+     * <li>{@link KHRSamplerYcbcrConversion#VK_IMAGE_CREATE_DISJOINT_BIT_KHR IMAGE_CREATE_DISJOINT_BIT_KHR} indicates that an image with a <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-formats-requiring-sampler-ycbcr-conversion">multi-planar format</a> <b>must</b> have each plane separately bound to memory, rather than having a single memory binding for the whole image; the presence of this bit distinguishes a <em>disjoint image</em> from an image without this bit set.</li>
+     * <li>{@link KHRBindMemory2#VK_IMAGE_CREATE_ALIAS_BIT_KHR IMAGE_CREATE_ALIAS_BIT_KHR} indicates that two images created with the same creation parameters and aliased to the same memory <b>can</b> interpret the contents of the memory consistently with each other, subject to the rules described in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#resources-memory-aliasing">Memory Aliasing</a> section. This flag further indicates that each plane of a <em>disjoint</em> image <b>can</b> share an in-memory non-linear representation with single-plane images, and that a single-plane image <b>can</b> share an in-memory non-linear representation with a plane of a multi-planar disjoint image, according to the rules in <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-formats-compatible-planes">the “Compatible formats of planes of multi-planar formats” section</a>. If the {@code pNext} chain includes a {@link VkExternalMemoryImageCreateInfoKHR} or {@link VkExternalMemoryImageCreateInfoNV} structure whose {@code handleTypes} member is not 0, it is as if {@link KHRBindMemory2#VK_IMAGE_CREATE_ALIAS_BIT_KHR IMAGE_CREATE_ALIAS_BIT_KHR} is set.</li>
      * <li>{@link EXTSampleLocations#VK_IMAGE_CREATE_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT IMAGE_CREATE_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT} specifies that an image with a depth or depth/stencil format <b>can</b> be used with custom sample locations when used as a depth/stencil attachment.</li>
      * </ul>
+     * 
+     * <p>If any of the bits {@link #VK_IMAGE_CREATE_SPARSE_BINDING_BIT IMAGE_CREATE_SPARSE_BINDING_BIT}, {@link #VK_IMAGE_CREATE_SPARSE_RESIDENCY_BIT IMAGE_CREATE_SPARSE_RESIDENCY_BIT}, or {@link #VK_IMAGE_CREATE_SPARSE_ALIASED_BIT IMAGE_CREATE_SPARSE_ALIASED_BIT} are set, {@link #VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT} <b>must</b> not also be set.</p>
      * 
      * <p>See <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#sparsememory-sparseresourcefeatures">Sparse Resource Features</a> and <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#sparsememory-physicalfeatures">Sparse Physical Device Features</a> for more details.</p>
      * 
@@ -868,7 +893,7 @@ public class VK10 {
      * 
      * <h5>See Also</h5>
      * 
-     * <p>{@link VkAttachmentDescription}, {@link VkImageCreateInfo}, {@link VkPhysicalDeviceSparseImageFormatInfo2}, {@link VkPipelineMultisampleStateCreateInfo}, {@code VkSampleCountFlags}, {@link VkSampleLocationsInfoEXT}, {@link EXTSampleLocations#vkGetPhysicalDeviceMultisamplePropertiesEXT GetPhysicalDeviceMultisamplePropertiesEXT}, {@link #vkGetPhysicalDeviceSparseImageFormatProperties GetPhysicalDeviceSparseImageFormatProperties}</p>
+     * <p>{@link VkAttachmentDescription}, {@link VkImageCreateInfo}, {@link VkPhysicalDeviceSparseImageFormatInfo2KHR}, {@link VkPipelineMultisampleStateCreateInfo}, {@code VkSampleCountFlags}, {@link VkSampleLocationsInfoEXT}, {@link EXTSampleLocations#vkGetPhysicalDeviceMultisamplePropertiesEXT GetPhysicalDeviceMultisamplePropertiesEXT}, {@link #vkGetPhysicalDeviceSparseImageFormatProperties GetPhysicalDeviceSparseImageFormatProperties}</p>
      */
     public static final int
         VK_SAMPLE_COUNT_1_BIT  = 0x1,
@@ -911,16 +936,13 @@ public class VK10 {
      * <h5>Description</h5>
      * 
      * <ul>
-     * <li>{@link #VK_QUEUE_GRAPHICS_BIT QUEUE_GRAPHICS_BIT} specifies that queues in this queue family support graphics operations.</li>
-     * <li>{@link #VK_QUEUE_COMPUTE_BIT QUEUE_COMPUTE_BIT} specifies that queues in this queue family support compute operations.</li>
-     * <li>{@link #VK_QUEUE_TRANSFER_BIT QUEUE_TRANSFER_BIT} specifies that queues in this queue family support transfer operations.</li>
-     * <li>{@link #VK_QUEUE_SPARSE_BINDING_BIT QUEUE_SPARSE_BINDING_BIT} specifies that queues in this queue family support sparse memory management operations (see <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#sparsememory">Sparse Resources</a>). If any of the sparse resource features are enabled, then at least one queue family <b>must</b> support this bit.</li>
-     * <li>if {@link VK11#VK_QUEUE_PROTECTED_BIT QUEUE_PROTECTED_BIT} is set, then the queues in this queue family support the {@link VK11#VK_DEVICE_QUEUE_CREATE_PROTECTED_BIT DEVICE_QUEUE_CREATE_PROTECTED_BIT} bit. (see <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-protected-memory">Protected Memory</a>). If the protected memory physical device feature is supported, then at least one queue family of at least one physical device exposed by the implementation <b>must</b> support this bit.</li>
+     * <li>{@link #VK_QUEUE_GRAPHICS_BIT QUEUE_GRAPHICS_BIT} indicates that queues in this queue family support graphics operations.</li>
+     * <li>{@link #VK_QUEUE_COMPUTE_BIT QUEUE_COMPUTE_BIT} indicates that queues in this queue family support compute operations.</li>
+     * <li>{@link #VK_QUEUE_TRANSFER_BIT QUEUE_TRANSFER_BIT} indicates that queues in this queue family support transfer operations.</li>
+     * <li>{@link #VK_QUEUE_SPARSE_BINDING_BIT QUEUE_SPARSE_BINDING_BIT} indicates that queues in this queue family support sparse memory management operations (see <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#sparsememory">Sparse Resources</a>). If any of the sparse resource features are enabled, then at least one queue family <b>must</b> support this bit.</li>
      * </ul>
      * 
      * <p>If an implementation exposes any queue family that supports graphics operations, at least one queue family of at least one physical device exposed by the implementation <b>must</b> support both graphics and compute operations.</p>
-     * 
-     * <p>Furthermore, if the protected memory physical device feature is supported, then at least one queue family of at least one physical device exposed by the implementation <b>must</b> support graphics operations, compute operations, and protected memory operations.</p>
      * 
      * <div style="margin-left: 26px; border-left: 1px solid gray; padding-left: 14px;"><h5>Note</h5>
      * 
@@ -945,12 +967,11 @@ public class VK10 {
      * <h5>Description</h5>
      * 
      * <ul>
-     * <li>{@link #VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT MEMORY_PROPERTY_DEVICE_LOCAL_BIT} bit specifies that memory allocated with this type is the most efficient for device access. This property will be set if and only if the memory type belongs to a heap with the {@link #VK_MEMORY_HEAP_DEVICE_LOCAL_BIT MEMORY_HEAP_DEVICE_LOCAL_BIT} set.</li>
-     * <li>{@link #VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT MEMORY_PROPERTY_HOST_VISIBLE_BIT} bit specifies that memory allocated with this type <b>can</b> be mapped for host access using {@link #vkMapMemory MapMemory}.</li>
-     * <li>{@link #VK_MEMORY_PROPERTY_HOST_COHERENT_BIT MEMORY_PROPERTY_HOST_COHERENT_BIT} bit specifies that the host cache management commands {@link #vkFlushMappedMemoryRanges FlushMappedMemoryRanges} and {@link #vkInvalidateMappedMemoryRanges InvalidateMappedMemoryRanges} are not needed to flush host writes to the device or make device writes visible to the host, respectively.</li>
-     * <li>{@link #VK_MEMORY_PROPERTY_HOST_CACHED_BIT MEMORY_PROPERTY_HOST_CACHED_BIT} bit specifies that memory allocated with this type is cached on the host. Host memory accesses to uncached memory are slower than to cached memory, however uncached memory is always host coherent.</li>
-     * <li>{@link #VK_MEMORY_PROPERTY_LAZILY_ALLOCATED_BIT MEMORY_PROPERTY_LAZILY_ALLOCATED_BIT} bit specifies that the memory type only allows device access to the memory. Memory types <b>must</b> not have both {@link #VK_MEMORY_PROPERTY_LAZILY_ALLOCATED_BIT MEMORY_PROPERTY_LAZILY_ALLOCATED_BIT} and {@link #VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT MEMORY_PROPERTY_HOST_VISIBLE_BIT} set. Additionally, the object&#8217;s backing memory <b>may</b> be provided by the implementation lazily as specified in <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-device-lazy_allocation">Lazily Allocated Memory</a>.</li>
-     * <li>{@link VK11#VK_MEMORY_PROPERTY_PROTECTED_BIT MEMORY_PROPERTY_PROTECTED_BIT} bit specifies that the memory type only allows device access to the memory, and allows protected queue operations to access the memory. Memory types <b>must</b> not have {@link VK11#VK_MEMORY_PROPERTY_PROTECTED_BIT MEMORY_PROPERTY_PROTECTED_BIT} set and any of {@link #VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT MEMORY_PROPERTY_HOST_VISIBLE_BIT} set, or {@link #VK_MEMORY_PROPERTY_HOST_COHERENT_BIT MEMORY_PROPERTY_HOST_COHERENT_BIT} set, or {@link #VK_MEMORY_PROPERTY_HOST_CACHED_BIT MEMORY_PROPERTY_HOST_CACHED_BIT} set.</li>
+     * <li>{@link #VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT MEMORY_PROPERTY_DEVICE_LOCAL_BIT} bit indicates that memory allocated with this type is the most efficient for device access. This property will be set if and only if the memory type belongs to a heap with the {@link #VK_MEMORY_HEAP_DEVICE_LOCAL_BIT MEMORY_HEAP_DEVICE_LOCAL_BIT} set.</li>
+     * <li>{@link #VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT MEMORY_PROPERTY_HOST_VISIBLE_BIT} bit indicates that memory allocated with this type <b>can</b> be mapped for host access using {@link #vkMapMemory MapMemory}.</li>
+     * <li>{@link #VK_MEMORY_PROPERTY_HOST_COHERENT_BIT MEMORY_PROPERTY_HOST_COHERENT_BIT} bit indicates that the host cache management commands {@link #vkFlushMappedMemoryRanges FlushMappedMemoryRanges} and {@link #vkInvalidateMappedMemoryRanges InvalidateMappedMemoryRanges} are not needed to flush host writes to the device or make device writes visible to the host, respectively.</li>
+     * <li>{@link #VK_MEMORY_PROPERTY_HOST_CACHED_BIT MEMORY_PROPERTY_HOST_CACHED_BIT} bit indicates that memory allocated with this type is cached on the host. Host memory accesses to uncached memory are slower than to cached memory, however uncached memory is always host coherent.</li>
+     * <li>{@link #VK_MEMORY_PROPERTY_LAZILY_ALLOCATED_BIT MEMORY_PROPERTY_LAZILY_ALLOCATED_BIT} bit indicates that the memory type only allows device access to the memory. Memory types <b>must</b> not have both {@link #VK_MEMORY_PROPERTY_LAZILY_ALLOCATED_BIT MEMORY_PROPERTY_LAZILY_ALLOCATED_BIT} and {@link #VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT MEMORY_PROPERTY_HOST_VISIBLE_BIT} set. Additionally, the object&#8217;s backing memory <b>may</b> be provided by the implementation lazily as specified in <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-device-lazy_allocation">Lazily Allocated Memory</a>.</li>
      * </ul>
      * 
      * <h5>See Also</h5>
@@ -970,8 +991,8 @@ public class VK10 {
      * <h5>Description</h5>
      * 
      * <ul>
-     * <li>{@link #VK_MEMORY_HEAP_DEVICE_LOCAL_BIT MEMORY_HEAP_DEVICE_LOCAL_BIT} specifies that the heap corresponds to device local memory. Device local memory <b>may</b> have different performance characteristics than host local memory, and <b>may</b> support different memory property flags.</li>
-     * <li>{@link VK11#VK_MEMORY_HEAP_MULTI_INSTANCE_BIT MEMORY_HEAP_MULTI_INSTANCE_BIT} specifies that in a logical device representing more than one physical device, there is a per-physical device instance of the heap memory. By default, an allocation from such a heap will be replicated to each physical device&#8217;s instance of the heap.</li>
+     * <li>{@link #VK_MEMORY_HEAP_DEVICE_LOCAL_BIT MEMORY_HEAP_DEVICE_LOCAL_BIT} indicates that the heap corresponds to device local memory. Device local memory <b>may</b> have different performance characteristics than host local memory, and <b>may</b> support different memory property flags.</li>
+     * <li>{@link KHXDeviceGroupCreation#VK_MEMORY_HEAP_MULTI_INSTANCE_BIT_KHX MEMORY_HEAP_MULTI_INSTANCE_BIT_KHX} indicates that in a logical device representing more than one physical device, there is a per-physical device instance of the heap memory. By default, an allocation from such a heap will be replicated to each physical device&#8217;s instance of the heap.</li>
      * </ul>
      * 
      * <h5>See Also</h5>
@@ -1033,7 +1054,7 @@ public class VK10 {
      * 
      * <h5>See Also</h5>
      * 
-     * <p>{@code VkPipelineStageFlags}, {@link AMDBufferMarker#vkCmdWriteBufferMarkerAMD CmdWriteBufferMarkerAMD}, {@link #vkCmdWriteTimestamp CmdWriteTimestamp}</p>
+     * <p>{@code VkPipelineStageFlags}, {@link #vkCmdWriteTimestamp CmdWriteTimestamp}</p>
      */
     public static final int
         VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT                    = 0x1,
@@ -1068,7 +1089,7 @@ public class VK10 {
      * 
      * <h5>See Also</h5>
      * 
-     * <p>{@link VkBindImagePlaneMemoryInfo}, {@code VkImageAspectFlags}, {@link VkImagePlaneMemoryRequirementsInfo}</p>
+     * <p>{@link VkBindImagePlaneMemoryInfoKHR}, {@code VkImageAspectFlags}, {@link VkImagePlaneMemoryRequirementsInfoKHR}</p>
      */
     public static final int
         VK_IMAGE_ASPECT_COLOR_BIT    = 0x1,
@@ -1230,7 +1251,6 @@ public class VK10 {
      * <li>{@link #VK_BUFFER_CREATE_SPARSE_BINDING_BIT BUFFER_CREATE_SPARSE_BINDING_BIT} specifies that the buffer will be backed using sparse memory binding.</li>
      * <li>{@link #VK_BUFFER_CREATE_SPARSE_RESIDENCY_BIT BUFFER_CREATE_SPARSE_RESIDENCY_BIT} specifies that the buffer <b>can</b> be partially backed using sparse memory binding. Buffers created with this flag <b>must</b> also be created with the {@link #VK_BUFFER_CREATE_SPARSE_BINDING_BIT BUFFER_CREATE_SPARSE_BINDING_BIT} flag.</li>
      * <li>{@link #VK_BUFFER_CREATE_SPARSE_ALIASED_BIT BUFFER_CREATE_SPARSE_ALIASED_BIT} specifies that the buffer will be backed using sparse memory binding with memory ranges that might also simultaneously be backing another buffer (or another portion of the same buffer). Buffers created with this flag <b>must</b> also be created with the {@link #VK_BUFFER_CREATE_SPARSE_BINDING_BIT BUFFER_CREATE_SPARSE_BINDING_BIT} flag.</li>
-     * <li>{@link VK11#VK_BUFFER_CREATE_PROTECTED_BIT BUFFER_CREATE_PROTECTED_BIT} specifies that the buffer is a protected buffer.</li>
      * </ul>
      * 
      * <p>See <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#sparsememory-sparseresourcefeatures">Sparse Resource Features</a> and <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-features">Physical Device Features</a> for details of the sparse memory features supported on a device.</p>
@@ -1291,7 +1311,9 @@ public class VK10 {
      * <p>{@link #VK_SHARING_MODE_CONCURRENT SHARING_MODE_CONCURRENT} <b>may</b> result in lower performance access to the buffer or image than {@link #VK_SHARING_MODE_EXCLUSIVE SHARING_MODE_EXCLUSIVE}.</p>
      * </div>
      * 
-     * <p>Ranges of buffers and image subresources of image objects created using {@link #VK_SHARING_MODE_EXCLUSIVE SHARING_MODE_EXCLUSIVE} <b>must</b> only be accessed by queues in the queue family that has <em>ownership</em> of the resource. Upon creation, such resources are not owned by any queue family; ownership is implicitly acquired upon first use within a queue. Once a resource using {@link #VK_SHARING_MODE_EXCLUSIVE SHARING_MODE_EXCLUSIVE} is owned by some queue family, the application <b>must</b> perform a <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-queue-transfers">queue family ownership transfer</a> to make the memory contents of a range or image subresource accessible to a different queue family.</p>
+     * <p>Ranges of buffers and image subresources of image objects created using {@link #VK_SHARING_MODE_EXCLUSIVE SHARING_MODE_EXCLUSIVE} <b>must</b> only be accessed by queues in the same queue family at any given time. In order for a different queue family to be able to interpret the memory contents of a range or image subresource, the application <b>must</b> perform a <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-queue-transfers">queue family ownership transfer</a>.</p>
+     * 
+     * <p>Upon creation, resources using {@link #VK_SHARING_MODE_EXCLUSIVE SHARING_MODE_EXCLUSIVE} are not owned by any queue family. A buffer or image memory barrier is not required to acquire <em>ownership</em> when no queue family owns the resource - it is implicitly acquired upon first use within a queue.</p>
      * 
      * <div style="margin-left: 26px; border-left: 1px solid gray; padding-left: 14px;"><h5>Note</h5>
      * 
@@ -1324,8 +1346,8 @@ public class VK10 {
      * <li>{@link #VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL} <b>must</b> only be used as a color or resolve attachment in a {@code VkFramebuffer}. This layout is valid only for image subresources of images created with the {@link #VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT IMAGE_USAGE_COLOR_ATTACHMENT_BIT} usage bit enabled.</li>
      * <li>{@link #VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL} <b>must</b> only be used as a depth/stencil attachment in a {@code VkFramebuffer}. This layout is valid only for image subresources of images created with the {@link #VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT} usage bit enabled.</li>
      * <li>{@link #VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL} <b>must</b> only be used as a read-only depth/stencil attachment in a {@code VkFramebuffer} and/or as a read-only image in a shader (which <b>can</b> be read as a sampled image, combined image/sampler and/or input attachment). This layout is valid only for image subresources of images created with the {@link #VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT} usage bit enabled. Only image subresources of images created with {@link #VK_IMAGE_USAGE_SAMPLED_BIT IMAGE_USAGE_SAMPLED_BIT} <b>can</b> be used as a sampled image or combined image/sampler in a shader. Similarly, only image subresources of images created with {@link #VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT IMAGE_USAGE_INPUT_ATTACHMENT_BIT} <b>can</b> be used as input attachments.</li>
-     * <li>{@link VK11#VK_IMAGE_LAYOUT_DEPTH_READ_ONLY_STENCIL_ATTACHMENT_OPTIMAL IMAGE_LAYOUT_DEPTH_READ_ONLY_STENCIL_ATTACHMENT_OPTIMAL}: <b>must</b> only be used as a depth/stencil attachment in a {@code VkFramebuffer}, where the depth aspect is read-only, and/or as a read-only image in a shader (which <b>can</b> be read as a sampled image, combined image/sampler and/or input attachment) where only the depth aspect is accessed. This layout is valid only for image subresources of images created with the {@link #VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT} usage bit enabled. Only image subresources of images created with {@link #VK_IMAGE_USAGE_SAMPLED_BIT IMAGE_USAGE_SAMPLED_BIT} <b>can</b> be used as a sampled image or combined image/sampler in a shader. Similarly, only image subresources of images created with {@link #VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT IMAGE_USAGE_INPUT_ATTACHMENT_BIT} <b>can</b> be used as input attachments.</li>
-     * <li>{@link VK11#VK_IMAGE_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_OPTIMAL IMAGE_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_OPTIMAL}: <b>must</b> only be used as a depth/stencil attachment in a {@code VkFramebuffer}, where the stencil aspect is read-only, and/or as a read-only image in a shader (which <b>can</b> be read as a sampled image, combined image/sampler and/or input attachment) where only the stencil aspect is accessed. This layout is valid only for image subresources of images created with the {@link #VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT} usage bit enabled. Only image subresources of images created with {@link #VK_IMAGE_USAGE_SAMPLED_BIT IMAGE_USAGE_SAMPLED_BIT} <b>can</b> be used as a sampled image or combined image/sampler in a shader. Similarly, only image subresources of images created with {@link #VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT IMAGE_USAGE_INPUT_ATTACHMENT_BIT} <b>can</b> be used as input attachments.</li>
+     * <li>{@link KHRMaintenance2#VK_IMAGE_LAYOUT_DEPTH_READ_ONLY_STENCIL_ATTACHMENT_OPTIMAL_KHR IMAGE_LAYOUT_DEPTH_READ_ONLY_STENCIL_ATTACHMENT_OPTIMAL_KHR}: <b>must</b> only be used as a depth/stencil attachment in a {@code VkFramebuffer}, where the depth aspect is read-only, and/or as a read-only image in a shader (which <b>can</b> be read as a sampled image, combined image/sampler and/or input attachment) where only the depth aspect is accessed. This layout is valid only for image subresources of images created with the {@link #VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT} usage bit enabled. Only image subresources of images created with {@link #VK_IMAGE_USAGE_SAMPLED_BIT IMAGE_USAGE_SAMPLED_BIT} <b>can</b> be used as a sampled image or combined image/sampler in a shader. Similarly, only image subresources of images created with {@link #VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT IMAGE_USAGE_INPUT_ATTACHMENT_BIT} <b>can</b> be used as input attachments.</li>
+     * <li>{@link KHRMaintenance2#VK_IMAGE_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_OPTIMAL_KHR IMAGE_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_OPTIMAL_KHR}: <b>must</b> only be used as a depth/stencil attachment in a {@code VkFramebuffer}, where the stencil aspect is read-only, and/or as a read-only image in a shader (which <b>can</b> be read as a sampled image, combined image/sampler and/or input attachment) where only the stencil aspect is accessed. This layout is valid only for image subresources of images created with the {@link #VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT} usage bit enabled. Only image subresources of images created with {@link #VK_IMAGE_USAGE_SAMPLED_BIT IMAGE_USAGE_SAMPLED_BIT} <b>can</b> be used as a sampled image or combined image/sampler in a shader. Similarly, only image subresources of images created with {@link #VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT IMAGE_USAGE_INPUT_ATTACHMENT_BIT} <b>can</b> be used as input attachments.</li>
      * <li>{@link #VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL} <b>must</b> only be used as a read-only image in a shader (which <b>can</b> be read as a sampled image, combined image/sampler and/or input attachment). This layout is valid only for image subresources of images created with the {@link #VK_IMAGE_USAGE_SAMPLED_BIT IMAGE_USAGE_SAMPLED_BIT} or {@link #VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT IMAGE_USAGE_INPUT_ATTACHMENT_BIT} usage bit enabled.</li>
      * <li>{@link #VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL} <b>must</b> only be used as a source image of a transfer command (see the definition of <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-pipeline-stages-transfer">{@link #VK_PIPELINE_STAGE_TRANSFER_BIT PIPELINE_STAGE_TRANSFER_BIT}</a>). This layout is valid only for image subresources of images created with the {@link #VK_IMAGE_USAGE_TRANSFER_SRC_BIT IMAGE_USAGE_TRANSFER_SRC_BIT} usage bit enabled.</li>
      * <li>{@link #VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL} <b>must</b> only be used as a destination image of a transfer command. This layout is valid only for image subresources of images created with the {@link #VK_IMAGE_USAGE_TRANSFER_DST_BIT IMAGE_USAGE_TRANSFER_DST_BIT} usage bit enabled.</li>
@@ -1333,9 +1355,9 @@ public class VK10 {
      * <li>{@link KHRSharedPresentableImage#VK_IMAGE_LAYOUT_SHARED_PRESENT_KHR IMAGE_LAYOUT_SHARED_PRESENT_KHR} is valid only for shared presentable images, and <b>must</b> be used for any usage the image supports.</li>
      * </ul>
      * 
-     * <p>The layout of each image subresource is not a state of the image subresource itself, but is rather a property of how the data in memory is organized, and thus for each mechanism of accessing an image in the API the application <b>must</b> specify a parameter or structure member that indicates which image layout the image subresource(s) are considered to be in when the image will be accessed. For transfer commands, this is a parameter to the command (see <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#clears">the “Clear Commands” section</a> and <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#copies">the “Copy Commands” section</a>). For use as a framebuffer attachment, this is a member in the substructures of the {@link VkRenderPassCreateInfo} (see <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#renderpass">Render Pass</a>). For use in a descriptor set, this is a member in the {@link VkDescriptorImageInfo} structure (see <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-updates">the “Descriptor Set Updates” section</a>). At the time that any command buffer command accessing an image executes on any queue, the layouts of the image subresources that are accessed <b>must</b> all match the layout specified via the API controlling those accesses.</p>
+     * <p>For each mechanism of accessing an image in the API, there is a parameter or structure member that controls the image layout used to access the image. For transfer commands, this is a parameter to the command (see <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#clears">the “Clear Commands” section</a> and <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#copies">the “Copy Commands” section</a>). For use as a framebuffer attachment, this is a member in the substructures of the {@link VkRenderPassCreateInfo} (see <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#renderpass">Render Pass</a>). For use in a descriptor set, this is a member in the {@link VkDescriptorImageInfo} structure (see <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-updates">the “Descriptor Set Updates” section</a>). At the time that any command buffer command accessing an image executes on any queue, the layouts of the image subresources that are accessed <b>must</b> all match the layout specified via the API controlling those accesses.</p>
      * 
-     * <p>When performing a layout transition on an image subresource, the old layout value <b>must</b> either equal the current layout of the image subresource (at the time the transition executes), or else be {@link #VK_IMAGE_LAYOUT_UNDEFINED IMAGE_LAYOUT_UNDEFINED} (implying that the contents of the image subresource need not be preserved). The new layout used in a transition <b>must</b> not be {@link #VK_IMAGE_LAYOUT_UNDEFINED IMAGE_LAYOUT_UNDEFINED} or {@link #VK_IMAGE_LAYOUT_PREINITIALIZED IMAGE_LAYOUT_PREINITIALIZED}.</p>
+     * <p>The image layout of each image subresource <b>must</b> be well-defined at each point in the image subresource's lifetime. This means that when performing a layout transition on the image subresource, the old layout value <b>must</b> either equal the current layout of the image subresource (at the time the transition executes), or else be {@link #VK_IMAGE_LAYOUT_UNDEFINED IMAGE_LAYOUT_UNDEFINED} (implying that the contents of the image subresource need not be preserved). The new layout used in a transition <b>must</b> not be {@link #VK_IMAGE_LAYOUT_UNDEFINED IMAGE_LAYOUT_UNDEFINED} or {@link #VK_IMAGE_LAYOUT_PREINITIALIZED IMAGE_LAYOUT_PREINITIALIZED}.</p>
      * 
      * <p>The image layout of each image subresource of a depth/stencil image created with {@link EXTSampleLocations#VK_IMAGE_CREATE_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT IMAGE_CREATE_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT} is dependent on the last sample locations used to render to the image subresource as a depth/stencil attachment, thus applications <b>must</b> provide the same sample locations that were last used to render to the given image subresource whenever a layout transition of the image subresource happens, otherwise the contents of the depth aspect of the image subresource become undefined.</p>
      * 
@@ -1441,8 +1463,8 @@ public class VK10 {
      * <li>{@link #VK_PIPELINE_CREATE_DISABLE_OPTIMIZATION_BIT PIPELINE_CREATE_DISABLE_OPTIMIZATION_BIT} specifies that the created pipeline will not be optimized. Using this flag <b>may</b> reduce the time taken to create the pipeline.</li>
      * <li>{@link #VK_PIPELINE_CREATE_ALLOW_DERIVATIVES_BIT PIPELINE_CREATE_ALLOW_DERIVATIVES_BIT} specifies that the pipeline to be created is allowed to be the parent of a pipeline that will be created in a subsequent call to {@link #vkCreateGraphicsPipelines CreateGraphicsPipelines} or {@link #vkCreateComputePipelines CreateComputePipelines}.</li>
      * <li>{@link #VK_PIPELINE_CREATE_DERIVATIVE_BIT PIPELINE_CREATE_DERIVATIVE_BIT} specifies that the pipeline to be created will be a child of a previously created parent pipeline.</li>
-     * <li>{@link VK11#VK_PIPELINE_CREATE_VIEW_INDEX_FROM_DEVICE_INDEX_BIT PIPELINE_CREATE_VIEW_INDEX_FROM_DEVICE_INDEX_BIT} specifies that any shader input variables decorated as {@code ViewIndex} will be assigned values as if they were decorated as {@code DeviceIndex}.</li>
-     * <li>{@link VK11#VK_PIPELINE_CREATE_DISPATCH_BASE PIPELINE_CREATE_DISPATCH_BASE} specifies that a compute pipeline <b>can</b> be used with {@link VK11#vkCmdDispatchBase CmdDispatchBase} with a non-zero base workgroup.</li>
+     * <li>{@link KHXDeviceGroup#VK_PIPELINE_CREATE_VIEW_INDEX_FROM_DEVICE_INDEX_BIT_KHX PIPELINE_CREATE_VIEW_INDEX_FROM_DEVICE_INDEX_BIT_KHX} specifies that any shader input variables decorated as {@code DeviceIndex} will be assigned values as if they were decorated as {@code ViewIndex}.</li>
+     * <li>{@link KHXDeviceGroup#VK_PIPELINE_CREATE_DISPATCH_BASE_KHX PIPELINE_CREATE_DISPATCH_BASE_KHX} specifies that a compute pipeline <b>can</b> be used with {@link KHXDeviceGroup#vkCmdDispatchBaseKHX CmdDispatchBaseKHX} with a non-zero base workgroup.</li>
      * </ul>
      * 
      * <p>It is valid to set both {@link #VK_PIPELINE_CREATE_ALLOW_DERIVATIVES_BIT PIPELINE_CREATE_ALLOW_DERIVATIVES_BIT} and {@link #VK_PIPELINE_CREATE_DERIVATIVE_BIT PIPELINE_CREATE_DERIVATIVE_BIT}. This allows a pipeline to be both a parent and possibly a child in a pipeline hierarchy. See <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#pipelines-pipeline-derivatives">Pipeline Derivatives</a> for more information.</p>
@@ -1922,14 +1944,13 @@ public class VK10 {
      * <ul>
      * <li>{@link #VK_FILTER_NEAREST FILTER_NEAREST} specifies nearest filtering.</li>
      * <li>{@link #VK_FILTER_LINEAR FILTER_LINEAR} specifies linear filtering.</li>
-     * <li>{@link IMGFilterCubic#VK_FILTER_CUBIC_IMG FILTER_CUBIC_IMG} specifies cubic filtering.</li>
      * </ul>
      * 
      * <p>These filters are described in detail in <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#textures-texel-filtering">Texel Filtering</a>.</p>
      * 
      * <h5>See Also</h5>
      * 
-     * <p>{@link VkSamplerCreateInfo}, {@link VkSamplerYcbcrConversionCreateInfo}, {@link #vkCmdBlitImage CmdBlitImage}</p>
+     * <p>{@link VkSamplerCreateInfo}, {@link VkSamplerYcbcrConversionCreateInfoKHR}, {@link #vkCmdBlitImage CmdBlitImage}</p>
      */
     public static final int
         VK_FILTER_NEAREST = 0,
@@ -2012,32 +2033,14 @@ public class VK10 {
      * <h5>Description</h5>
      * 
      * <ul>
-     * <li>{@link #VK_DESCRIPTOR_TYPE_SAMPLER DESCRIPTOR_TYPE_SAMPLER} specifies a <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-sampler">sampler descriptor</a>.</li>
-     * <li>{@link #VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER} specifies a <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-combinedimagesampler">combined image sampler descriptor</a>.</li>
-     * <li>{@link #VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE DESCRIPTOR_TYPE_SAMPLED_IMAGE} specifies a <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-sampledimage">sampled image descriptor</a>.</li>
-     * <li>{@link #VK_DESCRIPTOR_TYPE_STORAGE_IMAGE DESCRIPTOR_TYPE_STORAGE_IMAGE} specifies a <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-storageimage">storage image descriptor</a>.</li>
-     * <li>{@link #VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER} specifies a <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-uniformtexelbuffer">uniform texel buffer descriptor</a>.</li>
-     * <li>{@link #VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER} specifies a <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-storagetexelbuffer">storage texel buffer descriptor</a>.</li>
-     * <li>{@link #VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER DESCRIPTOR_TYPE_UNIFORM_BUFFER} specifies a <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-uniformbuffer">uniform buffer descriptor</a>.</li>
-     * <li>{@link #VK_DESCRIPTOR_TYPE_STORAGE_BUFFER DESCRIPTOR_TYPE_STORAGE_BUFFER} specifies a <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-storagebuffer">storage buffer descriptor</a>.</li>
-     * <li>{@link #VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC} specifies a <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-uniformbufferdynamic">dynamic uniform buffer descriptor</a>.</li>
-     * <li>{@link #VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC} specifies a <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-storagebufferdynamic">dynamic storage buffer descriptor</a>.</li>
-     * <li>{@link #VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT DESCRIPTOR_TYPE_INPUT_ATTACHMENT} specifies a <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-inputattachment">input attachment descriptor</a>.</li>
-     * </ul>
-     * 
-     * <p>When a descriptor set is updated via elements of {@link VkWriteDescriptorSet}, members of {@code pImageInfo}, {@code pBufferInfo} and {@code pTexelBufferView} are only accessed by the implementation when they correspond to descriptor type being defined - otherwise they are ignored. The members accessed are as follows for each descriptor type:</p>
-     * 
-     * <ul>
-     * <li>For {@link #VK_DESCRIPTOR_TYPE_SAMPLER DESCRIPTOR_TYPE_SAMPLER}, only the {@code sample} member of each element of {@link VkWriteDescriptorSet}{@code ::pImageInfo} is accessed.</li>
-     * <li>For {@link #VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE DESCRIPTOR_TYPE_SAMPLED_IMAGE}, {@link #VK_DESCRIPTOR_TYPE_STORAGE_IMAGE DESCRIPTOR_TYPE_STORAGE_IMAGE}, or {@link #VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT DESCRIPTOR_TYPE_INPUT_ATTACHMENT}, only the {@code imageView} and {@code imageLayout} members of each element of {@link VkWriteDescriptorSet}{@code ::pImageInfo} are accessed.</li>
-     * <li>For {@link #VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER}, all members of each element of {@link VkWriteDescriptorSet}{@code ::pImageInfo} are accessed.</li>
-     * <li>For {@link #VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER DESCRIPTOR_TYPE_UNIFORM_BUFFER}, {@link #VK_DESCRIPTOR_TYPE_STORAGE_BUFFER DESCRIPTOR_TYPE_STORAGE_BUFFER}, {@link #VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC}, or {@link #VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC}, all members of each element of {@link VkWriteDescriptorSet}{@code ::pBufferInfo} are accessed.</li>
-     * <li>For {@link #VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER} or {@link #VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER}, each element of {@link VkWriteDescriptorSet}{@code ::pTexelBufferView} is accessed.</li>
+     * <li>{@link #VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER DESCRIPTOR_TYPE_UNIFORM_BUFFER}, {@link #VK_DESCRIPTOR_TYPE_STORAGE_BUFFER DESCRIPTOR_TYPE_STORAGE_BUFFER}, {@link #VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC}, or {@link #VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC} specify that the elements of the {@link VkWriteDescriptorSet}{@code ::pBufferInfo} array of {@link VkDescriptorBufferInfo} structures will be used to update the descriptors, and other arrays will be ignored.</li>
+     * <li>{@link #VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER} or {@link #VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER} specify that the {@link VkWriteDescriptorSet}{@code ::pTexelBufferView} array will be used to update the descriptors, and other arrays will be ignored.</li>
+     * <li>{@link #VK_DESCRIPTOR_TYPE_SAMPLER DESCRIPTOR_TYPE_SAMPLER}, {@link #VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER}, {@link #VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE DESCRIPTOR_TYPE_SAMPLED_IMAGE}, {@link #VK_DESCRIPTOR_TYPE_STORAGE_IMAGE DESCRIPTOR_TYPE_STORAGE_IMAGE}, or {@link #VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT DESCRIPTOR_TYPE_INPUT_ATTACHMENT} specify that the elements of the {@link VkWriteDescriptorSet}{@code ::pImageInfo} array of {@link VkDescriptorImageInfo} structures will be used to update the descriptors, and other arrays will be ignored.</li>
      * </ul>
      * 
      * <h5>See Also</h5>
      * 
-     * <p>{@link VkDescriptorPoolSize}, {@link VkDescriptorSetLayoutBinding}, {@link VkDescriptorUpdateTemplateEntry}, {@link VkWriteDescriptorSet}</p>
+     * <p>{@link VkDescriptorPoolSize}, {@link VkDescriptorSetLayoutBinding}, {@link VkDescriptorUpdateTemplateEntryKHR}, {@link VkWriteDescriptorSet}</p>
      */
     public static final int
         VK_DESCRIPTOR_TYPE_SAMPLER                = 0,
@@ -2059,7 +2062,6 @@ public class VK10 {
      * 
      * <ul>
      * <li>{@link #VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT} specifies that descriptor sets <b>can</b> return their individual allocations to the pool, i.e. all of {@link #vkAllocateDescriptorSets AllocateDescriptorSets}, {@link #vkFreeDescriptorSets FreeDescriptorSets}, and {@link #vkResetDescriptorPool ResetDescriptorPool} are allowed. Otherwise, descriptor sets allocated from the pool <b>must</b> not be individually freed back to the pool, i.e. only {@link #vkAllocateDescriptorSets AllocateDescriptorSets} and {@link #vkResetDescriptorPool ResetDescriptorPool} are allowed.</li>
-     * <li>{@link EXTDescriptorIndexing#VK_DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT_EXT DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT_EXT} specifies that descriptor sets allocated from this pool <b>can</b> include bindings with the {@link EXTDescriptorIndexing#VK_DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT_EXT DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT_EXT} bit set. It is valid to allocate descriptor sets that have bindings that don&#8217;t set the {@link EXTDescriptorIndexing#VK_DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT_EXT DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT_EXT} bit from a pool that has {@link EXTDescriptorIndexing#VK_DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT_EXT DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT_EXT} set.</li>
      * </ul>
      * 
      * <h5>See Also</h5>
@@ -2133,7 +2135,7 @@ public class VK10 {
      * 
      * <h5>See Also</h5>
      * 
-     * <p>{@link VkDescriptorUpdateTemplateCreateInfo}, {@link VkIndirectCommandsLayoutCreateInfoNVX}, {@link VkSubpassDescription}, {@link #vkCmdBindDescriptorSets CmdBindDescriptorSets}, {@link #vkCmdBindPipeline CmdBindPipeline}, {@link KHRPushDescriptor#vkCmdPushDescriptorSetKHR CmdPushDescriptorSetKHR}</p>
+     * <p>{@link VkDescriptorUpdateTemplateCreateInfoKHR}, {@link VkIndirectCommandsLayoutCreateInfoNVX}, {@link VkSubpassDescription}, {@link #vkCmdBindDescriptorSets CmdBindDescriptorSets}, {@link #vkCmdBindPipeline CmdBindPipeline}, {@link KHRPushDescriptor#vkCmdPushDescriptorSetKHR CmdPushDescriptorSetKHR}</p>
      */
     public static final int
         VK_PIPELINE_BIND_POINT_GRAPHICS = 0,
@@ -2236,8 +2238,8 @@ public class VK10 {
      * 
      * <ul>
      * <li>{@link #VK_DEPENDENCY_BY_REGION_BIT DEPENDENCY_BY_REGION_BIT} specifies that dependencies will be <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-framebuffer-regions">framebuffer-local</a>.</li>
-     * <li>{@link VK11#VK_DEPENDENCY_VIEW_LOCAL_BIT DEPENDENCY_VIEW_LOCAL_BIT} specifies that a <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-pipeline-barriers-subpass-self-dependencies">subpass has more than one view</a>.</li>
-     * <li>{@link VK11#VK_DEPENDENCY_DEVICE_GROUP_BIT DEPENDENCY_DEVICE_GROUP_BIT} specifies that dependencies are <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-device-local-dependencies">non-device-local dependency</a>.</li>
+     * <li>{@link KHXMultiview#VK_DEPENDENCY_VIEW_LOCAL_BIT_KHX DEPENDENCY_VIEW_LOCAL_BIT_KHX} specifies that a <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-pipeline-barriers-subpass-self-dependencies">subpass has more than one view</a>.</li>
+     * <li>{@link KHXDeviceGroup#VK_DEPENDENCY_DEVICE_GROUP_BIT_KHX DEPENDENCY_DEVICE_GROUP_BIT_KHX} specifies that dependencies are <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-device-local-dependencies">non-device-local dependency</a>.</li>
      * </ul>
      * 
      * <h5>See Also</h5>
@@ -2252,9 +2254,8 @@ public class VK10 {
      * <h5>Description</h5>
      * 
      * <ul>
-     * <li>{@link #VK_COMMAND_POOL_CREATE_TRANSIENT_BIT COMMAND_POOL_CREATE_TRANSIENT_BIT} specifies that command buffers allocated from the pool will be short-lived, meaning that they will be reset or freed in a relatively short timeframe. This flag <b>may</b> be used by the implementation to control memory allocation behavior within the pool.</li>
+     * <li>{@link #VK_COMMAND_POOL_CREATE_TRANSIENT_BIT COMMAND_POOL_CREATE_TRANSIENT_BIT} indicates that command buffers allocated from the pool will be short-lived, meaning that they will be reset or freed in a relatively short timeframe. This flag <b>may</b> be used by the implementation to control memory allocation behavior within the pool.</li>
      * <li>{@link #VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT} allows any command buffer allocated from a pool to be individually reset to the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle">initial state</a>; either by calling {@link #vkResetCommandBuffer ResetCommandBuffer}, or via the implicit reset when calling {@link #vkBeginCommandBuffer BeginCommandBuffer}. If this flag is not set on a pool, then {@link #vkResetCommandBuffer ResetCommandBuffer} <b>must</b> not be called for any command buffer allocated from that pool.</li>
-     * <li>{@link VK11#VK_COMMAND_POOL_CREATE_PROTECTED_BIT COMMAND_POOL_CREATE_PROTECTED_BIT} specifies that command buffers allocated from the pool are protected command buffers. If the protected memory feature is not enabled, the {@link VK11#VK_COMMAND_POOL_CREATE_PROTECTED_BIT COMMAND_POOL_CREATE_PROTECTED_BIT} bit of {@code flags} <b>must</b> not be set.</li>
      * </ul>
      * 
      * <h5>See Also</h5>
@@ -2445,7 +2446,7 @@ public class VK10 {
      * <tr><td>{@link KHRDisplay#VK_OBJECT_TYPE_DISPLAY_KHR OBJECT_TYPE_DISPLAY_KHR}</td><td>{@code VkDisplayKHR}</td></tr>
      * <tr><td>{@link KHRDisplay#VK_OBJECT_TYPE_DISPLAY_MODE_KHR OBJECT_TYPE_DISPLAY_MODE_KHR}</td><td>{@code VkDisplayModeKHR}</td></tr>
      * <tr><td>{@link EXTDebugReport#VK_OBJECT_TYPE_DEBUG_REPORT_CALLBACK_EXT OBJECT_TYPE_DEBUG_REPORT_CALLBACK_EXT}</td><td>{@code VkDebugReportCallbackEXT}</td></tr>
-     * <tr><td>{@link VK11#VK_OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE}</td><td>{@code VkDescriptorUpdateTemplate}</td></tr>
+     * <tr><td>{@link KHRDescriptorUpdateTemplate#VK_OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_KHR OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_KHR}</td><td>{@code VkDescriptorUpdateTemplateKHR}</td></tr>
      * <tr><td>{@link NVXDeviceGeneratedCommands#VK_OBJECT_TYPE_OBJECT_TABLE_NVX OBJECT_TYPE_OBJECT_TABLE_NVX}</td><td>{@code VkObjectTableNVX}</td></tr>
      * <tr><td>{@link NVXDeviceGeneratedCommands#VK_OBJECT_TYPE_INDIRECT_COMMANDS_LAYOUT_NVX OBJECT_TYPE_INDIRECT_COMMANDS_LAYOUT_NVX}</td><td>{@code VkIndirectCommandsLayoutNVX}</td></tr>
      * <tr><td>{@link EXTValidationCache#VK_OBJECT_TYPE_VALIDATION_CACHE_EXT OBJECT_TYPE_VALIDATION_CACHE_EXT}</td><td>{@code VkValidationCacheEXT}</td></tr>
@@ -2454,7 +2455,7 @@ public class VK10 {
      * 
      * <h5>See Also</h5>
      * 
-     * <p>{@link VkDebugUtilsObjectNameInfoEXT}, {@link VkDebugUtilsObjectTagInfoEXT}</p>
+     * <p>No cross-references are available</p>
      */
     public static final int
         VK_OBJECT_TYPE_UNKNOWN               = 0,
@@ -2492,9 +2493,6 @@ public class VK10 {
      */
     public static final int VK_API_VERSION_1_0 = VK_MAKE_VERSION(1, 0, 0);
 
-    /** The Vulkan registry version used to generate the LWJGL bindings. */
-    public static final int VK_HEADER_VERSION = 76;
-
     /**
      * The reserved handle {@code VK_NULL_HANDLE} <b>can</b> be passed in place of valid object handles when explicitly called out in the specification. Any
      * command that creates an object successfully <b>must</b> not return {@code VK_NULL_HANDLE}. It is valid to pass {@code VK_NULL_HANDLE} to any
@@ -2502,172 +2500,44 @@ public class VK10 {
      */
     public static final long VK_NULL_HANDLE = 0x0L;
 
-    /** API Constants */
-    public static final int
-        VK_MAX_PHYSICAL_DEVICE_NAME_SIZE = 256,
-        VK_UUID_SIZE                     = 16,
-        VK_MAX_EXTENSION_NAME_SIZE       = 256,
-        VK_MAX_DESCRIPTION_SIZE          = 256,
-        VK_MAX_MEMORY_TYPES              = 32,
-        VK_MAX_MEMORY_HEAPS              = 16,
-        VK_REMAINING_MIP_LEVELS          = (~0),
-        VK_REMAINING_ARRAY_LAYERS        = (~0),
-        VK_ATTACHMENT_UNUSED             = (~0),
-        VK_TRUE                          = 1,
-        VK_FALSE                         = 0,
-        VK_QUEUE_FAMILY_IGNORED          = (~0),
-        VK_SUBPASS_EXTERNAL              = (~0);
-
-    /** API Constants */
-    public static final float VK_LOD_CLAMP_NONE = 1000.0f;
-
-    /** API Constants */
-    public static final long VK_WHOLE_SIZE = (~0L);
-
     protected VK10() {
         throw new UnsupportedOperationException();
     }
 
-    static boolean checkCapsInstance(FunctionProvider provider, java.util.Map<String, Long> caps, java.util.Set<String> ext) {
-        return ext.contains("Vulkan10") && VK.checkExtension("Vulkan10",
-               VK.isSupported(provider, "vkDestroyInstance", caps)
-            && VK.isSupported(provider, "vkEnumeratePhysicalDevices", caps)
-            && VK.isSupported(provider, "vkGetPhysicalDeviceFeatures", caps)
-            && VK.isSupported(provider, "vkGetPhysicalDeviceFormatProperties", caps)
-            && VK.isSupported(provider, "vkGetPhysicalDeviceImageFormatProperties", caps)
-            && VK.isSupported(provider, "vkGetPhysicalDeviceProperties", caps)
-            && VK.isSupported(provider, "vkGetPhysicalDeviceQueueFamilyProperties", caps)
-            && VK.isSupported(provider, "vkGetPhysicalDeviceMemoryProperties", caps)
-            && VK.isSupported(provider, "vkCreateDevice", caps)
-            && VK.isSupported(provider, "vkEnumerateDeviceExtensionProperties", caps)
-            && VK.isSupported(provider, "vkEnumerateDeviceLayerProperties", caps)
-            && VK.isSupported(provider, "vkGetPhysicalDeviceSparseImageFormatProperties", caps)
+    static boolean isAvailable(VKCapabilitiesInstance caps) {
+        return checkFunctions(
+            caps.vkDestroyInstance, caps.vkEnumeratePhysicalDevices, caps.vkGetPhysicalDeviceFeatures, caps.vkGetPhysicalDeviceFormatProperties, 
+            caps.vkGetPhysicalDeviceImageFormatProperties, caps.vkGetPhysicalDeviceProperties, caps.vkGetPhysicalDeviceQueueFamilyProperties, 
+            caps.vkGetPhysicalDeviceMemoryProperties, caps.vkCreateDevice, caps.vkEnumerateDeviceExtensionProperties, caps.vkEnumerateDeviceLayerProperties, 
+            caps.vkGetPhysicalDeviceSparseImageFormatProperties
         );
     }
 
-    static boolean checkCapsDevice(FunctionProvider provider, java.util.Map<String, Long> caps, java.util.Set<String> ext) {
-        return ext.contains("Vulkan10") && VK.checkExtension("Vulkan10",
-               VK.isSupported(provider, "vkGetDeviceProcAddr", caps)
-            && VK.isSupported(provider, "vkDestroyDevice", caps)
-            && VK.isSupported(provider, "vkGetDeviceQueue", caps)
-            && VK.isSupported(provider, "vkQueueSubmit", caps)
-            && VK.isSupported(provider, "vkQueueWaitIdle", caps)
-            && VK.isSupported(provider, "vkDeviceWaitIdle", caps)
-            && VK.isSupported(provider, "vkAllocateMemory", caps)
-            && VK.isSupported(provider, "vkFreeMemory", caps)
-            && VK.isSupported(provider, "vkMapMemory", caps)
-            && VK.isSupported(provider, "vkUnmapMemory", caps)
-            && VK.isSupported(provider, "vkFlushMappedMemoryRanges", caps)
-            && VK.isSupported(provider, "vkInvalidateMappedMemoryRanges", caps)
-            && VK.isSupported(provider, "vkGetDeviceMemoryCommitment", caps)
-            && VK.isSupported(provider, "vkBindBufferMemory", caps)
-            && VK.isSupported(provider, "vkBindImageMemory", caps)
-            && VK.isSupported(provider, "vkGetBufferMemoryRequirements", caps)
-            && VK.isSupported(provider, "vkGetImageMemoryRequirements", caps)
-            && VK.isSupported(provider, "vkGetImageSparseMemoryRequirements", caps)
-            && VK.isSupported(provider, "vkQueueBindSparse", caps)
-            && VK.isSupported(provider, "vkCreateFence", caps)
-            && VK.isSupported(provider, "vkDestroyFence", caps)
-            && VK.isSupported(provider, "vkResetFences", caps)
-            && VK.isSupported(provider, "vkGetFenceStatus", caps)
-            && VK.isSupported(provider, "vkWaitForFences", caps)
-            && VK.isSupported(provider, "vkCreateSemaphore", caps)
-            && VK.isSupported(provider, "vkDestroySemaphore", caps)
-            && VK.isSupported(provider, "vkCreateEvent", caps)
-            && VK.isSupported(provider, "vkDestroyEvent", caps)
-            && VK.isSupported(provider, "vkGetEventStatus", caps)
-            && VK.isSupported(provider, "vkSetEvent", caps)
-            && VK.isSupported(provider, "vkResetEvent", caps)
-            && VK.isSupported(provider, "vkCreateQueryPool", caps)
-            && VK.isSupported(provider, "vkDestroyQueryPool", caps)
-            && VK.isSupported(provider, "vkGetQueryPoolResults", caps)
-            && VK.isSupported(provider, "vkCreateBuffer", caps)
-            && VK.isSupported(provider, "vkDestroyBuffer", caps)
-            && VK.isSupported(provider, "vkCreateBufferView", caps)
-            && VK.isSupported(provider, "vkDestroyBufferView", caps)
-            && VK.isSupported(provider, "vkCreateImage", caps)
-            && VK.isSupported(provider, "vkDestroyImage", caps)
-            && VK.isSupported(provider, "vkGetImageSubresourceLayout", caps)
-            && VK.isSupported(provider, "vkCreateImageView", caps)
-            && VK.isSupported(provider, "vkDestroyImageView", caps)
-            && VK.isSupported(provider, "vkCreateShaderModule", caps)
-            && VK.isSupported(provider, "vkDestroyShaderModule", caps)
-            && VK.isSupported(provider, "vkCreatePipelineCache", caps)
-            && VK.isSupported(provider, "vkDestroyPipelineCache", caps)
-            && VK.isSupported(provider, "vkGetPipelineCacheData", caps)
-            && VK.isSupported(provider, "vkMergePipelineCaches", caps)
-            && VK.isSupported(provider, "vkCreateGraphicsPipelines", caps)
-            && VK.isSupported(provider, "vkCreateComputePipelines", caps)
-            && VK.isSupported(provider, "vkDestroyPipeline", caps)
-            && VK.isSupported(provider, "vkCreatePipelineLayout", caps)
-            && VK.isSupported(provider, "vkDestroyPipelineLayout", caps)
-            && VK.isSupported(provider, "vkCreateSampler", caps)
-            && VK.isSupported(provider, "vkDestroySampler", caps)
-            && VK.isSupported(provider, "vkCreateDescriptorSetLayout", caps)
-            && VK.isSupported(provider, "vkDestroyDescriptorSetLayout", caps)
-            && VK.isSupported(provider, "vkCreateDescriptorPool", caps)
-            && VK.isSupported(provider, "vkDestroyDescriptorPool", caps)
-            && VK.isSupported(provider, "vkResetDescriptorPool", caps)
-            && VK.isSupported(provider, "vkAllocateDescriptorSets", caps)
-            && VK.isSupported(provider, "vkFreeDescriptorSets", caps)
-            && VK.isSupported(provider, "vkUpdateDescriptorSets", caps)
-            && VK.isSupported(provider, "vkCreateFramebuffer", caps)
-            && VK.isSupported(provider, "vkDestroyFramebuffer", caps)
-            && VK.isSupported(provider, "vkCreateRenderPass", caps)
-            && VK.isSupported(provider, "vkDestroyRenderPass", caps)
-            && VK.isSupported(provider, "vkGetRenderAreaGranularity", caps)
-            && VK.isSupported(provider, "vkCreateCommandPool", caps)
-            && VK.isSupported(provider, "vkDestroyCommandPool", caps)
-            && VK.isSupported(provider, "vkResetCommandPool", caps)
-            && VK.isSupported(provider, "vkAllocateCommandBuffers", caps)
-            && VK.isSupported(provider, "vkFreeCommandBuffers", caps)
-            && VK.isSupported(provider, "vkBeginCommandBuffer", caps)
-            && VK.isSupported(provider, "vkEndCommandBuffer", caps)
-            && VK.isSupported(provider, "vkResetCommandBuffer", caps)
-            && VK.isSupported(provider, "vkCmdBindPipeline", caps)
-            && VK.isSupported(provider, "vkCmdSetViewport", caps)
-            && VK.isSupported(provider, "vkCmdSetScissor", caps)
-            && VK.isSupported(provider, "vkCmdSetLineWidth", caps)
-            && VK.isSupported(provider, "vkCmdSetDepthBias", caps)
-            && VK.isSupported(provider, "vkCmdSetBlendConstants", caps)
-            && VK.isSupported(provider, "vkCmdSetDepthBounds", caps)
-            && VK.isSupported(provider, "vkCmdSetStencilCompareMask", caps)
-            && VK.isSupported(provider, "vkCmdSetStencilWriteMask", caps)
-            && VK.isSupported(provider, "vkCmdSetStencilReference", caps)
-            && VK.isSupported(provider, "vkCmdBindDescriptorSets", caps)
-            && VK.isSupported(provider, "vkCmdBindIndexBuffer", caps)
-            && VK.isSupported(provider, "vkCmdBindVertexBuffers", caps)
-            && VK.isSupported(provider, "vkCmdDraw", caps)
-            && VK.isSupported(provider, "vkCmdDrawIndexed", caps)
-            && VK.isSupported(provider, "vkCmdDrawIndirect", caps)
-            && VK.isSupported(provider, "vkCmdDrawIndexedIndirect", caps)
-            && VK.isSupported(provider, "vkCmdDispatch", caps)
-            && VK.isSupported(provider, "vkCmdDispatchIndirect", caps)
-            && VK.isSupported(provider, "vkCmdCopyBuffer", caps)
-            && VK.isSupported(provider, "vkCmdCopyImage", caps)
-            && VK.isSupported(provider, "vkCmdBlitImage", caps)
-            && VK.isSupported(provider, "vkCmdCopyBufferToImage", caps)
-            && VK.isSupported(provider, "vkCmdCopyImageToBuffer", caps)
-            && VK.isSupported(provider, "vkCmdUpdateBuffer", caps)
-            && VK.isSupported(provider, "vkCmdFillBuffer", caps)
-            && VK.isSupported(provider, "vkCmdClearColorImage", caps)
-            && VK.isSupported(provider, "vkCmdClearDepthStencilImage", caps)
-            && VK.isSupported(provider, "vkCmdClearAttachments", caps)
-            && VK.isSupported(provider, "vkCmdResolveImage", caps)
-            && VK.isSupported(provider, "vkCmdSetEvent", caps)
-            && VK.isSupported(provider, "vkCmdResetEvent", caps)
-            && VK.isSupported(provider, "vkCmdWaitEvents", caps)
-            && VK.isSupported(provider, "vkCmdPipelineBarrier", caps)
-            && VK.isSupported(provider, "vkCmdBeginQuery", caps)
-            && VK.isSupported(provider, "vkCmdEndQuery", caps)
-            && VK.isSupported(provider, "vkCmdResetQueryPool", caps)
-            && VK.isSupported(provider, "vkCmdWriteTimestamp", caps)
-            && VK.isSupported(provider, "vkCmdCopyQueryPoolResults", caps)
-            && VK.isSupported(provider, "vkCmdPushConstants", caps)
-            && VK.isSupported(provider, "vkCmdBeginRenderPass", caps)
-            && VK.isSupported(provider, "vkCmdNextSubpass", caps)
-            && VK.isSupported(provider, "vkCmdEndRenderPass", caps)
-            && VK.isSupported(provider, "vkCmdExecuteCommands", caps)
+    static boolean isAvailable(VKCapabilitiesInstance capsInstance, VKCapabilitiesDevice caps) {
+        return isAvailable(capsInstance) && checkFunctions(
+            caps.vkGetDeviceProcAddr, caps.vkDestroyDevice, caps.vkGetDeviceQueue, caps.vkQueueSubmit, caps.vkQueueWaitIdle, caps.vkDeviceWaitIdle, 
+            caps.vkAllocateMemory, caps.vkFreeMemory, caps.vkMapMemory, caps.vkUnmapMemory, caps.vkFlushMappedMemoryRanges, caps.vkInvalidateMappedMemoryRanges, 
+            caps.vkGetDeviceMemoryCommitment, caps.vkBindBufferMemory, caps.vkBindImageMemory, caps.vkGetBufferMemoryRequirements, 
+            caps.vkGetImageMemoryRequirements, caps.vkGetImageSparseMemoryRequirements, caps.vkQueueBindSparse, caps.vkCreateFence, caps.vkDestroyFence, 
+            caps.vkResetFences, caps.vkGetFenceStatus, caps.vkWaitForFences, caps.vkCreateSemaphore, caps.vkDestroySemaphore, caps.vkCreateEvent, 
+            caps.vkDestroyEvent, caps.vkGetEventStatus, caps.vkSetEvent, caps.vkResetEvent, caps.vkCreateQueryPool, caps.vkDestroyQueryPool, 
+            caps.vkGetQueryPoolResults, caps.vkCreateBuffer, caps.vkDestroyBuffer, caps.vkCreateBufferView, caps.vkDestroyBufferView, caps.vkCreateImage, 
+            caps.vkDestroyImage, caps.vkGetImageSubresourceLayout, caps.vkCreateImageView, caps.vkDestroyImageView, caps.vkCreateShaderModule, 
+            caps.vkDestroyShaderModule, caps.vkCreatePipelineCache, caps.vkDestroyPipelineCache, caps.vkGetPipelineCacheData, caps.vkMergePipelineCaches, 
+            caps.vkCreateGraphicsPipelines, caps.vkCreateComputePipelines, caps.vkDestroyPipeline, caps.vkCreatePipelineLayout, caps.vkDestroyPipelineLayout, 
+            caps.vkCreateSampler, caps.vkDestroySampler, caps.vkCreateDescriptorSetLayout, caps.vkDestroyDescriptorSetLayout, caps.vkCreateDescriptorPool, 
+            caps.vkDestroyDescriptorPool, caps.vkResetDescriptorPool, caps.vkAllocateDescriptorSets, caps.vkFreeDescriptorSets, caps.vkUpdateDescriptorSets, 
+            caps.vkCreateFramebuffer, caps.vkDestroyFramebuffer, caps.vkCreateRenderPass, caps.vkDestroyRenderPass, caps.vkGetRenderAreaGranularity, 
+            caps.vkCreateCommandPool, caps.vkDestroyCommandPool, caps.vkResetCommandPool, caps.vkAllocateCommandBuffers, caps.vkFreeCommandBuffers, 
+            caps.vkBeginCommandBuffer, caps.vkEndCommandBuffer, caps.vkResetCommandBuffer, caps.vkCmdBindPipeline, caps.vkCmdSetViewport, caps.vkCmdSetScissor, 
+            caps.vkCmdSetLineWidth, caps.vkCmdSetDepthBias, caps.vkCmdSetBlendConstants, caps.vkCmdSetDepthBounds, caps.vkCmdSetStencilCompareMask, 
+            caps.vkCmdSetStencilWriteMask, caps.vkCmdSetStencilReference, caps.vkCmdBindDescriptorSets, caps.vkCmdBindIndexBuffer, caps.vkCmdBindVertexBuffers, 
+            caps.vkCmdDraw, caps.vkCmdDrawIndexed, caps.vkCmdDrawIndirect, caps.vkCmdDrawIndexedIndirect, caps.vkCmdDispatch, caps.vkCmdDispatchIndirect, 
+            caps.vkCmdCopyBuffer, caps.vkCmdCopyImage, caps.vkCmdBlitImage, caps.vkCmdCopyBufferToImage, caps.vkCmdCopyImageToBuffer, caps.vkCmdUpdateBuffer, 
+            caps.vkCmdFillBuffer, caps.vkCmdClearColorImage, caps.vkCmdClearDepthStencilImage, caps.vkCmdClearAttachments, caps.vkCmdResolveImage, 
+            caps.vkCmdSetEvent, caps.vkCmdResetEvent, caps.vkCmdWaitEvents, caps.vkCmdPipelineBarrier, caps.vkCmdBeginQuery, caps.vkCmdEndQuery, 
+            caps.vkCmdResetQueryPool, caps.vkCmdWriteTimestamp, caps.vkCmdCopyQueryPoolResults, caps.vkCmdPushConstants, caps.vkCmdBeginRenderPass, 
+            caps.vkCmdNextSubpass, caps.vkCmdEndRenderPass, caps.vkCmdExecuteCommands
         );
     }
 
@@ -2690,11 +2560,11 @@ public class VK10 {
      * 
      * <p>To create an instance object, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * VkResult vkCreateInstance(
      *     const VkInstanceCreateInfo*                 pCreateInfo,
      *     const VkAllocationCallbacks*                pAllocator,
-     *     VkInstance*                                 pInstance);</code></pre>
+     *     VkInstance*                                 pInstance);</pre></code>
      * 
      * <h5>Description</h5>
      * 
@@ -2741,7 +2611,7 @@ public class VK10 {
      * @param pInstance   points a {@code VkInstance} handle in which the resulting instance is returned.
      */
     @NativeType("VkResult")
-    public static int vkCreateInstance(@NativeType("VkInstanceCreateInfo const *") VkInstanceCreateInfo pCreateInfo, @Nullable @NativeType("VkAllocationCallbacks const *") VkAllocationCallbacks pAllocator, @NativeType("VkInstance *") PointerBuffer pInstance) {
+    public static int vkCreateInstance(@NativeType("const VkInstanceCreateInfo *") VkInstanceCreateInfo pCreateInfo, @Nullable @NativeType("const VkAllocationCallbacks *") VkAllocationCallbacks pAllocator, @NativeType("VkInstance *") PointerBuffer pInstance) {
         if (CHECKS) {
             check(pInstance, 1);
         }
@@ -2766,10 +2636,10 @@ public class VK10 {
      * 
      * <p>To destroy an instance, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * void vkDestroyInstance(
      *     VkInstance                                  instance,
-     *     const VkAllocationCallbacks*                pAllocator);</code></pre>
+     *     const VkAllocationCallbacks*                pAllocator);</pre></code>
      * 
      * <h5>Valid Usage</h5>
      * 
@@ -2799,7 +2669,7 @@ public class VK10 {
      * @param instance   the handle of the instance to destroy.
      * @param pAllocator controls host memory allocation as described in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation">Memory Allocation</a> chapter.
      */
-    public static void vkDestroyInstance(VkInstance instance, @Nullable @NativeType("VkAllocationCallbacks const *") VkAllocationCallbacks pAllocator) {
+    public static void vkDestroyInstance(VkInstance instance, @Nullable @NativeType("const VkAllocationCallbacks *") VkAllocationCallbacks pAllocator) {
         nvkDestroyInstance(instance, memAddressSafe(pAllocator));
     }
 
@@ -2822,11 +2692,11 @@ public class VK10 {
      * 
      * <p>To retrieve a list of physical device objects representing the physical devices installed in the system, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * VkResult vkEnumeratePhysicalDevices(
      *     VkInstance                                  instance,
      *     uint32_t*                                   pPhysicalDeviceCount,
-     *     VkPhysicalDevice*                           pPhysicalDevices);</code></pre>
+     *     VkPhysicalDevice*                           pPhysicalDevices);</pre></code>
      * 
      * <h5>Description</h5>
      * 
@@ -2884,10 +2754,10 @@ public class VK10 {
      * 
      * <p>To query supported features, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * void vkGetPhysicalDeviceFeatures(
      *     VkPhysicalDevice                            physicalDevice,
-     *     VkPhysicalDeviceFeatures*                   pFeatures);</code></pre>
+     *     VkPhysicalDeviceFeatures*                   pFeatures);</pre></code>
      * 
      * <h5>Valid Usage (Implicit)</h5>
      * 
@@ -2901,7 +2771,7 @@ public class VK10 {
      * <p>{@link VkPhysicalDeviceFeatures}</p>
      *
      * @param physicalDevice the physical device from which to query the supported features.
-     * @param pFeatures      a pointer to a {@link VkPhysicalDeviceFeatures} structure in which the physical device features are returned. For each feature, a value of {@link #VK_TRUE TRUE} specifies that the feature is supported on this physical device, and {@link #VK_FALSE FALSE} specifies that the feature is not supported.
+     * @param pFeatures      a pointer to a {@link VkPhysicalDeviceFeatures} structure in which the physical device features are returned. For each feature, a value of {@link #VK_TRUE TRUE} indicates that the feature is supported on this physical device, and {@link #VK_FALSE FALSE} indicates that the feature is not supported.
      */
     public static void vkGetPhysicalDeviceFeatures(VkPhysicalDevice physicalDevice, @NativeType("VkPhysicalDeviceFeatures *") VkPhysicalDeviceFeatures pFeatures) {
         nvkGetPhysicalDeviceFeatures(physicalDevice, pFeatures.address());
@@ -2922,11 +2792,11 @@ public class VK10 {
      * 
      * <p>To query supported format features which are properties of the physical device, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * void vkGetPhysicalDeviceFormatProperties(
      *     VkPhysicalDevice                            physicalDevice,
      *     VkFormat                                    format,
-     *     VkFormatProperties*                         pFormatProperties);</code></pre>
+     *     VkFormatProperties*                         pFormatProperties);</pre></code>
      * 
      * <h5>Valid Usage (Implicit)</h5>
      * 
@@ -2963,7 +2833,7 @@ public class VK10 {
      * 
      * <p>To query additional capabilities specific to image types, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * VkResult vkGetPhysicalDeviceImageFormatProperties(
      *     VkPhysicalDevice                            physicalDevice,
      *     VkFormat                                    format,
@@ -2971,7 +2841,7 @@ public class VK10 {
      *     VkImageTiling                               tiling,
      *     VkImageUsageFlags                           usage,
      *     VkImageCreateFlags                          flags,
-     *     VkImageFormatProperties*                    pImageFormatProperties);</code></pre>
+     *     VkImageFormatProperties*                    pImageFormatProperties);</pre></code>
      * 
      * <h5>Description</h5>
      * 
@@ -3041,10 +2911,10 @@ public class VK10 {
      * 
      * <p>To query general properties of physical devices once enumerated, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * void vkGetPhysicalDeviceProperties(
      *     VkPhysicalDevice                            physicalDevice,
-     *     VkPhysicalDeviceProperties*                 pProperties);</code></pre>
+     *     VkPhysicalDeviceProperties*                 pProperties);</pre></code>
      * 
      * <h5>Valid Usage (Implicit)</h5>
      * 
@@ -3083,11 +2953,11 @@ public class VK10 {
      * 
      * <p>To query properties of queues available on a physical device, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * void vkGetPhysicalDeviceQueueFamilyProperties(
      *     VkPhysicalDevice                            physicalDevice,
      *     uint32_t*                                   pQueueFamilyPropertyCount,
-     *     VkQueueFamilyProperties*                    pQueueFamilyProperties);</code></pre>
+     *     VkQueueFamilyProperties*                    pQueueFamilyProperties);</pre></code>
      * 
      * <h5>Description</h5>
      * 
@@ -3132,10 +3002,10 @@ public class VK10 {
      * 
      * <p>To query memory properties, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * void vkGetPhysicalDeviceMemoryProperties(
      *     VkPhysicalDevice                            physicalDevice,
-     *     VkPhysicalDeviceMemoryProperties*           pMemoryProperties);</code></pre>
+     *     VkPhysicalDeviceMemoryProperties*           pMemoryProperties);</pre></code>
      * 
      * <h5>Valid Usage (Implicit)</h5>
      * 
@@ -3170,14 +3040,14 @@ public class VK10 {
      * 
      * <p>Vulkan commands are not necessarily exposed statically on a platform. Function pointers for all Vulkan commands <b>can</b> be obtained with the command:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * PFN_vkVoidFunction vkGetInstanceProcAddr(
      *     VkInstance                                  instance,
-     *     const char*                                 pName);</code></pre>
+     *     const char*                                 pName);</pre></code>
      * 
      * <h5>Description</h5>
      * 
-     * <p>{@link #vkGetInstanceProcAddr GetInstanceProcAddr} itself is obtained in a platform- and loader- specific manner. Typically, the loader library will export this command as a function symbol, so applications <b>can</b> link against the loader library, or load it dynamically and look up the symbol using platform-specific APIs.</p>
+     * <p>{@link #vkGetInstanceProcAddr GetInstanceProcAddr} itself is obtained in a platform- and loader- specific manner. Typically, the loader library will export this command as a function symbol, so applications <b>can</b> link against the loader library, or load it dynamically and look up the symbol using platform-specific APIs. Loaders are encouraged to export function symbols for all other core Vulkan commands as well; if this is done, then applications that use only the core Vulkan commands have no need to use {@link #vkGetInstanceProcAddr GetInstanceProcAddr}.</p>
      * 
      * <p>The table below defines the various use cases for {@link #vkGetInstanceProcAddr GetInstanceProcAddr} and expected return value ("{@code fp}" is "{@code function pointer}") for each case.</p>
      * 
@@ -3190,7 +3060,6 @@ public class VK10 {
      * <tbody>
      * <tr><td>*</td><td>{@code NULL}</td><td>undefined</td></tr>
      * <tr><td>invalid instance</td><td>*</td><td>undefined</td></tr>
-     * <tr><td>{@code NULL}</td><td>{@link VK11#vkEnumerateInstanceVersion EnumerateInstanceVersion}</td><td>fp</td></tr>
      * <tr><td>{@code NULL}</td><td>{@link #vkEnumerateInstanceExtensionProperties EnumerateInstanceExtensionProperties}</td><td>fp</td></tr>
      * <tr><td>{@code NULL}</td><td>{@link #vkEnumerateInstanceLayerProperties EnumerateInstanceLayerProperties}</td><td>fp</td></tr>
      * <tr><td>{@code NULL}</td><td>{@link #vkCreateInstance CreateInstance}</td><td>fp</td></tr>
@@ -3204,9 +3073,9 @@ public class VK10 {
      * 
      * <dl>
      * <dt>1</dt>
-     * <dd>The returned function pointer <b>must</b> only be called with a dispatchable object (the first parameter) that is {@code instance} or a child of {@code instance}, e.g. {@code VkInstance}, {@code VkPhysicalDevice}, {@code VkDevice}, {@code VkQueue}, or {@code VkCommandBuffer}.</dd>
+     * <dd>The returned function pointer <b>must</b> only be called with a dispatchable object (the first parameter) that is {@code instance} or a child of {@code instance}. e.g. {@code VkInstance}, {@code VkPhysicalDevice}, {@code VkDevice}, {@code VkQueue}, or {@code VkCommandBuffer}.</dd>
      * <dt>2</dt>
-     * <dd>An “available device extension” is a device extension supported by any physical device enumerated by {@code instance}.</dd>
+     * <dd>An “available extension” is an extension function supported by any of the loader, driver or layer.</dd>
      * </dl>
      * 
      * <h5>Valid Usage (Implicit)</h5>
@@ -3224,7 +3093,7 @@ public class VK10 {
      * @param pName    the name of the command to obtain.
      */
     @NativeType("PFN_vkVoidFunction")
-    public static long vkGetInstanceProcAddr(VkInstance instance, @NativeType("char const *") ByteBuffer pName) {
+    public static long vkGetInstanceProcAddr(VkInstance instance, @NativeType("const char *") ByteBuffer pName) {
         if (CHECKS) {
             checkNT1(pName);
         }
@@ -3238,14 +3107,14 @@ public class VK10 {
      * 
      * <p>Vulkan commands are not necessarily exposed statically on a platform. Function pointers for all Vulkan commands <b>can</b> be obtained with the command:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * PFN_vkVoidFunction vkGetInstanceProcAddr(
      *     VkInstance                                  instance,
-     *     const char*                                 pName);</code></pre>
+     *     const char*                                 pName);</pre></code>
      * 
      * <h5>Description</h5>
      * 
-     * <p>{@link #vkGetInstanceProcAddr GetInstanceProcAddr} itself is obtained in a platform- and loader- specific manner. Typically, the loader library will export this command as a function symbol, so applications <b>can</b> link against the loader library, or load it dynamically and look up the symbol using platform-specific APIs.</p>
+     * <p>{@link #vkGetInstanceProcAddr GetInstanceProcAddr} itself is obtained in a platform- and loader- specific manner. Typically, the loader library will export this command as a function symbol, so applications <b>can</b> link against the loader library, or load it dynamically and look up the symbol using platform-specific APIs. Loaders are encouraged to export function symbols for all other core Vulkan commands as well; if this is done, then applications that use only the core Vulkan commands have no need to use {@link #vkGetInstanceProcAddr GetInstanceProcAddr}.</p>
      * 
      * <p>The table below defines the various use cases for {@link #vkGetInstanceProcAddr GetInstanceProcAddr} and expected return value ("{@code fp}" is "{@code function pointer}") for each case.</p>
      * 
@@ -3258,7 +3127,6 @@ public class VK10 {
      * <tbody>
      * <tr><td>*</td><td>{@code NULL}</td><td>undefined</td></tr>
      * <tr><td>invalid instance</td><td>*</td><td>undefined</td></tr>
-     * <tr><td>{@code NULL}</td><td>{@link VK11#vkEnumerateInstanceVersion EnumerateInstanceVersion}</td><td>fp</td></tr>
      * <tr><td>{@code NULL}</td><td>{@link #vkEnumerateInstanceExtensionProperties EnumerateInstanceExtensionProperties}</td><td>fp</td></tr>
      * <tr><td>{@code NULL}</td><td>{@link #vkEnumerateInstanceLayerProperties EnumerateInstanceLayerProperties}</td><td>fp</td></tr>
      * <tr><td>{@code NULL}</td><td>{@link #vkCreateInstance CreateInstance}</td><td>fp</td></tr>
@@ -3272,9 +3140,9 @@ public class VK10 {
      * 
      * <dl>
      * <dt>1</dt>
-     * <dd>The returned function pointer <b>must</b> only be called with a dispatchable object (the first parameter) that is {@code instance} or a child of {@code instance}, e.g. {@code VkInstance}, {@code VkPhysicalDevice}, {@code VkDevice}, {@code VkQueue}, or {@code VkCommandBuffer}.</dd>
+     * <dd>The returned function pointer <b>must</b> only be called with a dispatchable object (the first parameter) that is {@code instance} or a child of {@code instance}. e.g. {@code VkInstance}, {@code VkPhysicalDevice}, {@code VkDevice}, {@code VkQueue}, or {@code VkCommandBuffer}.</dd>
      * <dt>2</dt>
-     * <dd>An “available device extension” is a device extension supported by any physical device enumerated by {@code instance}.</dd>
+     * <dd>An “available extension” is an extension function supported by any of the loader, driver or layer.</dd>
      * </dl>
      * 
      * <h5>Valid Usage (Implicit)</h5>
@@ -3292,7 +3160,7 @@ public class VK10 {
      * @param pName    the name of the command to obtain.
      */
     @NativeType("PFN_vkVoidFunction")
-    public static long vkGetInstanceProcAddr(VkInstance instance, @NativeType("char const *") CharSequence pName) {
+    public static long vkGetInstanceProcAddr(VkInstance instance, @NativeType("const char *") CharSequence pName) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
             ByteBuffer pNameEncoded = stack.ASCII(pName);
@@ -3315,16 +3183,16 @@ public class VK10 {
      * 
      * <h5>C Specification</h5>
      * 
-     * <p>In order to support systems with multiple Vulkan implementations, the function pointers returned by {@link #vkGetInstanceProcAddr GetInstanceProcAddr} <b>may</b> point to dispatch code that calls a different real implementation for different {@code VkDevice} objects or their child objects. The overhead of the internal dispatch for {@code VkDevice} objects can be avoided by obtaining device-specific function pointers for any commands that use a device or device-child object as their dispatchable object. Such function pointers <b>can</b> be obtained with the command:</p>
+     * <p>In order to support systems with multiple Vulkan implementations comprising heterogeneous collections of hardware and software, the function pointers returned by {@link #vkGetInstanceProcAddr GetInstanceProcAddr} <b>may</b> point to dispatch code, which calls a different real implementation for different {@code VkDevice} objects (and objects created from them). The overhead of this internal dispatch <b>can</b> be avoided by obtaining device-specific function pointers for any commands that use a device or device-child object as their dispatchable object. Such function pointers <b>can</b> be obtained with the command:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * PFN_vkVoidFunction vkGetDeviceProcAddr(
      *     VkDevice                                    device,
-     *     const char*                                 pName);</code></pre>
+     *     const char*                                 pName);</pre></code>
      * 
      * <h5>Description</h5>
      * 
-     * <p>The returned function pointer is of type {@code PFN_vkVoidFunction}, and must be cast to the type of the command being queried. The function pointer <b>must</b> only be called with a dispatchable object (the first parameter) that is {@code device} or a child of {@code device}.</p>
+     * <p>The returned function pointer is of type {@code PFN_vkVoidFunction}, and must be cast to the type of the command being queried.</p>
      * 
      * <h6>vkGetDeviceProcAddr behavior</h6>
      * 
@@ -3334,11 +3202,16 @@ public class VK10 {
      * <tr><td>{@code NULL}</td><td>*</td><td>undefined</td></tr>
      * <tr><td>invalid device</td><td>*</td><td>undefined</td></tr>
      * <tr><td>device</td><td>{@code NULL}</td><td>undefined</td></tr>
-     * <tr><td>device</td><td>core device-level Vulkan command</td><td>fp</td></tr>
-     * <tr><td>device</td><td>enabled device extension commands</td><td>fp</td></tr>
+     * <tr><td>device</td><td>core Vulkan command</td><td>fp<sup>1</sup></td></tr>
+     * <tr><td>device</td><td>enabled extension commands</td><td>fp<sup>1</sup></td></tr>
      * <tr><td>device</td><td>* (any {@code pName} not covered above)</td><td>{@code NULL}</td></tr>
      * </tbody>
      * </table>
+     * 
+     * <dl>
+     * <dt>1</dt>
+     * <dd>The returned function pointer <b>must</b> only be called with a dispatchable object (the first parameter) that is {@code device} or a child of {@code device}. e.g. {@code VkDevice}, {@code VkQueue}, or {@code VkCommandBuffer}.</dd>
+     * </dl>
      * 
      * <h5>Valid Usage (Implicit)</h5>
      * 
@@ -3350,9 +3223,12 @@ public class VK10 {
      * <h5>See Also</h5>
      * 
      * <p>{@code PFN_vkVoidFunction}</p>
+     *
+     * @param device 
+     * @param pName  
      */
     @NativeType("PFN_vkVoidFunction")
-    public static long vkGetDeviceProcAddr(VkDevice device, @NativeType("char const *") ByteBuffer pName) {
+    public static long vkGetDeviceProcAddr(VkDevice device, @NativeType("const char *") ByteBuffer pName) {
         if (CHECKS) {
             checkNT1(pName);
         }
@@ -3364,16 +3240,16 @@ public class VK10 {
      * 
      * <h5>C Specification</h5>
      * 
-     * <p>In order to support systems with multiple Vulkan implementations, the function pointers returned by {@link #vkGetInstanceProcAddr GetInstanceProcAddr} <b>may</b> point to dispatch code that calls a different real implementation for different {@code VkDevice} objects or their child objects. The overhead of the internal dispatch for {@code VkDevice} objects can be avoided by obtaining device-specific function pointers for any commands that use a device or device-child object as their dispatchable object. Such function pointers <b>can</b> be obtained with the command:</p>
+     * <p>In order to support systems with multiple Vulkan implementations comprising heterogeneous collections of hardware and software, the function pointers returned by {@link #vkGetInstanceProcAddr GetInstanceProcAddr} <b>may</b> point to dispatch code, which calls a different real implementation for different {@code VkDevice} objects (and objects created from them). The overhead of this internal dispatch <b>can</b> be avoided by obtaining device-specific function pointers for any commands that use a device or device-child object as their dispatchable object. Such function pointers <b>can</b> be obtained with the command:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * PFN_vkVoidFunction vkGetDeviceProcAddr(
      *     VkDevice                                    device,
-     *     const char*                                 pName);</code></pre>
+     *     const char*                                 pName);</pre></code>
      * 
      * <h5>Description</h5>
      * 
-     * <p>The returned function pointer is of type {@code PFN_vkVoidFunction}, and must be cast to the type of the command being queried. The function pointer <b>must</b> only be called with a dispatchable object (the first parameter) that is {@code device} or a child of {@code device}.</p>
+     * <p>The returned function pointer is of type {@code PFN_vkVoidFunction}, and must be cast to the type of the command being queried.</p>
      * 
      * <h6>vkGetDeviceProcAddr behavior</h6>
      * 
@@ -3383,11 +3259,16 @@ public class VK10 {
      * <tr><td>{@code NULL}</td><td>*</td><td>undefined</td></tr>
      * <tr><td>invalid device</td><td>*</td><td>undefined</td></tr>
      * <tr><td>device</td><td>{@code NULL}</td><td>undefined</td></tr>
-     * <tr><td>device</td><td>core device-level Vulkan command</td><td>fp</td></tr>
-     * <tr><td>device</td><td>enabled device extension commands</td><td>fp</td></tr>
+     * <tr><td>device</td><td>core Vulkan command</td><td>fp<sup>1</sup></td></tr>
+     * <tr><td>device</td><td>enabled extension commands</td><td>fp<sup>1</sup></td></tr>
      * <tr><td>device</td><td>* (any {@code pName} not covered above)</td><td>{@code NULL}</td></tr>
      * </tbody>
      * </table>
+     * 
+     * <dl>
+     * <dt>1</dt>
+     * <dd>The returned function pointer <b>must</b> only be called with a dispatchable object (the first parameter) that is {@code device} or a child of {@code device}. e.g. {@code VkDevice}, {@code VkQueue}, or {@code VkCommandBuffer}.</dd>
+     * </dl>
      * 
      * <h5>Valid Usage (Implicit)</h5>
      * 
@@ -3399,9 +3280,12 @@ public class VK10 {
      * <h5>See Also</h5>
      * 
      * <p>{@code PFN_vkVoidFunction}</p>
+     *
+     * @param device 
+     * @param pName  
      */
     @NativeType("PFN_vkVoidFunction")
-    public static long vkGetDeviceProcAddr(VkDevice device, @NativeType("char const *") CharSequence pName) {
+    public static long vkGetDeviceProcAddr(VkDevice device, @NativeType("const char *") CharSequence pName) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
             ByteBuffer pNameEncoded = stack.ASCII(pName);
@@ -3430,12 +3314,12 @@ public class VK10 {
      * 
      * <p>A logical device is created as a <em>connection</em> to a physical device. To create a logical device, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * VkResult vkCreateDevice(
      *     VkPhysicalDevice                            physicalDevice,
      *     const VkDeviceCreateInfo*                   pCreateInfo,
      *     const VkAllocationCallbacks*                pAllocator,
-     *     VkDevice*                                   pDevice);</code></pre>
+     *     VkDevice*                                   pDevice);</pre></code>
      * 
      * <h5>Description</h5>
      * 
@@ -3489,7 +3373,7 @@ public class VK10 {
      * @param pDevice        points to a handle in which the created {@code VkDevice} is returned.
      */
     @NativeType("VkResult")
-    public static int vkCreateDevice(VkPhysicalDevice physicalDevice, @NativeType("VkDeviceCreateInfo const *") VkDeviceCreateInfo pCreateInfo, @Nullable @NativeType("VkAllocationCallbacks const *") VkAllocationCallbacks pAllocator, @NativeType("VkDevice *") PointerBuffer pDevice) {
+    public static int vkCreateDevice(VkPhysicalDevice physicalDevice, @NativeType("const VkDeviceCreateInfo *") VkDeviceCreateInfo pCreateInfo, @Nullable @NativeType("const VkAllocationCallbacks *") VkAllocationCallbacks pAllocator, @NativeType("VkDevice *") PointerBuffer pDevice) {
         if (CHECKS) {
             check(pDevice, 1);
         }
@@ -3514,10 +3398,10 @@ public class VK10 {
      * 
      * <p>To destroy a device, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * void vkDestroyDevice(
      *     VkDevice                                    device,
-     *     const VkAllocationCallbacks*                pAllocator);</code></pre>
+     *     const VkAllocationCallbacks*                pAllocator);</pre></code>
      * 
      * <h5>Description</h5>
      * 
@@ -3556,7 +3440,7 @@ public class VK10 {
      * @param device     the logical device to destroy.
      * @param pAllocator controls host memory allocation as described in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation">Memory Allocation</a> chapter.
      */
-    public static void vkDestroyDevice(VkDevice device, @Nullable @NativeType("VkAllocationCallbacks const *") VkAllocationCallbacks pAllocator) {
+    public static void vkDestroyDevice(VkDevice device, @Nullable @NativeType("const VkAllocationCallbacks *") VkAllocationCallbacks pAllocator) {
         nvkDestroyDevice(device, memAddressSafe(pAllocator));
     }
 
@@ -3579,11 +3463,11 @@ public class VK10 {
      * 
      * <p>To query the available instance extensions, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * VkResult vkEnumerateInstanceExtensionProperties(
      *     const char*                                 pLayerName,
      *     uint32_t*                                   pPropertyCount,
-     *     VkExtensionProperties*                      pProperties);</code></pre>
+     *     VkExtensionProperties*                      pProperties);</pre></code>
      * 
      * <h5>Description</h5>
      * 
@@ -3626,7 +3510,7 @@ public class VK10 {
      * @param pProperties    either {@code NULL} or a pointer to an array of {@link VkExtensionProperties} structures.
      */
     @NativeType("VkResult")
-    public static int vkEnumerateInstanceExtensionProperties(@Nullable @NativeType("char const *") ByteBuffer pLayerName, @NativeType("uint32_t *") IntBuffer pPropertyCount, @Nullable @NativeType("VkExtensionProperties *") VkExtensionProperties.Buffer pProperties) {
+    public static int vkEnumerateInstanceExtensionProperties(@Nullable @NativeType("const char *") ByteBuffer pLayerName, @NativeType("uint32_t *") IntBuffer pPropertyCount, @Nullable @NativeType("VkExtensionProperties *") VkExtensionProperties.Buffer pProperties) {
         if (CHECKS) {
             checkNT1Safe(pLayerName);
             check(pPropertyCount, 1);
@@ -3642,11 +3526,11 @@ public class VK10 {
      * 
      * <p>To query the available instance extensions, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * VkResult vkEnumerateInstanceExtensionProperties(
      *     const char*                                 pLayerName,
      *     uint32_t*                                   pPropertyCount,
-     *     VkExtensionProperties*                      pProperties);</code></pre>
+     *     VkExtensionProperties*                      pProperties);</pre></code>
      * 
      * <h5>Description</h5>
      * 
@@ -3689,7 +3573,7 @@ public class VK10 {
      * @param pProperties    either {@code NULL} or a pointer to an array of {@link VkExtensionProperties} structures.
      */
     @NativeType("VkResult")
-    public static int vkEnumerateInstanceExtensionProperties(@Nullable @NativeType("char const *") CharSequence pLayerName, @NativeType("uint32_t *") IntBuffer pPropertyCount, @Nullable @NativeType("VkExtensionProperties *") VkExtensionProperties.Buffer pProperties) {
+    public static int vkEnumerateInstanceExtensionProperties(@Nullable @NativeType("const char *") CharSequence pLayerName, @NativeType("uint32_t *") IntBuffer pPropertyCount, @Nullable @NativeType("VkExtensionProperties *") VkExtensionProperties.Buffer pProperties) {
         if (CHECKS) {
             check(pPropertyCount, 1);
             checkSafe(pProperties, pPropertyCount.get(pPropertyCount.position()));
@@ -3722,12 +3606,12 @@ public class VK10 {
      * 
      * <p>To query the extensions available to a given physical device, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * VkResult vkEnumerateDeviceExtensionProperties(
      *     VkPhysicalDevice                            physicalDevice,
      *     const char*                                 pLayerName,
      *     uint32_t*                                   pPropertyCount,
-     *     VkExtensionProperties*                      pProperties);</code></pre>
+     *     VkExtensionProperties*                      pProperties);</pre></code>
      * 
      * <h5>Description</h5>
      * 
@@ -3768,7 +3652,7 @@ public class VK10 {
      * @param pProperties    either {@code NULL} or a pointer to an array of {@link VkExtensionProperties} structures.
      */
     @NativeType("VkResult")
-    public static int vkEnumerateDeviceExtensionProperties(VkPhysicalDevice physicalDevice, @Nullable @NativeType("char const *") ByteBuffer pLayerName, @NativeType("uint32_t *") IntBuffer pPropertyCount, @Nullable @NativeType("VkExtensionProperties *") VkExtensionProperties.Buffer pProperties) {
+    public static int vkEnumerateDeviceExtensionProperties(VkPhysicalDevice physicalDevice, @Nullable @NativeType("const char *") ByteBuffer pLayerName, @NativeType("uint32_t *") IntBuffer pPropertyCount, @Nullable @NativeType("VkExtensionProperties *") VkExtensionProperties.Buffer pProperties) {
         if (CHECKS) {
             checkNT1Safe(pLayerName);
             check(pPropertyCount, 1);
@@ -3784,12 +3668,12 @@ public class VK10 {
      * 
      * <p>To query the extensions available to a given physical device, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * VkResult vkEnumerateDeviceExtensionProperties(
      *     VkPhysicalDevice                            physicalDevice,
      *     const char*                                 pLayerName,
      *     uint32_t*                                   pPropertyCount,
-     *     VkExtensionProperties*                      pProperties);</code></pre>
+     *     VkExtensionProperties*                      pProperties);</pre></code>
      * 
      * <h5>Description</h5>
      * 
@@ -3830,7 +3714,7 @@ public class VK10 {
      * @param pProperties    either {@code NULL} or a pointer to an array of {@link VkExtensionProperties} structures.
      */
     @NativeType("VkResult")
-    public static int vkEnumerateDeviceExtensionProperties(VkPhysicalDevice physicalDevice, @Nullable @NativeType("char const *") CharSequence pLayerName, @NativeType("uint32_t *") IntBuffer pPropertyCount, @Nullable @NativeType("VkExtensionProperties *") VkExtensionProperties.Buffer pProperties) {
+    public static int vkEnumerateDeviceExtensionProperties(VkPhysicalDevice physicalDevice, @Nullable @NativeType("const char *") CharSequence pLayerName, @NativeType("uint32_t *") IntBuffer pPropertyCount, @Nullable @NativeType("VkExtensionProperties *") VkExtensionProperties.Buffer pProperties) {
         if (CHECKS) {
             check(pPropertyCount, 1);
             checkSafe(pProperties, pPropertyCount.get(pPropertyCount.position()));
@@ -3863,10 +3747,10 @@ public class VK10 {
      * 
      * <p>To query the available layers, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * VkResult vkEnumerateInstanceLayerProperties(
      *     uint32_t*                                   pPropertyCount,
-     *     VkLayerProperties*                          pProperties);</code></pre>
+     *     VkLayerProperties*                          pProperties);</pre></code>
      * 
      * <h5>Description</h5>
      * 
@@ -3931,11 +3815,11 @@ public class VK10 {
      * 
      * <p>To enumerate device layers, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * VkResult vkEnumerateDeviceLayerProperties(
      *     VkPhysicalDevice                            physicalDevice,
      *     uint32_t*                                   pPropertyCount,
-     *     VkLayerProperties*                          pProperties);</code></pre>
+     *     VkLayerProperties*                          pProperties);</pre></code>
      * 
      * <h5>Description</h5>
      * 
@@ -3970,6 +3854,7 @@ public class VK10 {
      * 
      * <p>{@link VkLayerProperties}</p>
      *
+     * @param physicalDevice 
      * @param pPropertyCount a pointer to an integer related to the number of layer properties available or queried.
      * @param pProperties    either {@code NULL} or a pointer to an array of {@link VkLayerProperties} structures.
      */
@@ -3997,23 +3882,18 @@ public class VK10 {
      * 
      * <p>To retrieve a handle to a VkQueue object, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * void vkGetDeviceQueue(
      *     VkDevice                                    device,
      *     uint32_t                                    queueFamilyIndex,
      *     uint32_t                                    queueIndex,
-     *     VkQueue*                                    pQueue);</code></pre>
-     * 
-     * <h5>Description</h5>
-     * 
-     * <p>{@link #vkGetDeviceQueue GetDeviceQueue} <b>must</b> only be used to get queues that were created with the {@code flags} parameter of {@link VkDeviceQueueCreateInfo} set to zero. To get queues that were created with a non-zero {@code flags} parameter use {@link VK11#vkGetDeviceQueue2 GetDeviceQueue2}.</p>
+     *     VkQueue*                                    pQueue);</pre></code>
      * 
      * <h5>Valid Usage</h5>
      * 
      * <ul>
      * <li>{@code queueFamilyIndex} <b>must</b> be one of the queue family indices specified when {@code device} was created, via the {@link VkDeviceQueueCreateInfo} structure</li>
      * <li>{@code queueIndex} <b>must</b> be less than the number of queues created for the specified queue family index when {@code device} was created, via the {@code queueCount} member of the {@link VkDeviceQueueCreateInfo} structure</li>
-     * <li>{@link VkDeviceQueueCreateInfo}{@code ::flags} <b>must</b> have been set to zero when {@code device} was created</li>
      * </ul>
      * 
      * <h5>Valid Usage (Implicit)</h5>
@@ -4057,12 +3937,12 @@ public class VK10 {
      * 
      * <p>To submit command buffers to a queue, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * VkResult vkQueueSubmit(
      *     VkQueue                                     queue,
      *     uint32_t                                    submitCount,
      *     const VkSubmitInfo*                         pSubmits,
-     *     VkFence                                     fence);</code></pre>
+     *     VkFence                                     fence);</pre></code>
      * 
      * <h5>Description</h5>
      * 
@@ -4081,7 +3961,7 @@ public class VK10 {
      * 
      * <p>If any command buffer submitted to this queue is in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle">executable state</a>, it is moved to the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle">pending state</a>. Once execution of all submissions of a command buffer complete, it moves from the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle">pending state</a>, back to the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle">executable state</a>. If a command buffer was recorded with the {@link #VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT} flag, it instead moves back to the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle">invalid state</a>.</p>
      * 
-     * <p>If {@link #vkQueueSubmit QueueSubmit} fails, it <b>may</b> return {@link #VK_ERROR_OUT_OF_HOST_MEMORY ERROR_OUT_OF_HOST_MEMORY} or {@link #VK_ERROR_OUT_OF_DEVICE_MEMORY ERROR_OUT_OF_DEVICE_MEMORY}. If it does, the implementation <b>must</b> ensure that the state and contents of any resources or synchronization primitives referenced by the submitted command buffers and any semaphores referenced by {@code pSubmits} is unaffected by the call or its failure. If {@link #vkQueueSubmit QueueSubmit} fails in such a way that the implementation is unable to make that guarantee, the implementation <b>must</b> return {@link #VK_ERROR_DEVICE_LOST ERROR_DEVICE_LOST}. See <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#devsandqueues-lost-device">Lost Device</a>.</p>
+     * <p>If {@link #vkQueueSubmit QueueSubmit} fails, it <b>may</b> return {@link #VK_ERROR_OUT_OF_HOST_MEMORY ERROR_OUT_OF_HOST_MEMORY} or {@link #VK_ERROR_OUT_OF_DEVICE_MEMORY ERROR_OUT_OF_DEVICE_MEMORY}. If it does, the implementation <b>must</b> ensure that the state and contents of any resources or synchronization primitives referenced by the submitted command buffers and any semaphores referenced by {@code pSubmits} is unaffected by the call or its failure. If {@link #vkQueueSubmit QueueSubmit} fails in such a way that the implementation <b>can</b> not make that guarantee, the implementation <b>must</b> return {@link #VK_ERROR_DEVICE_LOST ERROR_DEVICE_LOST}. See <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#devsandqueues-lost-device">Lost Device</a>.</p>
      * 
      * <h5>Valid Usage</h5>
      * 
@@ -4149,7 +4029,7 @@ public class VK10 {
      * @param fence    an optional: handle to a fence to be signaled once all submitted command buffers have completed execution. If {@code fence} is not {@link #VK_NULL_HANDLE NULL_HANDLE}, it defines a <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-fences-signaling">fence signal operation</a>.
      */
     @NativeType("VkResult")
-    public static int vkQueueSubmit(VkQueue queue, @Nullable @NativeType("VkSubmitInfo const *") VkSubmitInfo.Buffer pSubmits, @NativeType("VkFence") long fence) {
+    public static int vkQueueSubmit(VkQueue queue, @Nullable @NativeType("const VkSubmitInfo *") VkSubmitInfo.Buffer pSubmits, @NativeType("VkFence") long fence) {
         return nvkQueueSubmit(queue, remainingSafe(pSubmits), memAddressSafe(pSubmits), fence);
     }
 
@@ -4160,12 +4040,12 @@ public class VK10 {
      * 
      * <p>To submit command buffers to a queue, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * VkResult vkQueueSubmit(
      *     VkQueue                                     queue,
      *     uint32_t                                    submitCount,
      *     const VkSubmitInfo*                         pSubmits,
-     *     VkFence                                     fence);</code></pre>
+     *     VkFence                                     fence);</pre></code>
      * 
      * <h5>Description</h5>
      * 
@@ -4184,7 +4064,7 @@ public class VK10 {
      * 
      * <p>If any command buffer submitted to this queue is in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle">executable state</a>, it is moved to the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle">pending state</a>. Once execution of all submissions of a command buffer complete, it moves from the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle">pending state</a>, back to the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle">executable state</a>. If a command buffer was recorded with the {@link #VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT} flag, it instead moves back to the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle">invalid state</a>.</p>
      * 
-     * <p>If {@link #vkQueueSubmit QueueSubmit} fails, it <b>may</b> return {@link #VK_ERROR_OUT_OF_HOST_MEMORY ERROR_OUT_OF_HOST_MEMORY} or {@link #VK_ERROR_OUT_OF_DEVICE_MEMORY ERROR_OUT_OF_DEVICE_MEMORY}. If it does, the implementation <b>must</b> ensure that the state and contents of any resources or synchronization primitives referenced by the submitted command buffers and any semaphores referenced by {@code pSubmits} is unaffected by the call or its failure. If {@link #vkQueueSubmit QueueSubmit} fails in such a way that the implementation is unable to make that guarantee, the implementation <b>must</b> return {@link #VK_ERROR_DEVICE_LOST ERROR_DEVICE_LOST}. See <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#devsandqueues-lost-device">Lost Device</a>.</p>
+     * <p>If {@link #vkQueueSubmit QueueSubmit} fails, it <b>may</b> return {@link #VK_ERROR_OUT_OF_HOST_MEMORY ERROR_OUT_OF_HOST_MEMORY} or {@link #VK_ERROR_OUT_OF_DEVICE_MEMORY ERROR_OUT_OF_DEVICE_MEMORY}. If it does, the implementation <b>must</b> ensure that the state and contents of any resources or synchronization primitives referenced by the submitted command buffers and any semaphores referenced by {@code pSubmits} is unaffected by the call or its failure. If {@link #vkQueueSubmit QueueSubmit} fails in such a way that the implementation <b>can</b> not make that guarantee, the implementation <b>must</b> return {@link #VK_ERROR_DEVICE_LOST ERROR_DEVICE_LOST}. See <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#devsandqueues-lost-device">Lost Device</a>.</p>
      * 
      * <h5>Valid Usage</h5>
      * 
@@ -4251,7 +4131,7 @@ public class VK10 {
      * @param fence an optional: handle to a fence to be signaled once all submitted command buffers have completed execution. If {@code fence} is not {@link #VK_NULL_HANDLE NULL_HANDLE}, it defines a <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-fences-signaling">fence signal operation</a>.
      */
     @NativeType("VkResult")
-    public static int vkQueueSubmit(VkQueue queue, @Nullable @NativeType("VkSubmitInfo const *") VkSubmitInfo pSubmit, @NativeType("VkFence") long fence) {
+    public static int vkQueueSubmit(VkQueue queue, @Nullable @NativeType("const VkSubmitInfo *") VkSubmitInfo pSubmit, @NativeType("VkFence") long fence) {
         return nvkQueueSubmit(queue, 1, pSubmit.address(), fence);
     }
 
@@ -4264,9 +4144,9 @@ public class VK10 {
      * 
      * <p>To wait on the host for the completion of outstanding queue operations for a given queue, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * VkResult vkQueueWaitIdle(
-     *     VkQueue                                     queue);</code></pre>
+     *     VkQueue                                     queue);</pre></code>
      * 
      * <h5>Description</h5>
      * 
@@ -4317,9 +4197,9 @@ public class VK10 {
      * 
      * <p>To wait on the host for the completion of outstanding queue operations for all queues on a given logical device, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * VkResult vkDeviceWaitIdle(
-     *     VkDevice                                    device);</code></pre>
+     *     VkDevice                                    device);</pre></code>
      * 
      * <h5>Description</h5>
      * 
@@ -4372,37 +4252,28 @@ public class VK10 {
     }
 
     /**
-     * Allocate device memory.
+     * Allocate GPU memory.
      * 
      * <h5>C Specification</h5>
      * 
      * <p>To allocate memory objects, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * VkResult vkAllocateMemory(
      *     VkDevice                                    device,
      *     const VkMemoryAllocateInfo*                 pAllocateInfo,
      *     const VkAllocationCallbacks*                pAllocator,
-     *     VkDeviceMemory*                             pMemory);</code></pre>
+     *     VkDeviceMemory*                             pMemory);</pre></code>
      * 
      * <h5>Description</h5>
      * 
      * <p>Allocations returned by {@link #vkAllocateMemory AllocateMemory} are guaranteed to meet any alignment requirement of the implementation. For example, if an implementation requires 128 byte alignment for images and 64 byte alignment for buffers, the device memory returned through this mechanism would be 128-byte aligned. This ensures that applications <b>can</b> correctly suballocate objects of different types (with potentially different alignment requirements) in the same memory object.</p>
      * 
-     * <p>When memory is allocated, its contents are undefined with the following constraint:</p>
-     * 
-     * <ul>
-     * <li>The contents of unprotected memory <b>must</b> not be a function of data protected memory objects, even if those memory objects were previously freed.</li>
-     * </ul>
-     * 
-     * <div style="margin-left: 26px; border-left: 1px solid gray; padding-left: 14px;"><h5>Note</h5>
-     * 
-     * <p>The contents of memory allocated by one application <b>should</b> not be a function of data from protected memory objects of another application, even if those memory objects were previously freed.</p>
-     * </div>
+     * <p>When memory is allocated, its contents are undefined.</p>
      * 
      * <p>The maximum number of valid memory allocations that <b>can</b> exist simultaneously within a {@code VkDevice} <b>may</b> be restricted by implementation- or platform-dependent limits. If a call to {@link #vkAllocateMemory AllocateMemory} would cause the total number of allocations to exceed these limits, such a call will fail and <b>must</b> return {@link #VK_ERROR_TOO_MANY_OBJECTS ERROR_TOO_MANY_OBJECTS}. The <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-limits-maxMemoryAllocationCount">{@code maxMemoryAllocationCount}</a> feature describes the number of allocations that <b>can</b> exist simultaneously before encountering these internal limits.</p>
      * 
-     * <p>Some platforms <b>may</b> have a limit on the maximum size of a single allocation. For example, certain systems <b>may</b> fail to create allocations with a size greater than or equal to 4GB. Such a limit is implementation-dependent, and if such a failure occurs then the error {@link #VK_ERROR_OUT_OF_DEVICE_MEMORY ERROR_OUT_OF_DEVICE_MEMORY} <b>must</b> be returned. This limit is advertised in {@link VkPhysicalDeviceMaintenance3Properties}{@code ::maxMemoryAllocationSize}.</p>
+     * <p>Some platforms <b>may</b> have a limit on the maximum size of a single allocation. For example, certain systems <b>may</b> fail to create allocations with a size greater than or equal to 4GB. Such a limit is implementation-dependent, and if such a failure occurs then the error {@link #VK_ERROR_OUT_OF_DEVICE_MEMORY ERROR_OUT_OF_DEVICE_MEMORY} <b>must</b> be returned.</p>
      * 
      * <h5>Valid Usage</h5>
      * 
@@ -4432,7 +4303,7 @@ public class VK10 {
      * <li>{@link #VK_ERROR_OUT_OF_HOST_MEMORY ERROR_OUT_OF_HOST_MEMORY}</li>
      * <li>{@link #VK_ERROR_OUT_OF_DEVICE_MEMORY ERROR_OUT_OF_DEVICE_MEMORY}</li>
      * <li>{@link #VK_ERROR_TOO_MANY_OBJECTS ERROR_TOO_MANY_OBJECTS}</li>
-     * <li>{@link VK11#VK_ERROR_INVALID_EXTERNAL_HANDLE ERROR_INVALID_EXTERNAL_HANDLE}</li>
+     * <li>{@link KHRExternalMemory#VK_ERROR_INVALID_EXTERNAL_HANDLE_KHR ERROR_INVALID_EXTERNAL_HANDLE_KHR}</li>
      * </ul></dd>
      * </dl>
      * 
@@ -4446,7 +4317,7 @@ public class VK10 {
      * @param pMemory       a pointer to a {@code VkDeviceMemory} handle in which information about the allocated memory is returned.
      */
     @NativeType("VkResult")
-    public static int vkAllocateMemory(VkDevice device, @NativeType("VkMemoryAllocateInfo const *") VkMemoryAllocateInfo pAllocateInfo, @Nullable @NativeType("VkAllocationCallbacks const *") VkAllocationCallbacks pAllocator, @NativeType("VkDeviceMemory *") LongBuffer pMemory) {
+    public static int vkAllocateMemory(VkDevice device, @NativeType("const VkMemoryAllocateInfo *") VkMemoryAllocateInfo pAllocateInfo, @Nullable @NativeType("const VkAllocationCallbacks *") VkAllocationCallbacks pAllocator, @NativeType("VkDeviceMemory *") LongBuffer pMemory) {
         if (CHECKS) {
             check(pMemory, 1);
         }
@@ -4465,17 +4336,17 @@ public class VK10 {
     }
 
     /**
-     * Free device memory.
+     * Free GPU memory.
      * 
      * <h5>C Specification</h5>
      * 
      * <p>To free a memory object, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * void vkFreeMemory(
      *     VkDevice                                    device,
      *     VkDeviceMemory                              memory,
-     *     const VkAllocationCallbacks*                pAllocator);</code></pre>
+     *     const VkAllocationCallbacks*                pAllocator);</pre></code>
      * 
      * <h5>Description</h5>
      * 
@@ -4519,7 +4390,7 @@ public class VK10 {
      * @param memory     the {@code VkDeviceMemory} object to be freed.
      * @param pAllocator controls host memory allocation as described in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation">Memory Allocation</a> chapter.
      */
-    public static void vkFreeMemory(VkDevice device, @NativeType("VkDeviceMemory") long memory, @Nullable @NativeType("VkAllocationCallbacks const *") VkAllocationCallbacks pAllocator) {
+    public static void vkFreeMemory(VkDevice device, @NativeType("VkDeviceMemory") long memory, @Nullable @NativeType("const VkAllocationCallbacks *") VkAllocationCallbacks pAllocator) {
         nvkFreeMemory(device, memory, memAddressSafe(pAllocator));
     }
 
@@ -4538,14 +4409,14 @@ public class VK10 {
      * 
      * <p>To retrieve a host virtual address pointer to a region of a mappable memory object, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * VkResult vkMapMemory(
      *     VkDevice                                    device,
      *     VkDeviceMemory                              memory,
      *     VkDeviceSize                                offset,
      *     VkDeviceSize                                size,
      *     VkMemoryMapFlags                            flags,
-     *     void**                                      ppData);</code></pre>
+     *     void**                                      ppData);</pre></code>
      * 
      * <h5>Description</h5>
      * 
@@ -4631,10 +4502,10 @@ public class VK10 {
      * 
      * <p>To unmap a memory object once host access to it is no longer needed by the application, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * void vkUnmapMemory(
      *     VkDevice                                    device,
-     *     VkDeviceMemory                              memory);</code></pre>
+     *     VkDeviceMemory                              memory);</pre></code>
      * 
      * <h5>Valid Usage</h5>
      * 
@@ -4683,17 +4554,15 @@ public class VK10 {
      * 
      * <p>To flush ranges of non-coherent memory from the host caches, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * VkResult vkFlushMappedMemoryRanges(
      *     VkDevice                                    device,
      *     uint32_t                                    memoryRangeCount,
-     *     const VkMappedMemoryRange*                  pMemoryRanges);</code></pre>
+     *     const VkMappedMemoryRange*                  pMemoryRanges);</pre></code>
      * 
      * <h5>Description</h5>
      * 
      * <p>{@link #vkFlushMappedMemoryRanges FlushMappedMemoryRanges} guarantees that host writes to the memory ranges described by {@code pMemoryRanges} <b>can</b> be made available to device access, via <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-dependencies-available-and-visible">availability operations</a> from the {@link #VK_ACCESS_HOST_WRITE_BIT ACCESS_HOST_WRITE_BIT} <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-access-types">access type</a>.</p>
-     * 
-     * <p>Within each range described by {@code pMemoryRanges}, each set of {@code nonCoherentAtomSize} bytes in that range is flushed if any byte in that set has been written by the host since it was first mapped, or the last time it was flushed. If {@code pMemoryRanges} includes sets of {@code nonCoherentAtomSize} bytes where no bytes have been written by the host, those bytes <b>must</b> not be flushed.</p>
      * 
      * <p>Unmapping non-coherent memory does not implicitly flush the mapped memory, and host writes that have not been flushed <b>may</b> not ever be visible to the device. However, implementations <b>must</b> ensure that writes that have not been flushed do not become visible to any other memory.</p>
      * 
@@ -4732,7 +4601,7 @@ public class VK10 {
      * @param pMemoryRanges a pointer to an array of {@link VkMappedMemoryRange} structures describing the memory ranges to flush.
      */
     @NativeType("VkResult")
-    public static int vkFlushMappedMemoryRanges(VkDevice device, @NativeType("VkMappedMemoryRange const *") VkMappedMemoryRange.Buffer pMemoryRanges) {
+    public static int vkFlushMappedMemoryRanges(VkDevice device, @NativeType("const VkMappedMemoryRange *") VkMappedMemoryRange.Buffer pMemoryRanges) {
         return nvkFlushMappedMemoryRanges(device, pMemoryRanges.remaining(), pMemoryRanges.address());
     }
 
@@ -4743,17 +4612,15 @@ public class VK10 {
      * 
      * <p>To flush ranges of non-coherent memory from the host caches, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * VkResult vkFlushMappedMemoryRanges(
      *     VkDevice                                    device,
      *     uint32_t                                    memoryRangeCount,
-     *     const VkMappedMemoryRange*                  pMemoryRanges);</code></pre>
+     *     const VkMappedMemoryRange*                  pMemoryRanges);</pre></code>
      * 
      * <h5>Description</h5>
      * 
      * <p>{@link #vkFlushMappedMemoryRanges FlushMappedMemoryRanges} guarantees that host writes to the memory ranges described by {@code pMemoryRanges} <b>can</b> be made available to device access, via <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-dependencies-available-and-visible">availability operations</a> from the {@link #VK_ACCESS_HOST_WRITE_BIT ACCESS_HOST_WRITE_BIT} <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-access-types">access type</a>.</p>
-     * 
-     * <p>Within each range described by {@code pMemoryRanges}, each set of {@code nonCoherentAtomSize} bytes in that range is flushed if any byte in that set has been written by the host since it was first mapped, or the last time it was flushed. If {@code pMemoryRanges} includes sets of {@code nonCoherentAtomSize} bytes where no bytes have been written by the host, those bytes <b>must</b> not be flushed.</p>
      * 
      * <p>Unmapping non-coherent memory does not implicitly flush the mapped memory, and host writes that have not been flushed <b>may</b> not ever be visible to the device. However, implementations <b>must</b> ensure that writes that have not been flushed do not become visible to any other memory.</p>
      * 
@@ -4791,7 +4658,7 @@ public class VK10 {
      * @param device the logical device that owns the memory ranges.
      */
     @NativeType("VkResult")
-    public static int vkFlushMappedMemoryRanges(VkDevice device, @NativeType("VkMappedMemoryRange const *") VkMappedMemoryRange pMemoryRange) {
+    public static int vkFlushMappedMemoryRanges(VkDevice device, @NativeType("const VkMappedMemoryRange *") VkMappedMemoryRange pMemoryRange) {
         return nvkFlushMappedMemoryRanges(device, 1, pMemoryRange.address());
     }
 
@@ -4814,17 +4681,15 @@ public class VK10 {
      * 
      * <p>To invalidate ranges of non-coherent memory from the host caches, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * VkResult vkInvalidateMappedMemoryRanges(
      *     VkDevice                                    device,
      *     uint32_t                                    memoryRangeCount,
-     *     const VkMappedMemoryRange*                  pMemoryRanges);</code></pre>
+     *     const VkMappedMemoryRange*                  pMemoryRanges);</pre></code>
      * 
      * <h5>Description</h5>
      * 
      * <p>{@link #vkInvalidateMappedMemoryRanges InvalidateMappedMemoryRanges} guarantees that device writes to the memory ranges described by {@code pMemoryRanges}, which have been made visible to the {@link #VK_ACCESS_HOST_WRITE_BIT ACCESS_HOST_WRITE_BIT} and {@link #VK_ACCESS_HOST_READ_BIT ACCESS_HOST_READ_BIT} <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-access-types">access types</a>, are made visible to the host. If a range of non-coherent memory is written by the host and then invalidated without first being flushed, its contents are undefined.</p>
-     * 
-     * <p>Within each range described by {@code pMemoryRanges}, each set of {@code nonCoherentAtomSize} bytes in that range is invalidated if any byte in that set has been written by the device since it was first mapped, or the last time it was invalidated.</p>
      * 
      * <div style="margin-left: 26px; border-left: 1px solid gray; padding-left: 14px;"><h5>Note</h5>
      * 
@@ -4861,7 +4726,7 @@ public class VK10 {
      * @param pMemoryRanges a pointer to an array of {@link VkMappedMemoryRange} structures describing the memory ranges to invalidate.
      */
     @NativeType("VkResult")
-    public static int vkInvalidateMappedMemoryRanges(VkDevice device, @NativeType("VkMappedMemoryRange const *") VkMappedMemoryRange.Buffer pMemoryRanges) {
+    public static int vkInvalidateMappedMemoryRanges(VkDevice device, @NativeType("const VkMappedMemoryRange *") VkMappedMemoryRange.Buffer pMemoryRanges) {
         return nvkInvalidateMappedMemoryRanges(device, pMemoryRanges.remaining(), pMemoryRanges.address());
     }
 
@@ -4872,17 +4737,15 @@ public class VK10 {
      * 
      * <p>To invalidate ranges of non-coherent memory from the host caches, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * VkResult vkInvalidateMappedMemoryRanges(
      *     VkDevice                                    device,
      *     uint32_t                                    memoryRangeCount,
-     *     const VkMappedMemoryRange*                  pMemoryRanges);</code></pre>
+     *     const VkMappedMemoryRange*                  pMemoryRanges);</pre></code>
      * 
      * <h5>Description</h5>
      * 
      * <p>{@link #vkInvalidateMappedMemoryRanges InvalidateMappedMemoryRanges} guarantees that device writes to the memory ranges described by {@code pMemoryRanges}, which have been made visible to the {@link #VK_ACCESS_HOST_WRITE_BIT ACCESS_HOST_WRITE_BIT} and {@link #VK_ACCESS_HOST_READ_BIT ACCESS_HOST_READ_BIT} <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-access-types">access types</a>, are made visible to the host. If a range of non-coherent memory is written by the host and then invalidated without first being flushed, its contents are undefined.</p>
-     * 
-     * <p>Within each range described by {@code pMemoryRanges}, each set of {@code nonCoherentAtomSize} bytes in that range is invalidated if any byte in that set has been written by the device since it was first mapped, or the last time it was invalidated.</p>
      * 
      * <div style="margin-left: 26px; border-left: 1px solid gray; padding-left: 14px;"><h5>Note</h5>
      * 
@@ -4918,7 +4781,7 @@ public class VK10 {
      * @param device the logical device that owns the memory ranges.
      */
     @NativeType("VkResult")
-    public static int vkInvalidateMappedMemoryRanges(VkDevice device, @NativeType("VkMappedMemoryRange const *") VkMappedMemoryRange pMemoryRange) {
+    public static int vkInvalidateMappedMemoryRanges(VkDevice device, @NativeType("const VkMappedMemoryRange *") VkMappedMemoryRange pMemoryRange) {
         return nvkInvalidateMappedMemoryRanges(device, 1, pMemoryRange.address());
     }
 
@@ -4937,11 +4800,11 @@ public class VK10 {
      * 
      * <p>To determine the amount of lazily-allocated memory that is currently committed for a memory object, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * void vkGetDeviceMemoryCommitment(
      *     VkDevice                                    device,
      *     VkDeviceMemory                              memory,
-     *     VkDeviceSize*                               pCommittedMemoryInBytes);</code></pre>
+     *     VkDeviceSize*                               pCommittedMemoryInBytes);</pre></code>
      * 
      * <h5>Description</h5>
      * 
@@ -4984,16 +4847,16 @@ public class VK10 {
      * 
      * <p>To attach memory to a buffer object, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * VkResult vkBindBufferMemory(
      *     VkDevice                                    device,
      *     VkBuffer                                    buffer,
      *     VkDeviceMemory                              memory,
-     *     VkDeviceSize                                memoryOffset);</code></pre>
+     *     VkDeviceSize                                memoryOffset);</pre></code>
      * 
      * <h5>Description</h5>
      * 
-     * <p>{@link #vkBindBufferMemory BindBufferMemory} is equivalent to passing the same parameters through {@link VkBindBufferMemoryInfo} to {@link VK11#vkBindBufferMemory2 BindBufferMemory2}.</p>
+     * <p>{@link #vkBindBufferMemory BindBufferMemory} is equivalent to passing the same parameters through {@link VkBindBufferMemoryInfoKHR} to {@link KHRBindMemory2#vkBindBufferMemory2KHR BindBufferMemory2KHR}.</p>
      * 
      * <h5>Valid Usage</h5>
      * 
@@ -5001,13 +4864,14 @@ public class VK10 {
      * <li>{@code buffer} <b>must</b> not already be backed by a memory object</li>
      * <li>{@code buffer} <b>must</b> not have been created with any sparse memory binding flags</li>
      * <li>{@code memoryOffset} <b>must</b> be less than the size of {@code memory}</li>
+     * <li>If {@code buffer} was created with the {@link #VK_BUFFER_USAGE_UNIFORM_TEXEL_BUFFER_BIT BUFFER_USAGE_UNIFORM_TEXEL_BUFFER_BIT} or {@link #VK_BUFFER_USAGE_STORAGE_TEXEL_BUFFER_BIT BUFFER_USAGE_STORAGE_TEXEL_BUFFER_BIT}, {@code memoryOffset} <b>must</b> be a multiple of {@link VkPhysicalDeviceLimits}{@code ::minTexelBufferOffsetAlignment}</li>
+     * <li>If {@code buffer} was created with the {@link #VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT BUFFER_USAGE_UNIFORM_BUFFER_BIT}, {@code memoryOffset} <b>must</b> be a multiple of {@link VkPhysicalDeviceLimits}{@code ::minUniformBufferOffsetAlignment}</li>
+     * <li>If {@code buffer} was created with the {@link #VK_BUFFER_USAGE_STORAGE_BUFFER_BIT BUFFER_USAGE_STORAGE_BUFFER_BIT}, {@code memoryOffset} <b>must</b> be a multiple of {@link VkPhysicalDeviceLimits}{@code ::minStorageBufferOffsetAlignment}</li>
      * <li>{@code memory} <b>must</b> have been allocated using one of the memory types allowed in the {@code memoryTypeBits} member of the {@link VkMemoryRequirements} structure returned from a call to {@link #vkGetBufferMemoryRequirements GetBufferMemoryRequirements} with {@code buffer}</li>
      * <li>{@code memoryOffset} <b>must</b> be an integer multiple of the {@code alignment} member of the {@link VkMemoryRequirements} structure returned from a call to {@link #vkGetBufferMemoryRequirements GetBufferMemoryRequirements} with {@code buffer}</li>
      * <li>The {@code size} member of the {@link VkMemoryRequirements} structure returned from a call to {@link #vkGetBufferMemoryRequirements GetBufferMemoryRequirements} with {@code buffer} <b>must</b> be less than or equal to the size of {@code memory} minus {@code memoryOffset}</li>
-     * <li>If {@code buffer} requires a dedicated allocation(as reported by {@link VK11#vkGetBufferMemoryRequirements2 GetBufferMemoryRequirements2} in {@link VkMemoryDedicatedRequirements}::requiresDedicatedAllocation for {@code buffer}), {@code memory} <b>must</b> have been created with {@link VkMemoryDedicatedAllocateInfo}{@code ::buffer} equal to {@code buffer}</li>
-     * <li>If the {@link VkMemoryAllocateInfo} provided when {@code memory} was allocated included an instance of {@link VkMemoryDedicatedAllocateInfo} in its {@code pNext} chain, and {@link VkMemoryDedicatedAllocateInfo}{@code ::buffer} was not {@link #VK_NULL_HANDLE NULL_HANDLE}, then {@code buffer} <b>must</b> equal {@link VkMemoryDedicatedAllocateInfo}{@code ::buffer}, and {@code memoryOffset} <b>must</b> be zero.</li>
-     * <li>If buffer was created with the {@link VK11#VK_BUFFER_CREATE_PROTECTED_BIT BUFFER_CREATE_PROTECTED_BIT} bit set, the buffer <b>must</b> be bound to a memory object allocated with a memory type that reports {@link VK11#VK_MEMORY_PROPERTY_PROTECTED_BIT MEMORY_PROPERTY_PROTECTED_BIT}</li>
-     * <li>If buffer was created with the {@link VK11#VK_BUFFER_CREATE_PROTECTED_BIT BUFFER_CREATE_PROTECTED_BIT} bit not set, the buffer <b>must</b> not be bound to a memory object created with a memory type that reports {@link VK11#VK_MEMORY_PROPERTY_PROTECTED_BIT MEMORY_PROPERTY_PROTECTED_BIT}</li>
+     * <li>If {@code buffer} requires a dedicated allocation(as reported by {@link KHRGetMemoryRequirements2#vkGetBufferMemoryRequirements2KHR GetBufferMemoryRequirements2KHR} in {@link VkMemoryDedicatedRequirementsKHR}::requiresDedicatedAllocation for {@code image}), {@code memory} <b>must</b> have been created with {@link VkMemoryDedicatedAllocateInfoKHR}{@code ::buffer} equal to {@code buffer}</li>
+     * <li>If the {@code VkmemoryAllocateInfo} provided when {@code memory} was allocated included an instance of {@link VkMemoryDedicatedAllocateInfoKHR} in its {@code pNext} chain, and {@link VkMemoryDedicatedAllocateInfoKHR}{@code ::buffer} was not {@link #VK_NULL_HANDLE NULL_HANDLE}, then {@code buffer} <b>must</b> equal {@link VkMemoryDedicatedAllocateInfoKHR}{@code ::buffer} and {@code memoryOffset} <b>must</b> be zero.</li>
      * <li>If {@code buffer} was created with {@link VkDedicatedAllocationBufferCreateInfoNV}{@code ::dedicatedAllocation} equal to {@link #VK_TRUE TRUE}, {@code memory} <b>must</b> have been created with {@link VkDedicatedAllocationMemoryAllocateInfoNV}{@code ::buffer} equal to a buffer handle created with identical creation parameters to {@code buffer} and {@code memoryOffset} <b>must</b> be zero</li>
      * </ul>
      * 
@@ -5059,33 +4923,31 @@ public class VK10 {
      * 
      * <h5>C Specification</h5>
      * 
-     * <p>To attach memory to a {@code VkImage} object created without the {@link VK11#VK_IMAGE_CREATE_DISJOINT_BIT IMAGE_CREATE_DISJOINT_BIT} set, call:</p>
+     * <p>To attach memory to a {@code VkImage} object created without the {@link KHRSamplerYcbcrConversion#VK_IMAGE_CREATE_DISJOINT_BIT_KHR IMAGE_CREATE_DISJOINT_BIT_KHR} set, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * VkResult vkBindImageMemory(
      *     VkDevice                                    device,
      *     VkImage                                     image,
      *     VkDeviceMemory                              memory,
-     *     VkDeviceSize                                memoryOffset);</code></pre>
+     *     VkDeviceSize                                memoryOffset);</pre></code>
      * 
      * <h5>Description</h5>
      * 
-     * <p>{@link #vkBindImageMemory BindImageMemory} is equivalent to passing the same parameters through {@link VkBindImageMemoryInfo} to {@link VK11#vkBindImageMemory2 BindImageMemory2}.</p>
+     * <p>{@link #vkBindImageMemory BindImageMemory} is equivalent to passing the same parameters through {@link VkBindImageMemoryInfoKHR} to {@link KHRBindMemory2#vkBindImageMemory2KHR BindImageMemory2KHR}.</p>
      * 
      * <h5>Valid Usage</h5>
      * 
      * <ul>
-     * <li>{@code image} <b>must</b> not have been created with the {@link VK11#VK_IMAGE_CREATE_DISJOINT_BIT IMAGE_CREATE_DISJOINT_BIT} set.</li>
+     * <li>{@code image} <b>must</b> not have been created with the {@link KHRSamplerYcbcrConversion#VK_IMAGE_CREATE_DISJOINT_BIT_KHR IMAGE_CREATE_DISJOINT_BIT_KHR} set.</li>
      * <li>{@code image} <b>must</b> not already be backed by a memory object</li>
      * <li>{@code image} <b>must</b> not have been created with any sparse memory binding flags</li>
      * <li>{@code memoryOffset} <b>must</b> be less than the size of {@code memory}</li>
      * <li>{@code memory} <b>must</b> have been allocated using one of the memory types allowed in the {@code memoryTypeBits} member of the {@link VkMemoryRequirements} structure returned from a call to {@link #vkGetImageMemoryRequirements GetImageMemoryRequirements} with {@code image}</li>
      * <li>{@code memoryOffset} <b>must</b> be an integer multiple of the {@code alignment} member of the {@link VkMemoryRequirements} structure returned from a call to {@link #vkGetImageMemoryRequirements GetImageMemoryRequirements} with {@code image}</li>
      * <li>The {@code size} member of the {@link VkMemoryRequirements} structure returned from a call to {@link #vkGetImageMemoryRequirements GetImageMemoryRequirements} with {@code image} <b>must</b> be less than or equal to the size of {@code memory} minus {@code memoryOffset}</li>
-     * <li>If {@code image} requires a dedicated allocation (as reported by {@link VK11#vkGetImageMemoryRequirements2 GetImageMemoryRequirements2} in {@link VkMemoryDedicatedRequirements}::requiresDedicatedAllocation for {@code image}), {@code memory} <b>must</b> have been created with {@link VkMemoryDedicatedAllocateInfo}{@code ::image} equal to {@code image}</li>
-     * <li>If the {@link VkMemoryAllocateInfo} provided when {@code memory} was allocated included an instance of {@link VkMemoryDedicatedAllocateInfo} in its {@code pNext} chain, and {@link VkMemoryDedicatedAllocateInfo}{@code ::image} was not {@link #VK_NULL_HANDLE NULL_HANDLE}, then {@code image} <b>must</b> equal {@link VkMemoryDedicatedAllocateInfo}{@code ::image} and {@code memoryOffset} <b>must</b> be zero.</li>
-     * <li>If image was created with the {@link VK11#VK_IMAGE_CREATE_PROTECTED_BIT IMAGE_CREATE_PROTECTED_BIT} bit set, the image <b>must</b> be bound to a memory object allocated with a memory type that reports {@link VK11#VK_MEMORY_PROPERTY_PROTECTED_BIT MEMORY_PROPERTY_PROTECTED_BIT}</li>
-     * <li>If image was created with the {@link VK11#VK_IMAGE_CREATE_PROTECTED_BIT IMAGE_CREATE_PROTECTED_BIT} bit not set, the image <b>must</b> not be bound to a memory object created with a memory type that reports {@link VK11#VK_MEMORY_PROPERTY_PROTECTED_BIT MEMORY_PROPERTY_PROTECTED_BIT}</li>
+     * <li>If {@code image} requires a dedicated allocation (as reported by {@link KHRGetMemoryRequirements2#vkGetImageMemoryRequirements2KHR GetImageMemoryRequirements2KHR} in {@link VkMemoryDedicatedRequirementsKHR}::requiresDedicatedAllocation for {@code image}), {@code memory} <b>must</b> have been created with {@link VkMemoryDedicatedAllocateInfoKHR}{@code ::image} equal to {@code image}</li>
+     * <li>If the {@code VkmemoryAllocateInfo} provided when {@code memory} was allocated included an instance of {@link VkMemoryDedicatedAllocateInfoKHR} in its {@code pNext} chain, and {@link VkMemoryDedicatedAllocateInfoKHR}{@code ::image} was not {@link #VK_NULL_HANDLE NULL_HANDLE}, then {@code image} <b>must</b> equal {@link VkMemoryDedicatedAllocateInfoKHR}{@code ::image} and {@code memoryOffset} <b>must</b> be zero.</li>
      * <li>If {@code image} was created with {@link VkDedicatedAllocationImageCreateInfoNV}{@code ::dedicatedAllocation} equal to {@link #VK_TRUE TRUE}, {@code memory} <b>must</b> have been created with {@link VkDedicatedAllocationMemoryAllocateInfoNV}{@code ::image} equal to an image handle created with identical creation parameters to {@code image} and {@code memoryOffset} <b>must</b> be zero</li>
      * </ul>
      * 
@@ -5145,11 +5007,11 @@ public class VK10 {
      * 
      * <p>To determine the memory requirements for a buffer resource, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * void vkGetBufferMemoryRequirements(
      *     VkDevice                                    device,
      *     VkBuffer                                    buffer,
-     *     VkMemoryRequirements*                       pMemoryRequirements);</code></pre>
+     *     VkMemoryRequirements*                       pMemoryRequirements);</pre></code>
      * 
      * <h5>Valid Usage (Implicit)</h5>
      * 
@@ -5185,18 +5047,18 @@ public class VK10 {
      * 
      * <h5>C Specification</h5>
      * 
-     * <p>To determine the memory requirements for an image resource which is not created with the {@link VK11#VK_IMAGE_CREATE_DISJOINT_BIT IMAGE_CREATE_DISJOINT_BIT} flag set, call:</p>
+     * <p>To determine the memory requirements for an image resource which is not created with the {@link KHRSamplerYcbcrConversion#VK_IMAGE_CREATE_DISJOINT_BIT_KHR IMAGE_CREATE_DISJOINT_BIT_KHR} flag set, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * void vkGetImageMemoryRequirements(
      *     VkDevice                                    device,
      *     VkImage                                     image,
-     *     VkMemoryRequirements*                       pMemoryRequirements);</code></pre>
+     *     VkMemoryRequirements*                       pMemoryRequirements);</pre></code>
      * 
      * <h5>Valid Usage</h5>
      * 
      * <ul>
-     * <li>{@code image} <b>must</b> not have been created with the {@link VK11#VK_IMAGE_CREATE_DISJOINT_BIT IMAGE_CREATE_DISJOINT_BIT} flag set</li>
+     * <li>{@code image} <b>must</b> not have been created with the {@link KHRSamplerYcbcrConversion#VK_IMAGE_CREATE_DISJOINT_BIT_KHR IMAGE_CREATE_DISJOINT_BIT_KHR} flag set</li>
      * </ul>
      * 
      * <h5>Valid Usage (Implicit)</h5>
@@ -5239,12 +5101,12 @@ public class VK10 {
      * 
      * <p>To query sparse memory requirements for an image, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * void vkGetImageSparseMemoryRequirements(
      *     VkDevice                                    device,
      *     VkImage                                     image,
      *     uint32_t*                                   pSparseMemoryRequirementCount,
-     *     VkSparseImageMemoryRequirements*            pSparseMemoryRequirements);</code></pre>
+     *     VkSparseImageMemoryRequirements*            pSparseMemoryRequirements);</pre></code>
      * 
      * <h5>Description</h5>
      * 
@@ -5254,7 +5116,7 @@ public class VK10 {
      * 
      * <div style="margin-left: 26px; border-left: 1px solid gray; padding-left: 14px;"><h5>Note</h5>
      * 
-     * <p>It is legal for an implementation to report a larger value in {@link VkMemoryRequirements}{@code ::size} than would be obtained by adding together memory sizes for all {@link VkSparseImageMemoryRequirements} returned by {@link #vkGetImageSparseMemoryRequirements GetImageSparseMemoryRequirements}. This <b>may</b> occur when the implementation requires unused padding in the address range describing the resource.</p>
+     * <p>It is legal for an implementation to report a larger value in {@link VkMemoryRequirements}{@code ::size} than would be obtained by adding together memory sizes for all {@link VkSparseImageMemoryRequirements} returned by {@link #vkGetImageSparseMemoryRequirements GetImageSparseMemoryRequirements}. This <b>may</b> occur when the hardware requires unused padding in the address range describing the resource.</p>
      * </div>
      * 
      * <h5>Valid Usage (Implicit)</h5>
@@ -5303,7 +5165,7 @@ public class VK10 {
      * 
      * <p>{@link #vkGetPhysicalDeviceSparseImageFormatProperties GetPhysicalDeviceSparseImageFormatProperties} returns an array of {@link VkSparseImageFormatProperties}. Each element will describe properties for one set of image aspects that are bound simultaneously in the image. This is usually one element for each aspect in the image, but for interleaved depth/stencil images there is only one element describing the combined aspects.</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * void vkGetPhysicalDeviceSparseImageFormatProperties(
      *     VkPhysicalDevice                            physicalDevice,
      *     VkFormat                                    format,
@@ -5312,7 +5174,7 @@ public class VK10 {
      *     VkImageUsageFlags                           usage,
      *     VkImageTiling                               tiling,
      *     uint32_t*                                   pPropertyCount,
-     *     VkSparseImageFormatProperties*              pProperties);</code></pre>
+     *     VkSparseImageFormatProperties*              pProperties);</pre></code>
      * 
      * <h5>Description</h5>
      * 
@@ -5387,12 +5249,12 @@ public class VK10 {
      * 
      * <p>To submit sparse binding operations to a queue, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * VkResult vkQueueBindSparse(
      *     VkQueue                                     queue,
      *     uint32_t                                    bindInfoCount,
      *     const VkBindSparseInfo*                     pBindInfo,
-     *     VkFence                                     fence);</code></pre>
+     *     VkFence                                     fence);</pre></code>
      * 
      * <h5>Description</h5>
      * 
@@ -5467,7 +5329,7 @@ public class VK10 {
      * @param fence     an optional: handle to a fence to be signaled. If {@code fence} is not {@link #VK_NULL_HANDLE NULL_HANDLE}, it defines a <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-fences-signaling">fence signal operation</a>.
      */
     @NativeType("VkResult")
-    public static int vkQueueBindSparse(VkQueue queue, @Nullable @NativeType("VkBindSparseInfo const *") VkBindSparseInfo.Buffer pBindInfo, @NativeType("VkFence") long fence) {
+    public static int vkQueueBindSparse(VkQueue queue, @Nullable @NativeType("const VkBindSparseInfo *") VkBindSparseInfo.Buffer pBindInfo, @NativeType("VkFence") long fence) {
         return nvkQueueBindSparse(queue, remainingSafe(pBindInfo), memAddressSafe(pBindInfo), fence);
     }
 
@@ -5478,12 +5340,12 @@ public class VK10 {
      * 
      * <p>To submit sparse binding operations to a queue, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * VkResult vkQueueBindSparse(
      *     VkQueue                                     queue,
      *     uint32_t                                    bindInfoCount,
      *     const VkBindSparseInfo*                     pBindInfo,
-     *     VkFence                                     fence);</code></pre>
+     *     VkFence                                     fence);</pre></code>
      * 
      * <h5>Description</h5>
      * 
@@ -5558,7 +5420,7 @@ public class VK10 {
      * @param fence     an optional: handle to a fence to be signaled. If {@code fence} is not {@link #VK_NULL_HANDLE NULL_HANDLE}, it defines a <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-fences-signaling">fence signal operation</a>.
      */
     @NativeType("VkResult")
-    public static int vkQueueBindSparse(VkQueue queue, @Nullable @NativeType("VkBindSparseInfo const *") VkBindSparseInfo pBindInfo, @NativeType("VkFence") long fence) {
+    public static int vkQueueBindSparse(VkQueue queue, @Nullable @NativeType("const VkBindSparseInfo *") VkBindSparseInfo pBindInfo, @NativeType("VkFence") long fence) {
         return nvkQueueBindSparse(queue, 1, pBindInfo.address(), fence);
     }
 
@@ -5580,12 +5442,12 @@ public class VK10 {
      * 
      * <p>To create a fence, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * VkResult vkCreateFence(
      *     VkDevice                                    device,
      *     const VkFenceCreateInfo*                    pCreateInfo,
      *     const VkAllocationCallbacks*                pAllocator,
-     *     VkFence*                                    pFence);</code></pre>
+     *     VkFence*                                    pFence);</pre></code>
      * 
      * <h5>Valid Usage (Implicit)</h5>
      * 
@@ -5620,7 +5482,7 @@ public class VK10 {
      * @param pFence      points to a handle in which the resulting fence object is returned.
      */
     @NativeType("VkResult")
-    public static int vkCreateFence(VkDevice device, @NativeType("VkFenceCreateInfo const *") VkFenceCreateInfo pCreateInfo, @Nullable @NativeType("VkAllocationCallbacks const *") VkAllocationCallbacks pAllocator, @NativeType("VkFence *") LongBuffer pFence) {
+    public static int vkCreateFence(VkDevice device, @NativeType("const VkFenceCreateInfo *") VkFenceCreateInfo pCreateInfo, @Nullable @NativeType("const VkAllocationCallbacks *") VkAllocationCallbacks pAllocator, @NativeType("VkFence *") LongBuffer pFence) {
         if (CHECKS) {
             check(pFence, 1);
         }
@@ -5645,11 +5507,11 @@ public class VK10 {
      * 
      * <p>To destroy a fence, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * void vkDestroyFence(
      *     VkDevice                                    device,
      *     VkFence                                     fence,
-     *     const VkAllocationCallbacks*                pAllocator);</code></pre>
+     *     const VkAllocationCallbacks*                pAllocator);</pre></code>
      * 
      * <h5>Valid Usage</h5>
      * 
@@ -5682,7 +5544,7 @@ public class VK10 {
      * @param fence      the handle of the fence to destroy.
      * @param pAllocator controls host memory allocation as described in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation">Memory Allocation</a> chapter.
      */
-    public static void vkDestroyFence(VkDevice device, @NativeType("VkFence") long fence, @Nullable @NativeType("VkAllocationCallbacks const *") VkAllocationCallbacks pAllocator) {
+    public static void vkDestroyFence(VkDevice device, @NativeType("VkFence") long fence, @Nullable @NativeType("const VkAllocationCallbacks *") VkAllocationCallbacks pAllocator) {
         nvkDestroyFence(device, fence, memAddressSafe(pAllocator));
     }
 
@@ -5705,11 +5567,11 @@ public class VK10 {
      * 
      * <p>To set the state of fences to unsignaled from the host, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * VkResult vkResetFences(
      *     VkDevice                                    device,
      *     uint32_t                                    fenceCount,
-     *     const VkFence*                              pFences);</code></pre>
+     *     const VkFence*                              pFences);</pre></code>
      * 
      * <h5>Description</h5>
      * 
@@ -5758,7 +5620,7 @@ public class VK10 {
      * @param pFences a pointer to an array of fence handles to reset.
      */
     @NativeType("VkResult")
-    public static int vkResetFences(VkDevice device, @NativeType("VkFence const *") LongBuffer pFences) {
+    public static int vkResetFences(VkDevice device, @NativeType("const VkFence *") LongBuffer pFences) {
         return nvkResetFences(device, pFences.remaining(), memAddress(pFences));
     }
 
@@ -5769,11 +5631,11 @@ public class VK10 {
      * 
      * <p>To set the state of fences to unsignaled from the host, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * VkResult vkResetFences(
      *     VkDevice                                    device,
      *     uint32_t                                    fenceCount,
-     *     const VkFence*                              pFences);</code></pre>
+     *     const VkFence*                              pFences);</pre></code>
      * 
      * <h5>Description</h5>
      * 
@@ -5821,7 +5683,7 @@ public class VK10 {
      * @param device the logical device that owns the fences.
      */
     @NativeType("VkResult")
-    public static int vkResetFences(VkDevice device, @NativeType("VkFence const *") long pFence) {
+    public static int vkResetFences(VkDevice device, @NativeType("const VkFence *") long pFence) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
             LongBuffer pFences = stack.longs(pFence);
@@ -5840,10 +5702,10 @@ public class VK10 {
      * 
      * <p>To query the status of a fence from the host, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * VkResult vkGetFenceStatus(
      *     VkDevice                                    device,
-     *     VkFence                                     fence);</code></pre>
+     *     VkFence                                     fence);</pre></code>
      * 
      * <h5>Description</h5>
      * 
@@ -5916,13 +5778,13 @@ public class VK10 {
      * 
      * <p>To wait for one or more fences to enter the signaled state on the host, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * VkResult vkWaitForFences(
      *     VkDevice                                    device,
      *     uint32_t                                    fenceCount,
      *     const VkFence*                              pFences,
      *     VkBool32                                    waitAll,
-     *     uint64_t                                    timeout);</code></pre>
+     *     uint64_t                                    timeout);</pre></code>
      * 
      * <h5>Description</h5>
      * 
@@ -5970,7 +5832,7 @@ public class VK10 {
      * @param timeout the timeout period in units of nanoseconds. {@code timeout} is adjusted to the closest value allowed by the implementation-dependent timeout accuracy, which <b>may</b> be substantially longer than one nanosecond, and <b>may</b> be longer than the requested period.
      */
     @NativeType("VkResult")
-    public static int vkWaitForFences(VkDevice device, @NativeType("VkFence const *") LongBuffer pFences, @NativeType("VkBool32") boolean waitAll, @NativeType("uint64_t") long timeout) {
+    public static int vkWaitForFences(VkDevice device, @NativeType("const VkFence *") LongBuffer pFences, @NativeType("VkBool32") boolean waitAll, @NativeType("uint64_t") long timeout) {
         return nvkWaitForFences(device, pFences.remaining(), memAddress(pFences), waitAll ? 1 : 0, timeout);
     }
 
@@ -5981,13 +5843,13 @@ public class VK10 {
      * 
      * <p>To wait for one or more fences to enter the signaled state on the host, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * VkResult vkWaitForFences(
      *     VkDevice                                    device,
      *     uint32_t                                    fenceCount,
      *     const VkFence*                              pFences,
      *     VkBool32                                    waitAll,
-     *     uint64_t                                    timeout);</code></pre>
+     *     uint64_t                                    timeout);</pre></code>
      * 
      * <h5>Description</h5>
      * 
@@ -6034,7 +5896,7 @@ public class VK10 {
      * @param timeout the timeout period in units of nanoseconds. {@code timeout} is adjusted to the closest value allowed by the implementation-dependent timeout accuracy, which <b>may</b> be substantially longer than one nanosecond, and <b>may</b> be longer than the requested period.
      */
     @NativeType("VkResult")
-    public static int vkWaitForFences(VkDevice device, @NativeType("VkFence const *") long pFence, @NativeType("VkBool32") boolean waitAll, @NativeType("uint64_t") long timeout) {
+    public static int vkWaitForFences(VkDevice device, @NativeType("const VkFence *") long pFence, @NativeType("VkBool32") boolean waitAll, @NativeType("uint64_t") long timeout) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
             LongBuffer pFences = stack.longs(pFence);
@@ -6062,12 +5924,12 @@ public class VK10 {
      * 
      * <p>To create a semaphore, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * VkResult vkCreateSemaphore(
      *     VkDevice                                    device,
      *     const VkSemaphoreCreateInfo*                pCreateInfo,
      *     const VkAllocationCallbacks*                pAllocator,
-     *     VkSemaphore*                                pSemaphore);</code></pre>
+     *     VkSemaphore*                                pSemaphore);</pre></code>
      * 
      * <h5>Description</h5>
      * 
@@ -6106,7 +5968,7 @@ public class VK10 {
      * @param pSemaphore  points to a handle in which the resulting semaphore object is returned.
      */
     @NativeType("VkResult")
-    public static int vkCreateSemaphore(VkDevice device, @NativeType("VkSemaphoreCreateInfo const *") VkSemaphoreCreateInfo pCreateInfo, @Nullable @NativeType("VkAllocationCallbacks const *") VkAllocationCallbacks pAllocator, @NativeType("VkSemaphore *") LongBuffer pSemaphore) {
+    public static int vkCreateSemaphore(VkDevice device, @NativeType("const VkSemaphoreCreateInfo *") VkSemaphoreCreateInfo pCreateInfo, @Nullable @NativeType("const VkAllocationCallbacks *") VkAllocationCallbacks pAllocator, @NativeType("VkSemaphore *") LongBuffer pSemaphore) {
         if (CHECKS) {
             check(pSemaphore, 1);
         }
@@ -6131,11 +5993,11 @@ public class VK10 {
      * 
      * <p>To destroy a semaphore, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * void vkDestroySemaphore(
      *     VkDevice                                    device,
      *     VkSemaphore                                 semaphore,
-     *     const VkAllocationCallbacks*                pAllocator);</code></pre>
+     *     const VkAllocationCallbacks*                pAllocator);</pre></code>
      * 
      * <h5>Valid Usage</h5>
      * 
@@ -6168,7 +6030,7 @@ public class VK10 {
      * @param semaphore  the handle of the semaphore to destroy.
      * @param pAllocator controls host memory allocation as described in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation">Memory Allocation</a> chapter.
      */
-    public static void vkDestroySemaphore(VkDevice device, @NativeType("VkSemaphore") long semaphore, @Nullable @NativeType("VkAllocationCallbacks const *") VkAllocationCallbacks pAllocator) {
+    public static void vkDestroySemaphore(VkDevice device, @NativeType("VkSemaphore") long semaphore, @Nullable @NativeType("const VkAllocationCallbacks *") VkAllocationCallbacks pAllocator) {
         nvkDestroySemaphore(device, semaphore, memAddressSafe(pAllocator));
     }
 
@@ -6190,12 +6052,12 @@ public class VK10 {
      * 
      * <p>To create an event, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * VkResult vkCreateEvent(
      *     VkDevice                                    device,
      *     const VkEventCreateInfo*                    pCreateInfo,
      *     const VkAllocationCallbacks*                pAllocator,
-     *     VkEvent*                                    pEvent);</code></pre>
+     *     VkEvent*                                    pEvent);</pre></code>
      * 
      * <h5>Description</h5>
      * 
@@ -6234,7 +6096,7 @@ public class VK10 {
      * @param pEvent      points to a handle in which the resulting event object is returned.
      */
     @NativeType("VkResult")
-    public static int vkCreateEvent(VkDevice device, @NativeType("VkEventCreateInfo const *") VkEventCreateInfo pCreateInfo, @Nullable @NativeType("VkAllocationCallbacks const *") VkAllocationCallbacks pAllocator, @NativeType("VkEvent *") LongBuffer pEvent) {
+    public static int vkCreateEvent(VkDevice device, @NativeType("const VkEventCreateInfo *") VkEventCreateInfo pCreateInfo, @Nullable @NativeType("const VkAllocationCallbacks *") VkAllocationCallbacks pAllocator, @NativeType("VkEvent *") LongBuffer pEvent) {
         if (CHECKS) {
             check(pEvent, 1);
         }
@@ -6259,11 +6121,11 @@ public class VK10 {
      * 
      * <p>To destroy an event, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * void vkDestroyEvent(
      *     VkDevice                                    device,
      *     VkEvent                                     event,
-     *     const VkAllocationCallbacks*                pAllocator);</code></pre>
+     *     const VkAllocationCallbacks*                pAllocator);</pre></code>
      * 
      * <h5>Valid Usage</h5>
      * 
@@ -6296,7 +6158,7 @@ public class VK10 {
      * @param event      the handle of the event to destroy.
      * @param pAllocator controls host memory allocation as described in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation">Memory Allocation</a> chapter.
      */
-    public static void vkDestroyEvent(VkDevice device, @NativeType("VkEvent") long event, @Nullable @NativeType("VkAllocationCallbacks const *") VkAllocationCallbacks pAllocator) {
+    public static void vkDestroyEvent(VkDevice device, @NativeType("VkEvent") long event, @Nullable @NativeType("const VkAllocationCallbacks *") VkAllocationCallbacks pAllocator) {
         nvkDestroyEvent(device, event, memAddressSafe(pAllocator));
     }
 
@@ -6309,10 +6171,10 @@ public class VK10 {
      * 
      * <p>To query the state of an event from the host, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * VkResult vkGetEventStatus(
      *     VkDevice                                    device,
-     *     VkEvent                                     event);</code></pre>
+     *     VkEvent                                     event);</pre></code>
      * 
      * <h5>Description</h5>
      * 
@@ -6374,10 +6236,10 @@ public class VK10 {
      * 
      * <p>To set the state of an event to signaled from the host, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * VkResult vkSetEvent(
      *     VkDevice                                    device,
-     *     VkEvent                                     event);</code></pre>
+     *     VkEvent                                     event);</pre></code>
      * 
      * <h5>Description</h5>
      * 
@@ -6431,10 +6293,10 @@ public class VK10 {
      * 
      * <p>To set the state of an event to unsignaled from the host, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * VkResult vkResetEvent(
      *     VkDevice                                    device,
-     *     VkEvent                                     event);</code></pre>
+     *     VkEvent                                     event);</pre></code>
      * 
      * <h5>Description</h5>
      * 
@@ -6503,12 +6365,12 @@ public class VK10 {
      * 
      * <p>To create a query pool, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * VkResult vkCreateQueryPool(
      *     VkDevice                                    device,
      *     const VkQueryPoolCreateInfo*                pCreateInfo,
      *     const VkAllocationCallbacks*                pAllocator,
-     *     VkQueryPool*                                pQueryPool);</code></pre>
+     *     VkQueryPool*                                pQueryPool);</pre></code>
      * 
      * <h5>Valid Usage (Implicit)</h5>
      * 
@@ -6543,7 +6405,7 @@ public class VK10 {
      * @param pQueryPool  a pointer to a {@code VkQueryPool} handle in which the resulting query pool object is returned.
      */
     @NativeType("VkResult")
-    public static int vkCreateQueryPool(VkDevice device, @NativeType("VkQueryPoolCreateInfo const *") VkQueryPoolCreateInfo pCreateInfo, @Nullable @NativeType("VkAllocationCallbacks const *") VkAllocationCallbacks pAllocator, @NativeType("VkQueryPool *") LongBuffer pQueryPool) {
+    public static int vkCreateQueryPool(VkDevice device, @NativeType("const VkQueryPoolCreateInfo *") VkQueryPoolCreateInfo pCreateInfo, @Nullable @NativeType("const VkAllocationCallbacks *") VkAllocationCallbacks pAllocator, @NativeType("VkQueryPool *") LongBuffer pQueryPool) {
         if (CHECKS) {
             check(pQueryPool, 1);
         }
@@ -6568,11 +6430,11 @@ public class VK10 {
      * 
      * <p>To destroy a query pool, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * void vkDestroyQueryPool(
      *     VkDevice                                    device,
      *     VkQueryPool                                 queryPool,
-     *     const VkAllocationCallbacks*                pAllocator);</code></pre>
+     *     const VkAllocationCallbacks*                pAllocator);</pre></code>
      * 
      * <h5>Valid Usage</h5>
      * 
@@ -6605,7 +6467,7 @@ public class VK10 {
      * @param queryPool  the query pool to destroy.
      * @param pAllocator controls host memory allocation as described in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation">Memory Allocation</a> chapter.
      */
-    public static void vkDestroyQueryPool(VkDevice device, @NativeType("VkQueryPool") long queryPool, @Nullable @NativeType("VkAllocationCallbacks const *") VkAllocationCallbacks pAllocator) {
+    public static void vkDestroyQueryPool(VkDevice device, @NativeType("VkQueryPool") long queryPool, @Nullable @NativeType("const VkAllocationCallbacks *") VkAllocationCallbacks pAllocator) {
         nvkDestroyQueryPool(device, queryPool, memAddressSafe(pAllocator));
     }
 
@@ -6628,7 +6490,7 @@ public class VK10 {
      * 
      * <p>To retrieve status and results for a set of queries, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * VkResult vkGetQueryPoolResults(
      *     VkDevice                                    device,
      *     VkQueryPool                                 queryPool,
@@ -6637,7 +6499,7 @@ public class VK10 {
      *     size_t                                      dataSize,
      *     void*                                       pData,
      *     VkDeviceSize                                stride,
-     *     VkQueryResultFlags                          flags);</code></pre>
+     *     VkQueryResultFlags                          flags);</pre></code>
      * 
      * <h5>Description</h5>
      * 
@@ -6732,7 +6594,7 @@ public class VK10 {
      * 
      * <p>To retrieve status and results for a set of queries, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * VkResult vkGetQueryPoolResults(
      *     VkDevice                                    device,
      *     VkQueryPool                                 queryPool,
@@ -6741,7 +6603,7 @@ public class VK10 {
      *     size_t                                      dataSize,
      *     void*                                       pData,
      *     VkDeviceSize                                stride,
-     *     VkQueryResultFlags                          flags);</code></pre>
+     *     VkQueryResultFlags                          flags);</pre></code>
      * 
      * <h5>Description</h5>
      * 
@@ -6826,7 +6688,7 @@ public class VK10 {
      */
     @NativeType("VkResult")
     public static int vkGetQueryPoolResults(VkDevice device, @NativeType("VkQueryPool") long queryPool, @NativeType("uint32_t") int firstQuery, @NativeType("uint32_t") int queryCount, @NativeType("void *") IntBuffer pData, @NativeType("VkDeviceSize") long stride, @NativeType("VkQueryResultFlags") int flags) {
-        return nvkGetQueryPoolResults(device, queryPool, firstQuery, queryCount, Integer.toUnsignedLong(pData.remaining()) << 2, memAddress(pData), stride, flags);
+        return nvkGetQueryPoolResults(device, queryPool, firstQuery, queryCount, pData.remaining() << 2, memAddress(pData), stride, flags);
     }
 
     /**
@@ -6836,7 +6698,7 @@ public class VK10 {
      * 
      * <p>To retrieve status and results for a set of queries, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * VkResult vkGetQueryPoolResults(
      *     VkDevice                                    device,
      *     VkQueryPool                                 queryPool,
@@ -6845,7 +6707,7 @@ public class VK10 {
      *     size_t                                      dataSize,
      *     void*                                       pData,
      *     VkDeviceSize                                stride,
-     *     VkQueryResultFlags                          flags);</code></pre>
+     *     VkQueryResultFlags                          flags);</pre></code>
      * 
      * <h5>Description</h5>
      * 
@@ -6930,7 +6792,7 @@ public class VK10 {
      */
     @NativeType("VkResult")
     public static int vkGetQueryPoolResults(VkDevice device, @NativeType("VkQueryPool") long queryPool, @NativeType("uint32_t") int firstQuery, @NativeType("uint32_t") int queryCount, @NativeType("void *") LongBuffer pData, @NativeType("VkDeviceSize") long stride, @NativeType("VkQueryResultFlags") int flags) {
-        return nvkGetQueryPoolResults(device, queryPool, firstQuery, queryCount, Integer.toUnsignedLong(pData.remaining()) << 3, memAddress(pData), stride, flags);
+        return nvkGetQueryPoolResults(device, queryPool, firstQuery, queryCount, pData.remaining() << 3, memAddress(pData), stride, flags);
     }
 
     // --- [ vkCreateBuffer ] ---
@@ -6952,12 +6814,12 @@ public class VK10 {
      * 
      * <p>To create buffers, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * VkResult vkCreateBuffer(
      *     VkDevice                                    device,
      *     const VkBufferCreateInfo*                   pCreateInfo,
      *     const VkAllocationCallbacks*                pAllocator,
-     *     VkBuffer*                                   pBuffer);</code></pre>
+     *     VkBuffer*                                   pBuffer);</pre></code>
      * 
      * <h5>Valid Usage</h5>
      * 
@@ -6998,7 +6860,7 @@ public class VK10 {
      * @param pBuffer     points to a {@code VkBuffer} handle in which the resulting buffer object is returned.
      */
     @NativeType("VkResult")
-    public static int vkCreateBuffer(VkDevice device, @NativeType("VkBufferCreateInfo const *") VkBufferCreateInfo pCreateInfo, @Nullable @NativeType("VkAllocationCallbacks const *") VkAllocationCallbacks pAllocator, @NativeType("VkBuffer *") LongBuffer pBuffer) {
+    public static int vkCreateBuffer(VkDevice device, @NativeType("const VkBufferCreateInfo *") VkBufferCreateInfo pCreateInfo, @Nullable @NativeType("const VkAllocationCallbacks *") VkAllocationCallbacks pAllocator, @NativeType("VkBuffer *") LongBuffer pBuffer) {
         if (CHECKS) {
             check(pBuffer, 1);
         }
@@ -7023,11 +6885,11 @@ public class VK10 {
      * 
      * <p>To destroy a buffer, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * void vkDestroyBuffer(
      *     VkDevice                                    device,
      *     VkBuffer                                    buffer,
-     *     const VkAllocationCallbacks*                pAllocator);</code></pre>
+     *     const VkAllocationCallbacks*                pAllocator);</pre></code>
      * 
      * <h5>Valid Usage</h5>
      * 
@@ -7060,7 +6922,7 @@ public class VK10 {
      * @param buffer     the buffer to destroy.
      * @param pAllocator controls host memory allocation as described in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation">Memory Allocation</a> chapter.
      */
-    public static void vkDestroyBuffer(VkDevice device, @NativeType("VkBuffer") long buffer, @Nullable @NativeType("VkAllocationCallbacks const *") VkAllocationCallbacks pAllocator) {
+    public static void vkDestroyBuffer(VkDevice device, @NativeType("VkBuffer") long buffer, @Nullable @NativeType("const VkAllocationCallbacks *") VkAllocationCallbacks pAllocator) {
         nvkDestroyBuffer(device, buffer, memAddressSafe(pAllocator));
     }
 
@@ -7082,12 +6944,12 @@ public class VK10 {
      * 
      * <p>To create a buffer view, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * VkResult vkCreateBufferView(
      *     VkDevice                                    device,
      *     const VkBufferViewCreateInfo*               pCreateInfo,
      *     const VkAllocationCallbacks*                pAllocator,
-     *     VkBufferView*                               pView);</code></pre>
+     *     VkBufferView*                               pView);</pre></code>
      * 
      * <h5>Valid Usage (Implicit)</h5>
      * 
@@ -7122,7 +6984,7 @@ public class VK10 {
      * @param pView       points to a {@code VkBufferView} handle in which the resulting buffer view object is returned.
      */
     @NativeType("VkResult")
-    public static int vkCreateBufferView(VkDevice device, @NativeType("VkBufferViewCreateInfo const *") VkBufferViewCreateInfo pCreateInfo, @Nullable @NativeType("VkAllocationCallbacks const *") VkAllocationCallbacks pAllocator, @NativeType("VkBufferView *") LongBuffer pView) {
+    public static int vkCreateBufferView(VkDevice device, @NativeType("const VkBufferViewCreateInfo *") VkBufferViewCreateInfo pCreateInfo, @Nullable @NativeType("const VkAllocationCallbacks *") VkAllocationCallbacks pAllocator, @NativeType("VkBufferView *") LongBuffer pView) {
         if (CHECKS) {
             check(pView, 1);
         }
@@ -7147,11 +7009,11 @@ public class VK10 {
      * 
      * <p>To destroy a buffer view, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * void vkDestroyBufferView(
      *     VkDevice                                    device,
      *     VkBufferView                                bufferView,
-     *     const VkAllocationCallbacks*                pAllocator);</code></pre>
+     *     const VkAllocationCallbacks*                pAllocator);</pre></code>
      * 
      * <h5>Valid Usage</h5>
      * 
@@ -7184,7 +7046,7 @@ public class VK10 {
      * @param bufferView the buffer view to destroy.
      * @param pAllocator controls host memory allocation as described in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation">Memory Allocation</a> chapter.
      */
-    public static void vkDestroyBufferView(VkDevice device, @NativeType("VkBufferView") long bufferView, @Nullable @NativeType("VkAllocationCallbacks const *") VkAllocationCallbacks pAllocator) {
+    public static void vkDestroyBufferView(VkDevice device, @NativeType("VkBufferView") long bufferView, @Nullable @NativeType("const VkAllocationCallbacks *") VkAllocationCallbacks pAllocator) {
         nvkDestroyBufferView(device, bufferView, memAddressSafe(pAllocator));
     }
 
@@ -7207,12 +7069,12 @@ public class VK10 {
      * 
      * <p>To create images, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * VkResult vkCreateImage(
      *     VkDevice                                    device,
      *     const VkImageCreateInfo*                    pCreateInfo,
      *     const VkAllocationCallbacks*                pAllocator,
-     *     VkImage*                                    pImage);</code></pre>
+     *     VkImage*                                    pImage);</pre></code>
      * 
      * <h5>Valid Usage</h5>
      * 
@@ -7253,7 +7115,7 @@ public class VK10 {
      * @param pImage      points to a {@code VkImage} handle in which the resulting image object is returned.
      */
     @NativeType("VkResult")
-    public static int vkCreateImage(VkDevice device, @NativeType("VkImageCreateInfo const *") VkImageCreateInfo pCreateInfo, @Nullable @NativeType("VkAllocationCallbacks const *") VkAllocationCallbacks pAllocator, @NativeType("VkImage *") LongBuffer pImage) {
+    public static int vkCreateImage(VkDevice device, @NativeType("const VkImageCreateInfo *") VkImageCreateInfo pCreateInfo, @Nullable @NativeType("const VkAllocationCallbacks *") VkAllocationCallbacks pAllocator, @NativeType("VkImage *") LongBuffer pImage) {
         if (CHECKS) {
             check(pImage, 1);
         }
@@ -7278,11 +7140,11 @@ public class VK10 {
      * 
      * <p>To destroy an image, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * void vkDestroyImage(
      *     VkDevice                                    device,
      *     VkImage                                     image,
-     *     const VkAllocationCallbacks*                pAllocator);</code></pre>
+     *     const VkAllocationCallbacks*                pAllocator);</pre></code>
      * 
      * <h5>Valid Usage</h5>
      * 
@@ -7315,7 +7177,7 @@ public class VK10 {
      * @param image      the image to destroy.
      * @param pAllocator controls host memory allocation as described in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation">Memory Allocation</a> chapter.
      */
-    public static void vkDestroyImage(VkDevice device, @NativeType("VkImage") long image, @Nullable @NativeType("VkAllocationCallbacks const *") VkAllocationCallbacks pAllocator) {
+    public static void vkDestroyImage(VkDevice device, @NativeType("VkImage") long image, @Nullable @NativeType("const VkAllocationCallbacks *") VkAllocationCallbacks pAllocator) {
         nvkDestroyImage(device, image, memAddressSafe(pAllocator));
     }
 
@@ -7334,12 +7196,12 @@ public class VK10 {
      * 
      * <p>To query the host access layout of an image subresource, for an image created with linear tiling, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * void vkGetImageSubresourceLayout(
      *     VkDevice                                    device,
      *     VkImage                                     image,
      *     const VkImageSubresource*                   pSubresource,
-     *     VkSubresourceLayout*                        pLayout);</code></pre>
+     *     VkSubresourceLayout*                        pLayout);</pre></code>
      * 
      * <h5>Description</h5>
      * 
@@ -7354,8 +7216,8 @@ public class VK10 {
      * <li>The {@code aspectMask} member of {@code pSubresource} <b>must</b> only have a single bit set</li>
      * <li>The {@code mipLevel} member of {@code pSubresource} <b>must</b> be less than the {@code mipLevels} specified in {@link VkImageCreateInfo} when {@code image} was created</li>
      * <li>The {@code arrayLayer} member of {@code pSubresource} <b>must</b> be less than the {@code arrayLayers} specified in {@link VkImageCreateInfo} when {@code image} was created</li>
-     * <li>If the {@code format} of {@code image} is a <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-formats-requiring-sampler-ycbcr-conversion">multi-planar format</a> with two planes, the {@code aspectMask} member of {@code pSubresource} <b>must</b> be {@link VK11#VK_IMAGE_ASPECT_PLANE_0_BIT IMAGE_ASPECT_PLANE_0_BIT} or {@link VK11#VK_IMAGE_ASPECT_PLANE_1_BIT IMAGE_ASPECT_PLANE_1_BIT}</li>
-     * <li>If the {@code format} of {@code image} is a <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-formats-requiring-sampler-ycbcr-conversion">multi-planar format</a> with three planes, the {@code aspectMask} member of {@code pSubresource} <b>must</b> be {@link VK11#VK_IMAGE_ASPECT_PLANE_0_BIT IMAGE_ASPECT_PLANE_0_BIT}, {@link VK11#VK_IMAGE_ASPECT_PLANE_1_BIT IMAGE_ASPECT_PLANE_1_BIT} or {@link VK11#VK_IMAGE_ASPECT_PLANE_2_BIT IMAGE_ASPECT_PLANE_2_BIT}</li>
+     * <li>If the {@code format} of {@code image} is a <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-formats-requiring-sampler-ycbcr-conversion">multi-planar format</a> with two planes, the {@code aspectMask} member of {@code pSubresource} <b>must</b> be {@link KHRSamplerYcbcrConversion#VK_IMAGE_ASPECT_PLANE_0_BIT_KHR IMAGE_ASPECT_PLANE_0_BIT_KHR} or {@link KHRSamplerYcbcrConversion#VK_IMAGE_ASPECT_PLANE_1_BIT_KHR IMAGE_ASPECT_PLANE_1_BIT_KHR}</li>
+     * <li>If the {@code format} of {@code image} is a <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-formats-requiring-sampler-ycbcr-conversion">multi-planar format</a> with three planes, the {@code aspectMask} member of {@code pSubresource} <b>must</b> be {@link KHRSamplerYcbcrConversion#VK_IMAGE_ASPECT_PLANE_0_BIT_KHR IMAGE_ASPECT_PLANE_0_BIT_KHR}, {@link KHRSamplerYcbcrConversion#VK_IMAGE_ASPECT_PLANE_1_BIT_KHR IMAGE_ASPECT_PLANE_1_BIT_KHR} or {@link KHRSamplerYcbcrConversion#VK_IMAGE_ASPECT_PLANE_2_BIT_KHR IMAGE_ASPECT_PLANE_2_BIT_KHR}</li>
      * </ul>
      * 
      * <h5>Valid Usage (Implicit)</h5>
@@ -7377,7 +7239,7 @@ public class VK10 {
      * @param pSubresource a pointer to a {@link VkImageSubresource} structure selecting a specific image for the image subresource.
      * @param pLayout      points to a {@link VkSubresourceLayout} structure in which the layout is returned.
      */
-    public static void vkGetImageSubresourceLayout(VkDevice device, @NativeType("VkImage") long image, @NativeType("VkImageSubresource const *") VkImageSubresource pSubresource, @NativeType("VkSubresourceLayout *") VkSubresourceLayout pLayout) {
+    public static void vkGetImageSubresourceLayout(VkDevice device, @NativeType("VkImage") long image, @NativeType("const VkImageSubresource *") VkImageSubresource pSubresource, @NativeType("VkSubresourceLayout *") VkSubresourceLayout pLayout) {
         nvkGetImageSubresourceLayout(device, image, pSubresource.address(), pLayout.address());
     }
 
@@ -7399,16 +7261,16 @@ public class VK10 {
      * 
      * <p>To create an image view, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * VkResult vkCreateImageView(
      *     VkDevice                                    device,
      *     const VkImageViewCreateInfo*                pCreateInfo,
      *     const VkAllocationCallbacks*                pAllocator,
-     *     VkImageView*                                pView);</code></pre>
+     *     VkImageView*                                pView);</pre></code>
      * 
      * <h5>Description</h5>
      * 
-     * <p>Some of the image creation parameters are inherited by the view. In particular, image view creation inherits the implicit parameter {@code usage} specifying the allowed usages of the image view that, by default, takes the value of the corresponding {@code usage} parameter specified in {@link VkImageCreateInfo} at image creation time. This implicit parameter <b>can</b> be overriden by chaining a {@link VkImageViewUsageCreateInfo} structure through the {@code pNext} member to {@link VkImageViewCreateInfo} as described later in this section.</p>
+     * <p>Some of the image creation parameters are inherited by the view. In particular, image view creation inherits the implicit parameter {@code usage} specifying the allowed usages of the image view that, by default, takes the value of the corresponding {@code usage} parameter specified in {@link VkImageCreateInfo} at image creation time. This implicit parameter <b>can</b> be overriden by chaining a {@link VkImageViewUsageCreateInfoKHR} structure through the {@code pNext} member to {@link VkImageViewCreateInfo} as described later in this section.</p>
      * 
      * <p>The remaining parameters are contained in the {@code pCreateInfo}.</p>
      * 
@@ -7445,7 +7307,7 @@ public class VK10 {
      * @param pView       points to a {@code VkImageView} handle in which the resulting image view object is returned.
      */
     @NativeType("VkResult")
-    public static int vkCreateImageView(VkDevice device, @NativeType("VkImageViewCreateInfo const *") VkImageViewCreateInfo pCreateInfo, @Nullable @NativeType("VkAllocationCallbacks const *") VkAllocationCallbacks pAllocator, @NativeType("VkImageView *") LongBuffer pView) {
+    public static int vkCreateImageView(VkDevice device, @NativeType("const VkImageViewCreateInfo *") VkImageViewCreateInfo pCreateInfo, @Nullable @NativeType("const VkAllocationCallbacks *") VkAllocationCallbacks pAllocator, @NativeType("VkImageView *") LongBuffer pView) {
         if (CHECKS) {
             check(pView, 1);
         }
@@ -7470,11 +7332,11 @@ public class VK10 {
      * 
      * <p>To destroy an image view, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * void vkDestroyImageView(
      *     VkDevice                                    device,
      *     VkImageView                                 imageView,
-     *     const VkAllocationCallbacks*                pAllocator);</code></pre>
+     *     const VkAllocationCallbacks*                pAllocator);</pre></code>
      * 
      * <h5>Valid Usage</h5>
      * 
@@ -7507,7 +7369,7 @@ public class VK10 {
      * @param imageView  the image view to destroy.
      * @param pAllocator controls host memory allocation as described in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation">Memory Allocation</a> chapter.
      */
-    public static void vkDestroyImageView(VkDevice device, @NativeType("VkImageView") long imageView, @Nullable @NativeType("VkAllocationCallbacks const *") VkAllocationCallbacks pAllocator) {
+    public static void vkDestroyImageView(VkDevice device, @NativeType("VkImageView") long imageView, @Nullable @NativeType("const VkAllocationCallbacks *") VkAllocationCallbacks pAllocator) {
         nvkDestroyImageView(device, imageView, memAddressSafe(pAllocator));
     }
 
@@ -7530,12 +7392,12 @@ public class VK10 {
      * 
      * <p>To create a shader module, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * VkResult vkCreateShaderModule(
      *     VkDevice                                    device,
      *     const VkShaderModuleCreateInfo*             pCreateInfo,
      *     const VkAllocationCallbacks*                pAllocator,
-     *     VkShaderModule*                             pShaderModule);</code></pre>
+     *     VkShaderModule*                             pShaderModule);</pre></code>
      * 
      * <h5>Description</h5>
      * 
@@ -7572,12 +7434,12 @@ public class VK10 {
      * <p>{@link VkAllocationCallbacks}, {@link VkShaderModuleCreateInfo}</p>
      *
      * @param device        the logical device that creates the shader module.
-     * @param pCreateInfo   a pointer to an instance of the {@link VkShaderModuleCreateInfo} structure.
+     * @param pCreateInfo   parameter is a pointer to an instance of the {@link VkShaderModuleCreateInfo} structure.
      * @param pAllocator    controls host memory allocation as described in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation">Memory Allocation</a> chapter.
      * @param pShaderModule points to a {@code VkShaderModule} handle in which the resulting shader module object is returned.
      */
     @NativeType("VkResult")
-    public static int vkCreateShaderModule(VkDevice device, @NativeType("VkShaderModuleCreateInfo const *") VkShaderModuleCreateInfo pCreateInfo, @Nullable @NativeType("VkAllocationCallbacks const *") VkAllocationCallbacks pAllocator, @NativeType("VkShaderModule *") LongBuffer pShaderModule) {
+    public static int vkCreateShaderModule(VkDevice device, @NativeType("const VkShaderModuleCreateInfo *") VkShaderModuleCreateInfo pCreateInfo, @Nullable @NativeType("const VkAllocationCallbacks *") VkAllocationCallbacks pAllocator, @NativeType("VkShaderModule *") LongBuffer pShaderModule) {
         if (CHECKS) {
             check(pShaderModule, 1);
         }
@@ -7602,11 +7464,11 @@ public class VK10 {
      * 
      * <p>To destroy a shader module, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * void vkDestroyShaderModule(
      *     VkDevice                                    device,
      *     VkShaderModule                              shaderModule,
-     *     const VkAllocationCallbacks*                pAllocator);</code></pre>
+     *     const VkAllocationCallbacks*                pAllocator);</pre></code>
      * 
      * <h5>Description</h5>
      * 
@@ -7642,7 +7504,7 @@ public class VK10 {
      * @param shaderModule the handle of the shader module to destroy.
      * @param pAllocator   controls host memory allocation as described in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation">Memory Allocation</a> chapter.
      */
-    public static void vkDestroyShaderModule(VkDevice device, @NativeType("VkShaderModule") long shaderModule, @Nullable @NativeType("VkAllocationCallbacks const *") VkAllocationCallbacks pAllocator) {
+    public static void vkDestroyShaderModule(VkDevice device, @NativeType("VkShaderModule") long shaderModule, @Nullable @NativeType("const VkAllocationCallbacks *") VkAllocationCallbacks pAllocator) {
         nvkDestroyShaderModule(device, shaderModule, memAddressSafe(pAllocator));
     }
 
@@ -7665,12 +7527,12 @@ public class VK10 {
      * 
      * <p>To create pipeline cache objects, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * VkResult vkCreatePipelineCache(
      *     VkDevice                                    device,
      *     const VkPipelineCacheCreateInfo*            pCreateInfo,
      *     const VkAllocationCallbacks*                pAllocator,
-     *     VkPipelineCache*                            pPipelineCache);</code></pre>
+     *     VkPipelineCache*                            pPipelineCache);</pre></code>
      * 
      * <h5>Description</h5>
      * 
@@ -7719,7 +7581,7 @@ public class VK10 {
      * @param pPipelineCache a pointer to a {@code VkPipelineCache} handle in which the resulting pipeline cache object is returned.
      */
     @NativeType("VkResult")
-    public static int vkCreatePipelineCache(VkDevice device, @NativeType("VkPipelineCacheCreateInfo const *") VkPipelineCacheCreateInfo pCreateInfo, @Nullable @NativeType("VkAllocationCallbacks const *") VkAllocationCallbacks pAllocator, @NativeType("VkPipelineCache *") LongBuffer pPipelineCache) {
+    public static int vkCreatePipelineCache(VkDevice device, @NativeType("const VkPipelineCacheCreateInfo *") VkPipelineCacheCreateInfo pCreateInfo, @Nullable @NativeType("const VkAllocationCallbacks *") VkAllocationCallbacks pAllocator, @NativeType("VkPipelineCache *") LongBuffer pPipelineCache) {
         if (CHECKS) {
             check(pPipelineCache, 1);
         }
@@ -7744,11 +7606,11 @@ public class VK10 {
      * 
      * <p>To destroy a pipeline cache, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * void vkDestroyPipelineCache(
      *     VkDevice                                    device,
      *     VkPipelineCache                             pipelineCache,
-     *     const VkAllocationCallbacks*                pAllocator);</code></pre>
+     *     const VkAllocationCallbacks*                pAllocator);</pre></code>
      * 
      * <h5>Valid Usage</h5>
      * 
@@ -7780,7 +7642,7 @@ public class VK10 {
      * @param pipelineCache the handle of the pipeline cache to destroy.
      * @param pAllocator    controls host memory allocation as described in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation">Memory Allocation</a> chapter.
      */
-    public static void vkDestroyPipelineCache(VkDevice device, @NativeType("VkPipelineCache") long pipelineCache, @Nullable @NativeType("VkAllocationCallbacks const *") VkAllocationCallbacks pAllocator) {
+    public static void vkDestroyPipelineCache(VkDevice device, @NativeType("VkPipelineCache") long pipelineCache, @Nullable @NativeType("const VkAllocationCallbacks *") VkAllocationCallbacks pAllocator) {
         nvkDestroyPipelineCache(device, pipelineCache, memAddressSafe(pAllocator));
     }
 
@@ -7803,12 +7665,12 @@ public class VK10 {
      * 
      * <p>Data <b>can</b> be retrieved from a pipeline cache object using the command:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * VkResult vkGetPipelineCacheData(
      *     VkDevice                                    device,
      *     VkPipelineCache                             pipelineCache,
      *     size_t*                                     pDataSize,
-     *     void*                                       pData);</code></pre>
+     *     void*                                       pData);</pre></code>
      * 
      * <h5>Description</h5>
      * 
@@ -7897,12 +7759,12 @@ public class VK10 {
      * 
      * <p>Pipeline cache objects <b>can</b> be merged using the command:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * VkResult vkMergePipelineCaches(
      *     VkDevice                                    device,
      *     VkPipelineCache                             dstCache,
      *     uint32_t                                    srcCacheCount,
-     *     const VkPipelineCache*                      pSrcCaches);</code></pre>
+     *     const VkPipelineCache*                      pSrcCaches);</pre></code>
      * 
      * <h5>Description</h5>
      * 
@@ -7953,7 +7815,7 @@ public class VK10 {
      * @param pSrcCaches an array of pipeline cache handles, which will be merged into {@code dstCache}. The previous contents of {@code dstCache} are included after the merge.
      */
     @NativeType("VkResult")
-    public static int vkMergePipelineCaches(VkDevice device, @NativeType("VkPipelineCache") long dstCache, @NativeType("VkPipelineCache const *") LongBuffer pSrcCaches) {
+    public static int vkMergePipelineCaches(VkDevice device, @NativeType("VkPipelineCache") long dstCache, @NativeType("const VkPipelineCache *") LongBuffer pSrcCaches) {
         return nvkMergePipelineCaches(device, dstCache, pSrcCaches.remaining(), memAddress(pSrcCaches));
     }
 
@@ -7980,14 +7842,14 @@ public class VK10 {
      * 
      * <p>To create graphics pipelines, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * VkResult vkCreateGraphicsPipelines(
      *     VkDevice                                    device,
      *     VkPipelineCache                             pipelineCache,
      *     uint32_t                                    createInfoCount,
      *     const VkGraphicsPipelineCreateInfo*         pCreateInfos,
      *     const VkAllocationCallbacks*                pAllocator,
-     *     VkPipeline*                                 pPipelines);</code></pre>
+     *     VkPipeline*                                 pPipelines);</pre></code>
      * 
      * <h5>Description</h5>
      * 
@@ -8038,7 +7900,7 @@ public class VK10 {
      * @param pPipelines    a pointer to an array in which the resulting graphics pipeline objects are returned.
      */
     @NativeType("VkResult")
-    public static int vkCreateGraphicsPipelines(VkDevice device, @NativeType("VkPipelineCache") long pipelineCache, @NativeType("VkGraphicsPipelineCreateInfo const *") VkGraphicsPipelineCreateInfo.Buffer pCreateInfos, @Nullable @NativeType("VkAllocationCallbacks const *") VkAllocationCallbacks pAllocator, @NativeType("VkPipeline *") LongBuffer pPipelines) {
+    public static int vkCreateGraphicsPipelines(VkDevice device, @NativeType("VkPipelineCache") long pipelineCache, @NativeType("const VkGraphicsPipelineCreateInfo *") VkGraphicsPipelineCreateInfo.Buffer pCreateInfos, @Nullable @NativeType("const VkAllocationCallbacks *") VkAllocationCallbacks pAllocator, @NativeType("VkPipeline *") LongBuffer pPipelines) {
         if (CHECKS) {
             check(pPipelines, pCreateInfos.remaining());
         }
@@ -8068,14 +7930,14 @@ public class VK10 {
      * 
      * <p>To create compute pipelines, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * VkResult vkCreateComputePipelines(
      *     VkDevice                                    device,
      *     VkPipelineCache                             pipelineCache,
      *     uint32_t                                    createInfoCount,
      *     const VkComputePipelineCreateInfo*          pCreateInfos,
      *     const VkAllocationCallbacks*                pAllocator,
-     *     VkPipeline*                                 pPipelines);</code></pre>
+     *     VkPipeline*                                 pPipelines);</pre></code>
      * 
      * <h5>Valid Usage</h5>
      * 
@@ -8122,7 +7984,7 @@ public class VK10 {
      * @param pPipelines    a pointer to an array in which the resulting compute pipeline objects are returned.
      */
     @NativeType("VkResult")
-    public static int vkCreateComputePipelines(VkDevice device, @NativeType("VkPipelineCache") long pipelineCache, @NativeType("VkComputePipelineCreateInfo const *") VkComputePipelineCreateInfo.Buffer pCreateInfos, @Nullable @NativeType("VkAllocationCallbacks const *") VkAllocationCallbacks pAllocator, @NativeType("VkPipeline *") LongBuffer pPipelines) {
+    public static int vkCreateComputePipelines(VkDevice device, @NativeType("VkPipelineCache") long pipelineCache, @NativeType("const VkComputePipelineCreateInfo *") VkComputePipelineCreateInfo.Buffer pCreateInfos, @Nullable @NativeType("const VkAllocationCallbacks *") VkAllocationCallbacks pAllocator, @NativeType("VkPipeline *") LongBuffer pPipelines) {
         if (CHECKS) {
             check(pPipelines, pCreateInfos.remaining());
         }
@@ -8147,11 +8009,11 @@ public class VK10 {
      * 
      * <p>To destroy a graphics or compute pipeline, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * void vkDestroyPipeline(
      *     VkDevice                                    device,
      *     VkPipeline                                  pipeline,
-     *     const VkAllocationCallbacks*                pAllocator);</code></pre>
+     *     const VkAllocationCallbacks*                pAllocator);</pre></code>
      * 
      * <h5>Valid Usage</h5>
      * 
@@ -8184,7 +8046,7 @@ public class VK10 {
      * @param pipeline   the handle of the pipeline to destroy.
      * @param pAllocator controls host memory allocation as described in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation">Memory Allocation</a> chapter.
      */
-    public static void vkDestroyPipeline(VkDevice device, @NativeType("VkPipeline") long pipeline, @Nullable @NativeType("VkAllocationCallbacks const *") VkAllocationCallbacks pAllocator) {
+    public static void vkDestroyPipeline(VkDevice device, @NativeType("VkPipeline") long pipeline, @Nullable @NativeType("const VkAllocationCallbacks *") VkAllocationCallbacks pAllocator) {
         nvkDestroyPipeline(device, pipeline, memAddressSafe(pAllocator));
     }
 
@@ -8207,12 +8069,12 @@ public class VK10 {
      * 
      * <p>To create a pipeline layout, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * VkResult vkCreatePipelineLayout(
      *     VkDevice                                    device,
      *     const VkPipelineLayoutCreateInfo*           pCreateInfo,
      *     const VkAllocationCallbacks*                pAllocator,
-     *     VkPipelineLayout*                           pPipelineLayout);</code></pre>
+     *     VkPipelineLayout*                           pPipelineLayout);</pre></code>
      * 
      * <h5>Valid Usage (Implicit)</h5>
      * 
@@ -8247,7 +8109,7 @@ public class VK10 {
      * @param pPipelineLayout points to a {@code VkPipelineLayout} handle in which the resulting pipeline layout object is returned.
      */
     @NativeType("VkResult")
-    public static int vkCreatePipelineLayout(VkDevice device, @NativeType("VkPipelineLayoutCreateInfo const *") VkPipelineLayoutCreateInfo pCreateInfo, @Nullable @NativeType("VkAllocationCallbacks const *") VkAllocationCallbacks pAllocator, @NativeType("VkPipelineLayout *") LongBuffer pPipelineLayout) {
+    public static int vkCreatePipelineLayout(VkDevice device, @NativeType("const VkPipelineLayoutCreateInfo *") VkPipelineLayoutCreateInfo pCreateInfo, @Nullable @NativeType("const VkAllocationCallbacks *") VkAllocationCallbacks pAllocator, @NativeType("VkPipelineLayout *") LongBuffer pPipelineLayout) {
         if (CHECKS) {
             check(pPipelineLayout, 1);
         }
@@ -8272,11 +8134,11 @@ public class VK10 {
      * 
      * <p>To destroy a pipeline layout, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * void vkDestroyPipelineLayout(
      *     VkDevice                                    device,
      *     VkPipelineLayout                            pipelineLayout,
-     *     const VkAllocationCallbacks*                pAllocator);</code></pre>
+     *     const VkAllocationCallbacks*                pAllocator);</pre></code>
      * 
      * <h5>Valid Usage</h5>
      * 
@@ -8308,7 +8170,7 @@ public class VK10 {
      * @param pipelineLayout the pipeline layout to destroy.
      * @param pAllocator     controls host memory allocation as described in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation">Memory Allocation</a> chapter.
      */
-    public static void vkDestroyPipelineLayout(VkDevice device, @NativeType("VkPipelineLayout") long pipelineLayout, @Nullable @NativeType("VkAllocationCallbacks const *") VkAllocationCallbacks pAllocator) {
+    public static void vkDestroyPipelineLayout(VkDevice device, @NativeType("VkPipelineLayout") long pipelineLayout, @Nullable @NativeType("const VkAllocationCallbacks *") VkAllocationCallbacks pAllocator) {
         nvkDestroyPipelineLayout(device, pipelineLayout, memAddressSafe(pAllocator));
     }
 
@@ -8330,12 +8192,12 @@ public class VK10 {
      * 
      * <p>To create a sampler object, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * VkResult vkCreateSampler(
      *     VkDevice                                    device,
      *     const VkSamplerCreateInfo*                  pCreateInfo,
      *     const VkAllocationCallbacks*                pAllocator,
-     *     VkSampler*                                  pSampler);</code></pre>
+     *     VkSampler*                                  pSampler);</pre></code>
      * 
      * <h5>Valid Usage (Implicit)</h5>
      * 
@@ -8371,7 +8233,7 @@ public class VK10 {
      * @param pSampler    points to a {@code VkSampler} handle in which the resulting sampler object is returned.
      */
     @NativeType("VkResult")
-    public static int vkCreateSampler(VkDevice device, @NativeType("VkSamplerCreateInfo const *") VkSamplerCreateInfo pCreateInfo, @Nullable @NativeType("VkAllocationCallbacks const *") VkAllocationCallbacks pAllocator, @NativeType("VkSampler *") LongBuffer pSampler) {
+    public static int vkCreateSampler(VkDevice device, @NativeType("const VkSamplerCreateInfo *") VkSamplerCreateInfo pCreateInfo, @Nullable @NativeType("const VkAllocationCallbacks *") VkAllocationCallbacks pAllocator, @NativeType("VkSampler *") LongBuffer pSampler) {
         if (CHECKS) {
             check(pSampler, 1);
         }
@@ -8396,11 +8258,11 @@ public class VK10 {
      * 
      * <p>To destroy a sampler, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * void vkDestroySampler(
      *     VkDevice                                    device,
      *     VkSampler                                   sampler,
-     *     const VkAllocationCallbacks*                pAllocator);</code></pre>
+     *     const VkAllocationCallbacks*                pAllocator);</pre></code>
      * 
      * <h5>Valid Usage</h5>
      * 
@@ -8433,7 +8295,7 @@ public class VK10 {
      * @param sampler    the sampler to destroy.
      * @param pAllocator controls host memory allocation as described in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation">Memory Allocation</a> chapter.
      */
-    public static void vkDestroySampler(VkDevice device, @NativeType("VkSampler") long sampler, @Nullable @NativeType("VkAllocationCallbacks const *") VkAllocationCallbacks pAllocator) {
+    public static void vkDestroySampler(VkDevice device, @NativeType("VkSampler") long sampler, @Nullable @NativeType("const VkAllocationCallbacks *") VkAllocationCallbacks pAllocator) {
         nvkDestroySampler(device, sampler, memAddressSafe(pAllocator));
     }
 
@@ -8456,12 +8318,12 @@ public class VK10 {
      * 
      * <p>To create descriptor set layout objects, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * VkResult vkCreateDescriptorSetLayout(
      *     VkDevice                                    device,
      *     const VkDescriptorSetLayoutCreateInfo*      pCreateInfo,
      *     const VkAllocationCallbacks*                pAllocator,
-     *     VkDescriptorSetLayout*                      pSetLayout);</code></pre>
+     *     VkDescriptorSetLayout*                      pSetLayout);</pre></code>
      * 
      * <h5>Valid Usage (Implicit)</h5>
      * 
@@ -8496,7 +8358,7 @@ public class VK10 {
      * @param pSetLayout  points to a {@code VkDescriptorSetLayout} handle in which the resulting descriptor set layout object is returned.
      */
     @NativeType("VkResult")
-    public static int vkCreateDescriptorSetLayout(VkDevice device, @NativeType("VkDescriptorSetLayoutCreateInfo const *") VkDescriptorSetLayoutCreateInfo pCreateInfo, @Nullable @NativeType("VkAllocationCallbacks const *") VkAllocationCallbacks pAllocator, @NativeType("VkDescriptorSetLayout *") LongBuffer pSetLayout) {
+    public static int vkCreateDescriptorSetLayout(VkDevice device, @NativeType("const VkDescriptorSetLayoutCreateInfo *") VkDescriptorSetLayoutCreateInfo pCreateInfo, @Nullable @NativeType("const VkAllocationCallbacks *") VkAllocationCallbacks pAllocator, @NativeType("VkDescriptorSetLayout *") LongBuffer pSetLayout) {
         if (CHECKS) {
             check(pSetLayout, 1);
         }
@@ -8521,11 +8383,11 @@ public class VK10 {
      * 
      * <p>To destroy a descriptor set layout, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * void vkDestroyDescriptorSetLayout(
      *     VkDevice                                    device,
      *     VkDescriptorSetLayout                       descriptorSetLayout,
-     *     const VkAllocationCallbacks*                pAllocator);</code></pre>
+     *     const VkAllocationCallbacks*                pAllocator);</pre></code>
      * 
      * <h5>Valid Usage</h5>
      * 
@@ -8557,7 +8419,7 @@ public class VK10 {
      * @param descriptorSetLayout the descriptor set layout to destroy.
      * @param pAllocator          controls host memory allocation as described in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation">Memory Allocation</a> chapter.
      */
-    public static void vkDestroyDescriptorSetLayout(VkDevice device, @NativeType("VkDescriptorSetLayout") long descriptorSetLayout, @Nullable @NativeType("VkAllocationCallbacks const *") VkAllocationCallbacks pAllocator) {
+    public static void vkDestroyDescriptorSetLayout(VkDevice device, @NativeType("VkDescriptorSetLayout") long descriptorSetLayout, @Nullable @NativeType("const VkAllocationCallbacks *") VkAllocationCallbacks pAllocator) {
         nvkDestroyDescriptorSetLayout(device, descriptorSetLayout, memAddressSafe(pAllocator));
     }
 
@@ -8580,12 +8442,12 @@ public class VK10 {
      * 
      * <p>To create a descriptor pool object, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * VkResult vkCreateDescriptorPool(
      *     VkDevice                                    device,
      *     const VkDescriptorPoolCreateInfo*           pCreateInfo,
      *     const VkAllocationCallbacks*                pAllocator,
-     *     VkDescriptorPool*                           pDescriptorPool);</code></pre>
+     *     VkDescriptorPool*                           pDescriptorPool);</pre></code>
      * 
      * <h5>Description</h5>
      * 
@@ -8613,7 +8475,6 @@ public class VK10 {
      * <dd><ul>
      * <li>{@link #VK_ERROR_OUT_OF_HOST_MEMORY ERROR_OUT_OF_HOST_MEMORY}</li>
      * <li>{@link #VK_ERROR_OUT_OF_DEVICE_MEMORY ERROR_OUT_OF_DEVICE_MEMORY}</li>
-     * <li>{@link EXTDescriptorIndexing#VK_ERROR_FRAGMENTATION_EXT ERROR_FRAGMENTATION_EXT}</li>
      * </ul></dd>
      * </dl>
      * 
@@ -8627,7 +8488,7 @@ public class VK10 {
      * @param pDescriptorPool points to a {@code VkDescriptorPool} handle in which the resulting descriptor pool object is returned.
      */
     @NativeType("VkResult")
-    public static int vkCreateDescriptorPool(VkDevice device, @NativeType("VkDescriptorPoolCreateInfo const *") VkDescriptorPoolCreateInfo pCreateInfo, @Nullable @NativeType("VkAllocationCallbacks const *") VkAllocationCallbacks pAllocator, @NativeType("VkDescriptorPool *") LongBuffer pDescriptorPool) {
+    public static int vkCreateDescriptorPool(VkDevice device, @NativeType("const VkDescriptorPoolCreateInfo *") VkDescriptorPoolCreateInfo pCreateInfo, @Nullable @NativeType("const VkAllocationCallbacks *") VkAllocationCallbacks pAllocator, @NativeType("VkDescriptorPool *") LongBuffer pDescriptorPool) {
         if (CHECKS) {
             check(pDescriptorPool, 1);
         }
@@ -8652,11 +8513,11 @@ public class VK10 {
      * 
      * <p>To destroy a descriptor pool, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * void vkDestroyDescriptorPool(
      *     VkDevice                                    device,
      *     VkDescriptorPool                            descriptorPool,
-     *     const VkAllocationCallbacks*                pAllocator);</code></pre>
+     *     const VkAllocationCallbacks*                pAllocator);</pre></code>
      * 
      * <h5>Description</h5>
      * 
@@ -8693,7 +8554,7 @@ public class VK10 {
      * @param descriptorPool the descriptor pool to destroy.
      * @param pAllocator     controls host memory allocation as described in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation">Memory Allocation</a> chapter.
      */
-    public static void vkDestroyDescriptorPool(VkDevice device, @NativeType("VkDescriptorPool") long descriptorPool, @Nullable @NativeType("VkAllocationCallbacks const *") VkAllocationCallbacks pAllocator) {
+    public static void vkDestroyDescriptorPool(VkDevice device, @NativeType("VkDescriptorPool") long descriptorPool, @Nullable @NativeType("const VkAllocationCallbacks *") VkAllocationCallbacks pAllocator) {
         nvkDestroyDescriptorPool(device, descriptorPool, memAddressSafe(pAllocator));
     }
 
@@ -8706,11 +8567,11 @@ public class VK10 {
      * 
      * <p>To return all descriptor sets allocated from a given pool to the pool, rather than freeing individual descriptor sets, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * VkResult vkResetDescriptorPool(
      *     VkDevice                                    device,
      *     VkDescriptorPool                            descriptorPool,
-     *     VkDescriptorPoolResetFlags                  flags);</code></pre>
+     *     VkDescriptorPoolResetFlags                  flags);</pre></code>
      * 
      * <h5>Description</h5>
      * 
@@ -8780,19 +8641,19 @@ public class VK10 {
      * 
      * <p>To allocate descriptor sets from a descriptor pool, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * VkResult vkAllocateDescriptorSets(
      *     VkDevice                                    device,
      *     const VkDescriptorSetAllocateInfo*          pAllocateInfo,
-     *     VkDescriptorSet*                            pDescriptorSets);</code></pre>
+     *     VkDescriptorSet*                            pDescriptorSets);</pre></code>
      * 
      * <h5>Description</h5>
      * 
      * <p>The allocated descriptor sets are returned in {@code pDescriptorSets}.</p>
      * 
-     * <p>When a descriptor set is allocated, the initial state is largely uninitialized and all descriptors are undefined. However, the descriptor set <b>can</b> be bound in a command buffer without causing errors or exceptions. For descriptor set bindings created with the {@link EXTDescriptorIndexing#VK_DESCRIPTOR_BINDING_PARTIALLY_BOUND_BIT_EXT DESCRIPTOR_BINDING_PARTIALLY_BOUND_BIT_EXT} bit set, all descriptors in that binding that are dynamically used <b>must</b> have been populated before the descriptor set is <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-binding">consumed</a>. For descriptor set bindings created without the {@link EXTDescriptorIndexing#VK_DESCRIPTOR_BINDING_PARTIALLY_BOUND_BIT_EXT DESCRIPTOR_BINDING_PARTIALLY_BOUND_BIT_EXT} bit set, all descriptors in that binding that are statically used <b>must</b> have been populated before the descriptor set is <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-binding">consumed</a>. Entries that are not used by a pipeline <b>can</b> have uninitialized descriptors or descriptors of resources that have been destroyed, and executing a draw or dispatch with such a descriptor set bound does not cause undefined behavior. This means applications need not populate unused entries with dummy descriptors.</p>
+     * <p>When a descriptor set is allocated, the initial state is largely uninitialized and all descriptors are undefined. However, the descriptor set <b>can</b> be bound in a command buffer without causing errors or exceptions. All entries that are statically used by a pipeline in a drawing or dispatching command <b>must</b> have been populated before the descriptor set is bound for use by that command. Entries that are not statically used by a pipeline <b>can</b> have uninitialized descriptors or descriptors of resources that have been destroyed, and executing a draw or dispatch with such a descriptor set bound does not cause undefined behavior. This means applications need not populate unused entries with dummy descriptors.</p>
      * 
-     * <p>If a call to {@link #vkAllocateDescriptorSets AllocateDescriptorSets} would cause the total number of descriptor sets allocated from the pool to exceed the value of {@link VkDescriptorPoolCreateInfo}{@code ::maxSets} used to create {@code pAllocateInfo}-&gt;{@code descriptorPool}, then the allocation <b>may</b> fail due to lack of space in the descriptor pool. Similarly, the allocation <b>may</b> fail due to lack of space if the call to {@link #vkAllocateDescriptorSets AllocateDescriptorSets} would cause the number of any given descriptor type to exceed the sum of all the {@code descriptorCount} members of each element of {@link VkDescriptorPoolCreateInfo}{@code ::pPoolSizes} with a {@code member} equal to that type. If the allocation fails due to no more space in the descriptor pool, and not because of system or device memory exhaustion, then {@link VK11#VK_ERROR_OUT_OF_POOL_MEMORY ERROR_OUT_OF_POOL_MEMORY} <b>must</b> be returned.</p>
+     * <p>If a call to {@link #vkAllocateDescriptorSets AllocateDescriptorSets} would cause the total number of descriptor sets allocated from the pool to exceed the value of {@link VkDescriptorPoolCreateInfo}{@code ::maxSets} used to create {@code pAllocateInfo}->{@code descriptorPool}, then the allocation <b>may</b> fail due to lack of space in the descriptor pool. Similarly, the allocation <b>may</b> fail due to lack of space if the call to {@link #vkAllocateDescriptorSets AllocateDescriptorSets} would cause the number of any given descriptor type to exceed the sum of all the {@code descriptorCount} members of each element of {@link VkDescriptorPoolCreateInfo}{@code ::pPoolSizes} with a {@code member} equal to that type. If the allocation fails due to no more space in the descriptor pool, and not because of system or device memory exhaustion, then {@link KHRMaintenance1#VK_ERROR_OUT_OF_POOL_MEMORY_KHR ERROR_OUT_OF_POOL_MEMORY_KHR} <b>must</b> be returned.</p>
      * 
      * <p>{@link #vkAllocateDescriptorSets AllocateDescriptorSets} <b>can</b> be used to create multiple descriptor sets. If the creation of any of those descriptor sets fails, then the implementation <b>must</b> destroy all successfully created descriptor set objects from this command, set all entries of the {@code pDescriptorSets} array to {@link #VK_NULL_HANDLE NULL_HANDLE} and return the error.</p>
      * 
@@ -8822,7 +8683,7 @@ public class VK10 {
      * <li>{@link #VK_ERROR_OUT_OF_HOST_MEMORY ERROR_OUT_OF_HOST_MEMORY}</li>
      * <li>{@link #VK_ERROR_OUT_OF_DEVICE_MEMORY ERROR_OUT_OF_DEVICE_MEMORY}</li>
      * <li>{@link #VK_ERROR_FRAGMENTED_POOL ERROR_FRAGMENTED_POOL}</li>
-     * <li>{@link VK11#VK_ERROR_OUT_OF_POOL_MEMORY ERROR_OUT_OF_POOL_MEMORY}</li>
+     * <li>{@link KHRMaintenance1#VK_ERROR_OUT_OF_POOL_MEMORY_KHR ERROR_OUT_OF_POOL_MEMORY_KHR}</li>
      * </ul></dd>
      * </dl>
      * 
@@ -8835,7 +8696,7 @@ public class VK10 {
      * @param pDescriptorSets a pointer to an array of {@code VkDescriptorSet} handles in which the resulting descriptor set objects are returned.
      */
     @NativeType("VkResult")
-    public static int vkAllocateDescriptorSets(VkDevice device, @NativeType("VkDescriptorSetAllocateInfo const *") VkDescriptorSetAllocateInfo pAllocateInfo, @NativeType("VkDescriptorSet *") LongBuffer pDescriptorSets) {
+    public static int vkAllocateDescriptorSets(VkDevice device, @NativeType("const VkDescriptorSetAllocateInfo *") VkDescriptorSetAllocateInfo pAllocateInfo, @NativeType("VkDescriptorSet *") LongBuffer pDescriptorSets) {
         if (CHECKS) {
             check(pDescriptorSets, pAllocateInfo.descriptorSetCount());
         }
@@ -8861,12 +8722,12 @@ public class VK10 {
      * 
      * <p>To free allocated descriptor sets, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * VkResult vkFreeDescriptorSets(
      *     VkDevice                                    device,
      *     VkDescriptorPool                            descriptorPool,
      *     uint32_t                                    descriptorSetCount,
-     *     const VkDescriptorSet*                      pDescriptorSets);</code></pre>
+     *     const VkDescriptorSet*                      pDescriptorSets);</pre></code>
      * 
      * <h5>Description</h5>
      * 
@@ -8917,7 +8778,7 @@ public class VK10 {
      * @param pDescriptorSets an array of handles to {@code VkDescriptorSet} objects.
      */
     @NativeType("VkResult")
-    public static int vkFreeDescriptorSets(VkDevice device, @NativeType("VkDescriptorPool") long descriptorPool, @NativeType("VkDescriptorSet const *") LongBuffer pDescriptorSets) {
+    public static int vkFreeDescriptorSets(VkDevice device, @NativeType("VkDescriptorPool") long descriptorPool, @NativeType("const VkDescriptorSet *") LongBuffer pDescriptorSets) {
         return nvkFreeDescriptorSets(device, descriptorPool, pDescriptorSets.remaining(), memAddress(pDescriptorSets));
     }
 
@@ -8928,12 +8789,12 @@ public class VK10 {
      * 
      * <p>To free allocated descriptor sets, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * VkResult vkFreeDescriptorSets(
      *     VkDevice                                    device,
      *     VkDescriptorPool                            descriptorPool,
      *     uint32_t                                    descriptorSetCount,
-     *     const VkDescriptorSet*                      pDescriptorSets);</code></pre>
+     *     const VkDescriptorSet*                      pDescriptorSets);</pre></code>
      * 
      * <h5>Description</h5>
      * 
@@ -8983,7 +8844,7 @@ public class VK10 {
      * @param descriptorPool the descriptor pool from which the descriptor sets were allocated.
      */
     @NativeType("VkResult")
-    public static int vkFreeDescriptorSets(VkDevice device, @NativeType("VkDescriptorPool") long descriptorPool, @NativeType("VkDescriptorSet const *") long pDescriptorSet) {
+    public static int vkFreeDescriptorSets(VkDevice device, @NativeType("VkDescriptorPool") long descriptorPool, @NativeType("const VkDescriptorSet *") long pDescriptorSet) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
             LongBuffer pDescriptorSets = stack.longs(pDescriptorSet);
@@ -9016,13 +8877,13 @@ public class VK10 {
      * 
      * <p>Once allocated, descriptor sets <b>can</b> be updated with a combination of write and copy operations. To update descriptor sets, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * void vkUpdateDescriptorSets(
      *     VkDevice                                    device,
      *     uint32_t                                    descriptorWriteCount,
      *     const VkWriteDescriptorSet*                 pDescriptorWrites,
      *     uint32_t                                    descriptorCopyCount,
-     *     const VkCopyDescriptorSet*                  pDescriptorCopies);</code></pre>
+     *     const VkCopyDescriptorSet*                  pDescriptorCopies);</pre></code>
      * 
      * <h5>Description</h5>
      * 
@@ -9032,12 +8893,12 @@ public class VK10 {
      * 
      * <p>Each element in the {@code pDescriptorCopies} array is a {@link VkCopyDescriptorSet} structure describing an operation copying descriptors between sets.</p>
      * 
-     * <p>If the {@code dstSet} member of any element of {@code pDescriptorWrites} or {@code pDescriptorCopies} is bound, accessed, or modified by any command that was recorded to a command buffer which is currently in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle">recording or executable state</a>, and any of the descriptor bindings that are updated were not created with the {@link EXTDescriptorIndexing#VK_DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT_EXT DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT_EXT} or {@link EXTDescriptorIndexing#VK_DESCRIPTOR_BINDING_UPDATE_UNUSED_WHILE_PENDING_BIT_EXT DESCRIPTOR_BINDING_UPDATE_UNUSED_WHILE_PENDING_BIT_EXT} bits set, that command buffer becomes <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle">invalid</a>.</p>
+     * <p>If the {@code dstSet} member of any element of {@code pDescriptorWrites} or {@code pDescriptorCopies} is bound, accessed, or modified by any command that was recorded to a command buffer which is currently in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle">recording or executable state</a>, that command buffer becomes <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle">invalid</a>.</p>
      * 
      * <h5>Valid Usage</h5>
      * 
      * <ul>
-     * <li>Descriptor bindings updated by this command which were created without the {@link EXTDescriptorIndexing#VK_DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT_EXT DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT_EXT} or {@link EXTDescriptorIndexing#VK_DESCRIPTOR_BINDING_UPDATE_UNUSED_WHILE_PENDING_BIT_EXT DESCRIPTOR_BINDING_UPDATE_UNUSED_WHILE_PENDING_BIT_EXT} bits set <b>must</b> not be used by any command that was recorded to a command buffer which is in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle">pending state</a>.</li>
+     * <li>The {@code dstSet} member of each element of {@code pDescriptorWrites} or {@code pDescriptorCopies} <b>must</b> not be used by any command that was recorded to a command buffer which is in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle">pending state</a>.</li>
      * </ul>
      * 
      * <h5>Valid Usage (Implicit)</h5>
@@ -9063,7 +8924,7 @@ public class VK10 {
      * @param pDescriptorWrites a pointer to an array of {@link VkWriteDescriptorSet} structures describing the descriptor sets to write to.
      * @param pDescriptorCopies a pointer to an array of {@link VkCopyDescriptorSet} structures describing the descriptor sets to copy between.
      */
-    public static void vkUpdateDescriptorSets(VkDevice device, @Nullable @NativeType("VkWriteDescriptorSet const *") VkWriteDescriptorSet.Buffer pDescriptorWrites, @Nullable @NativeType("VkCopyDescriptorSet const *") VkCopyDescriptorSet.Buffer pDescriptorCopies) {
+    public static void vkUpdateDescriptorSets(VkDevice device, @Nullable @NativeType("const VkWriteDescriptorSet *") VkWriteDescriptorSet.Buffer pDescriptorWrites, @Nullable @NativeType("const VkCopyDescriptorSet *") VkCopyDescriptorSet.Buffer pDescriptorCopies) {
         nvkUpdateDescriptorSets(device, remainingSafe(pDescriptorWrites), memAddressSafe(pDescriptorWrites), remainingSafe(pDescriptorCopies), memAddressSafe(pDescriptorCopies));
     }
 
@@ -9086,12 +8947,12 @@ public class VK10 {
      * 
      * <p>To create a framebuffer, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * VkResult vkCreateFramebuffer(
      *     VkDevice                                    device,
      *     const VkFramebufferCreateInfo*              pCreateInfo,
      *     const VkAllocationCallbacks*                pAllocator,
-     *     VkFramebuffer*                              pFramebuffer);</code></pre>
+     *     VkFramebuffer*                              pFramebuffer);</pre></code>
      * 
      * <h5>Valid Usage (Implicit)</h5>
      * 
@@ -9126,7 +8987,7 @@ public class VK10 {
      * @param pFramebuffer points to a {@code VkFramebuffer} handle in which the resulting framebuffer object is returned.
      */
     @NativeType("VkResult")
-    public static int vkCreateFramebuffer(VkDevice device, @NativeType("VkFramebufferCreateInfo const *") VkFramebufferCreateInfo pCreateInfo, @Nullable @NativeType("VkAllocationCallbacks const *") VkAllocationCallbacks pAllocator, @NativeType("VkFramebuffer *") LongBuffer pFramebuffer) {
+    public static int vkCreateFramebuffer(VkDevice device, @NativeType("const VkFramebufferCreateInfo *") VkFramebufferCreateInfo pCreateInfo, @Nullable @NativeType("const VkAllocationCallbacks *") VkAllocationCallbacks pAllocator, @NativeType("VkFramebuffer *") LongBuffer pFramebuffer) {
         if (CHECKS) {
             check(pFramebuffer, 1);
         }
@@ -9151,11 +9012,11 @@ public class VK10 {
      * 
      * <p>To destroy a framebuffer, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * void vkDestroyFramebuffer(
      *     VkDevice                                    device,
      *     VkFramebuffer                               framebuffer,
-     *     const VkAllocationCallbacks*                pAllocator);</code></pre>
+     *     const VkAllocationCallbacks*                pAllocator);</pre></code>
      * 
      * <h5>Valid Usage</h5>
      * 
@@ -9188,7 +9049,7 @@ public class VK10 {
      * @param framebuffer the handle of the framebuffer to destroy.
      * @param pAllocator  controls host memory allocation as described in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation">Memory Allocation</a> chapter.
      */
-    public static void vkDestroyFramebuffer(VkDevice device, @NativeType("VkFramebuffer") long framebuffer, @Nullable @NativeType("VkAllocationCallbacks const *") VkAllocationCallbacks pAllocator) {
+    public static void vkDestroyFramebuffer(VkDevice device, @NativeType("VkFramebuffer") long framebuffer, @Nullable @NativeType("const VkAllocationCallbacks *") VkAllocationCallbacks pAllocator) {
         nvkDestroyFramebuffer(device, framebuffer, memAddressSafe(pAllocator));
     }
 
@@ -9211,12 +9072,12 @@ public class VK10 {
      * 
      * <p>To create a render pass, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * VkResult vkCreateRenderPass(
      *     VkDevice                                    device,
      *     const VkRenderPassCreateInfo*               pCreateInfo,
      *     const VkAllocationCallbacks*                pAllocator,
-     *     VkRenderPass*                               pRenderPass);</code></pre>
+     *     VkRenderPass*                               pRenderPass);</pre></code>
      * 
      * <h5>Valid Usage (Implicit)</h5>
      * 
@@ -9251,7 +9112,7 @@ public class VK10 {
      * @param pRenderPass points to a {@code VkRenderPass} handle in which the resulting render pass object is returned.
      */
     @NativeType("VkResult")
-    public static int vkCreateRenderPass(VkDevice device, @NativeType("VkRenderPassCreateInfo const *") VkRenderPassCreateInfo pCreateInfo, @Nullable @NativeType("VkAllocationCallbacks const *") VkAllocationCallbacks pAllocator, @NativeType("VkRenderPass *") LongBuffer pRenderPass) {
+    public static int vkCreateRenderPass(VkDevice device, @NativeType("const VkRenderPassCreateInfo *") VkRenderPassCreateInfo pCreateInfo, @Nullable @NativeType("const VkAllocationCallbacks *") VkAllocationCallbacks pAllocator, @NativeType("VkRenderPass *") LongBuffer pRenderPass) {
         if (CHECKS) {
             check(pRenderPass, 1);
         }
@@ -9276,11 +9137,11 @@ public class VK10 {
      * 
      * <p>To destroy a render pass, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * void vkDestroyRenderPass(
      *     VkDevice                                    device,
      *     VkRenderPass                                renderPass,
-     *     const VkAllocationCallbacks*                pAllocator);</code></pre>
+     *     const VkAllocationCallbacks*                pAllocator);</pre></code>
      * 
      * <h5>Valid Usage</h5>
      * 
@@ -9313,7 +9174,7 @@ public class VK10 {
      * @param renderPass the handle of the render pass to destroy.
      * @param pAllocator controls host memory allocation as described in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation">Memory Allocation</a> chapter.
      */
-    public static void vkDestroyRenderPass(VkDevice device, @NativeType("VkRenderPass") long renderPass, @Nullable @NativeType("VkAllocationCallbacks const *") VkAllocationCallbacks pAllocator) {
+    public static void vkDestroyRenderPass(VkDevice device, @NativeType("VkRenderPass") long renderPass, @Nullable @NativeType("const VkAllocationCallbacks *") VkAllocationCallbacks pAllocator) {
         nvkDestroyRenderPass(device, renderPass, memAddressSafe(pAllocator));
     }
 
@@ -9332,11 +9193,11 @@ public class VK10 {
      * 
      * <p>To query the render area granularity, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * void vkGetRenderAreaGranularity(
      *     VkDevice                                    device,
      *     VkRenderPass                                renderPass,
-     *     VkExtent2D*                                 pGranularity);</code></pre>
+     *     VkExtent2D*                                 pGranularity);</pre></code>
      * 
      * <h5>Description</h5>
      * 
@@ -9390,18 +9251,12 @@ public class VK10 {
      * 
      * <p>To create a command pool, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * VkResult vkCreateCommandPool(
      *     VkDevice                                    device,
      *     const VkCommandPoolCreateInfo*              pCreateInfo,
      *     const VkAllocationCallbacks*                pAllocator,
-     *     VkCommandPool*                              pCommandPool);</code></pre>
-     * 
-     * <h5>Valid Usage</h5>
-     * 
-     * <ul>
-     * <li>{@code pCreateInfo}{@code ::queueFamilyIndex} <b>must</b> be the index of a queue family available in the logical device {@code device}.</li>
-     * </ul>
+     *     VkCommandPool*                              pCommandPool);</pre></code>
      * 
      * <h5>Valid Usage (Implicit)</h5>
      * 
@@ -9431,12 +9286,12 @@ public class VK10 {
      * <p>{@link VkAllocationCallbacks}, {@link VkCommandPoolCreateInfo}</p>
      *
      * @param device       the logical device that creates the command pool.
-     * @param pCreateInfo  a pointer to an instance of the {@link VkCommandPoolCreateInfo} structure specifying the state of the command pool object.
+     * @param pCreateInfo  contains information used to create the command pool.
      * @param pAllocator   controls host memory allocation as described in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation">Memory Allocation</a> chapter.
      * @param pCommandPool points to a {@code VkCommandPool} handle in which the created pool is returned.
      */
     @NativeType("VkResult")
-    public static int vkCreateCommandPool(VkDevice device, @NativeType("VkCommandPoolCreateInfo const *") VkCommandPoolCreateInfo pCreateInfo, @Nullable @NativeType("VkAllocationCallbacks const *") VkAllocationCallbacks pAllocator, @NativeType("VkCommandPool *") LongBuffer pCommandPool) {
+    public static int vkCreateCommandPool(VkDevice device, @NativeType("const VkCommandPoolCreateInfo *") VkCommandPoolCreateInfo pCreateInfo, @Nullable @NativeType("const VkAllocationCallbacks *") VkAllocationCallbacks pAllocator, @NativeType("VkCommandPool *") LongBuffer pCommandPool) {
         if (CHECKS) {
             check(pCommandPool, 1);
         }
@@ -9461,11 +9316,11 @@ public class VK10 {
      * 
      * <p>To destroy a command pool, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * void vkDestroyCommandPool(
      *     VkDevice                                    device,
      *     VkCommandPool                               commandPool,
-     *     const VkAllocationCallbacks*                pAllocator);</code></pre>
+     *     const VkAllocationCallbacks*                pAllocator);</pre></code>
      * 
      * <h5>Description</h5>
      * 
@@ -9504,7 +9359,7 @@ public class VK10 {
      * @param commandPool the handle of the command pool to destroy.
      * @param pAllocator  controls host memory allocation as described in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation">Memory Allocation</a> chapter.
      */
-    public static void vkDestroyCommandPool(VkDevice device, @NativeType("VkCommandPool") long commandPool, @Nullable @NativeType("VkAllocationCallbacks const *") VkAllocationCallbacks pAllocator) {
+    public static void vkDestroyCommandPool(VkDevice device, @NativeType("VkCommandPool") long commandPool, @Nullable @NativeType("const VkAllocationCallbacks *") VkAllocationCallbacks pAllocator) {
         nvkDestroyCommandPool(device, commandPool, memAddressSafe(pAllocator));
     }
 
@@ -9517,11 +9372,11 @@ public class VK10 {
      * 
      * <p>To reset a command pool, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * VkResult vkResetCommandPool(
      *     VkDevice                                    device,
      *     VkCommandPool                               commandPool,
-     *     VkCommandPoolResetFlags                     flags);</code></pre>
+     *     VkCommandPoolResetFlags                     flags);</pre></code>
      * 
      * <h5>Description</h5>
      * 
@@ -9589,11 +9444,11 @@ public class VK10 {
      * 
      * <p>To allocate command buffers, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * VkResult vkAllocateCommandBuffers(
      *     VkDevice                                    device,
      *     const VkCommandBufferAllocateInfo*          pAllocateInfo,
-     *     VkCommandBuffer*                            pCommandBuffers);</code></pre>
+     *     VkCommandBuffer*                            pCommandBuffers);</pre></code>
      * 
      * <h5>Description</h5>
      * 
@@ -9638,7 +9493,7 @@ public class VK10 {
      * @param pCommandBuffers a pointer to an array of {@code VkCommandBuffer} handles in which the resulting command buffer objects are returned. The array <b>must</b> be at least the length specified by the {@code commandBufferCount} member of {@code pAllocateInfo}. Each allocated command buffer begins in the initial state.
      */
     @NativeType("VkResult")
-    public static int vkAllocateCommandBuffers(VkDevice device, @NativeType("VkCommandBufferAllocateInfo const *") VkCommandBufferAllocateInfo pAllocateInfo, @NativeType("VkCommandBuffer *") PointerBuffer pCommandBuffers) {
+    public static int vkAllocateCommandBuffers(VkDevice device, @NativeType("const VkCommandBufferAllocateInfo *") VkCommandBufferAllocateInfo pAllocateInfo, @NativeType("VkCommandBuffer *") PointerBuffer pCommandBuffers) {
         if (CHECKS) {
             check(pCommandBuffers, pAllocateInfo.commandBufferCount());
         }
@@ -9664,12 +9519,12 @@ public class VK10 {
      * 
      * <p>To free command buffers, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * void vkFreeCommandBuffers(
      *     VkDevice                                    device,
      *     VkCommandPool                               commandPool,
      *     uint32_t                                    commandBufferCount,
-     *     const VkCommandBuffer*                      pCommandBuffers);</code></pre>
+     *     const VkCommandBuffer*                      pCommandBuffers);</pre></code>
      * 
      * <h5>Description</h5>
      * 
@@ -9703,7 +9558,7 @@ public class VK10 {
      * @param commandPool     the command pool from which the command buffers were allocated.
      * @param pCommandBuffers an array of handles of command buffers to free.
      */
-    public static void vkFreeCommandBuffers(VkDevice device, @NativeType("VkCommandPool") long commandPool, @NativeType("VkCommandBuffer const *") PointerBuffer pCommandBuffers) {
+    public static void vkFreeCommandBuffers(VkDevice device, @NativeType("VkCommandPool") long commandPool, @NativeType("const VkCommandBuffer *") PointerBuffer pCommandBuffers) {
         nvkFreeCommandBuffers(device, commandPool, pCommandBuffers.remaining(), memAddress(pCommandBuffers));
     }
 
@@ -9714,12 +9569,12 @@ public class VK10 {
      * 
      * <p>To free command buffers, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * void vkFreeCommandBuffers(
      *     VkDevice                                    device,
      *     VkCommandPool                               commandPool,
      *     uint32_t                                    commandBufferCount,
-     *     const VkCommandBuffer*                      pCommandBuffers);</code></pre>
+     *     const VkCommandBuffer*                      pCommandBuffers);</pre></code>
      * 
      * <h5>Description</h5>
      * 
@@ -9752,7 +9607,7 @@ public class VK10 {
      * @param device      the logical device that owns the command pool.
      * @param commandPool the command pool from which the command buffers were allocated.
      */
-    public static void vkFreeCommandBuffers(VkDevice device, @NativeType("VkCommandPool") long commandPool, @NativeType("VkCommandBuffer const *") VkCommandBuffer pCommandBuffer) {
+    public static void vkFreeCommandBuffers(VkDevice device, @NativeType("VkCommandPool") long commandPool, @NativeType("const VkCommandBuffer *") VkCommandBuffer pCommandBuffer) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
             PointerBuffer pCommandBuffers = stack.pointers(pCommandBuffer);
@@ -9777,10 +9632,10 @@ public class VK10 {
      * 
      * <p>To begin recording a command buffer, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * VkResult vkBeginCommandBuffer(
      *     VkCommandBuffer                             commandBuffer,
-     *     const VkCommandBufferBeginInfo*             pBeginInfo);</code></pre>
+     *     const VkCommandBufferBeginInfo*             pBeginInfo);</pre></code>
      * 
      * <h5>Valid Usage</h5>
      * 
@@ -9827,7 +9682,7 @@ public class VK10 {
      * @param pBeginInfo    an instance of the {@link VkCommandBufferBeginInfo} structure, which defines additional information about how the command buffer begins recording.
      */
     @NativeType("VkResult")
-    public static int vkBeginCommandBuffer(VkCommandBuffer commandBuffer, @NativeType("VkCommandBufferBeginInfo const *") VkCommandBufferBeginInfo pBeginInfo) {
+    public static int vkBeginCommandBuffer(VkCommandBuffer commandBuffer, @NativeType("const VkCommandBufferBeginInfo *") VkCommandBufferBeginInfo pBeginInfo) {
         return nvkBeginCommandBuffer(commandBuffer, pBeginInfo.address());
     }
 
@@ -9840,9 +9695,9 @@ public class VK10 {
      * 
      * <p>To complete recording of a command buffer, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * VkResult vkEndCommandBuffer(
-     *     VkCommandBuffer                             commandBuffer);</code></pre>
+     *     VkCommandBuffer                             commandBuffer);</pre></code>
      * 
      * <h5>Description</h5>
      * 
@@ -9854,7 +9709,6 @@ public class VK10 {
      * <li>{@code commandBuffer} <b>must</b> be in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle">recording state</a>.</li>
      * <li>If {@code commandBuffer} is a primary command buffer, there <b>must</b> not be an active render pass instance</li>
      * <li>All queries made <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#queries-operation-active">active</a> during the recording of {@code commandBuffer} <b>must</b> have been made inactive</li>
-     * <li>If {@code commandBuffer} is a secondary command buffer, there <b>must</b> not be an outstanding {@link EXTDebugUtils#vkCmdBeginDebugUtilsLabelEXT CmdBeginDebugUtilsLabelEXT} command recorded to {@code commandBuffer} that has not previously been ended by a call to {@link EXTDebugUtils#vkCmdEndDebugUtilsLabelEXT CmdEndDebugUtilsLabelEXT}.</li>
      * <li>If {@code commandBuffer} is a secondary command buffer, there <b>must</b> not be an outstanding {@link EXTDebugMarker#vkCmdDebugMarkerBeginEXT CmdDebugMarkerBeginEXT} command recorded to {@code commandBuffer} that has not previously been ended by a call to {@link EXTDebugMarker#vkCmdDebugMarkerEndEXT CmdDebugMarkerEndEXT}.</li>
      * </ul>
      * 
@@ -9902,10 +9756,10 @@ public class VK10 {
      * 
      * <p>To reset command buffers, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * VkResult vkResetCommandBuffer(
      *     VkCommandBuffer                             commandBuffer,
-     *     VkCommandBufferResetFlags                   flags);</code></pre>
+     *     VkCommandBufferResetFlags                   flags);</pre></code>
      * 
      * <h5>Description</h5>
      * 
@@ -9963,11 +9817,11 @@ public class VK10 {
      * 
      * <p>Once a pipeline has been created, it <b>can</b> be bound to the command buffer using the command:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * void vkCmdBindPipeline(
      *     VkCommandBuffer                             commandBuffer,
      *     VkPipelineBindPoint                         pipelineBindPoint,
-     *     VkPipeline                                  pipeline);</code></pre>
+     *     VkPipeline                                  pipeline);</pre></code>
      * 
      * <h5>Description</h5>
      * 
@@ -10037,12 +9891,12 @@ public class VK10 {
      * 
      * <p>If the bound pipeline state object was not created with the {@link #VK_DYNAMIC_STATE_VIEWPORT DYNAMIC_STATE_VIEWPORT} dynamic state enabled, viewport transformation parameters are specified using the {@code pViewports} member of {@link VkPipelineViewportStateCreateInfo} in the pipeline state object. If the pipeline state object was created with the {@link #VK_DYNAMIC_STATE_VIEWPORT DYNAMIC_STATE_VIEWPORT} dynamic state enabled, the viewport transformation parameters are dynamically set and changed with the command:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * void vkCmdSetViewport(
      *     VkCommandBuffer                             commandBuffer,
      *     uint32_t                                    firstViewport,
      *     uint32_t                                    viewportCount,
-     *     const VkViewport*                           pViewports);</code></pre>
+     *     const VkViewport*                           pViewports);</pre></code>
      * 
      * <h5>Description</h5>
      * 
@@ -10051,7 +9905,7 @@ public class VK10 {
      * <h5>Valid Usage</h5>
      * 
      * <ul>
-     * <li>The bound graphics pipeline <b>must</b> have been created with the {@link #VK_DYNAMIC_STATE_VIEWPORT DYNAMIC_STATE_VIEWPORT} dynamic state enabled</li>
+     * <li>The currently bound graphics pipeline <b>must</b> have been created with the {@link #VK_DYNAMIC_STATE_VIEWPORT DYNAMIC_STATE_VIEWPORT} dynamic state enabled</li>
      * <li>{@code firstViewport} <b>must</b> be less than {@link VkPhysicalDeviceLimits}{@code ::maxViewports}</li>
      * <li>The sum of {@code firstViewport} and {@code viewportCount} <b>must</b> be between 1 and {@link VkPhysicalDeviceLimits}{@code ::maxViewports}, inclusive</li>
      * <li>If the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-features-multiViewport">multiple viewports</a> feature is not enabled, {@code firstViewport} <b>must</b> be 0</li>
@@ -10090,7 +9944,7 @@ public class VK10 {
      * @param firstViewport the index of the first viewport whose parameters are updated by the command.
      * @param pViewports    a pointer to an array of {@link VkViewport} structures specifying viewport parameters.
      */
-    public static void vkCmdSetViewport(VkCommandBuffer commandBuffer, @NativeType("uint32_t") int firstViewport, @NativeType("VkViewport const *") VkViewport.Buffer pViewports) {
+    public static void vkCmdSetViewport(VkCommandBuffer commandBuffer, @NativeType("uint32_t") int firstViewport, @NativeType("const VkViewport *") VkViewport.Buffer pViewports) {
         nvkCmdSetViewport(commandBuffer, firstViewport, pViewports.remaining(), pViewports.address());
     }
 
@@ -10113,12 +9967,12 @@ public class VK10 {
      * 
      * <p>The scissor test determines if a fragment's framebuffer coordinates <code>(x<sub>f</sub>,y<sub>f</sub>)</code> lie within the scissor rectangle corresponding to the viewport index (see <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#vertexpostproc-viewport">Controlling the Viewport</a>) used by the primitive that generated the fragment. If the pipeline state object is created without {@link #VK_DYNAMIC_STATE_SCISSOR DYNAMIC_STATE_SCISSOR} enabled then the scissor rectangles are set by the {@link VkPipelineViewportStateCreateInfo} state of the pipeline state object. Otherwise, to dynamically set the scissor rectangles call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * void vkCmdSetScissor(
      *     VkCommandBuffer                             commandBuffer,
      *     uint32_t                                    firstScissor,
      *     uint32_t                                    scissorCount,
-     *     const VkRect2D*                             pScissors);</code></pre>
+     *     const VkRect2D*                             pScissors);</pre></code>
      * 
      * <h5>Description</h5>
      * 
@@ -10129,7 +9983,7 @@ public class VK10 {
      * <h5>Valid Usage</h5>
      * 
      * <ul>
-     * <li>The bound graphics pipeline <b>must</b> have been created with the {@link #VK_DYNAMIC_STATE_SCISSOR DYNAMIC_STATE_SCISSOR} dynamic state enabled</li>
+     * <li>The currently bound graphics pipeline <b>must</b> have been created with the {@link #VK_DYNAMIC_STATE_SCISSOR DYNAMIC_STATE_SCISSOR} dynamic state enabled</li>
      * <li>{@code firstScissor} <b>must</b> be less than {@link VkPhysicalDeviceLimits}{@code ::maxViewports}</li>
      * <li>The sum of {@code firstScissor} and {@code scissorCount} <b>must</b> be between 1 and {@link VkPhysicalDeviceLimits}{@code ::maxViewports}, inclusive</li>
      * <li>If the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-features-multiViewport">multiple viewports</a> feature is not enabled, {@code firstScissor} <b>must</b> be 0</li>
@@ -10171,7 +10025,7 @@ public class VK10 {
      * @param firstScissor  the index of the first scissor whose state is updated by the command.
      * @param pScissors     a pointer to an array of {@link VkRect2D} structures defining scissor rectangles.
      */
-    public static void vkCmdSetScissor(VkCommandBuffer commandBuffer, @NativeType("uint32_t") int firstScissor, @NativeType("VkRect2D const *") VkRect2D.Buffer pScissors) {
+    public static void vkCmdSetScissor(VkCommandBuffer commandBuffer, @NativeType("uint32_t") int firstScissor, @NativeType("const VkRect2D *") VkRect2D.Buffer pScissors) {
         nvkCmdSetScissor(commandBuffer, firstScissor, pScissors.remaining(), pScissors.address());
     }
 
@@ -10186,15 +10040,15 @@ public class VK10 {
      * 
      * <p>Otherwise, the line width is set by calling {@link #vkCmdSetLineWidth CmdSetLineWidth}:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * void vkCmdSetLineWidth(
      *     VkCommandBuffer                             commandBuffer,
-     *     float                                       lineWidth);</code></pre>
+     *     float                                       lineWidth);</pre></code>
      * 
      * <h5>Valid Usage</h5>
      * 
      * <ul>
-     * <li>The bound graphics pipeline <b>must</b> have been created with the {@link #VK_DYNAMIC_STATE_LINE_WIDTH DYNAMIC_STATE_LINE_WIDTH} dynamic state enabled</li>
+     * <li>The currently bound graphics pipeline <b>must</b> have been created with the {@link #VK_DYNAMIC_STATE_LINE_WIDTH DYNAMIC_STATE_LINE_WIDTH} dynamic state enabled</li>
      * <li>If the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-features-wideLines">wide lines</a> feature is not enabled, {@code lineWidth} <b>must</b> be {@code 1.0}</li>
      * </ul>
      * 
@@ -10237,12 +10091,12 @@ public class VK10 {
      * 
      * <p>The depth values of all fragments generated by the rasterization of a polygon <b>can</b> be offset by a single value that is computed for that polygon. This behavior is controlled by the {@code depthBiasEnable}, {@code depthBiasConstantFactor}, {@code depthBiasClamp}, and {@code depthBiasSlopeFactor} members of {@link VkPipelineRasterizationStateCreateInfo}, or by the corresponding parameters to the {@link #vkCmdSetDepthBias CmdSetDepthBias} command if depth bias state is dynamic.</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * void vkCmdSetDepthBias(
      *     VkCommandBuffer                             commandBuffer,
      *     float                                       depthBiasConstantFactor,
      *     float                                       depthBiasClamp,
-     *     float                                       depthBiasSlopeFactor);</code></pre>
+     *     float                                       depthBiasSlopeFactor);</pre></code>
      * 
      * <h5>Description</h5>
      * 
@@ -10252,13 +10106,13 @@ public class VK10 {
      * 
      * <p>The maximum depth slope <code>m</code> of a triangle is</p>
      * 
-     * <pre><code>
-     *       m = sqrt((&part;z<sub>f</sub> / &part;x<sub>f</sub>)<sup>2</sup> + (&part;z<sub>f</sub> / &part;y<sub>f</sub>)<sup>2</sup>)</code></pre>
+     * <code><pre>
+     *       m = sqrt((&part;z<sub>f</sub> / &part;x<sub>f</sub>)<sup>2</sup> + (&part;z<sub>f</sub> / &part;y<sub>f</sub>)<sup>2</sup>)</pre></code>
      * 
      * <p>where <code>(x<sub>f</sub>, y<sub>f</sub>, z<sub>f</sub>)</code> is a point on the triangle. <code>m</code> <b>may</b> be approximated as</p>
      * 
-     * <pre><code>
-     *       m = max(abs(&part;z<sub>f</sub> / &part;x<sub>f</sub>), abs(&part;z<sub>f</sub> / &part;y<sub>f</sub>))</code></pre>
+     * <code><pre>
+     *       m = max(abs(&part;z<sub>f</sub> / &part;x<sub>f</sub>), abs(&part;z<sub>f</sub> / &part;y<sub>f</sub>))</pre></code>
      * 
      * <p>The minimum resolvable difference <code>r</code> is an implementation-dependent parameter that depends on the depth buffer representation. It is the smallest difference in framebuffer coordinate <code>z</code> values that is guaranteed to remain distinct throughout polygon rasterization and in the depth buffer. All pairs of fragments generated by the rasterization of two polygons with otherwise identical vertices, but <code>z<sub>f</sub></code> values that differ by <code>r</code>, will have distinct depth values.</p>
      * 
@@ -10274,19 +10128,19 @@ public class VK10 {
      * 
      * <p>The bias value <code>o</code> for a polygon is</p>
      * 
-     * <pre><code>
+     * <code><pre>
      *         m &times; depthBiasSlopeFactor + r &times; depthBiasConstantFactor                     depthBiasClamp = 0 or NaN
      * o = min(m &times; depthBiasSlopeFactor + r &times; depthBiasConstantFactor, depthBiasClamp)    depthBiasClamp &gt; 0
-     *     max(m &times; depthBiasSlopeFactor + r &times; depthBiasConstantFactor, depthBiasClamp)    depthBiasClamp &lt; 0</code></pre>
+     *     max(m &times; depthBiasSlopeFactor + r &times; depthBiasConstantFactor, depthBiasClamp)    depthBiasClamp &lt; 0</pre></code>
      * 
      * <p><code>m</code> is computed as described above. If the depth buffer uses a fixed-point representation, <code>m</code> is a function of depth values in the range <code>[0,1]</code>, and <code>o</code> is applied to depth values in the same range.</p>
      * 
-     * <p>For fixed-point depth buffers, fragment depth values are always limited to the range <code>[0,1]</code> by clamping after depth bias addition is performed. Unless the {@link EXTDepthRangeUnrestricted VK_EXT_depth_range_unrestricted} extension is enabled, fragment depth values are clamped even when the depth buffer uses a floating-point representation.</p>
+     * <p>For fixed-point depth buffers, fragment depth values are always limited to the range <code>[0,1]</code> by clamping after depth bias addition is performed. Fragment depth values are clamped even when the depth buffer uses a floating-point representation.</p>
      * 
      * <h5>Valid Usage</h5>
      * 
      * <ul>
-     * <li>The bound graphics pipeline <b>must</b> have been created with the {@link #VK_DYNAMIC_STATE_DEPTH_BIAS DYNAMIC_STATE_DEPTH_BIAS} dynamic state enabled</li>
+     * <li>The currently bound graphics pipeline <b>must</b> have been created with the {@link #VK_DYNAMIC_STATE_DEPTH_BIAS DYNAMIC_STATE_DEPTH_BIAS} dynamic state enabled</li>
      * <li>If the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-features-depthBiasClamp">depth bias clamping</a> feature is not enabled, {@code depthBiasClamp} <b>must</b> be {@code 0.0}</li>
      * </ul>
      * 
@@ -10337,15 +10191,15 @@ public class VK10 {
      * 
      * <p>Otherwise, to dynamically set and change the blend constant, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * void vkCmdSetBlendConstants(
      *     VkCommandBuffer                             commandBuffer,
-     *     const float                                 blendConstants[4]);</code></pre>
+     *     const float                                 blendConstants[4]);</pre></code>
      * 
      * <h5>Valid Usage</h5>
      * 
      * <ul>
-     * <li>The bound graphics pipeline <b>must</b> have been created with the {@link #VK_DYNAMIC_STATE_BLEND_CONSTANTS DYNAMIC_STATE_BLEND_CONSTANTS} dynamic state enabled</li>
+     * <li>The currently bound graphics pipeline <b>must</b> have been created with the {@link #VK_DYNAMIC_STATE_BLEND_CONSTANTS DYNAMIC_STATE_BLEND_CONSTANTS} dynamic state enabled</li>
      * </ul>
      * 
      * <h5>Valid Usage (Implicit)</h5>
@@ -10373,7 +10227,7 @@ public class VK10 {
      * @param commandBuffer  the command buffer into which the command will be recorded.
      * @param blendConstants an array of four values specifying the R, G, B, and A components of the blend constant color used in blending, depending on the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#framebuffer-blendfactors">blend factor</a>.
      */
-    public static void vkCmdSetBlendConstants(VkCommandBuffer commandBuffer, @NativeType("float const *") FloatBuffer blendConstants) {
+    public static void vkCmdSetBlendConstants(VkCommandBuffer commandBuffer, @NativeType("const float *") FloatBuffer blendConstants) {
         if (CHECKS) {
             check(blendConstants, 4);
         }
@@ -10389,18 +10243,16 @@ public class VK10 {
      * 
      * <p>The depth bounds test conditionally disables coverage of a sample based on the outcome of a comparison between the value <code>z<sub>a</sub></code> in the depth attachment at location <code>(x<sub>f</sub>,y<sub>f</sub>)</code> (for the appropriate sample) and a range of values. The test is enabled or disabled by the {@code depthBoundsTestEnable} member of {@link VkPipelineDepthStencilStateCreateInfo}: If the pipeline state object is created without the {@link #VK_DYNAMIC_STATE_DEPTH_BOUNDS DYNAMIC_STATE_DEPTH_BOUNDS} dynamic state enabled then the range of values used in the depth bounds test are defined by the {@code minDepthBounds} and {@code maxDepthBounds} members of the {@link VkPipelineDepthStencilStateCreateInfo} structure. Otherwise, to dynamically set the depth bounds range values call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * void vkCmdSetDepthBounds(
      *     VkCommandBuffer                             commandBuffer,
      *     float                                       minDepthBounds,
-     *     float                                       maxDepthBounds);</code></pre>
+     *     float                                       maxDepthBounds);</pre></code>
      * 
      * <h5>Valid Usage</h5>
      * 
      * <ul>
-     * <li>The bound graphics pipeline <b>must</b> have been created with the {@link #VK_DYNAMIC_STATE_DEPTH_BOUNDS DYNAMIC_STATE_DEPTH_BOUNDS} dynamic state enabled</li>
-     * <li>Unless the {@link EXTDepthRangeUnrestricted VK_EXT_depth_range_unrestricted} extension is enabled {@code minDepthBounds} <b>must</b> be between {@code 0.0} and {@code 1.0}, inclusive</li>
-     * <li>Unless the {@link EXTDepthRangeUnrestricted VK_EXT_depth_range_unrestricted} extension is enabled {@code maxDepthBounds} <b>must</b> be between {@code 0.0} and {@code 1.0}, inclusive</li>
+     * <li>The currently bound graphics pipeline <b>must</b> have been created with the {@link #VK_DYNAMIC_STATE_DEPTH_BOUNDS DYNAMIC_STATE_DEPTH_BOUNDS} dynamic state enabled</li>
      * </ul>
      * 
      * <h5>Valid Usage (Implicit)</h5>
@@ -10443,16 +10295,16 @@ public class VK10 {
      * 
      * <p>If the pipeline state object is created with the {@link #VK_DYNAMIC_STATE_STENCIL_COMPARE_MASK DYNAMIC_STATE_STENCIL_COMPARE_MASK} dynamic state enabled, then to dynamically set the stencil compare mask call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * void vkCmdSetStencilCompareMask(
      *     VkCommandBuffer                             commandBuffer,
      *     VkStencilFaceFlags                          faceMask,
-     *     uint32_t                                    compareMask);</code></pre>
+     *     uint32_t                                    compareMask);</pre></code>
      * 
      * <h5>Valid Usage</h5>
      * 
      * <ul>
-     * <li>The bound graphics pipeline <b>must</b> have been created with the {@link #VK_DYNAMIC_STATE_STENCIL_COMPARE_MASK DYNAMIC_STATE_STENCIL_COMPARE_MASK} dynamic state enabled</li>
+     * <li>The currently bound graphics pipeline <b>must</b> have been created with the {@link #VK_DYNAMIC_STATE_STENCIL_COMPARE_MASK DYNAMIC_STATE_STENCIL_COMPARE_MASK} dynamic state enabled</li>
      * </ul>
      * 
      * <h5>Valid Usage (Implicit)</h5>
@@ -10497,16 +10349,16 @@ public class VK10 {
      * 
      * <p>If the pipeline state object is created with the {@link #VK_DYNAMIC_STATE_STENCIL_WRITE_MASK DYNAMIC_STATE_STENCIL_WRITE_MASK} dynamic state enabled, then to dynamically set the stencil write mask call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * void vkCmdSetStencilWriteMask(
      *     VkCommandBuffer                             commandBuffer,
      *     VkStencilFaceFlags                          faceMask,
-     *     uint32_t                                    writeMask);</code></pre>
+     *     uint32_t                                    writeMask);</pre></code>
      * 
      * <h5>Valid Usage</h5>
      * 
      * <ul>
-     * <li>The bound graphics pipeline <b>must</b> have been created with the {@link #VK_DYNAMIC_STATE_STENCIL_WRITE_MASK DYNAMIC_STATE_STENCIL_WRITE_MASK} dynamic state enabled</li>
+     * <li>The currently bound graphics pipeline <b>must</b> have been created with the {@link #VK_DYNAMIC_STATE_STENCIL_WRITE_MASK DYNAMIC_STATE_STENCIL_WRITE_MASK} dynamic state enabled</li>
      * </ul>
      * 
      * <h5>Valid Usage (Implicit)</h5>
@@ -10551,16 +10403,16 @@ public class VK10 {
      * 
      * <p>If the pipeline state object is created with the {@link #VK_DYNAMIC_STATE_STENCIL_REFERENCE DYNAMIC_STATE_STENCIL_REFERENCE} dynamic state enabled, then to dynamically set the stencil reference value call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * void vkCmdSetStencilReference(
      *     VkCommandBuffer                             commandBuffer,
      *     VkStencilFaceFlags                          faceMask,
-     *     uint32_t                                    reference);</code></pre>
+     *     uint32_t                                    reference);</pre></code>
      * 
      * <h5>Valid Usage</h5>
      * 
      * <ul>
-     * <li>The bound graphics pipeline <b>must</b> have been created with the {@link #VK_DYNAMIC_STATE_STENCIL_REFERENCE DYNAMIC_STATE_STENCIL_REFERENCE} dynamic state enabled</li>
+     * <li>The currently bound graphics pipeline <b>must</b> have been created with the {@link #VK_DYNAMIC_STATE_STENCIL_REFERENCE DYNAMIC_STATE_STENCIL_REFERENCE} dynamic state enabled</li>
      * </ul>
      * 
      * <h5>Valid Usage (Implicit)</h5>
@@ -10616,7 +10468,7 @@ public class VK10 {
      * 
      * <p>To bind one or more descriptor sets to a command buffer, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * void vkCmdBindDescriptorSets(
      *     VkCommandBuffer                             commandBuffer,
      *     VkPipelineBindPoint                         pipelineBindPoint,
@@ -10625,7 +10477,7 @@ public class VK10 {
      *     uint32_t                                    descriptorSetCount,
      *     const VkDescriptorSet*                      pDescriptorSets,
      *     uint32_t                                    dynamicOffsetCount,
-     *     const uint32_t*                             pDynamicOffsets);</code></pre>
+     *     const uint32_t*                             pDynamicOffsets);</pre></code>
      * 
      * <h5>Description</h5>
      * 
@@ -10641,16 +10493,7 @@ public class VK10 {
      * 
      * <p>Each of the {@code pDescriptorSets} <b>must</b> be compatible with the pipeline layout specified by {@code layout}. The layout used to program the bindings <b>must</b> also be compatible with the pipeline used in subsequent graphics or compute commands, as defined in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-compatibility">Pipeline Layout Compatibility</a> section.</p>
      * 
-     * <p>The descriptor set contents bound by a call to {@link #vkCmdBindDescriptorSets CmdBindDescriptorSets} <b>may</b> be consumed at the following times:</p>
-     * 
-     * <ul>
-     * <li>For descriptor bindings created with the {@link EXTDescriptorIndexing#VK_DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT_EXT DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT_EXT} bit set, the contents <b>may</b> be consumed when the command buffer is submitted to a queue, or during shader execution of the resulting draws and dispatches, or any time in between. Otherwise,</li>
-     * <li>during host execution of the command, or during shader execution of the resulting draws and dispatches, or any time in between.</li>
-     * </ul>
-     * 
-     * <p>Thus, the contents of a descriptor set binding <b>must</b> not be altered (overwritten by an update command, or freed) between the first point in time that it <b>may</b> be consumed, and when the command completes executing on the queue.</p>
-     * 
-     * <p>The contents of {@code pDynamicOffsets} are consumed immediately during execution of {@link #vkCmdBindDescriptorSets CmdBindDescriptorSets}. Once all pending uses have completed, it is legal to update and reuse a descriptor set.</p>
+     * <p>The descriptor set contents bound by a call to {@link #vkCmdBindDescriptorSets CmdBindDescriptorSets} <b>may</b> be consumed during host execution of the command, or during shader execution of the resulting draws, or any time in between. Thus, the contents <b>must</b> not be altered (overwritten by an update command, or freed) between when the command is recorded and when the command completes executing on the queue. The contents of {@code pDynamicOffsets} are consumed immediately during execution of {@link #vkCmdBindDescriptorSets CmdBindDescriptorSets}. Once all pending uses have completed, it is legal to update and reuse a descriptor set.</p>
      * 
      * <h5>Valid Usage</h5>
      * 
@@ -10659,8 +10502,7 @@ public class VK10 {
      * <li>{@code dynamicOffsetCount} <b>must</b> be equal to the total number of dynamic descriptors in {@code pDescriptorSets}</li>
      * <li>The sum of {@code firstSet} and {@code descriptorSetCount} <b>must</b> be less than or equal to {@link VkPipelineLayoutCreateInfo}{@code ::setLayoutCount} provided when {@code layout} was created</li>
      * <li>{@code pipelineBindPoint} <b>must</b> be supported by the {@code commandBuffer}&#8217;s parent {@code VkCommandPool}&#8217;s queue family</li>
-     * <li>Each element of {@code pDynamicOffsets} which corresponds to a descriptor binding with type {@link #VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC} <b>must</b> be a multiple of {@link VkPhysicalDeviceLimits}{@code ::minUniformBufferOffsetAlignment}</li>
-     * <li>Each element of {@code pDynamicOffsets} which corresponds to a descriptor binding with type {@link #VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC} <b>must</b> be a multiple of {@link VkPhysicalDeviceLimits}{@code ::minStorageBufferOffsetAlignment}</li>
+     * <li>Each element of {@code pDynamicOffsets} <b>must</b> satisfy the required alignment for the corresponding descriptor binding&#8217;s descriptor type</li>
      * </ul>
      * 
      * <h5>Valid Usage (Implicit)</h5>
@@ -10698,7 +10540,7 @@ public class VK10 {
      * @param pDescriptorSets   an array of handles to {@code VkDescriptorSet} objects describing the descriptor sets to write to.
      * @param pDynamicOffsets   a pointer to an array of {@code uint32_t} values specifying dynamic offsets.
      */
-    public static void vkCmdBindDescriptorSets(VkCommandBuffer commandBuffer, @NativeType("VkPipelineBindPoint") int pipelineBindPoint, @NativeType("VkPipelineLayout") long layout, @NativeType("uint32_t") int firstSet, @NativeType("VkDescriptorSet const *") LongBuffer pDescriptorSets, @Nullable @NativeType("uint32_t const *") IntBuffer pDynamicOffsets) {
+    public static void vkCmdBindDescriptorSets(VkCommandBuffer commandBuffer, @NativeType("VkPipelineBindPoint") int pipelineBindPoint, @NativeType("VkPipelineLayout") long layout, @NativeType("uint32_t") int firstSet, @NativeType("const VkDescriptorSet *") LongBuffer pDescriptorSets, @Nullable @NativeType("const uint32_t *") IntBuffer pDynamicOffsets) {
         nvkCmdBindDescriptorSets(commandBuffer, pipelineBindPoint, layout, firstSet, pDescriptorSets.remaining(), memAddress(pDescriptorSets), remainingSafe(pDynamicOffsets), memAddressSafe(pDynamicOffsets));
     }
 
@@ -10711,12 +10553,12 @@ public class VK10 {
      * 
      * <p>To bind an index buffer to a command buffer, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * void vkCmdBindIndexBuffer(
      *     VkCommandBuffer                             commandBuffer,
      *     VkBuffer                                    buffer,
      *     VkDeviceSize                                offset,
-     *     VkIndexType                                 indexType);</code></pre>
+     *     VkIndexType                                 indexType);</pre></code>
      * 
      * <h5>Valid Usage</h5>
      * 
@@ -10781,13 +10623,13 @@ public class VK10 {
      * 
      * <p>To bind vertex buffers to a command buffer for use in subsequent draw commands, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * void vkCmdBindVertexBuffers(
      *     VkCommandBuffer                             commandBuffer,
      *     uint32_t                                    firstBinding,
      *     uint32_t                                    bindingCount,
      *     const VkBuffer*                             pBuffers,
-     *     const VkDeviceSize*                         pOffsets);</code></pre>
+     *     const VkDeviceSize*                         pOffsets);</pre></code>
      * 
      * <h5>Description</h5>
      * 
@@ -10834,7 +10676,7 @@ public class VK10 {
      * @param pBuffers      a pointer to an array of buffer handles.
      * @param pOffsets      a pointer to an array of buffer offsets.
      */
-    public static void vkCmdBindVertexBuffers(VkCommandBuffer commandBuffer, @NativeType("uint32_t") int firstBinding, @NativeType("VkBuffer const *") LongBuffer pBuffers, @NativeType("VkDeviceSize const *") LongBuffer pOffsets) {
+    public static void vkCmdBindVertexBuffers(VkCommandBuffer commandBuffer, @NativeType("uint32_t") int firstBinding, @NativeType("const VkBuffer *") LongBuffer pBuffers, @NativeType("const VkDeviceSize *") LongBuffer pOffsets) {
         if (CHECKS) {
             check(pOffsets, pBuffers.remaining());
         }
@@ -10850,45 +10692,42 @@ public class VK10 {
      * 
      * <p>To record a non-indexed draw, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * void vkCmdDraw(
      *     VkCommandBuffer                             commandBuffer,
      *     uint32_t                                    vertexCount,
      *     uint32_t                                    instanceCount,
      *     uint32_t                                    firstVertex,
-     *     uint32_t                                    firstInstance);</code></pre>
+     *     uint32_t                                    firstInstance);</pre></code>
      * 
      * <h5>Description</h5>
      * 
-     * <p>When the command is executed, primitives are assembled using the current primitive topology and {@code vertexCount} consecutive vertex indices with the first {@code vertexIndex} value equal to {@code firstVertex}. The primitives are drawn {@code instanceCount} times with {@code instanceIndex} starting with {@code firstInstance} and increasing sequentially for each instance. The assembled primitives execute the bound graphics pipeline.</p>
+     * <p>When the command is executed, primitives are assembled using the current primitive topology and {@code vertexCount} consecutive vertex indices with the first {@code vertexIndex} value equal to {@code firstVertex}. The primitives are drawn {@code instanceCount} times with {@code instanceIndex} starting with {@code firstInstance} and increasing sequentially for each instance. The assembled primitives execute the currently bound graphics pipeline.</p>
      * 
      * <h5>Valid Usage</h5>
      * 
      * <ul>
-     * <li>The current render pass <b>must</b> be <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#renderpass-compatibility">compatible</a> with the {@code renderPass} member of the {@link VkGraphicsPipelineCreateInfo} structure specified when creating the {@code VkPipeline} bound to {@link #VK_PIPELINE_BIND_POINT_GRAPHICS PIPELINE_BIND_POINT_GRAPHICS}.</li>
-     * <li>The subpass index of the current render pass <b>must</b> be equal to the {@code subpass} member of the {@link VkGraphicsPipelineCreateInfo} structure specified when creating the {@code VkPipeline} bound to {@link #VK_PIPELINE_BIND_POINT_GRAPHICS PIPELINE_BIND_POINT_GRAPHICS}.</li>
-     * <li>For each set <em>n</em> that is statically used by the {@code VkPipeline} bound to {@link #VK_PIPELINE_BIND_POINT_GRAPHICS PIPELINE_BIND_POINT_GRAPHICS}, a descriptor set <b>must</b> have been bound to <em>n</em> at {@link #VK_PIPELINE_BIND_POINT_GRAPHICS PIPELINE_BIND_POINT_GRAPHICS}, with a {@code VkPipelineLayout} that is compatible for set <em>n</em>, with the {@code VkPipelineLayout} used to create the current {@code VkPipeline}, as described in <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-compatibility">the “Pipeline Layout Compatibility” section</a></li>
-     * <li>For each push constant that is statically used by the {@code VkPipeline} bound to {@link #VK_PIPELINE_BIND_POINT_GRAPHICS PIPELINE_BIND_POINT_GRAPHICS}, a push constant value <b>must</b> have been set for {@link #VK_PIPELINE_BIND_POINT_GRAPHICS PIPELINE_BIND_POINT_GRAPHICS}, with a {@code VkPipelineLayout} that is compatible for push constants, with the {@code VkPipelineLayout} used to create the current {@code VkPipeline}, as described in <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-compatibility">the “Pipeline Layout Compatibility” section</a></li>
-     * <li>Descriptors in each bound descriptor set, specified via {@link #vkCmdBindDescriptorSets CmdBindDescriptorSets}, <b>must</b> be valid if they are statically used by the bound {@code VkPipeline} object, specified via {@link #vkCmdBindPipeline CmdBindPipeline}</li>
+     * <li>The current render pass <b>must</b> be <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#renderpass-compatibility">compatible</a> with the {@code renderPass} member of the {@link VkGraphicsPipelineCreateInfo} structure specified when creating the {@code VkPipeline} currently bound to {@link #VK_PIPELINE_BIND_POINT_GRAPHICS PIPELINE_BIND_POINT_GRAPHICS}.</li>
+     * <li>The subpass index of the current render pass <b>must</b> be equal to the {@code subpass} member of the {@link VkGraphicsPipelineCreateInfo} structure specified when creating the {@code VkPipeline} currently bound to {@link #VK_PIPELINE_BIND_POINT_GRAPHICS PIPELINE_BIND_POINT_GRAPHICS}.</li>
+     * <li>For each set <em>n</em> that is statically used by the {@code VkPipeline} currently bound to {@link #VK_PIPELINE_BIND_POINT_GRAPHICS PIPELINE_BIND_POINT_GRAPHICS}, a descriptor set <b>must</b> have been bound to <em>n</em> at {@link #VK_PIPELINE_BIND_POINT_GRAPHICS PIPELINE_BIND_POINT_GRAPHICS}, with a {@code VkPipelineLayout} that is compatible for set <em>n</em>, with the {@code VkPipelineLayout} used to create the current {@code VkPipeline}, as described in <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-compatibility">the “Pipeline Layout Compatibility” section</a></li>
+     * <li>For each push constant that is statically used by the {@code VkPipeline} currently bound to {@link #VK_PIPELINE_BIND_POINT_GRAPHICS PIPELINE_BIND_POINT_GRAPHICS}, a push constant value <b>must</b> have been set for {@link #VK_PIPELINE_BIND_POINT_GRAPHICS PIPELINE_BIND_POINT_GRAPHICS}, with a {@code VkPipelineLayout} that is compatible for push constants, with the {@code VkPipelineLayout} used to create the current {@code VkPipeline}, as described in <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-compatibility">the “Pipeline Layout Compatibility” section</a></li>
+     * <li>Descriptors in each bound descriptor set, specified via {@link #vkCmdBindDescriptorSets CmdBindDescriptorSets}, <b>must</b> be valid if they are statically used by the currently bound {@code VkPipeline} object, specified via {@link #vkCmdBindPipeline CmdBindPipeline}</li>
      * <li>All vertex input bindings accessed via vertex input variables declared in the vertex shader entry point&#8217;s interface <b>must</b> have valid buffers bound</li>
      * <li>For a given vertex buffer binding, any attribute data fetched <b>must</b> be entirely contained within the corresponding vertex buffer binding, as described in <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fxvertex-input">the “Vertex Input Description” section</a></li>
      * <li>A valid graphics pipeline <b>must</b> be bound to the current command buffer with {@link #VK_PIPELINE_BIND_POINT_GRAPHICS PIPELINE_BIND_POINT_GRAPHICS}</li>
-     * <li>If the {@code VkPipeline} object bound to {@link #VK_PIPELINE_BIND_POINT_GRAPHICS PIPELINE_BIND_POINT_GRAPHICS} requires any dynamic state, that state <b>must</b> have been set on the current command buffer</li>
+     * <li>If the {@code VkPipeline} object currently bound to {@link #VK_PIPELINE_BIND_POINT_GRAPHICS PIPELINE_BIND_POINT_GRAPHICS} requires any dynamic state, that state <b>must</b> have been set on the current command buffer</li>
      * <li>Every input attachment used by the current subpass <b>must</b> be bound to the pipeline via a descriptor set</li>
-     * <li>If any {@code VkSampler} object that is accessed from a shader by the {@code VkPipeline} bound to {@link #VK_PIPELINE_BIND_POINT_GRAPHICS PIPELINE_BIND_POINT_GRAPHICS} uses unnormalized coordinates, it <b>must</b> not be used to sample from any {@code VkImage} with a {@code VkImageView} of the type {@link #VK_IMAGE_VIEW_TYPE_3D IMAGE_VIEW_TYPE_3D}, {@link #VK_IMAGE_VIEW_TYPE_CUBE IMAGE_VIEW_TYPE_CUBE}, {@link #VK_IMAGE_VIEW_TYPE_1D_ARRAY IMAGE_VIEW_TYPE_1D_ARRAY}, {@link #VK_IMAGE_VIEW_TYPE_2D_ARRAY IMAGE_VIEW_TYPE_2D_ARRAY} or {@link #VK_IMAGE_VIEW_TYPE_CUBE_ARRAY IMAGE_VIEW_TYPE_CUBE_ARRAY}, in any shader stage</li>
-     * <li>If any {@code VkSampler} object that is accessed from a shader by the {@code VkPipeline} bound to {@link #VK_PIPELINE_BIND_POINT_GRAPHICS PIPELINE_BIND_POINT_GRAPHICS} uses unnormalized coordinates, it <b>must</b> not be used with any of the SPIR-V {@code OpImageSample*} or {@code OpImageSparseSample*} instructions with {@code ImplicitLod}, {@code Dref} or {@code Proj} in their name, in any shader stage</li>
-     * <li>If any {@code VkSampler} object that is accessed from a shader by the {@code VkPipeline} bound to {@link #VK_PIPELINE_BIND_POINT_GRAPHICS PIPELINE_BIND_POINT_GRAPHICS} uses unnormalized coordinates, it <b>must</b> not be used with any of the SPIR-V {@code OpImageSample*} or {@code OpImageSparseSample*} instructions that includes a LOD bias or any offset values, in any shader stage</li>
-     * <li>If the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-features-robustBufferAccess">robust buffer access</a> feature is not enabled, and any shader stage in the {@code VkPipeline} object bound to {@link #VK_PIPELINE_BIND_POINT_GRAPHICS PIPELINE_BIND_POINT_GRAPHICS} accesses a uniform buffer, it <b>must</b> not access values outside of the range of that buffer specified in the bound descriptor set</li>
-     * <li>If the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-features-robustBufferAccess">robust buffer access</a> feature is not enabled, and any shader stage in the {@code VkPipeline} object bound to {@link #VK_PIPELINE_BIND_POINT_GRAPHICS PIPELINE_BIND_POINT_GRAPHICS} accesses a storage buffer, it <b>must</b> not access values outside of the range of that buffer specified in the bound descriptor set</li>
-     * <li>Any {@code VkImageView} being sampled with {@link #VK_FILTER_LINEAR FILTER_LINEAR} as a result of this command <b>must</b> be of a format which supports linear filtering, as specified by the {@link #VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT} flag in {@link VkFormatProperties}{@code ::linearTilingFeatures} or {@link VkFormatProperties}{@code ::optimalTilingFeatures} returned by {@link #vkGetPhysicalDeviceFormatProperties GetPhysicalDeviceFormatProperties} for linearly or optimally tiled images, respectively</li>
+     * <li>If any {@code VkSampler} object that is accessed from a shader by the {@code VkPipeline} currently bound to {@link #VK_PIPELINE_BIND_POINT_GRAPHICS PIPELINE_BIND_POINT_GRAPHICS} uses unnormalized coordinates, it <b>must</b> not be used to sample from any {@code VkImage} with a {@code VkImageView} of the type {@link #VK_IMAGE_VIEW_TYPE_3D IMAGE_VIEW_TYPE_3D}, {@link #VK_IMAGE_VIEW_TYPE_CUBE IMAGE_VIEW_TYPE_CUBE}, {@link #VK_IMAGE_VIEW_TYPE_1D_ARRAY IMAGE_VIEW_TYPE_1D_ARRAY}, {@link #VK_IMAGE_VIEW_TYPE_2D_ARRAY IMAGE_VIEW_TYPE_2D_ARRAY} or {@link #VK_IMAGE_VIEW_TYPE_CUBE_ARRAY IMAGE_VIEW_TYPE_CUBE_ARRAY}, in any shader stage</li>
+     * <li>If any {@code VkSampler} object that is accessed from a shader by the {@code VkPipeline} currently bound to {@link #VK_PIPELINE_BIND_POINT_GRAPHICS PIPELINE_BIND_POINT_GRAPHICS} uses unnormalized coordinates, it <b>must</b> not be used with any of the SPIR-V {@code OpImageSample*} or {@code OpImageSparseSample*} instructions with {@code ImplicitLod}, {@code Dref} or {@code Proj} in their name, in any shader stage</li>
+     * <li>If any {@code VkSampler} object that is accessed from a shader by the {@code VkPipeline} currently bound to {@link #VK_PIPELINE_BIND_POINT_GRAPHICS PIPELINE_BIND_POINT_GRAPHICS} uses unnormalized coordinates, it <b>must</b> not be used with any of the SPIR-V {@code OpImageSample*} or {@code OpImageSparseSample*} instructions that includes a LOD bias or any offset values, in any shader stage</li>
+     * <li>If the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-features-robustBufferAccess">robust buffer access</a> feature is not enabled, and any shader stage in the {@code VkPipeline} object currently bound to {@link #VK_PIPELINE_BIND_POINT_GRAPHICS PIPELINE_BIND_POINT_GRAPHICS} accesses a uniform buffer, it <b>must</b> not access values outside of the range of that buffer specified in the currently bound descriptor set</li>
+     * <li>If the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-features-robustBufferAccess">robust buffer access</a> feature is not enabled, and any shader stage in the {@code VkPipeline} object currently bound to {@link #VK_PIPELINE_BIND_POINT_GRAPHICS PIPELINE_BIND_POINT_GRAPHICS} accesses a storage buffer, it <b>must</b> not access values outside of the range of that buffer specified in the currently bound descriptor set</li>
+     * <li>Any {@code VkImageView} being sampled with {@link #VK_FILTER_LINEAR FILTER_LINEAR} as a result of this command <b>must</b> be of a format which supports linear filtering, as specified by the {@link #VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT} flag in {@link VkFormatProperties}{@code ::linearTilingFeatures} (for a linear image) or {@link VkFormatProperties}{@code ::optimalTilingFeatures}(for an optimally tiled image) returned by {@link #vkGetPhysicalDeviceFormatProperties GetPhysicalDeviceFormatProperties}</li>
      * <li>Image subresources used as attachments in the current render pass <b>must</b> not be accessed in any way other than as an attachment by this command.</li>
-     * <li>Any {@code VkImageView} being sampled with {@link IMGFilterCubic#VK_FILTER_CUBIC_IMG FILTER_CUBIC_IMG} as a result of this command <b>must</b> be of a format which supports cubic filtering, as specified by the {@link IMGFilterCubic#VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_IMG FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_IMG} flag in {@link VkFormatProperties}{@code ::linearTilingFeatures} or {@link VkFormatProperties}{@code ::optimalTilingFeatures} returned by {@link #vkGetPhysicalDeviceFormatProperties GetPhysicalDeviceFormatProperties} for linearly or optimally tiled images, respectively</li>
+     * <li>Any {@code VkImageView} being sampled with {@link IMGFilterCubic#VK_FILTER_CUBIC_IMG FILTER_CUBIC_IMG} as a result of this command <b>must</b> be of a format which supports cubic filtering, as specified by the {@link IMGFilterCubic#VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_IMG FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_IMG} flag in {@link VkFormatProperties}{@code ::linearTilingFeatures} (for a linear image) or {@link VkFormatProperties}{@code ::optimalTilingFeatures}(for an optimally tiled image) returned by {@link #vkGetPhysicalDeviceFormatProperties GetPhysicalDeviceFormatProperties}</li>
      * <li>Any {@code VkImageView} being sampled with {@link IMGFilterCubic#VK_FILTER_CUBIC_IMG FILTER_CUBIC_IMG} as a result of this command <b>must</b> not have a {@code VkImageViewType} of {@link #VK_IMAGE_VIEW_TYPE_3D IMAGE_VIEW_TYPE_3D}, {@link #VK_IMAGE_VIEW_TYPE_CUBE IMAGE_VIEW_TYPE_CUBE}, or {@link #VK_IMAGE_VIEW_TYPE_CUBE_ARRAY IMAGE_VIEW_TYPE_CUBE_ARRAY}</li>
-     * <li>If the draw is recorded in a render pass instance with multiview enabled, the maximum instance index <b>must</b> be less than or equal to {@link VkPhysicalDeviceMultiviewProperties}{@code ::maxMultiviewInstanceIndex}.</li>
-     * <li>If {@code commandBuffer} is an unprotected command buffer, and any pipeline stage in the {@code VkPipeline} object bound to {@link #VK_PIPELINE_BIND_POINT_GRAPHICS PIPELINE_BIND_POINT_GRAPHICS} reads from or writes to any image or buffer, that image or buffer <b>must</b> not be a protected image or protected buffer.</li>
-     * <li>If {@code commandBuffer} is a protected command buffer, and any pipeline stage in the {@code VkPipeline} object bound to {@link #VK_PIPELINE_BIND_POINT_GRAPHICS PIPELINE_BIND_POINT_GRAPHICS} writes to any image or buffer, that image or buffer <b>must</b> not be an unprotected image or unprotected buffer.</li>
-     * <li>If {@code commandBuffer} is a protected command buffer, and any pipeline stage other than the framebuffer-space pipeline stages in the {@code VkPipeline} object bound to {@link #VK_PIPELINE_BIND_POINT_GRAPHICS PIPELINE_BIND_POINT_GRAPHICS} reads from or writes to any image or buffer, the image or buffer <b>must</b> not be a protected image or protected buffer.</li>
-     * <li>If the bound graphics pipeline was created with {@link VkPipelineSampleLocationsStateCreateInfoEXT}{@code ::sampleLocationsEnable} set to {@link #VK_TRUE TRUE} and the current subpass has a depth/stencil attachment, then that attachment <b>must</b> have been created with the {@link EXTSampleLocations#VK_IMAGE_CREATE_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT IMAGE_CREATE_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT} bit set</li>
+     * <li>If the draw is recorded in a render pass instance with multiview enabled, the maximum instance index <b>must</b> be less than or equal to {@link VkPhysicalDeviceMultiviewPropertiesKHX}{@code ::maxMultiviewInstanceIndex}.</li>
+     * <li>If the currently bound graphics pipeline was created with {@link VkPipelineSampleLocationsStateCreateInfoEXT}{@code ::sampleLocationsEnable} set to {@link #VK_TRUE TRUE} and the current subpass has a depth/stencil attachment, then that attachment <b>must</b> have been created with the {@link EXTSampleLocations#VK_IMAGE_CREATE_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT IMAGE_CREATE_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT} bit set</li>
      * </ul>
      * 
      * <h5>Valid Usage (Implicit)</h5>
@@ -10934,51 +10773,48 @@ public class VK10 {
      * 
      * <p>To record an indexed draw, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * void vkCmdDrawIndexed(
      *     VkCommandBuffer                             commandBuffer,
      *     uint32_t                                    indexCount,
      *     uint32_t                                    instanceCount,
      *     uint32_t                                    firstIndex,
      *     int32_t                                     vertexOffset,
-     *     uint32_t                                    firstInstance);</code></pre>
+     *     uint32_t                                    firstInstance);</pre></code>
      * 
      * <h5>Description</h5>
      * 
      * <p>When the command is executed, primitives are assembled using the current primitive topology and {@code indexCount} vertices whose indices are retrieved from the index buffer. The index buffer is treated as an array of tightly packed unsigned integers of size defined by the {@link #vkCmdBindIndexBuffer CmdBindIndexBuffer}{@code ::indexType} parameter with which the buffer was bound.</p>
      * 
-     * <p>The first vertex index is at an offset of {@code firstIndex} * {@code indexSize} + {@code offset} within the bound index buffer, where {@code offset} is the offset specified by {@link #vkCmdBindIndexBuffer CmdBindIndexBuffer} and {@code indexSize} is the byte size of the type specified by {@code indexType}. Subsequent index values are retrieved from consecutive locations in the index buffer. Indices are first compared to the primitive restart value, then zero extended to 32 bits (if the {@code indexType} is {@link #VK_INDEX_TYPE_UINT16 INDEX_TYPE_UINT16}) and have {@code vertexOffset} added to them, before being supplied as the {@code vertexIndex} value.</p>
+     * <p>The first vertex index is at an offset of {@code firstIndex} * {@code indexSize} + {@code offset} within the currently bound index buffer, where {@code offset} is the offset specified by {@link #vkCmdBindIndexBuffer CmdBindIndexBuffer} and {@code indexSize} is the byte size of the type specified by {@code indexType}. Subsequent index values are retrieved from consecutive locations in the index buffer. Indices are first compared to the primitive restart value, then zero extended to 32 bits (if the {@code indexType} is {@link #VK_INDEX_TYPE_UINT16 INDEX_TYPE_UINT16}) and have {@code vertexOffset} added to them, before being supplied as the {@code vertexIndex} value.</p>
      * 
-     * <p>The primitives are drawn {@code instanceCount} times with {@code instanceIndex} starting with {@code firstInstance} and increasing sequentially for each instance. The assembled primitives execute the bound graphics pipeline.</p>
+     * <p>The primitives are drawn {@code instanceCount} times with {@code instanceIndex} starting with {@code firstInstance} and increasing sequentially for each instance. The assembled primitives execute the currently bound graphics pipeline.</p>
      * 
      * <h5>Valid Usage</h5>
      * 
      * <ul>
-     * <li>The current render pass <b>must</b> be <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#renderpass-compatibility">compatible</a> with the {@code renderPass} member of the {@link VkGraphicsPipelineCreateInfo} structure specified when creating the {@code VkPipeline} bound to {@link #VK_PIPELINE_BIND_POINT_GRAPHICS PIPELINE_BIND_POINT_GRAPHICS}.</li>
-     * <li>The subpass index of the current render pass <b>must</b> be equal to the {@code subpass} member of the {@link VkGraphicsPipelineCreateInfo} structure specified when creating the {@code VkPipeline} bound to {@link #VK_PIPELINE_BIND_POINT_GRAPHICS PIPELINE_BIND_POINT_GRAPHICS}.</li>
-     * <li>For each set <em>n</em> that is statically used by the {@code VkPipeline} bound to {@link #VK_PIPELINE_BIND_POINT_GRAPHICS PIPELINE_BIND_POINT_GRAPHICS}, a descriptor set <b>must</b> have been bound to <em>n</em> at {@link #VK_PIPELINE_BIND_POINT_GRAPHICS PIPELINE_BIND_POINT_GRAPHICS}, with a {@code VkPipelineLayout} that is compatible for set <em>n</em>, with the {@code VkPipelineLayout} used to create the current {@code VkPipeline}, as described in <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-compatibility">the “Pipeline Layout Compatibility” section</a></li>
-     * <li>For each push constant that is statically used by the {@code VkPipeline} bound to {@link #VK_PIPELINE_BIND_POINT_GRAPHICS PIPELINE_BIND_POINT_GRAPHICS}, a push constant value <b>must</b> have been set for {@link #VK_PIPELINE_BIND_POINT_GRAPHICS PIPELINE_BIND_POINT_GRAPHICS}, with a {@code VkPipelineLayout} that is compatible for push constants, with the {@code VkPipelineLayout} used to create the current {@code VkPipeline}, as described in <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-compatibility">the “Pipeline Layout Compatibility” section</a></li>
-     * <li>Descriptors in each bound descriptor set, specified via {@link #vkCmdBindDescriptorSets CmdBindDescriptorSets}, <b>must</b> be valid if they are statically used by the bound {@code VkPipeline} object, specified via {@link #vkCmdBindPipeline CmdBindPipeline}</li>
+     * <li>The current render pass <b>must</b> be <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#renderpass-compatibility">compatible</a> with the {@code renderPass} member of the {@link VkGraphicsPipelineCreateInfo} structure specified when creating the {@code VkPipeline} currently bound to {@link #VK_PIPELINE_BIND_POINT_GRAPHICS PIPELINE_BIND_POINT_GRAPHICS}.</li>
+     * <li>The subpass index of the current render pass <b>must</b> be equal to the {@code subpass} member of the {@link VkGraphicsPipelineCreateInfo} structure specified when creating the {@code VkPipeline} currently bound to {@link #VK_PIPELINE_BIND_POINT_GRAPHICS PIPELINE_BIND_POINT_GRAPHICS}.</li>
+     * <li>For each set <em>n</em> that is statically used by the {@code VkPipeline} currently bound to {@link #VK_PIPELINE_BIND_POINT_GRAPHICS PIPELINE_BIND_POINT_GRAPHICS}, a descriptor set <b>must</b> have been bound to <em>n</em> at {@link #VK_PIPELINE_BIND_POINT_GRAPHICS PIPELINE_BIND_POINT_GRAPHICS}, with a {@code VkPipelineLayout} that is compatible for set <em>n</em>, with the {@code VkPipelineLayout} used to create the current {@code VkPipeline}, as described in <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-compatibility">the “Pipeline Layout Compatibility” section</a></li>
+     * <li>For each push constant that is statically used by the {@code VkPipeline} currently bound to {@link #VK_PIPELINE_BIND_POINT_GRAPHICS PIPELINE_BIND_POINT_GRAPHICS}, a push constant value <b>must</b> have been set for {@link #VK_PIPELINE_BIND_POINT_GRAPHICS PIPELINE_BIND_POINT_GRAPHICS}, with a {@code VkPipelineLayout} that is compatible for push constants, with the {@code VkPipelineLayout} used to create the current {@code VkPipeline}, as described in <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-compatibility">the “Pipeline Layout Compatibility” section</a></li>
+     * <li>Descriptors in each bound descriptor set, specified via {@link #vkCmdBindDescriptorSets CmdBindDescriptorSets}, <b>must</b> be valid if they are statically used by the currently bound {@code VkPipeline} object, specified via {@link #vkCmdBindPipeline CmdBindPipeline}</li>
      * <li>All vertex input bindings accessed via vertex input variables declared in the vertex shader entry point&#8217;s interface <b>must</b> have valid buffers bound</li>
      * <li>For a given vertex buffer binding, any attribute data fetched <b>must</b> be entirely contained within the corresponding vertex buffer binding, as described in <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fxvertex-input">the “Vertex Input Description” section</a></li>
      * <li>A valid graphics pipeline <b>must</b> be bound to the current command buffer with {@link #VK_PIPELINE_BIND_POINT_GRAPHICS PIPELINE_BIND_POINT_GRAPHICS}</li>
-     * <li>If the {@code VkPipeline} object bound to {@link #VK_PIPELINE_BIND_POINT_GRAPHICS PIPELINE_BIND_POINT_GRAPHICS} requires any dynamic state, that state <b>must</b> have been set on the current command buffer</li>
-     * <li><code>(indexSize * (firstIndex + indexCount) + offset)</code> <b>must</b> be less than or equal to the size of the bound index buffer, with indexSize being based on the type specified by {@code indexType}, where the index buffer, {@code indexType}, and {@code offset} are specified via {@link #vkCmdBindIndexBuffer CmdBindIndexBuffer}</li>
+     * <li>If the {@code VkPipeline} object currently bound to {@link #VK_PIPELINE_BIND_POINT_GRAPHICS PIPELINE_BIND_POINT_GRAPHICS} requires any dynamic state, that state <b>must</b> have been set on the current command buffer</li>
+     * <li><code>(indexSize * (firstIndex + indexCount) + offset)</code> <b>must</b> be less than or equal to the size of the currently bound index buffer, with indexSize being based on the type specified by {@code indexType}, where the index buffer, {@code indexType}, and {@code offset} are specified via {@link #vkCmdBindIndexBuffer CmdBindIndexBuffer}</li>
      * <li>Every input attachment used by the current subpass <b>must</b> be bound to the pipeline via a descriptor set</li>
-     * <li>If any {@code VkSampler} object that is accessed from a shader by the {@code VkPipeline} bound to {@link #VK_PIPELINE_BIND_POINT_GRAPHICS PIPELINE_BIND_POINT_GRAPHICS} uses unnormalized coordinates, it <b>must</b> not be used to sample from any {@code VkImage} with a {@code VkImageView} of the type {@link #VK_IMAGE_VIEW_TYPE_3D IMAGE_VIEW_TYPE_3D}, {@link #VK_IMAGE_VIEW_TYPE_CUBE IMAGE_VIEW_TYPE_CUBE}, {@link #VK_IMAGE_VIEW_TYPE_1D_ARRAY IMAGE_VIEW_TYPE_1D_ARRAY}, {@link #VK_IMAGE_VIEW_TYPE_2D_ARRAY IMAGE_VIEW_TYPE_2D_ARRAY} or {@link #VK_IMAGE_VIEW_TYPE_CUBE_ARRAY IMAGE_VIEW_TYPE_CUBE_ARRAY}, in any shader stage</li>
-     * <li>If any {@code VkSampler} object that is accessed from a shader by the {@code VkPipeline} bound to {@link #VK_PIPELINE_BIND_POINT_GRAPHICS PIPELINE_BIND_POINT_GRAPHICS} uses unnormalized coordinates, it <b>must</b> not be used with any of the SPIR-V {@code OpImageSample*} or {@code OpImageSparseSample*} instructions with {@code ImplicitLod}, {@code Dref} or {@code Proj} in their name, in any shader stage</li>
-     * <li>If any {@code VkSampler} object that is accessed from a shader by the {@code VkPipeline} bound to {@link #VK_PIPELINE_BIND_POINT_GRAPHICS PIPELINE_BIND_POINT_GRAPHICS} uses unnormalized coordinates, it <b>must</b> not be used with any of the SPIR-V {@code OpImageSample*} or {@code OpImageSparseSample*} instructions that includes a LOD bias or any offset values, in any shader stage</li>
-     * <li>If the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-features-robustBufferAccess">robust buffer access</a> feature is not enabled, and any shader stage in the {@code VkPipeline} object bound to {@link #VK_PIPELINE_BIND_POINT_GRAPHICS PIPELINE_BIND_POINT_GRAPHICS} accesses a uniform buffer, it <b>must</b> not access values outside of the range of that buffer specified in the bound descriptor set</li>
-     * <li>If the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-features-robustBufferAccess">robust buffer access</a> feature is not enabled, and any shader stage in the {@code VkPipeline} object bound to {@link #VK_PIPELINE_BIND_POINT_GRAPHICS PIPELINE_BIND_POINT_GRAPHICS} accesses a storage buffer, it <b>must</b> not access values outside of the range of that buffer specified in the bound descriptor set</li>
-     * <li>Any {@code VkImageView} being sampled with {@link #VK_FILTER_LINEAR FILTER_LINEAR} as a result of this command <b>must</b> be of a format which supports linear filtering, as specified by the {@link #VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT} flag in {@link VkFormatProperties}{@code ::linearTilingFeatures} or {@link VkFormatProperties}{@code ::optimalTilingFeatures} returned by {@link #vkGetPhysicalDeviceFormatProperties GetPhysicalDeviceFormatProperties} for linearly or optimally tiled images, respectively</li>
+     * <li>If any {@code VkSampler} object that is accessed from a shader by the {@code VkPipeline} currently bound to {@link #VK_PIPELINE_BIND_POINT_GRAPHICS PIPELINE_BIND_POINT_GRAPHICS} uses unnormalized coordinates, it <b>must</b> not be used to sample from any {@code VkImage} with a {@code VkImageView} of the type {@link #VK_IMAGE_VIEW_TYPE_3D IMAGE_VIEW_TYPE_3D}, {@link #VK_IMAGE_VIEW_TYPE_CUBE IMAGE_VIEW_TYPE_CUBE}, {@link #VK_IMAGE_VIEW_TYPE_1D_ARRAY IMAGE_VIEW_TYPE_1D_ARRAY}, {@link #VK_IMAGE_VIEW_TYPE_2D_ARRAY IMAGE_VIEW_TYPE_2D_ARRAY} or {@link #VK_IMAGE_VIEW_TYPE_CUBE_ARRAY IMAGE_VIEW_TYPE_CUBE_ARRAY}, in any shader stage</li>
+     * <li>If any {@code VkSampler} object that is accessed from a shader by the {@code VkPipeline} currently bound to {@link #VK_PIPELINE_BIND_POINT_GRAPHICS PIPELINE_BIND_POINT_GRAPHICS} uses unnormalized coordinates, it <b>must</b> not be used with any of the SPIR-V {@code OpImageSample*} or {@code OpImageSparseSample*} instructions with {@code ImplicitLod}, {@code Dref} or {@code Proj} in their name, in any shader stage</li>
+     * <li>If any {@code VkSampler} object that is accessed from a shader by the {@code VkPipeline} currently bound to {@link #VK_PIPELINE_BIND_POINT_GRAPHICS PIPELINE_BIND_POINT_GRAPHICS} uses unnormalized coordinates, it <b>must</b> not be used with any of the SPIR-V {@code OpImageSample*} or {@code OpImageSparseSample*} instructions that includes a LOD bias or any offset values, in any shader stage</li>
+     * <li>If the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-features-robustBufferAccess">robust buffer access</a> feature is not enabled, and any shader stage in the {@code VkPipeline} object currently bound to {@link #VK_PIPELINE_BIND_POINT_GRAPHICS PIPELINE_BIND_POINT_GRAPHICS} accesses a uniform buffer, it <b>must</b> not access values outside of the range of that buffer specified in the currently bound descriptor set</li>
+     * <li>If the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-features-robustBufferAccess">robust buffer access</a> feature is not enabled, and any shader stage in the {@code VkPipeline} object currently bound to {@link #VK_PIPELINE_BIND_POINT_GRAPHICS PIPELINE_BIND_POINT_GRAPHICS} accesses a storage buffer, it <b>must</b> not access values outside of the range of that buffer specified in the currently bound descriptor set</li>
+     * <li>Any {@code VkImageView} being sampled with {@link #VK_FILTER_LINEAR FILTER_LINEAR} as a result of this command <b>must</b> be of a format which supports linear filtering, as specified by the {@link #VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT} flag in {@link VkFormatProperties}{@code ::linearTilingFeatures} (for a linear image) or {@link VkFormatProperties}{@code ::optimalTilingFeatures}(for an optimally tiled image) returned by {@link #vkGetPhysicalDeviceFormatProperties GetPhysicalDeviceFormatProperties}</li>
      * <li>Image subresources used as attachments in the current render pass <b>must</b> not be accessed in any way other than as an attachment by this command.</li>
-     * <li>Any {@code VkImageView} being sampled with {@link IMGFilterCubic#VK_FILTER_CUBIC_IMG FILTER_CUBIC_IMG} as a result of this command <b>must</b> be of a format which supports cubic filtering, as specified by the {@link IMGFilterCubic#VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_IMG FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_IMG} flag in {@link VkFormatProperties}{@code ::linearTilingFeatures} or {@link VkFormatProperties}{@code ::optimalTilingFeatures} returned by {@link #vkGetPhysicalDeviceFormatProperties GetPhysicalDeviceFormatProperties} for linearly or optimally tiled images, respectively</li>
+     * <li>Any {@code VkImageView} being sampled with {@link IMGFilterCubic#VK_FILTER_CUBIC_IMG FILTER_CUBIC_IMG} as a result of this command <b>must</b> be of a format which supports cubic filtering, as specified by the {@link IMGFilterCubic#VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_IMG FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_IMG} flag in {@link VkFormatProperties}{@code ::linearTilingFeatures} (for a linear image) or {@link VkFormatProperties}{@code ::optimalTilingFeatures}(for an optimally tiled image) returned by {@link #vkGetPhysicalDeviceFormatProperties GetPhysicalDeviceFormatProperties}</li>
      * <li>Any {@code VkImageView} being sampled with {@link IMGFilterCubic#VK_FILTER_CUBIC_IMG FILTER_CUBIC_IMG} as a result of this command <b>must</b> not have a {@code VkImageViewType} of {@link #VK_IMAGE_VIEW_TYPE_3D IMAGE_VIEW_TYPE_3D}, {@link #VK_IMAGE_VIEW_TYPE_CUBE IMAGE_VIEW_TYPE_CUBE}, or {@link #VK_IMAGE_VIEW_TYPE_CUBE_ARRAY IMAGE_VIEW_TYPE_CUBE_ARRAY}</li>
-     * <li>If the draw is recorded in a render pass instance with multiview enabled, the maximum instance index <b>must</b> be less than or equal to {@link VkPhysicalDeviceMultiviewProperties}{@code ::maxMultiviewInstanceIndex}.</li>
-     * <li>If {@code commandBuffer} is an unprotected command buffer, and any pipeline stage in the {@code VkPipeline} object bound to {@link #VK_PIPELINE_BIND_POINT_GRAPHICS PIPELINE_BIND_POINT_GRAPHICS} reads from or writes to any image or buffer, that image or buffer <b>must</b> not be a protected image or protected buffer.</li>
-     * <li>If {@code commandBuffer} is a protected command buffer, and any pipeline stage in the {@code VkPipeline} object bound to {@link #VK_PIPELINE_BIND_POINT_GRAPHICS PIPELINE_BIND_POINT_GRAPHICS} writes to any image or buffer, that image or buffer <b>must</b> not be an unprotected image or unprotected buffer.</li>
-     * <li>If {@code commandBuffer} is a protected command buffer, and any pipeline stage other than the framebuffer-space pipeline stages in the {@code VkPipeline} object bound to {@link #VK_PIPELINE_BIND_POINT_GRAPHICS PIPELINE_BIND_POINT_GRAPHICS} reads from or writes to any image or buffer, the image or buffer <b>must</b> not be a protected image or protected buffer.</li>
-     * <li>If the bound graphics pipeline was created with {@link VkPipelineSampleLocationsStateCreateInfoEXT}{@code ::sampleLocationsEnable} set to {@link #VK_TRUE TRUE} and the current subpass has a depth/stencil attachment, then that attachment <b>must</b> have been created with the {@link EXTSampleLocations#VK_IMAGE_CREATE_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT IMAGE_CREATE_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT} bit set</li>
+     * <li>If the draw is recorded in a render pass instance with multiview enabled, the maximum instance index <b>must</b> be less than or equal to {@link VkPhysicalDeviceMultiviewPropertiesKHX}{@code ::maxMultiviewInstanceIndex}.</li>
+     * <li>If the currently bound graphics pipeline was created with {@link VkPipelineSampleLocationsStateCreateInfoEXT}{@code ::sampleLocationsEnable} set to {@link #VK_TRUE TRUE} and the current subpass has a depth/stencil attachment, then that attachment <b>must</b> have been created with the {@link EXTSampleLocations#VK_IMAGE_CREATE_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT IMAGE_CREATE_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT} bit set</li>
      * </ul>
      * 
      * <h5>Valid Usage (Implicit)</h5>
@@ -11025,13 +10861,13 @@ public class VK10 {
      * 
      * <p>To record a non-indexed indirect draw, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * void vkCmdDrawIndirect(
      *     VkCommandBuffer                             commandBuffer,
      *     VkBuffer                                    buffer,
      *     VkDeviceSize                                offset,
      *     uint32_t                                    drawCount,
-     *     uint32_t                                    stride);</code></pre>
+     *     uint32_t                                    stride);</pre></code>
      * 
      * <h5>Description</h5>
      * 
@@ -11046,32 +10882,29 @@ public class VK10 {
      * <li>If {@code drawCount} is greater than 1, {@code stride} <b>must</b> be a multiple of 4 and <b>must</b> be greater than or equal to {@code sizeof}({@link VkDrawIndirectCommand})</li>
      * <li>If the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-features-multiDrawIndirect">multi-draw indirect</a> feature is not enabled, {@code drawCount} <b>must</b> be 0 or 1</li>
      * <li>If the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-features-drawIndirectFirstInstance">drawIndirectFirstInstance</a> feature is not enabled, all the {@code firstInstance} members of the {@link VkDrawIndirectCommand} structures accessed by this command <b>must</b> be 0</li>
-     * <li>The current render pass <b>must</b> be <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#renderpass-compatibility">compatible</a> with the {@code renderPass} member of the {@link VkGraphicsPipelineCreateInfo} structure specified when creating the {@code VkPipeline} bound to {@link #VK_PIPELINE_BIND_POINT_GRAPHICS PIPELINE_BIND_POINT_GRAPHICS}.</li>
-     * <li>The subpass index of the current render pass <b>must</b> be equal to the {@code subpass} member of the {@link VkGraphicsPipelineCreateInfo} structure specified when creating the {@code VkPipeline} bound to {@link #VK_PIPELINE_BIND_POINT_GRAPHICS PIPELINE_BIND_POINT_GRAPHICS}.</li>
-     * <li>For each set <em>n</em> that is statically used by the {@code VkPipeline} bound to {@link #VK_PIPELINE_BIND_POINT_GRAPHICS PIPELINE_BIND_POINT_GRAPHICS}, a descriptor set <b>must</b> have been bound to <em>n</em> at {@link #VK_PIPELINE_BIND_POINT_GRAPHICS PIPELINE_BIND_POINT_GRAPHICS}, with a {@code VkPipelineLayout} that is compatible for set <em>n</em>, with the {@code VkPipelineLayout} used to create the current {@code VkPipeline}, as described in <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-compatibility">the “Pipeline Layout Compatibility” section</a></li>
-     * <li>For each push constant that is statically used by the {@code VkPipeline} bound to {@link #VK_PIPELINE_BIND_POINT_GRAPHICS PIPELINE_BIND_POINT_GRAPHICS}, a push constant value <b>must</b> have been set for {@link #VK_PIPELINE_BIND_POINT_GRAPHICS PIPELINE_BIND_POINT_GRAPHICS}, with a {@code VkPipelineLayout} that is compatible for push constants, with the {@code VkPipelineLayout} used to create the current {@code VkPipeline}, as described in <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-compatibility">the “Pipeline Layout Compatibility” section</a></li>
-     * <li>Descriptors in each bound descriptor set, specified via {@link #vkCmdBindDescriptorSets CmdBindDescriptorSets}, <b>must</b> be valid if they are statically used by the bound {@code VkPipeline} object, specified via {@link #vkCmdBindPipeline CmdBindPipeline}</li>
+     * <li>The current render pass <b>must</b> be <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#renderpass-compatibility">compatible</a> with the {@code renderPass} member of the {@link VkGraphicsPipelineCreateInfo} structure specified when creating the {@code VkPipeline} currently bound to {@link #VK_PIPELINE_BIND_POINT_GRAPHICS PIPELINE_BIND_POINT_GRAPHICS}.</li>
+     * <li>The subpass index of the current render pass <b>must</b> be equal to the {@code subpass} member of the {@link VkGraphicsPipelineCreateInfo} structure specified when creating the {@code VkPipeline} currently bound to {@link #VK_PIPELINE_BIND_POINT_GRAPHICS PIPELINE_BIND_POINT_GRAPHICS}.</li>
+     * <li>For each set <em>n</em> that is statically used by the {@code VkPipeline} currently bound to {@link #VK_PIPELINE_BIND_POINT_GRAPHICS PIPELINE_BIND_POINT_GRAPHICS}, a descriptor set <b>must</b> have been bound to <em>n</em> at {@link #VK_PIPELINE_BIND_POINT_GRAPHICS PIPELINE_BIND_POINT_GRAPHICS}, with a {@code VkPipelineLayout} that is compatible for set <em>n</em>, with the {@code VkPipelineLayout} used to create the current {@code VkPipeline}, as described in <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-compatibility">the “Pipeline Layout Compatibility” section</a></li>
+     * <li>For each push constant that is statically used by the {@code VkPipeline} currently bound to {@link #VK_PIPELINE_BIND_POINT_GRAPHICS PIPELINE_BIND_POINT_GRAPHICS}, a push constant value <b>must</b> have been set for {@link #VK_PIPELINE_BIND_POINT_GRAPHICS PIPELINE_BIND_POINT_GRAPHICS}, with a {@code VkPipelineLayout} that is compatible for push constants, with the {@code VkPipelineLayout} used to create the current {@code VkPipeline}, as described in <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-compatibility">the “Pipeline Layout Compatibility” section</a></li>
+     * <li>Descriptors in each bound descriptor set, specified via {@link #vkCmdBindDescriptorSets CmdBindDescriptorSets}, <b>must</b> be valid if they are statically used by the currently bound {@code VkPipeline} object, specified via {@link #vkCmdBindPipeline CmdBindPipeline}</li>
      * <li>All vertex input bindings accessed via vertex input variables declared in the vertex shader entry point&#8217;s interface <b>must</b> have valid buffers bound</li>
      * <li>A valid graphics pipeline <b>must</b> be bound to the current command buffer with {@link #VK_PIPELINE_BIND_POINT_GRAPHICS PIPELINE_BIND_POINT_GRAPHICS}</li>
-     * <li>If the {@code VkPipeline} object bound to {@link #VK_PIPELINE_BIND_POINT_GRAPHICS PIPELINE_BIND_POINT_GRAPHICS} requires any dynamic state, that state <b>must</b> have been set on the current command buffer</li>
+     * <li>If the {@code VkPipeline} object currently bound to {@link #VK_PIPELINE_BIND_POINT_GRAPHICS PIPELINE_BIND_POINT_GRAPHICS} requires any dynamic state, that state <b>must</b> have been set on the current command buffer</li>
      * <li>If {@code drawCount} is equal to 1, <code>(offset sizeof({@link VkDrawIndirectCommand}))</code> <b>must</b> be less than or equal to the size of {@code buffer}</li>
      * <li>If {@code drawCount} is greater than 1, <code>(stride × (drawCount - 1) + offset sizeof({@link VkDrawIndirectCommand}))</code> <b>must</b> be less than or equal to the size of {@code buffer}</li>
      * <li>{@code drawCount} <b>must</b> be less than or equal to {@link VkPhysicalDeviceLimits}{@code ::maxDrawIndirectCount}</li>
      * <li>Every input attachment used by the current subpass <b>must</b> be bound to the pipeline via a descriptor set</li>
-     * <li>If any {@code VkSampler} object that is accessed from a shader by the {@code VkPipeline} bound to {@link #VK_PIPELINE_BIND_POINT_GRAPHICS PIPELINE_BIND_POINT_GRAPHICS} uses unnormalized coordinates, it <b>must</b> not be used to sample from any {@code VkImage} with a {@code VkImageView} of the type {@link #VK_IMAGE_VIEW_TYPE_3D IMAGE_VIEW_TYPE_3D}, {@link #VK_IMAGE_VIEW_TYPE_CUBE IMAGE_VIEW_TYPE_CUBE}, {@link #VK_IMAGE_VIEW_TYPE_1D_ARRAY IMAGE_VIEW_TYPE_1D_ARRAY}, {@link #VK_IMAGE_VIEW_TYPE_2D_ARRAY IMAGE_VIEW_TYPE_2D_ARRAY} or {@link #VK_IMAGE_VIEW_TYPE_CUBE_ARRAY IMAGE_VIEW_TYPE_CUBE_ARRAY}, in any shader stage</li>
-     * <li>If any {@code VkSampler} object that is accessed from a shader by the {@code VkPipeline} bound to {@link #VK_PIPELINE_BIND_POINT_GRAPHICS PIPELINE_BIND_POINT_GRAPHICS} uses unnormalized coordinates, it <b>must</b> not be used with any of the SPIR-V {@code OpImageSample*} or {@code OpImageSparseSample*} instructions with {@code ImplicitLod}, {@code Dref} or {@code Proj} in their name, in any shader stage</li>
-     * <li>If any {@code VkSampler} object that is accessed from a shader by the {@code VkPipeline} bound to {@link #VK_PIPELINE_BIND_POINT_GRAPHICS PIPELINE_BIND_POINT_GRAPHICS} uses unnormalized coordinates, it <b>must</b> not be used with any of the SPIR-V {@code OpImageSample*} or {@code OpImageSparseSample*} instructions that includes a LOD bias or any offset values, in any shader stage</li>
-     * <li>If the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-features-robustBufferAccess">robust buffer access</a> feature is not enabled, and any shader stage in the {@code VkPipeline} object bound to {@link #VK_PIPELINE_BIND_POINT_GRAPHICS PIPELINE_BIND_POINT_GRAPHICS} accesses a uniform buffer, it <b>must</b> not access values outside of the range of that buffer specified in the bound descriptor set</li>
-     * <li>If the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-features-robustBufferAccess">robust buffer access</a> feature is not enabled, and any shader stage in the {@code VkPipeline} object bound to {@link #VK_PIPELINE_BIND_POINT_GRAPHICS PIPELINE_BIND_POINT_GRAPHICS} accesses a storage buffer, it <b>must</b> not access values outside of the range of that buffer specified in the bound descriptor set</li>
-     * <li>Any {@code VkImageView} being sampled with {@link #VK_FILTER_LINEAR FILTER_LINEAR} as a result of this command <b>must</b> be of a format which supports linear filtering, as specified by the {@link #VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT} flag in {@link VkFormatProperties}{@code ::linearTilingFeatures} or {@link VkFormatProperties}{@code ::optimalTilingFeatures} returned by {@link #vkGetPhysicalDeviceFormatProperties GetPhysicalDeviceFormatProperties} for linearly or optimally tiled images, respectively</li>
+     * <li>If any {@code VkSampler} object that is accessed from a shader by the {@code VkPipeline} currently bound to {@link #VK_PIPELINE_BIND_POINT_GRAPHICS PIPELINE_BIND_POINT_GRAPHICS} uses unnormalized coordinates, it <b>must</b> not be used to sample from any {@code VkImage} with a {@code VkImageView} of the type {@link #VK_IMAGE_VIEW_TYPE_3D IMAGE_VIEW_TYPE_3D}, {@link #VK_IMAGE_VIEW_TYPE_CUBE IMAGE_VIEW_TYPE_CUBE}, {@link #VK_IMAGE_VIEW_TYPE_1D_ARRAY IMAGE_VIEW_TYPE_1D_ARRAY}, {@link #VK_IMAGE_VIEW_TYPE_2D_ARRAY IMAGE_VIEW_TYPE_2D_ARRAY} or {@link #VK_IMAGE_VIEW_TYPE_CUBE_ARRAY IMAGE_VIEW_TYPE_CUBE_ARRAY}, in any shader stage</li>
+     * <li>If any {@code VkSampler} object that is accessed from a shader by the {@code VkPipeline} currently bound to {@link #VK_PIPELINE_BIND_POINT_GRAPHICS PIPELINE_BIND_POINT_GRAPHICS} uses unnormalized coordinates, it <b>must</b> not be used with any of the SPIR-V {@code OpImageSample*} or {@code OpImageSparseSample*} instructions with {@code ImplicitLod}, {@code Dref} or {@code Proj} in their name, in any shader stage</li>
+     * <li>If any {@code VkSampler} object that is accessed from a shader by the {@code VkPipeline} currently bound to {@link #VK_PIPELINE_BIND_POINT_GRAPHICS PIPELINE_BIND_POINT_GRAPHICS} uses unnormalized coordinates, it <b>must</b> not be used with any of the SPIR-V {@code OpImageSample*} or {@code OpImageSparseSample*} instructions that includes a LOD bias or any offset values, in any shader stage</li>
+     * <li>If the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-features-robustBufferAccess">robust buffer access</a> feature is not enabled, and any shader stage in the {@code VkPipeline} object currently bound to {@link #VK_PIPELINE_BIND_POINT_GRAPHICS PIPELINE_BIND_POINT_GRAPHICS} accesses a uniform buffer, it <b>must</b> not access values outside of the range of that buffer specified in the currently bound descriptor set</li>
+     * <li>If the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-features-robustBufferAccess">robust buffer access</a> feature is not enabled, and any shader stage in the {@code VkPipeline} object currently bound to {@link #VK_PIPELINE_BIND_POINT_GRAPHICS PIPELINE_BIND_POINT_GRAPHICS} accesses a storage buffer, it <b>must</b> not access values outside of the range of that buffer specified in the currently bound descriptor set</li>
+     * <li>Any {@code VkImageView} being sampled with {@link #VK_FILTER_LINEAR FILTER_LINEAR} as a result of this command <b>must</b> be of a format which supports linear filtering, as specified by the {@link #VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT} flag in {@link VkFormatProperties}{@code ::linearTilingFeatures} (for a linear image) or {@link VkFormatProperties}{@code ::optimalTilingFeatures}(for an optimally tiled image) returned by {@link #vkGetPhysicalDeviceFormatProperties GetPhysicalDeviceFormatProperties}</li>
      * <li>Image subresources used as attachments in the current render pass <b>must</b> not be accessed in any way other than as an attachment by this command.</li>
-     * <li>Any {@code VkImageView} being sampled with {@link IMGFilterCubic#VK_FILTER_CUBIC_IMG FILTER_CUBIC_IMG} as a result of this command <b>must</b> be of a format which supports cubic filtering, as specified by the {@link IMGFilterCubic#VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_IMG FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_IMG} flag in {@link VkFormatProperties}{@code ::linearTilingFeatures} or {@link VkFormatProperties}{@code ::optimalTilingFeatures} returned by {@link #vkGetPhysicalDeviceFormatProperties GetPhysicalDeviceFormatProperties} for linearly or optimally tiled images, respectively</li>
+     * <li>Any {@code VkImageView} being sampled with {@link IMGFilterCubic#VK_FILTER_CUBIC_IMG FILTER_CUBIC_IMG} as a result of this command <b>must</b> be of a format which supports cubic filtering, as specified by the {@link IMGFilterCubic#VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_IMG FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_IMG} flag in {@link VkFormatProperties}{@code ::linearTilingFeatures} (for a linear image) or {@link VkFormatProperties}{@code ::optimalTilingFeatures}(for an optimally tiled image) returned by {@link #vkGetPhysicalDeviceFormatProperties GetPhysicalDeviceFormatProperties}</li>
      * <li>Any {@code VkImageView} being sampled with {@link IMGFilterCubic#VK_FILTER_CUBIC_IMG FILTER_CUBIC_IMG} as a result of this command <b>must</b> not have a {@code VkImageViewType} of {@link #VK_IMAGE_VIEW_TYPE_3D IMAGE_VIEW_TYPE_3D}, {@link #VK_IMAGE_VIEW_TYPE_CUBE IMAGE_VIEW_TYPE_CUBE}, or {@link #VK_IMAGE_VIEW_TYPE_CUBE_ARRAY IMAGE_VIEW_TYPE_CUBE_ARRAY}</li>
-     * <li>If the draw is recorded in a render pass instance with multiview enabled, the maximum instance index <b>must</b> be less than or equal to {@link VkPhysicalDeviceMultiviewProperties}{@code ::maxMultiviewInstanceIndex}.</li>
-     * <li>If {@code commandBuffer} is an unprotected command buffer, and any pipeline stage in the {@code VkPipeline} object bound to {@link #VK_PIPELINE_BIND_POINT_GRAPHICS PIPELINE_BIND_POINT_GRAPHICS} reads from or writes to any image or buffer, that image or buffer <b>must</b> not be a protected image or protected buffer.</li>
-     * <li>If {@code commandBuffer} is a protected command buffer, and any pipeline stage in the {@code VkPipeline} object bound to {@link #VK_PIPELINE_BIND_POINT_GRAPHICS PIPELINE_BIND_POINT_GRAPHICS} writes to any image or buffer, that image or buffer <b>must</b> not be an unprotected image or unprotected buffer.</li>
-     * <li>If {@code commandBuffer} is a protected command buffer, and any pipeline stage other than the framebuffer-space pipeline stages in the {@code VkPipeline} object bound to {@link #VK_PIPELINE_BIND_POINT_GRAPHICS PIPELINE_BIND_POINT_GRAPHICS} reads from or writes to any image or buffer, the image or buffer <b>must</b> not be a protected image or protected buffer.</li>
-     * <li>If the bound graphics pipeline was created with {@link VkPipelineSampleLocationsStateCreateInfoEXT}{@code ::sampleLocationsEnable} set to {@link #VK_TRUE TRUE} and the current subpass has a depth/stencil attachment, then that attachment <b>must</b> have been created with the {@link EXTSampleLocations#VK_IMAGE_CREATE_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT IMAGE_CREATE_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT} bit set</li>
+     * <li>If the draw is recorded in a render pass instance with multiview enabled, the maximum instance index <b>must</b> be less than or equal to {@link VkPhysicalDeviceMultiviewPropertiesKHX}{@code ::maxMultiviewInstanceIndex}.</li>
+     * <li>If the currently bound graphics pipeline was created with {@link VkPipelineSampleLocationsStateCreateInfoEXT}{@code ::sampleLocationsEnable} set to {@link #VK_TRUE TRUE} and the current subpass has a depth/stencil attachment, then that attachment <b>must</b> have been created with the {@link EXTSampleLocations#VK_IMAGE_CREATE_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT IMAGE_CREATE_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT} bit set</li>
      * </ul>
      * 
      * <h5>Valid Usage (Implicit)</h5>
@@ -11119,13 +10952,13 @@ public class VK10 {
      * 
      * <p>To record an indexed indirect draw, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * void vkCmdDrawIndexedIndirect(
      *     VkCommandBuffer                             commandBuffer,
      *     VkBuffer                                    buffer,
      *     VkDeviceSize                                offset,
      *     uint32_t                                    drawCount,
-     *     uint32_t                                    stride);</code></pre>
+     *     uint32_t                                    stride);</pre></code>
      * 
      * <h5>Description</h5>
      * 
@@ -11140,32 +10973,29 @@ public class VK10 {
      * <li>If {@code drawCount} is greater than 1, {@code stride} <b>must</b> be a multiple of 4 and <b>must</b> be greater than or equal to {@code sizeof}({@link VkDrawIndexedIndirectCommand})</li>
      * <li>If the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-features-multiDrawIndirect">multi-draw indirect</a> feature is not enabled, {@code drawCount} <b>must</b> be 0 or 1</li>
      * <li>If the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-features-drawIndirectFirstInstance">drawIndirectFirstInstance</a> feature is not enabled, all the {@code firstInstance} members of the {@link VkDrawIndexedIndirectCommand} structures accessed by this command <b>must</b> be 0</li>
-     * <li>The current render pass <b>must</b> be <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#renderpass-compatibility">compatible</a> with the {@code renderPass} member of the {@link VkGraphicsPipelineCreateInfo} structure specified when creating the {@code VkPipeline} bound to {@link #VK_PIPELINE_BIND_POINT_GRAPHICS PIPELINE_BIND_POINT_GRAPHICS}.</li>
-     * <li>The subpass index of the current render pass <b>must</b> be equal to the {@code subpass} member of the {@link VkGraphicsPipelineCreateInfo} structure specified when creating the {@code VkPipeline} bound to {@link #VK_PIPELINE_BIND_POINT_GRAPHICS PIPELINE_BIND_POINT_GRAPHICS}.</li>
-     * <li>For each set <em>n</em> that is statically used by the {@code VkPipeline} bound to {@link #VK_PIPELINE_BIND_POINT_GRAPHICS PIPELINE_BIND_POINT_GRAPHICS}, a descriptor set <b>must</b> have been bound to <em>n</em> at {@link #VK_PIPELINE_BIND_POINT_GRAPHICS PIPELINE_BIND_POINT_GRAPHICS}, with a {@code VkPipelineLayout} that is compatible for set <em>n</em>, with the {@code VkPipelineLayout} used to create the current {@code VkPipeline}, as described in <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-compatibility">the “Pipeline Layout Compatibility” section</a></li>
-     * <li>For each push constant that is statically used by the {@code VkPipeline} bound to {@link #VK_PIPELINE_BIND_POINT_GRAPHICS PIPELINE_BIND_POINT_GRAPHICS}, a push constant value <b>must</b> have been set for {@link #VK_PIPELINE_BIND_POINT_GRAPHICS PIPELINE_BIND_POINT_GRAPHICS}, with a {@code VkPipelineLayout} that is compatible for push constants, with the {@code VkPipelineLayout} used to create the current {@code VkPipeline}, as described in <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-compatibility">the “Pipeline Layout Compatibility” section</a></li>
-     * <li>Descriptors in each bound descriptor set, specified via {@link #vkCmdBindDescriptorSets CmdBindDescriptorSets}, <b>must</b> be valid if they are statically used by the bound {@code VkPipeline} object, specified via {@link #vkCmdBindPipeline CmdBindPipeline}</li>
+     * <li>The current render pass <b>must</b> be <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#renderpass-compatibility">compatible</a> with the {@code renderPass} member of the {@link VkGraphicsPipelineCreateInfo} structure specified when creating the {@code VkPipeline} currently bound to {@link #VK_PIPELINE_BIND_POINT_GRAPHICS PIPELINE_BIND_POINT_GRAPHICS}.</li>
+     * <li>The subpass index of the current render pass <b>must</b> be equal to the {@code subpass} member of the {@link VkGraphicsPipelineCreateInfo} structure specified when creating the {@code VkPipeline} currently bound to {@link #VK_PIPELINE_BIND_POINT_GRAPHICS PIPELINE_BIND_POINT_GRAPHICS}.</li>
+     * <li>For each set <em>n</em> that is statically used by the {@code VkPipeline} currently bound to {@link #VK_PIPELINE_BIND_POINT_GRAPHICS PIPELINE_BIND_POINT_GRAPHICS}, a descriptor set <b>must</b> have been bound to <em>n</em> at {@link #VK_PIPELINE_BIND_POINT_GRAPHICS PIPELINE_BIND_POINT_GRAPHICS}, with a {@code VkPipelineLayout} that is compatible for set <em>n</em>, with the {@code VkPipelineLayout} used to create the current {@code VkPipeline}, as described in <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-compatibility">the “Pipeline Layout Compatibility” section</a></li>
+     * <li>For each push constant that is statically used by the {@code VkPipeline} currently bound to {@link #VK_PIPELINE_BIND_POINT_GRAPHICS PIPELINE_BIND_POINT_GRAPHICS}, a push constant value <b>must</b> have been set for {@link #VK_PIPELINE_BIND_POINT_GRAPHICS PIPELINE_BIND_POINT_GRAPHICS}, with a {@code VkPipelineLayout} that is compatible for push constants, with the {@code VkPipelineLayout} used to create the current {@code VkPipeline}, as described in <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-compatibility">the “Pipeline Layout Compatibility” section</a></li>
+     * <li>Descriptors in each bound descriptor set, specified via {@link #vkCmdBindDescriptorSets CmdBindDescriptorSets}, <b>must</b> be valid if they are statically used by the currently bound {@code VkPipeline} object, specified via {@link #vkCmdBindPipeline CmdBindPipeline}</li>
      * <li>All vertex input bindings accessed via vertex input variables declared in the vertex shader entry point&#8217;s interface <b>must</b> have valid buffers bound</li>
      * <li>A valid graphics pipeline <b>must</b> be bound to the current command buffer with {@link #VK_PIPELINE_BIND_POINT_GRAPHICS PIPELINE_BIND_POINT_GRAPHICS}</li>
-     * <li>If the {@code VkPipeline} object bound to {@link #VK_PIPELINE_BIND_POINT_GRAPHICS PIPELINE_BIND_POINT_GRAPHICS} requires any dynamic state, that state <b>must</b> have been set on the current command buffer</li>
+     * <li>If the {@code VkPipeline} object currently bound to {@link #VK_PIPELINE_BIND_POINT_GRAPHICS PIPELINE_BIND_POINT_GRAPHICS} requires any dynamic state, that state <b>must</b> have been set on the current command buffer</li>
      * <li>If {@code drawCount} is equal to 1, <code>(offset sizeof({@link VkDrawIndexedIndirectCommand}))</code> <b>must</b> be less than or equal to the size of {@code buffer}</li>
      * <li>If {@code drawCount} is greater than 1, <code>(stride × (drawCount - 1) + offset sizeof({@link VkDrawIndexedIndirectCommand}))</code> <b>must</b> be less than or equal to the size of {@code buffer}</li>
      * <li>{@code drawCount} <b>must</b> be less than or equal to {@link VkPhysicalDeviceLimits}{@code ::maxDrawIndirectCount}</li>
      * <li>Every input attachment used by the current subpass <b>must</b> be bound to the pipeline via a descriptor set</li>
-     * <li>If any {@code VkSampler} object that is accessed from a shader by the {@code VkPipeline} bound to {@link #VK_PIPELINE_BIND_POINT_GRAPHICS PIPELINE_BIND_POINT_GRAPHICS} uses unnormalized coordinates, it <b>must</b> not be used to sample from any {@code VkImage} with a {@code VkImageView} of the type {@link #VK_IMAGE_VIEW_TYPE_3D IMAGE_VIEW_TYPE_3D}, {@link #VK_IMAGE_VIEW_TYPE_CUBE IMAGE_VIEW_TYPE_CUBE}, {@link #VK_IMAGE_VIEW_TYPE_1D_ARRAY IMAGE_VIEW_TYPE_1D_ARRAY}, {@link #VK_IMAGE_VIEW_TYPE_2D_ARRAY IMAGE_VIEW_TYPE_2D_ARRAY} or {@link #VK_IMAGE_VIEW_TYPE_CUBE_ARRAY IMAGE_VIEW_TYPE_CUBE_ARRAY}, in any shader stage</li>
-     * <li>If any {@code VkSampler} object that is accessed from a shader by the {@code VkPipeline} bound to {@link #VK_PIPELINE_BIND_POINT_GRAPHICS PIPELINE_BIND_POINT_GRAPHICS} uses unnormalized coordinates, it <b>must</b> not be used with any of the SPIR-V {@code OpImageSample*} or {@code OpImageSparseSample*} instructions with {@code ImplicitLod}, {@code Dref} or {@code Proj} in their name, in any shader stage</li>
-     * <li>If any {@code VkSampler} object that is accessed from a shader by the {@code VkPipeline} bound to {@link #VK_PIPELINE_BIND_POINT_GRAPHICS PIPELINE_BIND_POINT_GRAPHICS} uses unnormalized coordinates, it <b>must</b> not be used with any of the SPIR-V {@code OpImageSample*} or {@code OpImageSparseSample*} instructions that includes a LOD bias or any offset values, in any shader stage</li>
-     * <li>If the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-features-robustBufferAccess">robust buffer access</a> feature is not enabled, and any shader stage in the {@code VkPipeline} object bound to {@link #VK_PIPELINE_BIND_POINT_GRAPHICS PIPELINE_BIND_POINT_GRAPHICS} accesses a uniform buffer, it <b>must</b> not access values outside of the range of that buffer specified in the bound descriptor set</li>
-     * <li>If the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-features-robustBufferAccess">robust buffer access</a> feature is not enabled, and any shader stage in the {@code VkPipeline} object bound to {@link #VK_PIPELINE_BIND_POINT_GRAPHICS PIPELINE_BIND_POINT_GRAPHICS} accesses a storage buffer, it <b>must</b> not access values outside of the range of that buffer specified in the bound descriptor set</li>
-     * <li>Any {@code VkImageView} being sampled with {@link #VK_FILTER_LINEAR FILTER_LINEAR} as a result of this command <b>must</b> be of a format which supports linear filtering, as specified by the {@link #VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT} flag in {@link VkFormatProperties}{@code ::linearTilingFeatures} or {@link VkFormatProperties}{@code ::optimalTilingFeatures} returned by {@link #vkGetPhysicalDeviceFormatProperties GetPhysicalDeviceFormatProperties} for linearly or optimally tiled images, respectively</li>
+     * <li>If any {@code VkSampler} object that is accessed from a shader by the {@code VkPipeline} currently bound to {@link #VK_PIPELINE_BIND_POINT_GRAPHICS PIPELINE_BIND_POINT_GRAPHICS} uses unnormalized coordinates, it <b>must</b> not be used to sample from any {@code VkImage} with a {@code VkImageView} of the type {@link #VK_IMAGE_VIEW_TYPE_3D IMAGE_VIEW_TYPE_3D}, {@link #VK_IMAGE_VIEW_TYPE_CUBE IMAGE_VIEW_TYPE_CUBE}, {@link #VK_IMAGE_VIEW_TYPE_1D_ARRAY IMAGE_VIEW_TYPE_1D_ARRAY}, {@link #VK_IMAGE_VIEW_TYPE_2D_ARRAY IMAGE_VIEW_TYPE_2D_ARRAY} or {@link #VK_IMAGE_VIEW_TYPE_CUBE_ARRAY IMAGE_VIEW_TYPE_CUBE_ARRAY}, in any shader stage</li>
+     * <li>If any {@code VkSampler} object that is accessed from a shader by the {@code VkPipeline} currently bound to {@link #VK_PIPELINE_BIND_POINT_GRAPHICS PIPELINE_BIND_POINT_GRAPHICS} uses unnormalized coordinates, it <b>must</b> not be used with any of the SPIR-V {@code OpImageSample*} or {@code OpImageSparseSample*} instructions with {@code ImplicitLod}, {@code Dref} or {@code Proj} in their name, in any shader stage</li>
+     * <li>If any {@code VkSampler} object that is accessed from a shader by the {@code VkPipeline} currently bound to {@link #VK_PIPELINE_BIND_POINT_GRAPHICS PIPELINE_BIND_POINT_GRAPHICS} uses unnormalized coordinates, it <b>must</b> not be used with any of the SPIR-V {@code OpImageSample*} or {@code OpImageSparseSample*} instructions that includes a LOD bias or any offset values, in any shader stage</li>
+     * <li>If the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-features-robustBufferAccess">robust buffer access</a> feature is not enabled, and any shader stage in the {@code VkPipeline} object currently bound to {@link #VK_PIPELINE_BIND_POINT_GRAPHICS PIPELINE_BIND_POINT_GRAPHICS} accesses a uniform buffer, it <b>must</b> not access values outside of the range of that buffer specified in the currently bound descriptor set</li>
+     * <li>If the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-features-robustBufferAccess">robust buffer access</a> feature is not enabled, and any shader stage in the {@code VkPipeline} object currently bound to {@link #VK_PIPELINE_BIND_POINT_GRAPHICS PIPELINE_BIND_POINT_GRAPHICS} accesses a storage buffer, it <b>must</b> not access values outside of the range of that buffer specified in the currently bound descriptor set</li>
+     * <li>Any {@code VkImageView} being sampled with {@link #VK_FILTER_LINEAR FILTER_LINEAR} as a result of this command <b>must</b> be of a format which supports linear filtering, as specified by the {@link #VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT} flag in {@link VkFormatProperties}{@code ::linearTilingFeatures} (for a linear image) or {@link VkFormatProperties}{@code ::optimalTilingFeatures}(for an optimally tiled image) returned by {@link #vkGetPhysicalDeviceFormatProperties GetPhysicalDeviceFormatProperties}</li>
      * <li>Image subresources used as attachments in the current render pass <b>must</b> not be accessed in any way other than as an attachment by this command.</li>
-     * <li>Any {@code VkImageView} being sampled with {@link IMGFilterCubic#VK_FILTER_CUBIC_IMG FILTER_CUBIC_IMG} as a result of this command <b>must</b> be of a format which supports cubic filtering, as specified by the {@link IMGFilterCubic#VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_IMG FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_IMG} flag in {@link VkFormatProperties}{@code ::linearTilingFeatures} or {@link VkFormatProperties}{@code ::optimalTilingFeatures} returned by {@link #vkGetPhysicalDeviceFormatProperties GetPhysicalDeviceFormatProperties} for linearly or optimally tiled images, respectively</li>
+     * <li>Any {@code VkImageView} being sampled with {@link IMGFilterCubic#VK_FILTER_CUBIC_IMG FILTER_CUBIC_IMG} as a result of this command <b>must</b> be of a format which supports cubic filtering, as specified by the {@link IMGFilterCubic#VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_IMG FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_IMG} flag in {@link VkFormatProperties}{@code ::linearTilingFeatures} (for a linear image) or {@link VkFormatProperties}{@code ::optimalTilingFeatures}(for an optimally tiled image) returned by {@link #vkGetPhysicalDeviceFormatProperties GetPhysicalDeviceFormatProperties}</li>
      * <li>Any {@code VkImageView} being sampled with {@link IMGFilterCubic#VK_FILTER_CUBIC_IMG FILTER_CUBIC_IMG} as a result of this command <b>must</b> not have a {@code VkImageViewType} of {@link #VK_IMAGE_VIEW_TYPE_3D IMAGE_VIEW_TYPE_3D}, {@link #VK_IMAGE_VIEW_TYPE_CUBE IMAGE_VIEW_TYPE_CUBE}, or {@link #VK_IMAGE_VIEW_TYPE_CUBE_ARRAY IMAGE_VIEW_TYPE_CUBE_ARRAY}</li>
-     * <li>If the draw is recorded in a render pass instance with multiview enabled, the maximum instance index <b>must</b> be less than or equal to {@link VkPhysicalDeviceMultiviewProperties}{@code ::maxMultiviewInstanceIndex}.</li>
-     * <li>If {@code commandBuffer} is an unprotected command buffer, and any pipeline stage in the {@code VkPipeline} object bound to {@link #VK_PIPELINE_BIND_POINT_GRAPHICS PIPELINE_BIND_POINT_GRAPHICS} reads from or writes to any image or buffer, that image or buffer <b>must</b> not be a protected image or protected buffer.</li>
-     * <li>If {@code commandBuffer} is a protected command buffer, and any pipeline stage in the {@code VkPipeline} object bound to {@link #VK_PIPELINE_BIND_POINT_GRAPHICS PIPELINE_BIND_POINT_GRAPHICS} writes to any image or buffer, that image or buffer <b>must</b> not be an unprotected image or unprotected buffer.</li>
-     * <li>If {@code commandBuffer} is a protected command buffer, and any pipeline stage other than the framebuffer-space pipeline stages in the {@code VkPipeline} object bound to {@link #VK_PIPELINE_BIND_POINT_GRAPHICS PIPELINE_BIND_POINT_GRAPHICS} reads from or writes to any image or buffer, the image or buffer <b>must</b> not be a protected image or protected buffer.</li>
-     * <li>If the bound graphics pipeline was created with {@link VkPipelineSampleLocationsStateCreateInfoEXT}{@code ::sampleLocationsEnable} set to {@link #VK_TRUE TRUE} and the current subpass has a depth/stencil attachment, then that attachment <b>must</b> have been created with the {@link EXTSampleLocations#VK_IMAGE_CREATE_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT IMAGE_CREATE_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT} bit set</li>
+     * <li>If the draw is recorded in a render pass instance with multiview enabled, the maximum instance index <b>must</b> be less than or equal to {@link VkPhysicalDeviceMultiviewPropertiesKHX}{@code ::maxMultiviewInstanceIndex}.</li>
+     * <li>If the currently bound graphics pipeline was created with {@link VkPipelineSampleLocationsStateCreateInfoEXT}{@code ::sampleLocationsEnable} set to {@link #VK_TRUE TRUE} and the current subpass has a depth/stencil attachment, then that attachment <b>must</b> have been created with the {@link EXTSampleLocations#VK_IMAGE_CREATE_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT IMAGE_CREATE_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT} bit set</li>
      * </ul>
      * 
      * <h5>Valid Usage (Implicit)</h5>
@@ -11213,12 +11043,12 @@ public class VK10 {
      * 
      * <p>To record a dispatch, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * void vkCmdDispatch(
      *     VkCommandBuffer                             commandBuffer,
      *     uint32_t                                    groupCountX,
      *     uint32_t                                    groupCountY,
-     *     uint32_t                                    groupCountZ);</code></pre>
+     *     uint32_t                                    groupCountZ);</pre></code>
      * 
      * <h5>Description</h5>
      * 
@@ -11230,21 +11060,18 @@ public class VK10 {
      * <li>{@code groupCountX} <b>must</b> be less than or equal to {@link VkPhysicalDeviceLimits}{@code ::maxComputeWorkGroupCount}[0]</li>
      * <li>{@code groupCountY} <b>must</b> be less than or equal to {@link VkPhysicalDeviceLimits}{@code ::maxComputeWorkGroupCount}[1]</li>
      * <li>{@code groupCountZ} <b>must</b> be less than or equal to {@link VkPhysicalDeviceLimits}{@code ::maxComputeWorkGroupCount}[2]</li>
-     * <li>For each set <em>n</em> that is statically used by the {@code VkPipeline} bound to {@link #VK_PIPELINE_BIND_POINT_COMPUTE PIPELINE_BIND_POINT_COMPUTE}, a descriptor set <b>must</b> have been bound to <em>n</em> at {@link #VK_PIPELINE_BIND_POINT_COMPUTE PIPELINE_BIND_POINT_COMPUTE}, with a {@code VkPipelineLayout} that is compatible for set <em>n</em>, with the {@code VkPipelineLayout} used to create the current {@code VkPipeline}, as described in <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-compatibility">the “Pipeline Layout Compatibility” section</a></li>
-     * <li>Descriptors in each bound descriptor set, specified via {@link #vkCmdBindDescriptorSets CmdBindDescriptorSets}, <b>must</b> be valid if they are statically used by the bound {@code VkPipeline} object, specified via {@link #vkCmdBindPipeline CmdBindPipeline}</li>
+     * <li>For each set <em>n</em> that is statically used by the {@code VkPipeline} currently bound to {@link #VK_PIPELINE_BIND_POINT_COMPUTE PIPELINE_BIND_POINT_COMPUTE}, a descriptor set <b>must</b> have been bound to <em>n</em> at {@link #VK_PIPELINE_BIND_POINT_COMPUTE PIPELINE_BIND_POINT_COMPUTE}, with a {@code VkPipelineLayout} that is compatible for set <em>n</em>, with the {@code VkPipelineLayout} used to create the current {@code VkPipeline}, as described in <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-compatibility">the “Pipeline Layout Compatibility” section</a></li>
+     * <li>Descriptors in each bound descriptor set, specified via {@link #vkCmdBindDescriptorSets CmdBindDescriptorSets}, <b>must</b> be valid if they are statically used by the currently bound {@code VkPipeline} object, specified via {@link #vkCmdBindPipeline CmdBindPipeline}</li>
      * <li>A valid compute pipeline <b>must</b> be bound to the current command buffer with {@link #VK_PIPELINE_BIND_POINT_COMPUTE PIPELINE_BIND_POINT_COMPUTE}</li>
-     * <li>For each push constant that is statically used by the {@code VkPipeline} bound to {@link #VK_PIPELINE_BIND_POINT_COMPUTE PIPELINE_BIND_POINT_COMPUTE}, a push constant value <b>must</b> have been set for {@link #VK_PIPELINE_BIND_POINT_COMPUTE PIPELINE_BIND_POINT_COMPUTE}, with a {@code VkPipelineLayout} that is compatible for push constants with the one used to create the current {@code VkPipeline}, as described in <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-compatibility">the “Pipeline Layout Compatibility” section</a></li>
-     * <li>If any {@code VkSampler} object that is accessed from a shader by the {@code VkPipeline} bound to {@link #VK_PIPELINE_BIND_POINT_COMPUTE PIPELINE_BIND_POINT_COMPUTE} uses unnormalized coordinates, it <b>must</b> not be used to sample from any {@code VkImage} with a {@code VkImageView} of the type {@link #VK_IMAGE_VIEW_TYPE_3D IMAGE_VIEW_TYPE_3D}, {@link #VK_IMAGE_VIEW_TYPE_CUBE IMAGE_VIEW_TYPE_CUBE}, {@link #VK_IMAGE_VIEW_TYPE_1D_ARRAY IMAGE_VIEW_TYPE_1D_ARRAY}, {@link #VK_IMAGE_VIEW_TYPE_2D_ARRAY IMAGE_VIEW_TYPE_2D_ARRAY} or {@link #VK_IMAGE_VIEW_TYPE_CUBE_ARRAY IMAGE_VIEW_TYPE_CUBE_ARRAY}, in any shader stage</li>
-     * <li>If any {@code VkSampler} object that is accessed from a shader by the {@code VkPipeline} bound to {@link #VK_PIPELINE_BIND_POINT_COMPUTE PIPELINE_BIND_POINT_COMPUTE} uses unnormalized coordinates, it <b>must</b> not be used with any of the SPIR-V {@code OpImageSample*} or {@code OpImageSparseSample*} instructions with {@code ImplicitLod}, {@code Dref} or {@code Proj} in their name, in any shader stage</li>
-     * <li>If any {@code VkSampler} object that is accessed from a shader by the {@code VkPipeline} bound to {@link #VK_PIPELINE_BIND_POINT_COMPUTE PIPELINE_BIND_POINT_COMPUTE} uses unnormalized coordinates, it <b>must</b> not be used with any of the SPIR-V {@code OpImageSample*} or {@code OpImageSparseSample*} instructions that includes a LOD bias or any offset values, in any shader stage</li>
-     * <li>If the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-features-robustBufferAccess">robust buffer access</a> feature is not enabled, and any shader stage in the {@code VkPipeline} object bound to {@link #VK_PIPELINE_BIND_POINT_COMPUTE PIPELINE_BIND_POINT_COMPUTE} accesses a uniform buffer, it <b>must</b> not access values outside of the range of that buffer specified in the bound descriptor set</li>
-     * <li>If the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-features-robustBufferAccess">robust buffer access</a> feature is not enabled, and any shader stage in the {@code VkPipeline} object bound to {@link #VK_PIPELINE_BIND_POINT_COMPUTE PIPELINE_BIND_POINT_COMPUTE} accesses a storage buffer, it <b>must</b> not access values outside of the range of that buffer specified in the bound descriptor set</li>
-     * <li>Any {@code VkImageView} being sampled with {@link #VK_FILTER_LINEAR FILTER_LINEAR} as a result of this command <b>must</b> be of a format which supports linear filtering, as specified by the {@link #VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT} flag in {@link VkFormatProperties}{@code ::linearTilingFeatures} or {@link VkFormatProperties}{@code ::optimalTilingFeatures} returned by {@link #vkGetPhysicalDeviceFormatProperties GetPhysicalDeviceFormatProperties} for linearly or optimally tiled images, respectively</li>
-     * <li>Any {@code VkImageView} being sampled with {@link IMGFilterCubic#VK_FILTER_CUBIC_IMG FILTER_CUBIC_IMG} as a result of this command <b>must</b> be of a format which supports cubic filtering, as specified by the {@link IMGFilterCubic#VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_IMG FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_IMG} flag in {@link VkFormatProperties}{@code ::linearTilingFeatures} or {@link VkFormatProperties}{@code ::optimalTilingFeatures} returned by {@link #vkGetPhysicalDeviceFormatProperties GetPhysicalDeviceFormatProperties} for linearly or optimally tiled images, respectively</li>
+     * <li>For each push constant that is statically used by the {@code VkPipeline} currently bound to {@link #VK_PIPELINE_BIND_POINT_COMPUTE PIPELINE_BIND_POINT_COMPUTE}, a push constant value <b>must</b> have been set for {@link #VK_PIPELINE_BIND_POINT_COMPUTE PIPELINE_BIND_POINT_COMPUTE}, with a {@code VkPipelineLayout} that is compatible for push constants with the one used to create the current {@code VkPipeline}, as described in <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-compatibility">the “Pipeline Layout Compatibility” section</a></li>
+     * <li>If any {@code VkSampler} object that is accessed from a shader by the {@code VkPipeline} currently bound to {@link #VK_PIPELINE_BIND_POINT_COMPUTE PIPELINE_BIND_POINT_COMPUTE} uses unnormalized coordinates, it <b>must</b> not be used to sample from any {@code VkImage} with a {@code VkImageView} of the type {@link #VK_IMAGE_VIEW_TYPE_3D IMAGE_VIEW_TYPE_3D}, {@link #VK_IMAGE_VIEW_TYPE_CUBE IMAGE_VIEW_TYPE_CUBE}, {@link #VK_IMAGE_VIEW_TYPE_1D_ARRAY IMAGE_VIEW_TYPE_1D_ARRAY}, {@link #VK_IMAGE_VIEW_TYPE_2D_ARRAY IMAGE_VIEW_TYPE_2D_ARRAY} or {@link #VK_IMAGE_VIEW_TYPE_CUBE_ARRAY IMAGE_VIEW_TYPE_CUBE_ARRAY}, in any shader stage</li>
+     * <li>If any {@code VkSampler} object that is accessed from a shader by the {@code VkPipeline} currently bound to {@link #VK_PIPELINE_BIND_POINT_COMPUTE PIPELINE_BIND_POINT_COMPUTE} uses unnormalized coordinates, it <b>must</b> not be used with any of the SPIR-V {@code OpImageSample*} or {@code OpImageSparseSample*} instructions with {@code ImplicitLod}, {@code Dref} or {@code Proj} in their name, in any shader stage</li>
+     * <li>If any {@code VkSampler} object that is accessed from a shader by the {@code VkPipeline} currently bound to {@link #VK_PIPELINE_BIND_POINT_COMPUTE PIPELINE_BIND_POINT_COMPUTE} uses unnormalized coordinates, it <b>must</b> not be used with any of the SPIR-V {@code OpImageSample*} or {@code OpImageSparseSample*} instructions that includes a LOD bias or any offset values, in any shader stage</li>
+     * <li>If the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-features-robustBufferAccess">robust buffer access</a> feature is not enabled, and any shader stage in the {@code VkPipeline} object currently bound to {@link #VK_PIPELINE_BIND_POINT_COMPUTE PIPELINE_BIND_POINT_COMPUTE} accesses a uniform buffer, it <b>must</b> not access values outside of the range of that buffer specified in the currently bound descriptor set</li>
+     * <li>If the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-features-robustBufferAccess">robust buffer access</a> feature is not enabled, and any shader stage in the {@code VkPipeline} object currently bound to {@link #VK_PIPELINE_BIND_POINT_COMPUTE PIPELINE_BIND_POINT_COMPUTE} accesses a storage buffer, it <b>must</b> not access values outside of the range of that buffer specified in the currently bound descriptor set</li>
+     * <li>Any {@code VkImageView} being sampled with {@link #VK_FILTER_LINEAR FILTER_LINEAR} as a result of this command <b>must</b> be of a format which supports linear filtering, as specified by the {@link #VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT} flag in {@link VkFormatProperties}{@code ::linearTilingFeatures} (for a linear image) or {@link VkFormatProperties}{@code ::optimalTilingFeatures}(for an optimally tiled image) returned by {@link #vkGetPhysicalDeviceFormatProperties GetPhysicalDeviceFormatProperties}</li>
+     * <li>Any {@code VkImageView} being sampled with {@link IMGFilterCubic#VK_FILTER_CUBIC_IMG FILTER_CUBIC_IMG} as a result of this command <b>must</b> be of a format which supports cubic filtering, as specified by the {@link IMGFilterCubic#VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_IMG FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_IMG} flag in {@link VkFormatProperties}{@code ::linearTilingFeatures} (for a linear image) or {@link VkFormatProperties}{@code ::optimalTilingFeatures}(for an optimally tiled image) returned by {@link #vkGetPhysicalDeviceFormatProperties GetPhysicalDeviceFormatProperties}</li>
      * <li>Any {@code VkImageView} being sampled with {@link IMGFilterCubic#VK_FILTER_CUBIC_IMG FILTER_CUBIC_IMG} as a result of this command <b>must</b> not have a {@code VkImageViewType} of {@link #VK_IMAGE_VIEW_TYPE_3D IMAGE_VIEW_TYPE_3D}, {@link #VK_IMAGE_VIEW_TYPE_CUBE IMAGE_VIEW_TYPE_CUBE}, or {@link #VK_IMAGE_VIEW_TYPE_CUBE_ARRAY IMAGE_VIEW_TYPE_CUBE_ARRAY}</li>
-     * <li>If {@code commandBuffer} is an unprotected command buffer, and any pipeline stage in the {@code VkPipeline} object bound to {@link #VK_PIPELINE_BIND_POINT_COMPUTE PIPELINE_BIND_POINT_COMPUTE} reads from or writes to any image or buffer, that image or buffer <b>must</b> not be a protected image or protected buffer.</li>
-     * <li>If {@code commandBuffer} is a protected command buffer, and any pipeline stage in the {@code VkPipeline} object bound to {@link #VK_PIPELINE_BIND_POINT_COMPUTE PIPELINE_BIND_POINT_COMPUTE} writes to any image or buffer, that image or buffer <b>must</b> not be an unprotected image or unprotected buffer.</li>
-     * <li>If {@code commandBuffer} is a protected command buffer, and any pipeline stage other than the compute pipeline stage in the {@code VkPipeline} object bound to {@link #VK_PIPELINE_BIND_POINT_COMPUTE PIPELINE_BIND_POINT_COMPUTE} reads from any image or buffer, the image or buffer <b>must</b> not be a protected image or protected buffer.</li>
      * </ul>
      * 
      * <h5>Valid Usage (Implicit)</h5>
@@ -11289,11 +11116,11 @@ public class VK10 {
      * 
      * <p>To record an indirect command dispatch, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * void vkCmdDispatchIndirect(
      *     VkCommandBuffer                             commandBuffer,
      *     VkBuffer                                    buffer,
-     *     VkDeviceSize                                offset);</code></pre>
+     *     VkDeviceSize                                offset);</pre></code>
      * 
      * <h5>Description</h5>
      * 
@@ -11303,24 +11130,21 @@ public class VK10 {
      * 
      * <ul>
      * <li>If {@code buffer} is non-sparse then it <b>must</b> be bound completely and contiguously to a single {@code VkDeviceMemory} object</li>
-     * <li>For each set <em>n</em> that is statically used by the {@code VkPipeline} bound to {@link #VK_PIPELINE_BIND_POINT_COMPUTE PIPELINE_BIND_POINT_COMPUTE}, a descriptor set <b>must</b> have been bound to <em>n</em> at {@link #VK_PIPELINE_BIND_POINT_COMPUTE PIPELINE_BIND_POINT_COMPUTE}, with a {@code VkPipelineLayout} that is compatible for set <em>n</em>, with the {@code VkPipelineLayout} used to create the current {@code VkPipeline}, as described in <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-compatibility">the “Pipeline Layout Compatibility” section</a></li>
-     * <li>Descriptors in each bound descriptor set, specified via {@link #vkCmdBindDescriptorSets CmdBindDescriptorSets}, <b>must</b> be valid if they are statically used by the bound {@code VkPipeline} object, specified via {@link #vkCmdBindPipeline CmdBindPipeline}</li>
+     * <li>For each set <em>n</em> that is statically used by the {@code VkPipeline} currently bound to {@link #VK_PIPELINE_BIND_POINT_COMPUTE PIPELINE_BIND_POINT_COMPUTE}, a descriptor set <b>must</b> have been bound to <em>n</em> at {@link #VK_PIPELINE_BIND_POINT_COMPUTE PIPELINE_BIND_POINT_COMPUTE}, with a {@code VkPipelineLayout} that is compatible for set <em>n</em>, with the {@code VkPipelineLayout} used to create the current {@code VkPipeline}, as described in <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-compatibility">the “Pipeline Layout Compatibility” section</a></li>
+     * <li>Descriptors in each bound descriptor set, specified via {@link #vkCmdBindDescriptorSets CmdBindDescriptorSets}, <b>must</b> be valid if they are statically used by the currently bound {@code VkPipeline} object, specified via {@link #vkCmdBindPipeline CmdBindPipeline}</li>
      * <li>A valid compute pipeline <b>must</b> be bound to the current command buffer with {@link #VK_PIPELINE_BIND_POINT_COMPUTE PIPELINE_BIND_POINT_COMPUTE}</li>
      * <li>{@code buffer} <b>must</b> have been created with the {@link #VK_BUFFER_USAGE_INDIRECT_BUFFER_BIT BUFFER_USAGE_INDIRECT_BUFFER_BIT} bit set</li>
      * <li>{@code offset} <b>must</b> be a multiple of 4</li>
      * <li>The sum of {@code offset} and the size of {@link VkDispatchIndirectCommand} <b>must</b> be less than or equal to the size of {@code buffer}</li>
-     * <li>For each push constant that is statically used by the {@code VkPipeline} bound to {@link #VK_PIPELINE_BIND_POINT_COMPUTE PIPELINE_BIND_POINT_COMPUTE}, a push constant value <b>must</b> have been set for {@link #VK_PIPELINE_BIND_POINT_COMPUTE PIPELINE_BIND_POINT_COMPUTE}, with a {@code VkPipelineLayout} that is compatible for push constants with the one used to create the current {@code VkPipeline}, as described in <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-compatibility">the “Pipeline Layout Compatibility” section</a></li>
-     * <li>If any {@code VkSampler} object that is accessed from a shader by the {@code VkPipeline} bound to {@link #VK_PIPELINE_BIND_POINT_COMPUTE PIPELINE_BIND_POINT_COMPUTE} uses unnormalized coordinates, it <b>must</b> not be used to sample from any {@code VkImage} with a {@code VkImageView} of the type {@link #VK_IMAGE_VIEW_TYPE_3D IMAGE_VIEW_TYPE_3D}, {@link #VK_IMAGE_VIEW_TYPE_CUBE IMAGE_VIEW_TYPE_CUBE}, {@link #VK_IMAGE_VIEW_TYPE_1D_ARRAY IMAGE_VIEW_TYPE_1D_ARRAY}, {@link #VK_IMAGE_VIEW_TYPE_2D_ARRAY IMAGE_VIEW_TYPE_2D_ARRAY} or {@link #VK_IMAGE_VIEW_TYPE_CUBE_ARRAY IMAGE_VIEW_TYPE_CUBE_ARRAY}, in any shader stage</li>
-     * <li>If any {@code VkSampler} object that is accessed from a shader by the {@code VkPipeline} bound to {@link #VK_PIPELINE_BIND_POINT_COMPUTE PIPELINE_BIND_POINT_COMPUTE} uses unnormalized coordinates, it <b>must</b> not be used with any of the SPIR-V {@code OpImageSample*} or {@code OpImageSparseSample*} instructions with {@code ImplicitLod}, {@code Dref} or {@code Proj} in their name, in any shader stage</li>
-     * <li>If any {@code VkSampler} object that is accessed from a shader by the {@code VkPipeline} bound to {@link #VK_PIPELINE_BIND_POINT_COMPUTE PIPELINE_BIND_POINT_COMPUTE} uses unnormalized coordinates, it <b>must</b> not be used with any of the SPIR-V {@code OpImageSample*} or {@code OpImageSparseSample*} instructions that includes a LOD bias or any offset values, in any shader stage</li>
-     * <li>If the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-features-robustBufferAccess">robust buffer access</a> feature is not enabled, and any shader stage in the {@code VkPipeline} object bound to {@link #VK_PIPELINE_BIND_POINT_COMPUTE PIPELINE_BIND_POINT_COMPUTE} accesses a uniform buffer, it <b>must</b> not access values outside of the range of that buffer specified in the bound descriptor set</li>
-     * <li>If the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-features-robustBufferAccess">robust buffer access</a> feature is not enabled, and any shader stage in the {@code VkPipeline} object bound to {@link #VK_PIPELINE_BIND_POINT_COMPUTE PIPELINE_BIND_POINT_COMPUTE} accesses a storage buffer, it <b>must</b> not access values outside of the range of that buffer specified in the bound descriptor set</li>
-     * <li>Any {@code VkImageView} being sampled with {@link #VK_FILTER_LINEAR FILTER_LINEAR} as a result of this command <b>must</b> be of a format which supports linear filtering, as specified by the {@link #VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT} flag in {@link VkFormatProperties}{@code ::linearTilingFeatures} or {@link VkFormatProperties}{@code ::optimalTilingFeatures} returned by {@link #vkGetPhysicalDeviceFormatProperties GetPhysicalDeviceFormatProperties} for linearly or optimally tiled images, respectively</li>
-     * <li>Any {@code VkImageView} being sampled with {@link IMGFilterCubic#VK_FILTER_CUBIC_IMG FILTER_CUBIC_IMG} as a result of this command <b>must</b> be of a format which supports cubic filtering, as specified by the {@link IMGFilterCubic#VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_IMG FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_IMG} flag in {@link VkFormatProperties}{@code ::linearTilingFeatures} or {@link VkFormatProperties}{@code ::optimalTilingFeatures} returned by {@link #vkGetPhysicalDeviceFormatProperties GetPhysicalDeviceFormatProperties} for linearly or optimally tiled images, respectively</li>
+     * <li>For each push constant that is statically used by the {@code VkPipeline} currently bound to {@link #VK_PIPELINE_BIND_POINT_COMPUTE PIPELINE_BIND_POINT_COMPUTE}, a push constant value <b>must</b> have been set for {@link #VK_PIPELINE_BIND_POINT_COMPUTE PIPELINE_BIND_POINT_COMPUTE}, with a {@code VkPipelineLayout} that is compatible for push constants with the one used to create the current {@code VkPipeline}, as described in <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-compatibility">the “Pipeline Layout Compatibility” section</a></li>
+     * <li>If any {@code VkSampler} object that is accessed from a shader by the {@code VkPipeline} currently bound to {@link #VK_PIPELINE_BIND_POINT_COMPUTE PIPELINE_BIND_POINT_COMPUTE} uses unnormalized coordinates, it <b>must</b> not be used to sample from any {@code VkImage} with a {@code VkImageView} of the type {@link #VK_IMAGE_VIEW_TYPE_3D IMAGE_VIEW_TYPE_3D}, {@link #VK_IMAGE_VIEW_TYPE_CUBE IMAGE_VIEW_TYPE_CUBE}, {@link #VK_IMAGE_VIEW_TYPE_1D_ARRAY IMAGE_VIEW_TYPE_1D_ARRAY}, {@link #VK_IMAGE_VIEW_TYPE_2D_ARRAY IMAGE_VIEW_TYPE_2D_ARRAY} or {@link #VK_IMAGE_VIEW_TYPE_CUBE_ARRAY IMAGE_VIEW_TYPE_CUBE_ARRAY}, in any shader stage</li>
+     * <li>If any {@code VkSampler} object that is accessed from a shader by the {@code VkPipeline} currently bound to {@link #VK_PIPELINE_BIND_POINT_COMPUTE PIPELINE_BIND_POINT_COMPUTE} uses unnormalized coordinates, it <b>must</b> not be used with any of the SPIR-V {@code OpImageSample*} or {@code OpImageSparseSample*} instructions with {@code ImplicitLod}, {@code Dref} or {@code Proj} in their name, in any shader stage</li>
+     * <li>If any {@code VkSampler} object that is accessed from a shader by the {@code VkPipeline} currently bound to {@link #VK_PIPELINE_BIND_POINT_COMPUTE PIPELINE_BIND_POINT_COMPUTE} uses unnormalized coordinates, it <b>must</b> not be used with any of the SPIR-V {@code OpImageSample*} or {@code OpImageSparseSample*} instructions that includes a LOD bias or any offset values, in any shader stage</li>
+     * <li>If the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-features-robustBufferAccess">robust buffer access</a> feature is not enabled, and any shader stage in the {@code VkPipeline} object currently bound to {@link #VK_PIPELINE_BIND_POINT_COMPUTE PIPELINE_BIND_POINT_COMPUTE} accesses a uniform buffer, it <b>must</b> not access values outside of the range of that buffer specified in the currently bound descriptor set</li>
+     * <li>If the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-features-robustBufferAccess">robust buffer access</a> feature is not enabled, and any shader stage in the {@code VkPipeline} object currently bound to {@link #VK_PIPELINE_BIND_POINT_COMPUTE PIPELINE_BIND_POINT_COMPUTE} accesses a storage buffer, it <b>must</b> not access values outside of the range of that buffer specified in the currently bound descriptor set</li>
+     * <li>Any {@code VkImageView} being sampled with {@link #VK_FILTER_LINEAR FILTER_LINEAR} as a result of this command <b>must</b> be of a format which supports linear filtering, as specified by the {@link #VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT} flag in {@link VkFormatProperties}{@code ::linearTilingFeatures} (for a linear image) or {@link VkFormatProperties}{@code ::optimalTilingFeatures}(for an optimally tiled image) returned by {@link #vkGetPhysicalDeviceFormatProperties GetPhysicalDeviceFormatProperties}</li>
+     * <li>Any {@code VkImageView} being sampled with {@link IMGFilterCubic#VK_FILTER_CUBIC_IMG FILTER_CUBIC_IMG} as a result of this command <b>must</b> be of a format which supports cubic filtering, as specified by the {@link IMGFilterCubic#VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_IMG FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_IMG} flag in {@link VkFormatProperties}{@code ::linearTilingFeatures} (for a linear image) or {@link VkFormatProperties}{@code ::optimalTilingFeatures}(for an optimally tiled image) returned by {@link #vkGetPhysicalDeviceFormatProperties GetPhysicalDeviceFormatProperties}</li>
      * <li>Any {@code VkImageView} being sampled with {@link IMGFilterCubic#VK_FILTER_CUBIC_IMG FILTER_CUBIC_IMG} as a result of this command <b>must</b> not have a {@code VkImageViewType} of {@link #VK_IMAGE_VIEW_TYPE_3D IMAGE_VIEW_TYPE_3D}, {@link #VK_IMAGE_VIEW_TYPE_CUBE IMAGE_VIEW_TYPE_CUBE}, or {@link #VK_IMAGE_VIEW_TYPE_CUBE_ARRAY IMAGE_VIEW_TYPE_CUBE_ARRAY}</li>
-     * <li>If {@code commandBuffer} is an unprotected command buffer, and any pipeline stage in the {@code VkPipeline} object bound to {@link #VK_PIPELINE_BIND_POINT_COMPUTE PIPELINE_BIND_POINT_COMPUTE} reads from or writes to any image or buffer, that image or buffer <b>must</b> not be a protected image or protected buffer.</li>
-     * <li>If {@code commandBuffer} is a protected command buffer, and any pipeline stage in the {@code VkPipeline} object bound to {@link #VK_PIPELINE_BIND_POINT_COMPUTE PIPELINE_BIND_POINT_COMPUTE} writes to any image or buffer, that image or buffer <b>must</b> not be an unprotected image or unprotected buffer.</li>
-     * <li>If {@code commandBuffer} is a protected command buffer, and any pipeline stage other than the compute pipeline stage in the {@code VkPipeline} object bound to {@link #VK_PIPELINE_BIND_POINT_COMPUTE PIPELINE_BIND_POINT_COMPUTE} reads from any image or buffer, the image or buffer <b>must</b> not be a protected image or protected buffer.</li>
      * </ul>
      * 
      * <h5>Valid Usage (Implicit)</h5>
@@ -11376,13 +11200,13 @@ public class VK10 {
      * 
      * <p>To copy data between buffer objects, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * void vkCmdCopyBuffer(
      *     VkCommandBuffer                             commandBuffer,
      *     VkBuffer                                    srcBuffer,
      *     VkBuffer                                    dstBuffer,
      *     uint32_t                                    regionCount,
-     *     const VkBufferCopy*                         pRegions);</code></pre>
+     *     const VkBufferCopy*                         pRegions);</pre></code>
      * 
      * <h5>Description</h5>
      * 
@@ -11401,9 +11225,6 @@ public class VK10 {
      * <li>If {@code srcBuffer} is non-sparse then it <b>must</b> be bound completely and contiguously to a single {@code VkDeviceMemory} object</li>
      * <li>{@code dstBuffer} <b>must</b> have been created with {@link #VK_BUFFER_USAGE_TRANSFER_DST_BIT BUFFER_USAGE_TRANSFER_DST_BIT} usage flag</li>
      * <li>If {@code dstBuffer} is non-sparse then it <b>must</b> be bound completely and contiguously to a single {@code VkDeviceMemory} object</li>
-     * <li>If {@code commandBuffer} is an unprotected command buffer, then {@code srcBuffer} <b>must</b> not be a protected buffer</li>
-     * <li>If {@code commandBuffer} is an unprotected command buffer, then {@code dstBuffer} <b>must</b> not be a protected buffer</li>
-     * <li>If {@code commandBuffer} is a protected command buffer, then {@code dstBuffer} <b>must</b> not be an unprotected buffer</li>
      * </ul>
      * 
      * <h5>Valid Usage (Implicit)</h5>
@@ -11443,7 +11264,7 @@ public class VK10 {
      * @param dstBuffer     the destination buffer.
      * @param pRegions      a pointer to an array of {@link VkBufferCopy} structures specifying the regions to copy.
      */
-    public static void vkCmdCopyBuffer(VkCommandBuffer commandBuffer, @NativeType("VkBuffer") long srcBuffer, @NativeType("VkBuffer") long dstBuffer, @NativeType("VkBufferCopy const *") VkBufferCopy.Buffer pRegions) {
+    public static void vkCmdCopyBuffer(VkCommandBuffer commandBuffer, @NativeType("VkBuffer") long srcBuffer, @NativeType("VkBuffer") long dstBuffer, @NativeType("const VkBufferCopy *") VkBufferCopy.Buffer pRegions) {
         nvkCmdCopyBuffer(commandBuffer, srcBuffer, dstBuffer, pRegions.remaining(), pRegions.address());
     }
 
@@ -11466,7 +11287,7 @@ public class VK10 {
      * 
      * <p>To copy data between image objects, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * void vkCmdCopyImage(
      *     VkCommandBuffer                             commandBuffer,
      *     VkImage                                     srcImage,
@@ -11474,7 +11295,7 @@ public class VK10 {
      *     VkImage                                     dstImage,
      *     VkImageLayout                               dstImageLayout,
      *     uint32_t                                    regionCount,
-     *     const VkImageCopy*                          pRegions);</code></pre>
+     *     const VkImageCopy*                          pRegions);</pre></code>
      * 
      * <h5>Description</h5>
      * 
@@ -11482,14 +11303,14 @@ public class VK10 {
      * 
      * <p>The formats of {@code srcImage} and {@code dstImage} <b>must</b> be compatible. Formats are considered compatible if their element size is the same between both formats. For example, {@link #VK_FORMAT_R8G8B8A8_UNORM FORMAT_R8G8B8A8_UNORM} is compatible with {@link #VK_FORMAT_R32_UINT FORMAT_R32_UINT} because both texels are 4 bytes in size. Depth/stencil formats <b>must</b> match exactly.</p>
      * 
-     * <p>If the format of {@code srcImage} or {@code dstImage} is a <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-formats-requiring-sampler-ycbcr-conversion"><em>multi-planar</em> image format</a>, regions of each plane to be copied <b>must</b> be specified separately using the {@code srcSubresource} and {@code dstSubresource} members of the {@link VkImageCopy} structure. In this case, the {@code aspectMask} of the {@code srcSubresource} or {@code dstSubresource} that refers to the multi-planar image <b>must</b> be {@link VK11#VK_IMAGE_ASPECT_PLANE_0_BIT IMAGE_ASPECT_PLANE_0_BIT}, {@link VK11#VK_IMAGE_ASPECT_PLANE_1_BIT IMAGE_ASPECT_PLANE_1_BIT}, or {@link VK11#VK_IMAGE_ASPECT_PLANE_2_BIT IMAGE_ASPECT_PLANE_2_BIT}. For the purposes of {@link #vkCmdCopyImage CmdCopyImage}, each plane of a multi-planar image is treated as having the format listed in <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-formats-compatible-planes">the “Compatible formats of planes of multi-planar formats” section</a> for the plane identified by the {@code aspectMask} of the corresponding subresource. This applies both to {@code VkFormat} and to coordinates used in the copy, which correspond to texels in the <em>plane</em> rather than how these texels map to coordinates in the image as a whole.</p>
+     * <p>If the format of {@code srcImage} or {@code dstImage} is a <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-formats-requiring-sampler-ycbcr-conversion"><em>multi-planar</em> image format</a>, regions of each plane to be copied <b>must</b> be specified separately using the {@code srcSubresource} and {@code dstSubresource} members of the {@link VkImageCopy} structure. In this case, the {@code aspectMask} of the {@code srcSubresource} or {@code dstSubresource} that refers to the multi-planar image <b>must</b> be {@link KHRSamplerYcbcrConversion#VK_IMAGE_ASPECT_PLANE_0_BIT_KHR IMAGE_ASPECT_PLANE_0_BIT_KHR}, {@link KHRSamplerYcbcrConversion#VK_IMAGE_ASPECT_PLANE_1_BIT_KHR IMAGE_ASPECT_PLANE_1_BIT_KHR}, or {@link KHRSamplerYcbcrConversion#VK_IMAGE_ASPECT_PLANE_2_BIT_KHR IMAGE_ASPECT_PLANE_2_BIT_KHR}. For the purposes of {@link #vkCmdCopyImage CmdCopyImage}, each plane of a multi-planar image is treated as having the format listed in <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-formats-compatible-planes">the “Compatible formats of planes of multi-planar formats” section</a> for the plane identified by the {@code aspectMask} of the corresponding subresource. This applies both to {@code VkFormat} and to coordinates used in the copy, which correspond to texels in the <em>plane</em> rather than how these texels map to coordinates in the image as a whole.</p>
      * 
      * <div style="margin-left: 26px; border-left: 1px solid gray; padding-left: 14px;"><h5>Note</h5>
      * 
-     * <p>For example, the {@link VK11#VK_IMAGE_ASPECT_PLANE_1_BIT IMAGE_ASPECT_PLANE_1_BIT} plane of a {@link VK11#VK_FORMAT_G8_B8R8_2PLANE_420_UNORM FORMAT_G8_B8R8_2PLANE_420_UNORM} image is compatible with an image of format {@link #VK_FORMAT_R8G8_UNORM FORMAT_R8G8_UNORM} and (less usefully) with the {@link VK11#VK_IMAGE_ASPECT_PLANE_0_BIT IMAGE_ASPECT_PLANE_0_BIT} plane of an image of format {@link VK11#VK_FORMAT_G10X6_B10X6_R10X6_3PLANE_420_UNORM_3PACK16 FORMAT_G10X6_B10X6_R10X6_3PLANE_420_UNORM_3PACK16}, as each texel is 2 bytes in size.</p>
+     * <p>For example, the {@link KHRSamplerYcbcrConversion#VK_IMAGE_ASPECT_PLANE_1_BIT_KHR IMAGE_ASPECT_PLANE_1_BIT_KHR} plane of a {@link KHRSamplerYcbcrConversion#VK_FORMAT_G8_B8R8_2PLANE_420_UNORM_KHR FORMAT_G8_B8R8_2PLANE_420_UNORM_KHR} image is compatible with an image of format {@link #VK_FORMAT_R8G8_UNORM FORMAT_R8G8_UNORM} and (less usefully) with the {@link KHRSamplerYcbcrConversion#VK_IMAGE_ASPECT_PLANE_0_BIT_KHR IMAGE_ASPECT_PLANE_0_BIT_KHR} plane of an image of format {@link KHRSamplerYcbcrConversion#VK_FORMAT_G10X6_B10X6_R10X6_3PLANE_420_UNORM_3PACK16_KHR FORMAT_G10X6_B10X6_R10X6_3PLANE_420_UNORM_3PACK16_KHR}, as each texel is 2 bytes in size.</p>
      * </div>
      * 
-     * <p>{@link #vkCmdCopyImage CmdCopyImage} allows copying between <em>size-compatible</em> compressed and uncompressed internal formats. Formats are size-compatible if the element size of the uncompressed format is equal to the element size (compressed texel block size) of the compressed format. Such a copy does not perform on-the-fly compression or decompression. When copying from an uncompressed format to a compressed format, each texel of uncompressed data of the source image is copied as a raw value to the corresponding compressed texel block of the destination image. When copying from a compressed format to an uncompressed format, each compressed texel block of the source image is copied as a raw value to the corresponding texel of uncompressed data in the destination image. Thus, for example, it is legal to copy between a 128-bit uncompressed format and a compressed format which has a 128-bit sized compressed texel block representing 4{times}4 texels (using 8 bits per texel), or between a 64-bit uncompressed format and a compressed format which has a 64-bit sized compressed texel block representing 4{times}4 texels (using 4 bits per texel).</p>
+     * <p>{@link #vkCmdCopyImage CmdCopyImage} allows copying between size-compatible compressed and uncompressed internal formats. Formats are size-compatible if the element size of the uncompressed format is equal to the element size (compressed texel block size) of the compressed format. Such a copy does not perform on-the-fly compression or decompression. When copying from an uncompressed format to a compressed format, each texel of uncompressed data of the source image is copied as a raw value to the corresponding compressed texel block of the destination image. When copying from a compressed format to an uncompressed format, each compressed texel block of the source image is copied as a raw value to the corresponding texel of uncompressed data in the destination image. Thus, for example, it is legal to copy between a 128-bit uncompressed format and a compressed format which has a 128-bit sized compressed texel block representing 4{times}4 texels (using 8 bits per texel), or between a 64-bit uncompressed format and a compressed format which has a 64-bit sized compressed texel block representing 4{times}4 texels (using 4 bits per texel).</p>
      * 
      * <p>When copying between compressed and uncompressed formats the {@code extent} members represent the texel dimensions of the source image and not the destination. When copying from a compressed image to an uncompressed image the image texel dimensions written to the uncompressed image will be source extent divided by the compressed texel block dimensions. When copying from an uncompressed image to a compressed image the image texel dimensions written to the compressed image will be the source extent multiplied by the compressed texel block dimensions. In both cases the number of bytes read and the number of bytes written will be identical.</p>
      * 
@@ -11521,29 +11342,23 @@ public class VK10 {
      * <li>The source region specified by each element of {@code pRegions} <b>must</b> be a region that is contained within {@code srcImage} if the {@code srcImage}&#8217;s {@code VkFormat} is not a <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-formats-requiring-sampler-ycbcr-conversion">multi-planar format</a>, and <b>must</b> be a region that is contained within the plane being copied if the {@code srcImage}&#8217;s {@code VkFormat} is a multi-planar format</li>
      * <li>The destination region specified by each element of {@code pRegions} <b>must</b> be a region that is contained within {@code dstImage} if the {@code dstImage}&#8217;s {@code VkFormat} is not a <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-formats-requiring-sampler-ycbcr-conversion">multi-planar format</a>, and <b>must</b> be a region that is contained within the plane being copied to if the {@code dstImage}&#8217;s {@code VkFormat} is a multi-planar format</li>
      * <li>The union of all source regions, and the union of all destination regions, specified by the elements of {@code pRegions}, <b>must</b> not overlap in memory</li>
-     * <li>{@code srcImage} <b>must</b> use a format that supports {@link VK11#VK_FORMAT_FEATURE_TRANSFER_SRC_BIT FORMAT_FEATURE_TRANSFER_SRC_BIT}, which is indicated by {@link VkFormatProperties}{@code ::linearTilingFeatures} or {@link VkFormatProperties}{@code ::optimalTilingFeatures} returned by {@link #vkGetPhysicalDeviceFormatProperties GetPhysicalDeviceFormatProperties} for linearly or optimally tiled images, respectively</li>
+     * <li>{@code srcImage} <b>must</b> use a format that supports {@link KHRMaintenance1#VK_FORMAT_FEATURE_TRANSFER_SRC_BIT_KHR FORMAT_FEATURE_TRANSFER_SRC_BIT_KHR}, which is indicated by {@link VkFormatProperties}{@code ::linearTilingFeatures} (for linearly tiled images) or {@link VkFormatProperties}{@code ::optimalTilingFeatures} (for optimally tiled images) - as returned by {@link #vkGetPhysicalDeviceFormatProperties GetPhysicalDeviceFormatProperties}</li>
      * <li>{@code srcImage} <b>must</b> have been created with {@link #VK_IMAGE_USAGE_TRANSFER_SRC_BIT IMAGE_USAGE_TRANSFER_SRC_BIT} usage flag</li>
      * <li>If {@code srcImage} is non-sparse then the image or <em>disjoint</em> plane to be copied <b>must</b> be bound completely and contiguously to a single {@code VkDeviceMemory} object</li>
-     * <li>{@code srcImageLayout} <b>must</b> specify the layout of the image subresources of {@code srcImage} specified in {@code pRegions} at the time this command is executed on a {@code VkDevice}</li>
-     * <li>{@code srcImageLayout} <b>must</b> be {@link #VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL}, {@link #VK_IMAGE_LAYOUT_GENERAL IMAGE_LAYOUT_GENERAL}, or {@link KHRSharedPresentableImage#VK_IMAGE_LAYOUT_SHARED_PRESENT_KHR IMAGE_LAYOUT_SHARED_PRESENT_KHR}</li>
-     * <li>{@code dstImage} <b>must</b> use a format that supports {@link VK11#VK_FORMAT_FEATURE_TRANSFER_DST_BIT FORMAT_FEATURE_TRANSFER_DST_BIT}, which is indicated by {@link VkFormatProperties}{@code ::linearTilingFeatures} or {@link VkFormatProperties}{@code ::optimalTilingFeatures} returned by {@link #vkGetPhysicalDeviceFormatProperties GetPhysicalDeviceFormatProperties} for linearly or optimally tiled images, respectively</li>
+     * <li>{@code srcImageLayout} <b>must</b> specify the layout of the image subresources of {@code srcImage} specified in {@code pRegions} at the time this command is executed on a {@code VkDevice} {@code srcImageLayout} <b>must</b> be {@link #VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL}, {@link #VK_IMAGE_LAYOUT_GENERAL IMAGE_LAYOUT_GENERAL}, or {@link KHRSharedPresentableImage#VK_IMAGE_LAYOUT_SHARED_PRESENT_KHR IMAGE_LAYOUT_SHARED_PRESENT_KHR}</li>
+     * <li>{@code dstImage} <b>must</b> use a format that supports {@link KHRMaintenance1#VK_FORMAT_FEATURE_TRANSFER_DST_BIT_KHR FORMAT_FEATURE_TRANSFER_DST_BIT_KHR}, which is indicated by {@link VkFormatProperties}{@code ::linearTilingFeatures} (for linearly tiled images) or {@link VkFormatProperties}{@code ::optimalTilingFeatures} (for optimally tiled images) - as returned by {@link #vkGetPhysicalDeviceFormatProperties GetPhysicalDeviceFormatProperties}</li>
      * <li>{@code dstImage} <b>must</b> have been created with {@link #VK_IMAGE_USAGE_TRANSFER_DST_BIT IMAGE_USAGE_TRANSFER_DST_BIT} usage flag</li>
      * <li>If {@code dstImage} is non-sparse then the image or <em>disjoint</em> plane that is the destination of the copy <b>must</b> be bound completely and contiguously to a single {@code VkDeviceMemory} object</li>
      * <li>{@code dstImageLayout} <b>must</b> specify the layout of the image subresources of {@code dstImage} specified in {@code pRegions} at the time this command is executed on a {@code VkDevice}</li>
      * <li>{@code dstImageLayout} <b>must</b> be {@link #VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL}, {@link #VK_IMAGE_LAYOUT_GENERAL IMAGE_LAYOUT_GENERAL}, or {@link KHRSharedPresentableImage#VK_IMAGE_LAYOUT_SHARED_PRESENT_KHR IMAGE_LAYOUT_SHARED_PRESENT_KHR}</li>
      * <li>If the {@code VkFormat} of each of {@code srcImage} and {@code dstImage} is not a <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-formats-requiring-sampler-ycbcr-conversion"><em>multi-planar format</em></a>, the {@code VkFormat} of each of {@code srcImage} and {@code dstImage} <b>must</b> be compatible, as defined <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#copies-images-format-compatibility">below</a></li>
      * <li>In a copy to or from a plane of a <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-formats-requiring-sampler-ycbcr-conversion">multi-planar image</a>, the {@code VkFormat} of the image and plane <b>must</b> be compatible according to <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-formats-compatible-planes">the description of compatible planes</a> for the plane being copied</li>
-     * <li>When a copy is performed to or from an image with a <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-formats-requiring-sampler-ycbcr-conversion">multi-planar format</a>, the {@code aspectMask} of the {@code srcSubresource} and/or {@code dstSubresource} that refers to the multi-planar image <b>must</b> be {@link VK11#VK_IMAGE_ASPECT_PLANE_0_BIT IMAGE_ASPECT_PLANE_0_BIT}, {@link VK11#VK_IMAGE_ASPECT_PLANE_1_BIT IMAGE_ASPECT_PLANE_1_BIT}, or {@link VK11#VK_IMAGE_ASPECT_PLANE_2_BIT IMAGE_ASPECT_PLANE_2_BIT} (with {@link VK11#VK_IMAGE_ASPECT_PLANE_2_BIT IMAGE_ASPECT_PLANE_2_BIT} valid only for a {@code VkFormat} with three planes)</li>
+     * <li>When a copy is performed to or from an image with a <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-formats-requiring-sampler-ycbcr-conversion">multi-planar format</a>, the {@code aspectMask} of the {@code srcSubresource} and/or {@code dstSubresource} that refers to the multi-planar image <b>must</b> be {@link KHRSamplerYcbcrConversion#VK_IMAGE_ASPECT_PLANE_0_BIT_KHR IMAGE_ASPECT_PLANE_0_BIT_KHR}, {@link KHRSamplerYcbcrConversion#VK_IMAGE_ASPECT_PLANE_1_BIT_KHR IMAGE_ASPECT_PLANE_1_BIT_KHR}, or {@link KHRSamplerYcbcrConversion#VK_IMAGE_ASPECT_PLANE_2_BIT_KHR IMAGE_ASPECT_PLANE_2_BIT_KHR} (with {@link KHRSamplerYcbcrConversion#VK_IMAGE_ASPECT_PLANE_2_BIT_KHR IMAGE_ASPECT_PLANE_2_BIT_KHR} valid only for a {@code VkFormat} with three planes)</li>
      * <li>The sample count of {@code srcImage} and {@code dstImage} <b>must</b> match</li>
-     * <li>If {@code commandBuffer} is an unprotected command buffer, then {@code srcImage} <b>must</b> not be a protected image</li>
-     * <li>If {@code commandBuffer} is an unprotected command buffer, then {@code dstImage} <b>must</b> not be a protected image</li>
-     * <li>If {@code commandBuffer} is a protected command buffer, then {@code dstImage} <b>must</b> not be an unprotected image</li>
      * <li>The {@code srcSubresource.mipLevel} member of each element of {@code pRegions} <b>must</b> be less than the {@code mipLevels} specified in {@link VkImageCreateInfo} when {@code srcImage} was created</li>
      * <li>The {@code dstSubresource.mipLevel} member of each element of {@code pRegions} <b>must</b> be less than the {@code mipLevels} specified in {@link VkImageCreateInfo} when {@code dstImage} was created</li>
      * <li>The <code>srcSubresource.baseArrayLayer srcSubresource.layerCount</code> of each element of {@code pRegions} <b>must</b> be less than or equal to the {@code arrayLayers} specified in {@link VkImageCreateInfo} when {@code srcImage} was created</li>
      * <li>The <code>dstSubresource.baseArrayLayer dstSubresource.layerCount</code> of each element of {@code pRegions} <b>must</b> be less than or equal to the {@code arrayLayers} specified in {@link VkImageCreateInfo} when {@code dstImage} was created</li>
-     * <li>The {@code srcOffset} and {@code extent} members of each element of {@code pRegions} <b>must</b> respect the image transfer granularity requirements of {@code commandBuffer}&#8217;s command pool&#8217;s queue family, as described in {@link VkQueueFamilyProperties}</li>
-     * <li>The {@code dstOffset} and {@code extent} members of each element of {@code pRegions} <b>must</b> respect the image transfer granularity requirements of {@code commandBuffer}&#8217;s command pool&#8217;s queue family, as described in {@link VkQueueFamilyProperties}</li>
      * </ul>
      * 
      * <h5>Valid Usage (Implicit)</h5>
@@ -11587,7 +11402,7 @@ public class VK10 {
      * @param dstImageLayout the current layout of the destination image subresource.
      * @param pRegions       a pointer to an array of {@link VkImageCopy} structures specifying the regions to copy.
      */
-    public static void vkCmdCopyImage(VkCommandBuffer commandBuffer, @NativeType("VkImage") long srcImage, @NativeType("VkImageLayout") int srcImageLayout, @NativeType("VkImage") long dstImage, @NativeType("VkImageLayout") int dstImageLayout, @NativeType("VkImageCopy const *") VkImageCopy.Buffer pRegions) {
+    public static void vkCmdCopyImage(VkCommandBuffer commandBuffer, @NativeType("VkImage") long srcImage, @NativeType("VkImageLayout") int srcImageLayout, @NativeType("VkImage") long dstImage, @NativeType("VkImageLayout") int dstImageLayout, @NativeType("const VkImageCopy *") VkImageCopy.Buffer pRegions) {
         nvkCmdCopyImage(commandBuffer, srcImage, srcImageLayout, dstImage, dstImageLayout, pRegions.remaining(), pRegions.address());
     }
 
@@ -11610,7 +11425,7 @@ public class VK10 {
      * 
      * <p>To copy regions of a source image into a destination image, potentially performing format conversion, arbitrary scaling, and filtering, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * void vkCmdBlitImage(
      *     VkCommandBuffer                             commandBuffer,
      *     VkImage                                     srcImage,
@@ -11619,7 +11434,7 @@ public class VK10 {
      *     VkImageLayout                               dstImageLayout,
      *     uint32_t                                    regionCount,
      *     const VkImageBlit*                          pRegions,
-     *     VkFilter                                    filter);</code></pre>
+     *     VkFilter                                    filter);</pre></code>
      * 
      * <h5>Description</h5>
      * 
@@ -11697,13 +11512,13 @@ public class VK10 {
      * <li>The source region specified by each element of {@code pRegions} <b>must</b> be a region that is contained within {@code srcImage}</li>
      * <li>The destination region specified by each element of {@code pRegions} <b>must</b> be a region that is contained within {@code dstImage}</li>
      * <li>The union of all destination regions, specified by the elements of {@code pRegions}, <b>must</b> not overlap in memory with any texel that <b>may</b> be sampled during the blit operation</li>
-     * <li>{@code srcImage} <b>must</b> use a format that supports {@link #VK_FORMAT_FEATURE_BLIT_SRC_BIT FORMAT_FEATURE_BLIT_SRC_BIT}, which is indicated by {@link VkFormatProperties}{@code ::linearTilingFeatures} or {@link VkFormatProperties}{@code ::optimalTilingFeatures} returned by {@link #vkGetPhysicalDeviceFormatProperties GetPhysicalDeviceFormatProperties} for linearly or optimally tiled images, respectively</li>
+     * <li>{@code srcImage} <b>must</b> use a format that supports {@link #VK_FORMAT_FEATURE_BLIT_SRC_BIT FORMAT_FEATURE_BLIT_SRC_BIT}, which is indicated by {@link VkFormatProperties}{@code ::linearTilingFeatures} (for linearly tiled images) or {@link VkFormatProperties}{@code ::optimalTilingFeatures} (for optimally tiled images) - as returned by {@link #vkGetPhysicalDeviceFormatProperties GetPhysicalDeviceFormatProperties}</li>
      * <li>{@code srcImage} <b>must</b> not use a format listed in <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-formats-requiring-sampler-ycbcr-conversion">the “Formats requiring sampler Y'C<sub>B</sub>C<sub>R</sub> conversion for {@link #VK_IMAGE_ASPECT_COLOR_BIT IMAGE_ASPECT_COLOR_BIT} image views” table</a></li>
      * <li>{@code srcImage} <b>must</b> have been created with {@link #VK_IMAGE_USAGE_TRANSFER_SRC_BIT IMAGE_USAGE_TRANSFER_SRC_BIT} usage flag</li>
      * <li>If {@code srcImage} is non-sparse then it <b>must</b> be bound completely and contiguously to a single {@code VkDeviceMemory} object</li>
      * <li>{@code srcImageLayout} <b>must</b> specify the layout of the image subresources of {@code srcImage} specified in {@code pRegions} at the time this command is executed on a {@code VkDevice}</li>
      * <li>{@code srcImageLayout} <b>must</b> be {@link KHRSharedPresentableImage#VK_IMAGE_LAYOUT_SHARED_PRESENT_KHR IMAGE_LAYOUT_SHARED_PRESENT_KHR}, {@link #VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL} or {@link #VK_IMAGE_LAYOUT_GENERAL IMAGE_LAYOUT_GENERAL}</li>
-     * <li>{@code dstImage} <b>must</b> use a format that supports {@link #VK_FORMAT_FEATURE_BLIT_DST_BIT FORMAT_FEATURE_BLIT_DST_BIT}, which is indicated by {@link VkFormatProperties}{@code ::linearTilingFeatures} or {@link VkFormatProperties}{@code ::optimalTilingFeatures} returned by {@link #vkGetPhysicalDeviceFormatProperties GetPhysicalDeviceFormatProperties} for linearly or optimally tiled images, respectively</li>
+     * <li>{@code dstImage} <b>must</b> use a format that supports {@link #VK_FORMAT_FEATURE_BLIT_DST_BIT FORMAT_FEATURE_BLIT_DST_BIT}, which is indicated by {@link VkFormatProperties}{@code ::linearTilingFeatures} (for linearly tiled images) or {@link VkFormatProperties}{@code ::optimalTilingFeatures} (for optimally tiled images) - as returned by {@link #vkGetPhysicalDeviceFormatProperties GetPhysicalDeviceFormatProperties}</li>
      * <li>{@code dstImage} <b>must</b> not use a format listed in <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-formats-requiring-sampler-ycbcr-conversion">the “Formats requiring sampler Y'C<sub>B</sub>C<sub>R</sub> conversion for {@link #VK_IMAGE_ASPECT_COLOR_BIT IMAGE_ASPECT_COLOR_BIT} image views” table</a></li>
      * <li>{@code dstImage} <b>must</b> have been created with {@link #VK_IMAGE_USAGE_TRANSFER_DST_BIT IMAGE_USAGE_TRANSFER_DST_BIT} usage flag</li>
      * <li>If {@code dstImage} is non-sparse then it <b>must</b> be bound completely and contiguously to a single {@code VkDeviceMemory} object</li>
@@ -11716,12 +11531,9 @@ public class VK10 {
      * <li>If {@code srcImage} was created with a depth/stencil format, {@code filter} <b>must</b> be {@link #VK_FILTER_NEAREST FILTER_NEAREST}</li>
      * <li>{@code srcImage} <b>must</b> have been created with a {@code samples} value of {@link #VK_SAMPLE_COUNT_1_BIT SAMPLE_COUNT_1_BIT}</li>
      * <li>{@code dstImage} <b>must</b> have been created with a {@code samples} value of {@link #VK_SAMPLE_COUNT_1_BIT SAMPLE_COUNT_1_BIT}</li>
-     * <li>If {@code filter} is {@link #VK_FILTER_LINEAR FILTER_LINEAR}, {@code srcImage} <b>must</b> be of a format which supports linear filtering, as specified by the {@link #VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT} flag in {@link VkFormatProperties}{@code ::linearTilingFeatures} or {@link VkFormatProperties}{@code ::optimalTilingFeatures} returned by {@link #vkGetPhysicalDeviceFormatProperties GetPhysicalDeviceFormatProperties} for linearly or optimally tiled images, respectively</li>
-     * <li>If {@code filter} is {@link IMGFilterCubic#VK_FILTER_CUBIC_IMG FILTER_CUBIC_IMG}, {@code srcImage} <b>must</b> be of a format which supports cubic filtering, as specified by the {@link IMGFilterCubic#VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_IMG FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_IMG} flag in {@link VkFormatProperties}{@code ::linearTilingFeatures} or {@link VkFormatProperties}{@code ::optimalTilingFeatures} returned by {@link #vkGetPhysicalDeviceFormatProperties GetPhysicalDeviceFormatProperties} for linearly or optimally tiled images, respectively</li>
-     * <li>If {@code filter} is {@link IMGFilterCubic#VK_FILTER_CUBIC_IMG FILTER_CUBIC_IMG}, {@code srcImage} <b>must</b> have a {@code VkImageType} of {@link #VK_IMAGE_TYPE_2D IMAGE_TYPE_2D}</li>
-     * <li>If {@code commandBuffer} is an unprotected command buffer, then {@code srcImage} <b>must</b> not be a protected image</li>
-     * <li>If {@code commandBuffer} is an unprotected command buffer, then {@code dstImage} <b>must</b> not be a protected image</li>
-     * <li>If {@code commandBuffer} is a protected command buffer, then {@code dstImage} <b>must</b> not be an unprotected image</li>
+     * <li>If {@code filter} is {@link #VK_FILTER_LINEAR FILTER_LINEAR}, {@code srcImage} <b>must</b> be of a format which supports linear filtering, as specified by the {@link #VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT} flag in {@link VkFormatProperties}{@code ::linearTilingFeatures} (for a linear image) or {@link VkFormatProperties}{@code ::optimalTilingFeatures}(for an optimally tiled image) returned by {@link #vkGetPhysicalDeviceFormatProperties GetPhysicalDeviceFormatProperties}</li>
+     * <li>If {@code filter} is {@link IMGFilterCubic#VK_FILTER_CUBIC_IMG FILTER_CUBIC_IMG}, {@code srcImage} <b>must</b> be of a format which supports cubic filtering, as specified by the {@link IMGFilterCubic#VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_IMG FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_IMG} flag in {@link VkFormatProperties}{@code ::linearTilingFeatures} (for a linear image) or {@link VkFormatProperties}{@code ::optimalTilingFeatures}(for an optimally tiled image) returned by {@link #vkGetPhysicalDeviceFormatProperties GetPhysicalDeviceFormatProperties}</li>
+     * <li>If {@code filter} is {@link IMGFilterCubic#VK_FILTER_CUBIC_IMG FILTER_CUBIC_IMG}, {@code srcImage} <b>must</b> have a {@code VkImageType} of {@link #VK_IMAGE_TYPE_3D IMAGE_TYPE_3D}</li>
      * <li>The {@code srcSubresource.mipLevel} member of each element of {@code pRegions} <b>must</b> be less than the {@code mipLevels} specified in {@link VkImageCreateInfo} when {@code srcImage} was created</li>
      * <li>The {@code dstSubresource.mipLevel} member of each element of {@code pRegions} <b>must</b> be less than the {@code mipLevels} specified in {@link VkImageCreateInfo} when {@code dstImage} was created</li>
      * <li>The <code>srcSubresource.baseArrayLayer srcSubresource.layerCount</code> of each element of {@code pRegions} <b>must</b> be less than or equal to the {@code arrayLayers} specified in {@link VkImageCreateInfo} when {@code srcImage} was created</li>
@@ -11771,7 +11583,7 @@ public class VK10 {
      * @param pRegions       a pointer to an array of {@link VkImageBlit} structures specifying the regions to blit.
      * @param filter         a {@code VkFilter} specifying the filter to apply if the blits require scaling.
      */
-    public static void vkCmdBlitImage(VkCommandBuffer commandBuffer, @NativeType("VkImage") long srcImage, @NativeType("VkImageLayout") int srcImageLayout, @NativeType("VkImage") long dstImage, @NativeType("VkImageLayout") int dstImageLayout, @NativeType("VkImageBlit const *") VkImageBlit.Buffer pRegions, @NativeType("VkFilter") int filter) {
+    public static void vkCmdBlitImage(VkCommandBuffer commandBuffer, @NativeType("VkImage") long srcImage, @NativeType("VkImageLayout") int srcImageLayout, @NativeType("VkImage") long dstImage, @NativeType("VkImageLayout") int dstImageLayout, @NativeType("const VkImageBlit *") VkImageBlit.Buffer pRegions, @NativeType("VkFilter") int filter) {
         nvkCmdBlitImage(commandBuffer, srcImage, srcImageLayout, dstImage, dstImageLayout, pRegions.remaining(), pRegions.address(), filter);
     }
 
@@ -11794,41 +11606,37 @@ public class VK10 {
      * 
      * <p>To copy data from a buffer object to an image object, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * void vkCmdCopyBufferToImage(
      *     VkCommandBuffer                             commandBuffer,
      *     VkBuffer                                    srcBuffer,
      *     VkImage                                     dstImage,
      *     VkImageLayout                               dstImageLayout,
      *     uint32_t                                    regionCount,
-     *     const VkBufferImageCopy*                    pRegions);</code></pre>
+     *     const VkBufferImageCopy*                    pRegions);</pre></code>
      * 
      * <h5>Description</h5>
      * 
      * <p>Each region in {@code pRegions} is copied from the specified region of the source buffer to the specified region of the destination image.</p>
      * 
-     * <p>If the format of {@code dstImage} is a <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-formats-requiring-sampler-ycbcr-conversion">multi-planar image format</a>), regions of each plane to be a target of a copy <b>must</b> be specified separately using the {@code pRegions} member of the {@link VkBufferImageCopy} structure. In this case, the {@code aspectMask} of {@code imageSubresource} <b>must</b> be {@link VK11#VK_IMAGE_ASPECT_PLANE_0_BIT IMAGE_ASPECT_PLANE_0_BIT}, {@link VK11#VK_IMAGE_ASPECT_PLANE_1_BIT IMAGE_ASPECT_PLANE_1_BIT}, or {@link VK11#VK_IMAGE_ASPECT_PLANE_2_BIT IMAGE_ASPECT_PLANE_2_BIT}. For the purposes of {@link #vkCmdCopyBufferToImage CmdCopyBufferToImage}, each plane of a multi-planar image is treated as having the format listed in <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-formats-compatible-planes">the “Compatible formats of planes of multi-planar formats” section</a> for the plane identified by the {@code aspectMask} of the corresponding subresource. This applies both to {@code VkFormat} and to coordinates used in the copy, which correspond to texels in the <em>plane</em> rather than how these texels map to coordinates in the image as a whole.</p>
+     * <p>If the format of {@code dstImage} is a <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-formats-requiring-sampler-ycbcr-conversion">multi-planar image format</a>), regions of each plane to be a target of a copy <b>must</b> be specified separately using the {@code pRegions} member of the {@link VkBufferImageCopy} structure. In this case, the {@code aspectMask} of {@code imageSubresource} <b>must</b> be {@link KHRSamplerYcbcrConversion#VK_IMAGE_ASPECT_PLANE_0_BIT_KHR IMAGE_ASPECT_PLANE_0_BIT_KHR}, {@link KHRSamplerYcbcrConversion#VK_IMAGE_ASPECT_PLANE_1_BIT_KHR IMAGE_ASPECT_PLANE_1_BIT_KHR}, or {@link KHRSamplerYcbcrConversion#VK_IMAGE_ASPECT_PLANE_2_BIT_KHR IMAGE_ASPECT_PLANE_2_BIT_KHR}. For the purposes of {@link #vkCmdCopyBufferToImage CmdCopyBufferToImage}, each plane of a multi-planar image is treated as having the format listed in <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-formats-compatible-planes">the “Compatible formats of planes of multi-planar formats” section</a> for the plane identified by the {@code aspectMask} of the corresponding subresource. This applies both to {@code VkFormat} and to coordinates used in the copy, which correspond to texels in the <em>plane</em> rather than how these texels map to coordinates in the image as a whole.</p>
      * 
      * <h5>Valid Usage</h5>
      * 
      * <ul>
-     * <li>{@code srcBuffer} <b>must</b> be large enough to contain all buffer locations that are accessed according to <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#copies-buffers-images-addressing">Buffer and Image Addressing</a>, for each element of {@code pRegions}</li>
+     * <li>The buffer region specified by each element of {@code pRegions} <b>must</b> be a region that is contained within {@code srcBuffer}</li>
      * <li>The image region specified by each element of {@code pRegions} <b>must</b> be a region that is contained within {@code dstImage} if the {@code dstImage}&#8217;s {@code VkFormat} is not a <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-formats-requiring-sampler-ycbcr-conversion">multi-planar format</a>, and <b>must</b> be a region that is contained within the plane being copied to if the {@code dstImage}&#8217;s {@code VkFormat} is a multi-planar format</li>
      * <li>The union of all source regions, and the union of all destination regions, specified by the elements of {@code pRegions}, <b>must</b> not overlap in memory</li>
      * <li>{@code srcBuffer} <b>must</b> have been created with {@link #VK_BUFFER_USAGE_TRANSFER_SRC_BIT BUFFER_USAGE_TRANSFER_SRC_BIT} usage flag</li>
-     * <li>{@code dstImage} <b>must</b> use a format that supports {@link VK11#VK_FORMAT_FEATURE_TRANSFER_DST_BIT FORMAT_FEATURE_TRANSFER_DST_BIT}, which is indicated by {@link VkFormatProperties}{@code ::linearTilingFeatures} or {@link VkFormatProperties}{@code ::optimalTilingFeatures} returned by {@link #vkGetPhysicalDeviceFormatProperties GetPhysicalDeviceFormatProperties} for linearly or optimally tiled images, respectively</li>
+     * <li>{@code dstImage} <b>must</b> use a format that supports {@link KHRMaintenance1#VK_FORMAT_FEATURE_TRANSFER_DST_BIT_KHR FORMAT_FEATURE_TRANSFER_DST_BIT_KHR}, which is indicated by {@link VkFormatProperties}{@code ::linearTilingFeatures} (for linearly tiled images) or {@link VkFormatProperties}{@code ::optimalTilingFeatures} (for optimally tiled images) - as returned by {@link #vkGetPhysicalDeviceFormatProperties GetPhysicalDeviceFormatProperties}</li>
      * <li>If {@code srcBuffer} is non-sparse then it <b>must</b> be bound completely and contiguously to a single {@code VkDeviceMemory} object</li>
      * <li>{@code dstImage} <b>must</b> have been created with {@link #VK_IMAGE_USAGE_TRANSFER_DST_BIT IMAGE_USAGE_TRANSFER_DST_BIT} usage flag</li>
      * <li>If {@code dstImage} is non-sparse then it <b>must</b> be bound completely and contiguously to a single {@code VkDeviceMemory} object</li>
      * <li>{@code dstImage} <b>must</b> have a sample count equal to {@link #VK_SAMPLE_COUNT_1_BIT SAMPLE_COUNT_1_BIT}</li>
      * <li>{@code dstImageLayout} <b>must</b> specify the layout of the image subresources of {@code dstImage} specified in {@code pRegions} at the time this command is executed on a {@code VkDevice}</li>
      * <li>{@code dstImageLayout} <b>must</b> be {@link #VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL}, {@link #VK_IMAGE_LAYOUT_GENERAL IMAGE_LAYOUT_GENERAL}, or {@link KHRSharedPresentableImage#VK_IMAGE_LAYOUT_SHARED_PRESENT_KHR IMAGE_LAYOUT_SHARED_PRESENT_KHR}</li>
-     * <li>If {@code commandBuffer} is an unprotected command buffer, then {@code srcBuffer} <b>must</b> not be a protected buffer</li>
-     * <li>If {@code commandBuffer} is an unprotected command buffer, then {@code dstImage} <b>must</b> not be a protected image</li>
-     * <li>If {@code commandBuffer} is a protected command buffer, then {@code dstImage} <b>must</b> not be an unprotected image</li>
      * <li>The {@code imageSubresource.mipLevel} member of each element of {@code pRegions} <b>must</b> be less than the {@code mipLevels} specified in {@link VkImageCreateInfo} when {@code dstImage} was created</li>
      * <li>The <code>imageSubresource.baseArrayLayer imageSubresource.layerCount</code> of each element of {@code pRegions} <b>must</b> be less than or equal to the {@code arrayLayers} specified in {@link VkImageCreateInfo} when {@code dstImage} was created</li>
-     * <li>The {@code imageOffset} and {@code imageExtent} members of each element of {@code pRegions} <b>must</b> respect the image transfer granularity requirements of {@code commandBuffer}&#8217;s command pool&#8217;s queue family, as described in {@link VkQueueFamilyProperties}</li>
      * </ul>
      * 
      * <h5>Valid Usage (Implicit)</h5>
@@ -11870,7 +11678,7 @@ public class VK10 {
      * @param dstImageLayout the layout of the destination image subresources for the copy.
      * @param pRegions       a pointer to an array of {@link VkBufferImageCopy} structures specifying the regions to copy.
      */
-    public static void vkCmdCopyBufferToImage(VkCommandBuffer commandBuffer, @NativeType("VkBuffer") long srcBuffer, @NativeType("VkImage") long dstImage, @NativeType("VkImageLayout") int dstImageLayout, @NativeType("VkBufferImageCopy const *") VkBufferImageCopy.Buffer pRegions) {
+    public static void vkCmdCopyBufferToImage(VkCommandBuffer commandBuffer, @NativeType("VkBuffer") long srcBuffer, @NativeType("VkImage") long dstImage, @NativeType("VkImageLayout") int dstImageLayout, @NativeType("const VkBufferImageCopy *") VkBufferImageCopy.Buffer pRegions) {
         nvkCmdCopyBufferToImage(commandBuffer, srcBuffer, dstImage, dstImageLayout, pRegions.remaining(), pRegions.address());
     }
 
@@ -11893,28 +11701,28 @@ public class VK10 {
      * 
      * <p>To copy data from an image object to a buffer object, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * void vkCmdCopyImageToBuffer(
      *     VkCommandBuffer                             commandBuffer,
      *     VkImage                                     srcImage,
      *     VkImageLayout                               srcImageLayout,
      *     VkBuffer                                    dstBuffer,
      *     uint32_t                                    regionCount,
-     *     const VkBufferImageCopy*                    pRegions);</code></pre>
+     *     const VkBufferImageCopy*                    pRegions);</pre></code>
      * 
      * <h5>Description</h5>
      * 
      * <p>Each region in {@code pRegions} is copied from the specified region of the source image to the specified region of the destination buffer.</p>
      * 
-     * <p>If the {@code VkFormat} of {@code srcImage} is a <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-formats-requiring-sampler-ycbcr-conversion">multi-planar image format</a>, regions of each plane to be a source of a copy <b>must</b> be specified separately using the {@code pRegions} member of the {@link VkBufferImageCopy} structure. In this case, the {@code aspectMask} of {@code imageSubresource} <b>must</b> be {@link VK11#VK_IMAGE_ASPECT_PLANE_0_BIT IMAGE_ASPECT_PLANE_0_BIT}, {@link VK11#VK_IMAGE_ASPECT_PLANE_1_BIT IMAGE_ASPECT_PLANE_1_BIT}, or {@link VK11#VK_IMAGE_ASPECT_PLANE_2_BIT IMAGE_ASPECT_PLANE_2_BIT}. For the purposes of {@link #vkCmdCopyBufferToImage CmdCopyBufferToImage}, each plane of a multi-planar image is treated as having the format listed in <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-formats-compatible-planes">the “Compatible formats of planes of multi-planar formats” section</a> for the plane identified by the {@code aspectMask} of the corresponding subresource. This applies both to {@code VkFormat} and to coordinates used in the copy, which correspond to texels in the <em>plane</em> rather than how these texels map to coordinates in the image as a whole.</p>
+     * <p>If the {@code VkFormat} of {@code srcImage} is a <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-formats-requiring-sampler-ycbcr-conversion">multi-planar image format</a>, regions of each plane to be a source of a copy <b>must</b> be specified separately using the {@code pRegions} member of the {@link VkBufferImageCopy} structure. In this case, the {@code aspectMask} of {@code imageSubresource} <b>must</b> be {@link KHRSamplerYcbcrConversion#VK_IMAGE_ASPECT_PLANE_0_BIT_KHR IMAGE_ASPECT_PLANE_0_BIT_KHR}, {@link KHRSamplerYcbcrConversion#VK_IMAGE_ASPECT_PLANE_1_BIT_KHR IMAGE_ASPECT_PLANE_1_BIT_KHR}, or {@link KHRSamplerYcbcrConversion#VK_IMAGE_ASPECT_PLANE_2_BIT_KHR IMAGE_ASPECT_PLANE_2_BIT_KHR}. For the purposes of {@link #vkCmdCopyBufferToImage CmdCopyBufferToImage}, each plane of a multi-planar image is treated as having the format listed in <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-formats-compatible-planes">the “Compatible formats of planes of multi-planar formats” section</a> for the plane identified by the {@code aspectMask} of the corresponding subresource. This applies both to {@code VkFormat} and to coordinates used in the copy, which correspond to texels in the <em>plane</em> rather than how these texels map to coordinates in the image as a whole.</p>
      * 
      * <h5>Valid Usage</h5>
      * 
      * <ul>
      * <li>The image region specified by each element of {@code pRegions} <b>must</b> be a region that is contained within {@code srcImage} if the {@code srcImage}&#8217;s {@code VkFormat} is not a <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-formats-requiring-sampler-ycbcr-conversion">multi-planar format</a>, and <b>must</b> be a region that is contained within the plane being copied if the {@code srcImage}&#8217;s {@code VkFormat} is a multi-planar format</li>
-     * <li>{@code dstBuffer} <b>must</b> be large enough to contain all buffer locations that are accessed according to <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#copies-buffers-images-addressing">Buffer and Image Addressing</a>, for each element of {@code pRegions}</li>
+     * <li>The buffer region specified by each element of {@code pRegions} <b>must</b> be a region that is contained within {@code dstBuffer}</li>
      * <li>The union of all source regions, and the union of all destination regions, specified by the elements of {@code pRegions}, <b>must</b> not overlap in memory</li>
-     * <li>{@code srcImage} <b>must</b> use a format that supports {@link VK11#VK_FORMAT_FEATURE_TRANSFER_SRC_BIT FORMAT_FEATURE_TRANSFER_SRC_BIT}, which is indicated by {@link VkFormatProperties}{@code ::linearTilingFeatures} or {@link VkFormatProperties}{@code ::optimalTilingFeatures} returned by {@link #vkGetPhysicalDeviceFormatProperties GetPhysicalDeviceFormatProperties} for linearly or optimally tiled images, respectively</li>
+     * <li>{@code srcImage} <b>must</b> use a format that supports {@link KHRMaintenance1#VK_FORMAT_FEATURE_TRANSFER_SRC_BIT_KHR FORMAT_FEATURE_TRANSFER_SRC_BIT_KHR}, which is indicated by {@link VkFormatProperties}{@code ::linearTilingFeatures} (for linearly tiled images) or {@link VkFormatProperties}{@code ::optimalTilingFeatures} (for optimally tiled images) - as returned by {@link #vkGetPhysicalDeviceFormatProperties GetPhysicalDeviceFormatProperties}</li>
      * <li>{@code srcImage} <b>must</b> have been created with {@link #VK_IMAGE_USAGE_TRANSFER_SRC_BIT IMAGE_USAGE_TRANSFER_SRC_BIT} usage flag</li>
      * <li>If {@code srcImage} is non-sparse then it <b>must</b> be bound completely and contiguously to a single {@code VkDeviceMemory} object</li>
      * <li>{@code srcImage} <b>must</b> have a sample count equal to {@link #VK_SAMPLE_COUNT_1_BIT SAMPLE_COUNT_1_BIT}</li>
@@ -11922,12 +11730,8 @@ public class VK10 {
      * <li>{@code srcImageLayout} <b>must</b> be {@link KHRSharedPresentableImage#VK_IMAGE_LAYOUT_SHARED_PRESENT_KHR IMAGE_LAYOUT_SHARED_PRESENT_KHR}, {@link #VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL} or {@link #VK_IMAGE_LAYOUT_GENERAL IMAGE_LAYOUT_GENERAL}</li>
      * <li>{@code dstBuffer} <b>must</b> have been created with {@link #VK_BUFFER_USAGE_TRANSFER_DST_BIT BUFFER_USAGE_TRANSFER_DST_BIT} usage flag</li>
      * <li>If {@code dstBuffer} is non-sparse then it <b>must</b> be bound completely and contiguously to a single {@code VkDeviceMemory} object</li>
-     * <li>If {@code commandBuffer} is an unprotected command buffer, then {@code srcImage} <b>must</b> not be a protected image</li>
-     * <li>If {@code commandBuffer} is an unprotected command buffer, then {@code dstBuffer} <b>must</b> not be a protected buffer</li>
-     * <li>If {@code commandBuffer} is a protected command buffer, then {@code dstBuffer} <b>must</b> not be an unprotected buffer</li>
      * <li>The {@code imageSubresource.mipLevel} member of each element of {@code pRegions} <b>must</b> be less than the {@code mipLevels} specified in {@link VkImageCreateInfo} when {@code srcImage} was created</li>
      * <li>The <code>imageSubresource.baseArrayLayer imageSubresource.layerCount</code> of each element of {@code pRegions} <b>must</b> be less than or equal to the {@code arrayLayers} specified in {@link VkImageCreateInfo} when {@code srcImage} was created</li>
-     * <li>The {@code imageOffset} and {@code imageExtent} members of each element of {@code pRegions} <b>must</b> respect the image transfer granularity requirements of {@code commandBuffer}&#8217;s command pool&#8217;s queue family, as described in {@link VkQueueFamilyProperties}</li>
      * </ul>
      * 
      * <h5>Valid Usage (Implicit)</h5>
@@ -11969,7 +11773,7 @@ public class VK10 {
      * @param dstBuffer      the destination buffer.
      * @param pRegions       a pointer to an array of {@link VkBufferImageCopy} structures specifying the regions to copy.
      */
-    public static void vkCmdCopyImageToBuffer(VkCommandBuffer commandBuffer, @NativeType("VkImage") long srcImage, @NativeType("VkImageLayout") int srcImageLayout, @NativeType("VkBuffer") long dstBuffer, @NativeType("VkBufferImageCopy const *") VkBufferImageCopy.Buffer pRegions) {
+    public static void vkCmdCopyImageToBuffer(VkCommandBuffer commandBuffer, @NativeType("VkImage") long srcImage, @NativeType("VkImageLayout") int srcImageLayout, @NativeType("VkBuffer") long dstBuffer, @NativeType("const VkBufferImageCopy *") VkBufferImageCopy.Buffer pRegions) {
         nvkCmdCopyImageToBuffer(commandBuffer, srcImage, srcImageLayout, dstBuffer, pRegions.remaining(), pRegions.address());
     }
 
@@ -11992,13 +11796,13 @@ public class VK10 {
      * 
      * <p>To update buffer data inline in a command buffer, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * void vkCmdUpdateBuffer(
      *     VkCommandBuffer                             commandBuffer,
      *     VkBuffer                                    dstBuffer,
      *     VkDeviceSize                                dstOffset,
      *     VkDeviceSize                                dataSize,
-     *     const void*                                 pData);</code></pre>
+     *     const void*                                 pData);</pre></code>
      * 
      * <h5>Description</h5>
      * 
@@ -12027,8 +11831,6 @@ public class VK10 {
      * <li>{@code dstOffset} <b>must</b> be a multiple of 4</li>
      * <li>{@code dataSize} <b>must</b> be less than or equal to 65536</li>
      * <li>{@code dataSize} <b>must</b> be a multiple of 4</li>
-     * <li>If {@code commandBuffer} is an unprotected command buffer, then {@code dstBuffer} <b>must</b> not be a protected buffer</li>
-     * <li>If {@code commandBuffer} is a protected command buffer, then {@code dstBuffer} <b>must</b> not be an unprotected buffer</li>
      * </ul>
      * 
      * <h5>Valid Usage (Implicit)</h5>
@@ -12063,7 +11865,7 @@ public class VK10 {
      * @param dstOffset     the byte offset into the buffer to start updating, and <b>must</b> be a multiple of 4.
      * @param pData         a pointer to the source data for the buffer update, and <b>must</b> be at least {@code dataSize} bytes in size.
      */
-    public static void vkCmdUpdateBuffer(VkCommandBuffer commandBuffer, @NativeType("VkBuffer") long dstBuffer, @NativeType("VkDeviceSize") long dstOffset, @NativeType("void const *") ByteBuffer pData) {
+    public static void vkCmdUpdateBuffer(VkCommandBuffer commandBuffer, @NativeType("VkBuffer") long dstBuffer, @NativeType("VkDeviceSize") long dstOffset, @NativeType("const void *") ByteBuffer pData) {
         nvkCmdUpdateBuffer(commandBuffer, dstBuffer, dstOffset, pData.remaining(), memAddress(pData));
     }
 
@@ -12074,13 +11876,13 @@ public class VK10 {
      * 
      * <p>To update buffer data inline in a command buffer, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * void vkCmdUpdateBuffer(
      *     VkCommandBuffer                             commandBuffer,
      *     VkBuffer                                    dstBuffer,
      *     VkDeviceSize                                dstOffset,
      *     VkDeviceSize                                dataSize,
-     *     const void*                                 pData);</code></pre>
+     *     const void*                                 pData);</pre></code>
      * 
      * <h5>Description</h5>
      * 
@@ -12109,8 +11911,6 @@ public class VK10 {
      * <li>{@code dstOffset} <b>must</b> be a multiple of 4</li>
      * <li>{@code dataSize} <b>must</b> be less than or equal to 65536</li>
      * <li>{@code dataSize} <b>must</b> be a multiple of 4</li>
-     * <li>If {@code commandBuffer} is an unprotected command buffer, then {@code dstBuffer} <b>must</b> not be a protected buffer</li>
-     * <li>If {@code commandBuffer} is a protected command buffer, then {@code dstBuffer} <b>must</b> not be an unprotected buffer</li>
      * </ul>
      * 
      * <h5>Valid Usage (Implicit)</h5>
@@ -12145,7 +11945,7 @@ public class VK10 {
      * @param dstOffset     the byte offset into the buffer to start updating, and <b>must</b> be a multiple of 4.
      * @param pData         a pointer to the source data for the buffer update, and <b>must</b> be at least {@code dataSize} bytes in size.
      */
-    public static void vkCmdUpdateBuffer(VkCommandBuffer commandBuffer, @NativeType("VkBuffer") long dstBuffer, @NativeType("VkDeviceSize") long dstOffset, @NativeType("void const *") ShortBuffer pData) {
+    public static void vkCmdUpdateBuffer(VkCommandBuffer commandBuffer, @NativeType("VkBuffer") long dstBuffer, @NativeType("VkDeviceSize") long dstOffset, @NativeType("const void *") ShortBuffer pData) {
         nvkCmdUpdateBuffer(commandBuffer, dstBuffer, dstOffset, pData.remaining() << 1, memAddress(pData));
     }
 
@@ -12156,13 +11956,13 @@ public class VK10 {
      * 
      * <p>To update buffer data inline in a command buffer, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * void vkCmdUpdateBuffer(
      *     VkCommandBuffer                             commandBuffer,
      *     VkBuffer                                    dstBuffer,
      *     VkDeviceSize                                dstOffset,
      *     VkDeviceSize                                dataSize,
-     *     const void*                                 pData);</code></pre>
+     *     const void*                                 pData);</pre></code>
      * 
      * <h5>Description</h5>
      * 
@@ -12191,8 +11991,6 @@ public class VK10 {
      * <li>{@code dstOffset} <b>must</b> be a multiple of 4</li>
      * <li>{@code dataSize} <b>must</b> be less than or equal to 65536</li>
      * <li>{@code dataSize} <b>must</b> be a multiple of 4</li>
-     * <li>If {@code commandBuffer} is an unprotected command buffer, then {@code dstBuffer} <b>must</b> not be a protected buffer</li>
-     * <li>If {@code commandBuffer} is a protected command buffer, then {@code dstBuffer} <b>must</b> not be an unprotected buffer</li>
      * </ul>
      * 
      * <h5>Valid Usage (Implicit)</h5>
@@ -12227,7 +12025,7 @@ public class VK10 {
      * @param dstOffset     the byte offset into the buffer to start updating, and <b>must</b> be a multiple of 4.
      * @param pData         a pointer to the source data for the buffer update, and <b>must</b> be at least {@code dataSize} bytes in size.
      */
-    public static void vkCmdUpdateBuffer(VkCommandBuffer commandBuffer, @NativeType("VkBuffer") long dstBuffer, @NativeType("VkDeviceSize") long dstOffset, @NativeType("void const *") IntBuffer pData) {
+    public static void vkCmdUpdateBuffer(VkCommandBuffer commandBuffer, @NativeType("VkBuffer") long dstBuffer, @NativeType("VkDeviceSize") long dstOffset, @NativeType("const void *") IntBuffer pData) {
         nvkCmdUpdateBuffer(commandBuffer, dstBuffer, dstOffset, pData.remaining() << 2, memAddress(pData));
     }
 
@@ -12238,13 +12036,13 @@ public class VK10 {
      * 
      * <p>To update buffer data inline in a command buffer, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * void vkCmdUpdateBuffer(
      *     VkCommandBuffer                             commandBuffer,
      *     VkBuffer                                    dstBuffer,
      *     VkDeviceSize                                dstOffset,
      *     VkDeviceSize                                dataSize,
-     *     const void*                                 pData);</code></pre>
+     *     const void*                                 pData);</pre></code>
      * 
      * <h5>Description</h5>
      * 
@@ -12273,8 +12071,6 @@ public class VK10 {
      * <li>{@code dstOffset} <b>must</b> be a multiple of 4</li>
      * <li>{@code dataSize} <b>must</b> be less than or equal to 65536</li>
      * <li>{@code dataSize} <b>must</b> be a multiple of 4</li>
-     * <li>If {@code commandBuffer} is an unprotected command buffer, then {@code dstBuffer} <b>must</b> not be a protected buffer</li>
-     * <li>If {@code commandBuffer} is a protected command buffer, then {@code dstBuffer} <b>must</b> not be an unprotected buffer</li>
      * </ul>
      * 
      * <h5>Valid Usage (Implicit)</h5>
@@ -12309,7 +12105,7 @@ public class VK10 {
      * @param dstOffset     the byte offset into the buffer to start updating, and <b>must</b> be a multiple of 4.
      * @param pData         a pointer to the source data for the buffer update, and <b>must</b> be at least {@code dataSize} bytes in size.
      */
-    public static void vkCmdUpdateBuffer(VkCommandBuffer commandBuffer, @NativeType("VkBuffer") long dstBuffer, @NativeType("VkDeviceSize") long dstOffset, @NativeType("void const *") LongBuffer pData) {
+    public static void vkCmdUpdateBuffer(VkCommandBuffer commandBuffer, @NativeType("VkBuffer") long dstBuffer, @NativeType("VkDeviceSize") long dstOffset, @NativeType("const void *") LongBuffer pData) {
         nvkCmdUpdateBuffer(commandBuffer, dstBuffer, dstOffset, pData.remaining() << 3, memAddress(pData));
     }
 
@@ -12320,13 +12116,13 @@ public class VK10 {
      * 
      * <p>To update buffer data inline in a command buffer, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * void vkCmdUpdateBuffer(
      *     VkCommandBuffer                             commandBuffer,
      *     VkBuffer                                    dstBuffer,
      *     VkDeviceSize                                dstOffset,
      *     VkDeviceSize                                dataSize,
-     *     const void*                                 pData);</code></pre>
+     *     const void*                                 pData);</pre></code>
      * 
      * <h5>Description</h5>
      * 
@@ -12355,8 +12151,6 @@ public class VK10 {
      * <li>{@code dstOffset} <b>must</b> be a multiple of 4</li>
      * <li>{@code dataSize} <b>must</b> be less than or equal to 65536</li>
      * <li>{@code dataSize} <b>must</b> be a multiple of 4</li>
-     * <li>If {@code commandBuffer} is an unprotected command buffer, then {@code dstBuffer} <b>must</b> not be a protected buffer</li>
-     * <li>If {@code commandBuffer} is a protected command buffer, then {@code dstBuffer} <b>must</b> not be an unprotected buffer</li>
      * </ul>
      * 
      * <h5>Valid Usage (Implicit)</h5>
@@ -12391,7 +12185,7 @@ public class VK10 {
      * @param dstOffset     the byte offset into the buffer to start updating, and <b>must</b> be a multiple of 4.
      * @param pData         a pointer to the source data for the buffer update, and <b>must</b> be at least {@code dataSize} bytes in size.
      */
-    public static void vkCmdUpdateBuffer(VkCommandBuffer commandBuffer, @NativeType("VkBuffer") long dstBuffer, @NativeType("VkDeviceSize") long dstOffset, @NativeType("void const *") FloatBuffer pData) {
+    public static void vkCmdUpdateBuffer(VkCommandBuffer commandBuffer, @NativeType("VkBuffer") long dstBuffer, @NativeType("VkDeviceSize") long dstOffset, @NativeType("const void *") FloatBuffer pData) {
         nvkCmdUpdateBuffer(commandBuffer, dstBuffer, dstOffset, pData.remaining() << 2, memAddress(pData));
     }
 
@@ -12402,13 +12196,13 @@ public class VK10 {
      * 
      * <p>To update buffer data inline in a command buffer, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * void vkCmdUpdateBuffer(
      *     VkCommandBuffer                             commandBuffer,
      *     VkBuffer                                    dstBuffer,
      *     VkDeviceSize                                dstOffset,
      *     VkDeviceSize                                dataSize,
-     *     const void*                                 pData);</code></pre>
+     *     const void*                                 pData);</pre></code>
      * 
      * <h5>Description</h5>
      * 
@@ -12437,8 +12231,6 @@ public class VK10 {
      * <li>{@code dstOffset} <b>must</b> be a multiple of 4</li>
      * <li>{@code dataSize} <b>must</b> be less than or equal to 65536</li>
      * <li>{@code dataSize} <b>must</b> be a multiple of 4</li>
-     * <li>If {@code commandBuffer} is an unprotected command buffer, then {@code dstBuffer} <b>must</b> not be a protected buffer</li>
-     * <li>If {@code commandBuffer} is a protected command buffer, then {@code dstBuffer} <b>must</b> not be an unprotected buffer</li>
      * </ul>
      * 
      * <h5>Valid Usage (Implicit)</h5>
@@ -12473,7 +12265,7 @@ public class VK10 {
      * @param dstOffset     the byte offset into the buffer to start updating, and <b>must</b> be a multiple of 4.
      * @param pData         a pointer to the source data for the buffer update, and <b>must</b> be at least {@code dataSize} bytes in size.
      */
-    public static void vkCmdUpdateBuffer(VkCommandBuffer commandBuffer, @NativeType("VkBuffer") long dstBuffer, @NativeType("VkDeviceSize") long dstOffset, @NativeType("void const *") DoubleBuffer pData) {
+    public static void vkCmdUpdateBuffer(VkCommandBuffer commandBuffer, @NativeType("VkBuffer") long dstBuffer, @NativeType("VkDeviceSize") long dstOffset, @NativeType("const void *") DoubleBuffer pData) {
         nvkCmdUpdateBuffer(commandBuffer, dstBuffer, dstOffset, pData.remaining() << 3, memAddress(pData));
     }
 
@@ -12486,13 +12278,13 @@ public class VK10 {
      * 
      * <p>To clear buffer data, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * void vkCmdFillBuffer(
      *     VkCommandBuffer                             commandBuffer,
      *     VkBuffer                                    dstBuffer,
      *     VkDeviceSize                                dstOffset,
      *     VkDeviceSize                                size,
-     *     uint32_t                                    data);</code></pre>
+     *     uint32_t                                    data);</pre></code>
      * 
      * <h5>Description</h5>
      * 
@@ -12508,8 +12300,6 @@ public class VK10 {
      * <li>If {@code size} is not equal to {@link #VK_WHOLE_SIZE WHOLE_SIZE}, {@code size} <b>must</b> be a multiple of 4</li>
      * <li>{@code dstBuffer} <b>must</b> have been created with {@link #VK_BUFFER_USAGE_TRANSFER_DST_BIT BUFFER_USAGE_TRANSFER_DST_BIT} usage flag</li>
      * <li>If {@code dstBuffer} is non-sparse then it <b>must</b> be bound completely and contiguously to a single {@code VkDeviceMemory} object</li>
-     * <li>If {@code commandBuffer} is an unprotected command buffer, then {@code dstBuffer} <b>must</b> not be a protected buffer</li>
-     * <li>If {@code commandBuffer} is a protected command buffer, then {@code dstBuffer} <b>must</b> not be an unprotected buffer</li>
      * </ul>
      * 
      * <h5>Valid Usage (Implicit)</h5>
@@ -12567,14 +12357,14 @@ public class VK10 {
      * 
      * <p>To clear one or more subranges of a color image, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * void vkCmdClearColorImage(
      *     VkCommandBuffer                             commandBuffer,
      *     VkImage                                     image,
      *     VkImageLayout                               imageLayout,
      *     const VkClearColorValue*                    pColor,
      *     uint32_t                                    rangeCount,
-     *     const VkImageSubresourceRange*              pRanges);</code></pre>
+     *     const VkImageSubresourceRange*              pRanges);</pre></code>
      * 
      * <h5>Description</h5>
      * 
@@ -12583,7 +12373,7 @@ public class VK10 {
      * <h5>Valid Usage</h5>
      * 
      * <ul>
-     * <li>{@code image} <b>must</b> use a format that supports {@link VK11#VK_FORMAT_FEATURE_TRANSFER_DST_BIT FORMAT_FEATURE_TRANSFER_DST_BIT}, which is indicated by {@link VkFormatProperties}{@code ::linearTilingFeatures} or {@link VkFormatProperties}{@code ::optimalTilingFeatures} returned by {@link #vkGetPhysicalDeviceFormatProperties GetPhysicalDeviceFormatProperties} for linearly or optimally tiled images, respectively</li>
+     * <li>{@code image} <b>must</b> use a format that supports {@link KHRMaintenance1#VK_FORMAT_FEATURE_TRANSFER_DST_BIT_KHR FORMAT_FEATURE_TRANSFER_DST_BIT_KHR}, which is indicated by {@link VkFormatProperties}{@code ::linearTilingFeatures} (for linearly tiled images) or {@link VkFormatProperties}{@code ::optimalTilingFeatures} (for optimally tiled images) - as returned by {@link #vkGetPhysicalDeviceFormatProperties GetPhysicalDeviceFormatProperties}</li>
      * <li>{@code image} <b>must</b> have been created with {@link #VK_IMAGE_USAGE_TRANSFER_DST_BIT IMAGE_USAGE_TRANSFER_DST_BIT} usage flag</li>
      * <li>{@code image} <b>must</b> not use a format listed in <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-formats-requiring-sampler-ycbcr-conversion">the “Formats requiring sampler Y'C<sub>B</sub>C<sub>R</sub> conversion for {@link #VK_IMAGE_ASPECT_COLOR_BIT IMAGE_ASPECT_COLOR_BIT} image views” table</a></li>
      * <li>If {@code image} is non-sparse then it <b>must</b> be bound completely and contiguously to a single {@code VkDeviceMemory} object</li>
@@ -12594,8 +12384,6 @@ public class VK10 {
      * <li>The {@link VkImageSubresourceRange}{@code ::baseArrayLayer} members of the elements of the {@code pRanges} array <b>must</b> each be less than the {@code arrayLayers} specified in {@link VkImageCreateInfo} when {@code image} was created</li>
      * <li>For each {@link VkImageSubresourceRange} element of {@code pRanges}, if the {@code layerCount} member is not {@link #VK_REMAINING_ARRAY_LAYERS REMAINING_ARRAY_LAYERS}, then <code>baseArrayLayer + layerCount</code> <b>must</b> be less than the {@code arrayLayers} specified in {@link VkImageCreateInfo} when {@code image} was created</li>
      * <li>{@code image} <b>must</b> not have a compressed or depth/stencil format</li>
-     * <li>If {@code commandBuffer} is an unprotected command buffer, then {@code image} <b>must</b> not be a protected image</li>
-     * <li>If {@code commandBuffer} is a protected command buffer, then {@code image} <b>must</b> not be an unprotected image</li>
      * </ul>
      * 
      * <h5>Valid Usage (Implicit)</h5>
@@ -12637,7 +12425,7 @@ public class VK10 {
      * @param pColor        a pointer to a {@link VkClearColorValue} structure that contains the values the image subresource ranges will be cleared to (see <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#clears-values">the “Clear Values” section</a> below).
      * @param pRanges       points to an array of {@link VkImageSubresourceRange} structures that describe a range of mipmap levels, array layers, and aspects to be cleared, as described in <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#resources-image-views">Image Views</a>. The {@code aspectMask} of all image subresource ranges <b>must</b> only include {@link #VK_IMAGE_ASPECT_COLOR_BIT IMAGE_ASPECT_COLOR_BIT}.
      */
-    public static void vkCmdClearColorImage(VkCommandBuffer commandBuffer, @NativeType("VkImage") long image, @NativeType("VkImageLayout") int imageLayout, @NativeType("VkClearColorValue const *") VkClearColorValue pColor, @NativeType("VkImageSubresourceRange const *") VkImageSubresourceRange.Buffer pRanges) {
+    public static void vkCmdClearColorImage(VkCommandBuffer commandBuffer, @NativeType("VkImage") long image, @NativeType("VkImageLayout") int imageLayout, @NativeType("const VkClearColorValue *") VkClearColorValue pColor, @NativeType("const VkImageSubresourceRange *") VkImageSubresourceRange.Buffer pRanges) {
         nvkCmdClearColorImage(commandBuffer, image, imageLayout, pColor.address(), pRanges.remaining(), pRanges.address());
     }
 
@@ -12648,14 +12436,14 @@ public class VK10 {
      * 
      * <p>To clear one or more subranges of a color image, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * void vkCmdClearColorImage(
      *     VkCommandBuffer                             commandBuffer,
      *     VkImage                                     image,
      *     VkImageLayout                               imageLayout,
      *     const VkClearColorValue*                    pColor,
      *     uint32_t                                    rangeCount,
-     *     const VkImageSubresourceRange*              pRanges);</code></pre>
+     *     const VkImageSubresourceRange*              pRanges);</pre></code>
      * 
      * <h5>Description</h5>
      * 
@@ -12664,7 +12452,7 @@ public class VK10 {
      * <h5>Valid Usage</h5>
      * 
      * <ul>
-     * <li>{@code image} <b>must</b> use a format that supports {@link VK11#VK_FORMAT_FEATURE_TRANSFER_DST_BIT FORMAT_FEATURE_TRANSFER_DST_BIT}, which is indicated by {@link VkFormatProperties}{@code ::linearTilingFeatures} or {@link VkFormatProperties}{@code ::optimalTilingFeatures} returned by {@link #vkGetPhysicalDeviceFormatProperties GetPhysicalDeviceFormatProperties} for linearly or optimally tiled images, respectively</li>
+     * <li>{@code image} <b>must</b> use a format that supports {@link KHRMaintenance1#VK_FORMAT_FEATURE_TRANSFER_DST_BIT_KHR FORMAT_FEATURE_TRANSFER_DST_BIT_KHR}, which is indicated by {@link VkFormatProperties}{@code ::linearTilingFeatures} (for linearly tiled images) or {@link VkFormatProperties}{@code ::optimalTilingFeatures} (for optimally tiled images) - as returned by {@link #vkGetPhysicalDeviceFormatProperties GetPhysicalDeviceFormatProperties}</li>
      * <li>{@code image} <b>must</b> have been created with {@link #VK_IMAGE_USAGE_TRANSFER_DST_BIT IMAGE_USAGE_TRANSFER_DST_BIT} usage flag</li>
      * <li>{@code image} <b>must</b> not use a format listed in <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-formats-requiring-sampler-ycbcr-conversion">the “Formats requiring sampler Y'C<sub>B</sub>C<sub>R</sub> conversion for {@link #VK_IMAGE_ASPECT_COLOR_BIT IMAGE_ASPECT_COLOR_BIT} image views” table</a></li>
      * <li>If {@code image} is non-sparse then it <b>must</b> be bound completely and contiguously to a single {@code VkDeviceMemory} object</li>
@@ -12675,8 +12463,6 @@ public class VK10 {
      * <li>The {@link VkImageSubresourceRange}{@code ::baseArrayLayer} members of the elements of the {@code pRanges} array <b>must</b> each be less than the {@code arrayLayers} specified in {@link VkImageCreateInfo} when {@code image} was created</li>
      * <li>For each {@link VkImageSubresourceRange} element of {@code pRanges}, if the {@code layerCount} member is not {@link #VK_REMAINING_ARRAY_LAYERS REMAINING_ARRAY_LAYERS}, then <code>baseArrayLayer + layerCount</code> <b>must</b> be less than the {@code arrayLayers} specified in {@link VkImageCreateInfo} when {@code image} was created</li>
      * <li>{@code image} <b>must</b> not have a compressed or depth/stencil format</li>
-     * <li>If {@code commandBuffer} is an unprotected command buffer, then {@code image} <b>must</b> not be a protected image</li>
-     * <li>If {@code commandBuffer} is a protected command buffer, then {@code image} <b>must</b> not be an unprotected image</li>
      * </ul>
      * 
      * <h5>Valid Usage (Implicit)</h5>
@@ -12717,7 +12503,7 @@ public class VK10 {
      * @param imageLayout   specifies the current layout of the image subresource ranges to be cleared, and <b>must</b> be {@link KHRSharedPresentableImage#VK_IMAGE_LAYOUT_SHARED_PRESENT_KHR IMAGE_LAYOUT_SHARED_PRESENT_KHR}, {@link #VK_IMAGE_LAYOUT_GENERAL IMAGE_LAYOUT_GENERAL} or {@link #VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL}.
      * @param pColor        a pointer to a {@link VkClearColorValue} structure that contains the values the image subresource ranges will be cleared to (see <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#clears-values">the “Clear Values” section</a> below).
      */
-    public static void vkCmdClearColorImage(VkCommandBuffer commandBuffer, @NativeType("VkImage") long image, @NativeType("VkImageLayout") int imageLayout, @NativeType("VkClearColorValue const *") VkClearColorValue pColor, @NativeType("VkImageSubresourceRange const *") VkImageSubresourceRange pRange) {
+    public static void vkCmdClearColorImage(VkCommandBuffer commandBuffer, @NativeType("VkImage") long image, @NativeType("VkImageLayout") int imageLayout, @NativeType("const VkClearColorValue *") VkClearColorValue pColor, @NativeType("const VkImageSubresourceRange *") VkImageSubresourceRange pRange) {
         nvkCmdClearColorImage(commandBuffer, image, imageLayout, pColor.address(), 1, pRange.address());
     }
 
@@ -12740,19 +12526,19 @@ public class VK10 {
      * 
      * <p>To clear one or more subranges of a depth/stencil image, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * void vkCmdClearDepthStencilImage(
      *     VkCommandBuffer                             commandBuffer,
      *     VkImage                                     image,
      *     VkImageLayout                               imageLayout,
      *     const VkClearDepthStencilValue*             pDepthStencil,
      *     uint32_t                                    rangeCount,
-     *     const VkImageSubresourceRange*              pRanges);</code></pre>
+     *     const VkImageSubresourceRange*              pRanges);</pre></code>
      * 
      * <h5>Valid Usage</h5>
      * 
      * <ul>
-     * <li>{@code image} <b>must</b> use a format that supports {@link VK11#VK_FORMAT_FEATURE_TRANSFER_DST_BIT FORMAT_FEATURE_TRANSFER_DST_BIT}, which is indicated by {@link VkFormatProperties}{@code ::linearTilingFeatures} or {@link VkFormatProperties}{@code ::optimalTilingFeatures} returned by {@link #vkGetPhysicalDeviceFormatProperties GetPhysicalDeviceFormatProperties} for linearly or optimally tiled images, respectively</li>
+     * <li>{@code image} <b>must</b> use a format that supports {@link KHRMaintenance1#VK_FORMAT_FEATURE_TRANSFER_DST_BIT_KHR FORMAT_FEATURE_TRANSFER_DST_BIT_KHR}, which is indicated by {@link VkFormatProperties}{@code ::linearTilingFeatures} (for linearly tiled images) or {@link VkFormatProperties}{@code ::optimalTilingFeatures} (for optimally tiled images) - as returned by {@link #vkGetPhysicalDeviceFormatProperties GetPhysicalDeviceFormatProperties}</li>
      * <li>{@code image} <b>must</b> have been created with {@link #VK_IMAGE_USAGE_TRANSFER_DST_BIT IMAGE_USAGE_TRANSFER_DST_BIT} usage flag</li>
      * <li>If {@code image} is non-sparse then it <b>must</b> be bound completely and contiguously to a single {@code VkDeviceMemory} object</li>
      * <li>{@code imageLayout} <b>must</b> specify the layout of the image subresource ranges of {@code image} specified in {@code pRanges} at the time this command is executed on a {@code VkDevice}</li>
@@ -12762,8 +12548,6 @@ public class VK10 {
      * <li>The {@link VkImageSubresourceRange}{@code ::baseArrayLayer} members of the elements of the {@code pRanges} array <b>must</b> each be less than the {@code arrayLayers} specified in {@link VkImageCreateInfo} when {@code image} was created</li>
      * <li>For each {@link VkImageSubresourceRange} element of {@code pRanges}, if the {@code layerCount} member is not {@link #VK_REMAINING_ARRAY_LAYERS REMAINING_ARRAY_LAYERS}, then <code>baseArrayLayer + layerCount</code> <b>must</b> be less than the {@code arrayLayers} specified in {@link VkImageCreateInfo} when {@code image} was created</li>
      * <li>{@code image} <b>must</b> have a depth/stencil format</li>
-     * <li>If {@code commandBuffer} is an unprotected command buffer, then {@code image} <b>must</b> not be a protected image</li>
-     * <li>If {@code commandBuffer} is a protected command buffer, then {@code image} <b>must</b> not be an unprotected image</li>
      * </ul>
      * 
      * <h5>Valid Usage (Implicit)</h5>
@@ -12805,7 +12589,7 @@ public class VK10 {
      * @param pDepthStencil a pointer to a {@link VkClearDepthStencilValue} structure that contains the values the depth and stencil image subresource ranges will be cleared to (see <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#clears-values">the “Clear Values” section</a> below).
      * @param pRanges       points to an array of {@link VkImageSubresourceRange} structures that describe a range of mipmap levels, array layers, and aspects to be cleared, as described in <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#resources-image-views">Image Views</a>. The {@code aspectMask} of each image subresource range in {@code pRanges} <b>can</b> include {@link #VK_IMAGE_ASPECT_DEPTH_BIT IMAGE_ASPECT_DEPTH_BIT} if the image format has a depth component, and {@link #VK_IMAGE_ASPECT_STENCIL_BIT IMAGE_ASPECT_STENCIL_BIT} if the image format has a stencil component. {@code pDepthStencil} is a pointer to a {@link VkClearDepthStencilValue} structure that contains the values the image subresource ranges will be cleared to (see <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#clears-values">the “Clear Values” section</a> below).
      */
-    public static void vkCmdClearDepthStencilImage(VkCommandBuffer commandBuffer, @NativeType("VkImage") long image, @NativeType("VkImageLayout") int imageLayout, @NativeType("VkClearDepthStencilValue const *") VkClearDepthStencilValue pDepthStencil, @NativeType("VkImageSubresourceRange const *") VkImageSubresourceRange.Buffer pRanges) {
+    public static void vkCmdClearDepthStencilImage(VkCommandBuffer commandBuffer, @NativeType("VkImage") long image, @NativeType("VkImageLayout") int imageLayout, @NativeType("const VkClearDepthStencilValue *") VkClearDepthStencilValue pDepthStencil, @NativeType("const VkImageSubresourceRange *") VkImageSubresourceRange.Buffer pRanges) {
         nvkCmdClearDepthStencilImage(commandBuffer, image, imageLayout, pDepthStencil.address(), pRanges.remaining(), pRanges.address());
     }
 
@@ -12816,19 +12600,19 @@ public class VK10 {
      * 
      * <p>To clear one or more subranges of a depth/stencil image, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * void vkCmdClearDepthStencilImage(
      *     VkCommandBuffer                             commandBuffer,
      *     VkImage                                     image,
      *     VkImageLayout                               imageLayout,
      *     const VkClearDepthStencilValue*             pDepthStencil,
      *     uint32_t                                    rangeCount,
-     *     const VkImageSubresourceRange*              pRanges);</code></pre>
+     *     const VkImageSubresourceRange*              pRanges);</pre></code>
      * 
      * <h5>Valid Usage</h5>
      * 
      * <ul>
-     * <li>{@code image} <b>must</b> use a format that supports {@link VK11#VK_FORMAT_FEATURE_TRANSFER_DST_BIT FORMAT_FEATURE_TRANSFER_DST_BIT}, which is indicated by {@link VkFormatProperties}{@code ::linearTilingFeatures} or {@link VkFormatProperties}{@code ::optimalTilingFeatures} returned by {@link #vkGetPhysicalDeviceFormatProperties GetPhysicalDeviceFormatProperties} for linearly or optimally tiled images, respectively</li>
+     * <li>{@code image} <b>must</b> use a format that supports {@link KHRMaintenance1#VK_FORMAT_FEATURE_TRANSFER_DST_BIT_KHR FORMAT_FEATURE_TRANSFER_DST_BIT_KHR}, which is indicated by {@link VkFormatProperties}{@code ::linearTilingFeatures} (for linearly tiled images) or {@link VkFormatProperties}{@code ::optimalTilingFeatures} (for optimally tiled images) - as returned by {@link #vkGetPhysicalDeviceFormatProperties GetPhysicalDeviceFormatProperties}</li>
      * <li>{@code image} <b>must</b> have been created with {@link #VK_IMAGE_USAGE_TRANSFER_DST_BIT IMAGE_USAGE_TRANSFER_DST_BIT} usage flag</li>
      * <li>If {@code image} is non-sparse then it <b>must</b> be bound completely and contiguously to a single {@code VkDeviceMemory} object</li>
      * <li>{@code imageLayout} <b>must</b> specify the layout of the image subresource ranges of {@code image} specified in {@code pRanges} at the time this command is executed on a {@code VkDevice}</li>
@@ -12838,8 +12622,6 @@ public class VK10 {
      * <li>The {@link VkImageSubresourceRange}{@code ::baseArrayLayer} members of the elements of the {@code pRanges} array <b>must</b> each be less than the {@code arrayLayers} specified in {@link VkImageCreateInfo} when {@code image} was created</li>
      * <li>For each {@link VkImageSubresourceRange} element of {@code pRanges}, if the {@code layerCount} member is not {@link #VK_REMAINING_ARRAY_LAYERS REMAINING_ARRAY_LAYERS}, then <code>baseArrayLayer + layerCount</code> <b>must</b> be less than the {@code arrayLayers} specified in {@link VkImageCreateInfo} when {@code image} was created</li>
      * <li>{@code image} <b>must</b> have a depth/stencil format</li>
-     * <li>If {@code commandBuffer} is an unprotected command buffer, then {@code image} <b>must</b> not be a protected image</li>
-     * <li>If {@code commandBuffer} is a protected command buffer, then {@code image} <b>must</b> not be an unprotected image</li>
      * </ul>
      * 
      * <h5>Valid Usage (Implicit)</h5>
@@ -12880,7 +12662,7 @@ public class VK10 {
      * @param imageLayout   specifies the current layout of the image subresource ranges to be cleared, and <b>must</b> be {@link #VK_IMAGE_LAYOUT_GENERAL IMAGE_LAYOUT_GENERAL} or {@link #VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL}.
      * @param pDepthStencil a pointer to a {@link VkClearDepthStencilValue} structure that contains the values the depth and stencil image subresource ranges will be cleared to (see <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#clears-values">the “Clear Values” section</a> below).
      */
-    public static void vkCmdClearDepthStencilImage(VkCommandBuffer commandBuffer, @NativeType("VkImage") long image, @NativeType("VkImageLayout") int imageLayout, @NativeType("VkClearDepthStencilValue const *") VkClearDepthStencilValue pDepthStencil, @NativeType("VkImageSubresourceRange const *") VkImageSubresourceRange pRange) {
+    public static void vkCmdClearDepthStencilImage(VkCommandBuffer commandBuffer, @NativeType("VkImage") long image, @NativeType("VkImageLayout") int imageLayout, @NativeType("const VkClearDepthStencilValue *") VkClearDepthStencilValue pDepthStencil, @NativeType("const VkImageSubresourceRange *") VkImageSubresourceRange pRange) {
         nvkCmdClearDepthStencilImage(commandBuffer, image, imageLayout, pDepthStencil.address(), 1, pRange.address());
     }
 
@@ -12898,19 +12680,19 @@ public class VK10 {
     }
 
     /**
-     * Clear regions within bound framebuffer attachments.
+     * Clear regions within currently bound framebuffer attachments.
      * 
      * <h5>C Specification</h5>
      * 
      * <p>To clear one or more regions of color and depth/stencil attachments inside a render pass instance, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * void vkCmdClearAttachments(
      *     VkCommandBuffer                             commandBuffer,
      *     uint32_t                                    attachmentCount,
      *     const VkClearAttachment*                    pAttachments,
      *     uint32_t                                    rectCount,
-     *     const VkClearRect*                          pRects);</code></pre>
+     *     const VkClearRect*                          pRects);</pre></code>
      * 
      * <h5>Description</h5>
      * 
@@ -12922,7 +12704,6 @@ public class VK10 {
      * <li>If the {@code aspectMask} member of any element of {@code pAttachments} contains {@link #VK_IMAGE_ASPECT_COLOR_BIT IMAGE_ASPECT_COLOR_BIT}, the {@code colorAttachment} member of that element <b>must</b> refer to a valid color attachment in the current subpass</li>
      * <li>The rectangular region specified by each element of {@code pRects} <b>must</b> be contained within the render area of the current render pass instance</li>
      * <li>The layers specified by each element of {@code pRects} <b>must</b> be contained within every attachment that {@code pAttachments} refers to</li>
-     * <li>The {@code layerCount} member of each element of {@code pRects} <b>must</b> not be 0</li>
      * <li>If the render pass instance this is recorded in uses multiview, then {@code baseArrayLayer} <b>must</b> be zero and {@code layerCount} <b>must</b> be one.</li>
      * </ul>
      * 
@@ -12961,7 +12742,7 @@ public class VK10 {
      * @param pAttachments  a pointer to an array of {@link VkClearAttachment} structures defining the attachments to clear and the clear values to use.
      * @param pRects        points to an array of {@link VkClearRect} structures defining regions within each selected attachment to clear.
      */
-    public static void vkCmdClearAttachments(VkCommandBuffer commandBuffer, @NativeType("VkClearAttachment const *") VkClearAttachment.Buffer pAttachments, @NativeType("VkClearRect const *") VkClearRect.Buffer pRects) {
+    public static void vkCmdClearAttachments(VkCommandBuffer commandBuffer, @NativeType("const VkClearAttachment *") VkClearAttachment.Buffer pAttachments, @NativeType("const VkClearRect *") VkClearRect.Buffer pRects) {
         nvkCmdClearAttachments(commandBuffer, pAttachments.remaining(), pAttachments.address(), pRects.remaining(), pRects.address());
     }
 
@@ -12984,7 +12765,7 @@ public class VK10 {
      * 
      * <p>To resolve a multisample image to a non-multisample image, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * void vkCmdResolveImage(
      *     VkCommandBuffer                             commandBuffer,
      *     VkImage                                     srcImage,
@@ -12992,7 +12773,7 @@ public class VK10 {
      *     VkImage                                     dstImage,
      *     VkImageLayout                               dstImageLayout,
      *     uint32_t                                    regionCount,
-     *     const VkImageResolve*                       pRegions);</code></pre>
+     *     const VkImageResolve*                       pRegions);</pre></code>
      * 
      * <h5>Description</h5>
      * 
@@ -13019,9 +12800,6 @@ public class VK10 {
      * <li>If {@code dstImage} was created with {@code tiling} equal to {@link #VK_IMAGE_TILING_LINEAR IMAGE_TILING_LINEAR}, {@code dstImage} <b>must</b> have been created with a {@code format} that supports being a color attachment, as specified by the {@link #VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT FORMAT_FEATURE_COLOR_ATTACHMENT_BIT} flag in {@link VkFormatProperties}{@code ::linearTilingFeatures} returned by {@link #vkGetPhysicalDeviceFormatProperties GetPhysicalDeviceFormatProperties}</li>
      * <li>If {@code dstImage} was created with {@code tiling} equal to {@link #VK_IMAGE_TILING_OPTIMAL IMAGE_TILING_OPTIMAL}, {@code dstImage} <b>must</b> have been created with a {@code format} that supports being a color attachment, as specified by the {@link #VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT FORMAT_FEATURE_COLOR_ATTACHMENT_BIT} flag in {@link VkFormatProperties}{@code ::optimalTilingFeatures} returned by {@link #vkGetPhysicalDeviceFormatProperties GetPhysicalDeviceFormatProperties}</li>
      * <li>{@code srcImage} and {@code dstImage} <b>must</b> have been created with the same image format</li>
-     * <li>If {@code commandBuffer} is an unprotected command buffer, then {@code srcImage} <b>must</b> not be a protected image</li>
-     * <li>If {@code commandBuffer} is an unprotected command buffer, then {@code dstImage} <b>must</b> not be a protected image</li>
-     * <li>If {@code commandBuffer} is a protected command buffer, then {@code dstImage} <b>must</b> not be an unprotected image</li>
      * <li>The {@code srcSubresource.mipLevel} member of each element of {@code pRegions} <b>must</b> be less than the {@code mipLevels} specified in {@link VkImageCreateInfo} when {@code srcImage} was created</li>
      * <li>The {@code dstSubresource.mipLevel} member of each element of {@code pRegions} <b>must</b> be less than the {@code mipLevels} specified in {@link VkImageCreateInfo} when {@code dstImage} was created</li>
      * <li>The <code>srcSubresource.baseArrayLayer srcSubresource.layerCount</code> of each element of {@code pRegions} <b>must</b> be less than or equal to the {@code arrayLayers} specified in {@link VkImageCreateInfo} when {@code srcImage} was created</li>
@@ -13069,7 +12847,7 @@ public class VK10 {
      * @param dstImageLayout the layout of the destination image subresources for the resolve.
      * @param pRegions       a pointer to an array of {@link VkImageResolve} structures specifying the regions to resolve.
      */
-    public static void vkCmdResolveImage(VkCommandBuffer commandBuffer, @NativeType("VkImage") long srcImage, @NativeType("VkImageLayout") int srcImageLayout, @NativeType("VkImage") long dstImage, @NativeType("VkImageLayout") int dstImageLayout, @NativeType("VkImageResolve const *") VkImageResolve.Buffer pRegions) {
+    public static void vkCmdResolveImage(VkCommandBuffer commandBuffer, @NativeType("VkImage") long srcImage, @NativeType("VkImageLayout") int srcImageLayout, @NativeType("VkImage") long dstImage, @NativeType("VkImageLayout") int dstImageLayout, @NativeType("const VkImageResolve *") VkImageResolve.Buffer pRegions) {
         nvkCmdResolveImage(commandBuffer, srcImage, srcImageLayout, dstImage, dstImageLayout, pRegions.remaining(), pRegions.address());
     }
 
@@ -13080,7 +12858,7 @@ public class VK10 {
      * 
      * <p>To resolve a multisample image to a non-multisample image, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * void vkCmdResolveImage(
      *     VkCommandBuffer                             commandBuffer,
      *     VkImage                                     srcImage,
@@ -13088,7 +12866,7 @@ public class VK10 {
      *     VkImage                                     dstImage,
      *     VkImageLayout                               dstImageLayout,
      *     uint32_t                                    regionCount,
-     *     const VkImageResolve*                       pRegions);</code></pre>
+     *     const VkImageResolve*                       pRegions);</pre></code>
      * 
      * <h5>Description</h5>
      * 
@@ -13115,9 +12893,6 @@ public class VK10 {
      * <li>If {@code dstImage} was created with {@code tiling} equal to {@link #VK_IMAGE_TILING_LINEAR IMAGE_TILING_LINEAR}, {@code dstImage} <b>must</b> have been created with a {@code format} that supports being a color attachment, as specified by the {@link #VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT FORMAT_FEATURE_COLOR_ATTACHMENT_BIT} flag in {@link VkFormatProperties}{@code ::linearTilingFeatures} returned by {@link #vkGetPhysicalDeviceFormatProperties GetPhysicalDeviceFormatProperties}</li>
      * <li>If {@code dstImage} was created with {@code tiling} equal to {@link #VK_IMAGE_TILING_OPTIMAL IMAGE_TILING_OPTIMAL}, {@code dstImage} <b>must</b> have been created with a {@code format} that supports being a color attachment, as specified by the {@link #VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT FORMAT_FEATURE_COLOR_ATTACHMENT_BIT} flag in {@link VkFormatProperties}{@code ::optimalTilingFeatures} returned by {@link #vkGetPhysicalDeviceFormatProperties GetPhysicalDeviceFormatProperties}</li>
      * <li>{@code srcImage} and {@code dstImage} <b>must</b> have been created with the same image format</li>
-     * <li>If {@code commandBuffer} is an unprotected command buffer, then {@code srcImage} <b>must</b> not be a protected image</li>
-     * <li>If {@code commandBuffer} is an unprotected command buffer, then {@code dstImage} <b>must</b> not be a protected image</li>
-     * <li>If {@code commandBuffer} is a protected command buffer, then {@code dstImage} <b>must</b> not be an unprotected image</li>
      * <li>The {@code srcSubresource.mipLevel} member of each element of {@code pRegions} <b>must</b> be less than the {@code mipLevels} specified in {@link VkImageCreateInfo} when {@code srcImage} was created</li>
      * <li>The {@code dstSubresource.mipLevel} member of each element of {@code pRegions} <b>must</b> be less than the {@code mipLevels} specified in {@link VkImageCreateInfo} when {@code dstImage} was created</li>
      * <li>The <code>srcSubresource.baseArrayLayer srcSubresource.layerCount</code> of each element of {@code pRegions} <b>must</b> be less than or equal to the {@code arrayLayers} specified in {@link VkImageCreateInfo} when {@code srcImage} was created</li>
@@ -13164,7 +12939,7 @@ public class VK10 {
      * @param dstImage       the destination image.
      * @param dstImageLayout the layout of the destination image subresources for the resolve.
      */
-    public static void vkCmdResolveImage(VkCommandBuffer commandBuffer, @NativeType("VkImage") long srcImage, @NativeType("VkImageLayout") int srcImageLayout, @NativeType("VkImage") long dstImage, @NativeType("VkImageLayout") int dstImageLayout, @NativeType("VkImageResolve const *") VkImageResolve pRegion) {
+    public static void vkCmdResolveImage(VkCommandBuffer commandBuffer, @NativeType("VkImage") long srcImage, @NativeType("VkImageLayout") int srcImageLayout, @NativeType("VkImage") long dstImage, @NativeType("VkImageLayout") int dstImageLayout, @NativeType("const VkImageResolve *") VkImageResolve pRegion) {
         nvkCmdResolveImage(commandBuffer, srcImage, srcImageLayout, dstImage, dstImageLayout, 1, pRegion.address());
     }
 
@@ -13177,17 +12952,17 @@ public class VK10 {
      * 
      * <p>To set the state of an event to signaled from a device, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * void vkCmdSetEvent(
      *     VkCommandBuffer                             commandBuffer,
      *     VkEvent                                     event,
-     *     VkPipelineStageFlags                        stageMask);</code></pre>
+     *     VkPipelineStageFlags                        stageMask);</pre></code>
      * 
      * <h5>Description</h5>
      * 
      * <p>When {@link #vkCmdSetEvent CmdSetEvent} is submitted to a queue, it defines an execution dependency on commands that were submitted before it, and defines an event signal operation which sets the event to the signaled state.</p>
      * 
-     * <p>The first <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-dependencies-scopes">synchronization scope</a> includes all commands that occur earlier in <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-submission-order">submission order</a>. The synchronization scope is limited to operations on the pipeline stages determined by the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-pipeline-stages-masks">source stage mask</a> specified by {@code stageMask}.</p>
+     * <p>The first <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-dependencies-scopes">synchronization scope</a> includes every command previously submitted to the same queue, including those in the same command buffer and batch. The synchronization scope is limited to operations on the pipeline stages determined by the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-pipeline-stages-masks">source stage mask</a> specified by {@code stageMask}.</p>
      * 
      * <p>The second <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-dependencies-scopes">synchronization scope</a> includes only the event signal operation.</p>
      * 
@@ -13247,17 +13022,17 @@ public class VK10 {
      * 
      * <p>To set the state of an event to unsignaled from a device, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * void vkCmdResetEvent(
      *     VkCommandBuffer                             commandBuffer,
      *     VkEvent                                     event,
-     *     VkPipelineStageFlags                        stageMask);</code></pre>
+     *     VkPipelineStageFlags                        stageMask);</pre></code>
      * 
      * <h5>Description</h5>
      * 
      * <p>When {@link #vkCmdResetEvent CmdResetEvent} is submitted to a queue, it defines an execution dependency on commands that were submitted before it, and defines an event unsignal operation which resets the event to the unsignaled state.</p>
      * 
-     * <p>The first <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-dependencies-scopes">synchronization scope</a> includes all commands that occur earlier in <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-submission-order">submission order</a>. The synchronization scope is limited to operations on the pipeline stages determined by the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-pipeline-stages-masks">source stage mask</a> specified by {@code stageMask}.</p>
+     * <p>The first <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-dependencies-scopes">synchronization scope</a> includes every command previously submitted to the same queue, including those in the same command buffer and batch. The synchronization scope is limited to operations on the pipeline stages determined by the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-pipeline-stages-masks">source stage mask</a> specified by {@code stageMask}.</p>
      * 
      * <p>The second <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-dependencies-scopes">synchronization scope</a> includes only the event unsignal operation.</p>
      * 
@@ -13331,7 +13106,7 @@ public class VK10 {
      * 
      * <p>To wait for one or more events to enter the signaled state on a device, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * void vkCmdWaitEvents(
      *     VkCommandBuffer                             commandBuffer,
      *     uint32_t                                    eventCount,
@@ -13343,15 +13118,15 @@ public class VK10 {
      *     uint32_t                                    bufferMemoryBarrierCount,
      *     const VkBufferMemoryBarrier*                pBufferMemoryBarriers,
      *     uint32_t                                    imageMemoryBarrierCount,
-     *     const VkImageMemoryBarrier*                 pImageMemoryBarriers);</code></pre>
+     *     const VkImageMemoryBarrier*                 pImageMemoryBarriers);</pre></code>
      * 
      * <h5>Description</h5>
      * 
      * <p>When {@link #vkCmdWaitEvents CmdWaitEvents} is submitted to a queue, it defines a memory dependency between prior event signal operations on the same queue or the host, and subsequent commands. {@link #vkCmdWaitEvents CmdWaitEvents} <b>must</b> not be used to wait on event signal operations occuring on other queues.</p>
      * 
-     * <p>The first synchronization scope only includes event signal operations that operate on members of {@code pEvents}, and the operations that happened-before the event signal operations. Event signal operations performed by {@link #vkCmdSetEvent CmdSetEvent} that occur earlier in <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-submission-order">submission order</a> are included in the first synchronization scope, if the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-pipeline-stages-order">logically latest</a> pipeline stage in their {@code stageMask} parameter is <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-pipeline-stages-order">logically earlier</a> than or equal to the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-pipeline-stages-order">logically latest</a> pipeline stage in {@code srcStageMask}. Event signal operations performed by {@link #vkSetEvent SetEvent} are only included in the first synchronization scope if {@link #VK_PIPELINE_STAGE_HOST_BIT PIPELINE_STAGE_HOST_BIT} is included in {@code srcStageMask}.</p>
+     * <p>The first synchronization scope only includes event signal operations that operate on members of {@code pEvents}, and the operations that happened-before the event signal operations. Event signal operations performed by {@link #vkCmdSetEvent CmdSetEvent} that were previously submitted to the same queue are included in the first synchronization scope, if the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-pipeline-stages-order">logically latest</a> pipeline stage in their {@code stageMask} parameter is <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-pipeline-stages-order">logically earlier</a> than or equal to the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-pipeline-stages-order">logically latest</a> pipeline stage in {@code srcStageMask}. Event signal operations performed by {@link #vkSetEvent SetEvent} are only included in the first synchronization scope if {@link #VK_PIPELINE_STAGE_HOST_BIT PIPELINE_STAGE_HOST_BIT} is included in {@code srcStageMask}.</p>
      * 
-     * <p>The second <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-dependencies-scopes">synchronization scope</a> includes all commands that occur later in <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-submission-order">submission order</a>. The second synchronization scope is limited to operations on the pipeline stages determined by the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-pipeline-stages-masks">destination stage mask</a> specified by {@code dstStageMask}.</p>
+     * <p>The second <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-dependencies-scopes">synchronization scope</a> includes commands subsequently submitted to the same queue, including those in the same command buffer and batch. The second synchronization scope is limited to operations on the pipeline stages determined by the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-pipeline-stages-masks">destination stage mask</a> specified by {@code dstStageMask}.</p>
      * 
      * <p>The first <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-dependencies-access-scopes">access scope</a> is limited to access in the pipeline stages determined by the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-pipeline-stages-masks">source stage mask</a> specified by {@code srcStageMask}. Within that, the first access scope only includes the first access scopes defined by elements of the {@code pMemoryBarriers}, {@code pBufferMemoryBarriers} and {@code pImageMemoryBarriers} arrays, which each define a set of <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-memory-barriers">memory barriers</a>. If no memory barriers are specified, then the first access scope includes no accesses.</p>
      * 
@@ -13426,7 +13201,7 @@ public class VK10 {
      * @param pBufferMemoryBarriers a pointer to an array of {@link VkBufferMemoryBarrier} structures.
      * @param pImageMemoryBarriers  a pointer to an array of {@link VkImageMemoryBarrier} structures.
      */
-    public static void vkCmdWaitEvents(VkCommandBuffer commandBuffer, @NativeType("VkEvent const *") LongBuffer pEvents, @NativeType("VkPipelineStageFlags") int srcStageMask, @NativeType("VkPipelineStageFlags") int dstStageMask, @Nullable @NativeType("VkMemoryBarrier const *") VkMemoryBarrier.Buffer pMemoryBarriers, @Nullable @NativeType("VkBufferMemoryBarrier const *") VkBufferMemoryBarrier.Buffer pBufferMemoryBarriers, @Nullable @NativeType("VkImageMemoryBarrier const *") VkImageMemoryBarrier.Buffer pImageMemoryBarriers) {
+    public static void vkCmdWaitEvents(VkCommandBuffer commandBuffer, @NativeType("const VkEvent *") LongBuffer pEvents, @NativeType("VkPipelineStageFlags") int srcStageMask, @NativeType("VkPipelineStageFlags") int dstStageMask, @Nullable @NativeType("const VkMemoryBarrier *") VkMemoryBarrier.Buffer pMemoryBarriers, @Nullable @NativeType("const VkBufferMemoryBarrier *") VkBufferMemoryBarrier.Buffer pBufferMemoryBarriers, @Nullable @NativeType("const VkImageMemoryBarrier *") VkImageMemoryBarrier.Buffer pImageMemoryBarriers) {
         nvkCmdWaitEvents(commandBuffer, pEvents.remaining(), memAddress(pEvents), srcStageMask, dstStageMask, remainingSafe(pMemoryBarriers), memAddressSafe(pMemoryBarriers), remainingSafe(pBufferMemoryBarriers), memAddressSafe(pBufferMemoryBarriers), remainingSafe(pImageMemoryBarriers), memAddressSafe(pImageMemoryBarriers));
     }
 
@@ -13451,7 +13226,7 @@ public class VK10 {
      * 
      * <p>To record a pipeline barrier, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * void vkCmdPipelineBarrier(
      *     VkCommandBuffer                             commandBuffer,
      *     VkPipelineStageFlags                        srcStageMask,
@@ -13462,15 +13237,15 @@ public class VK10 {
      *     uint32_t                                    bufferMemoryBarrierCount,
      *     const VkBufferMemoryBarrier*                pBufferMemoryBarriers,
      *     uint32_t                                    imageMemoryBarrierCount,
-     *     const VkImageMemoryBarrier*                 pImageMemoryBarriers);</code></pre>
+     *     const VkImageMemoryBarrier*                 pImageMemoryBarriers);</pre></code>
      * 
      * <h5>Description</h5>
      * 
      * <p>When {@link #vkCmdPipelineBarrier CmdPipelineBarrier} is submitted to a queue, it defines a memory dependency between commands that were submitted before it, and those submitted after it.</p>
      * 
-     * <p>If {@link #vkCmdPipelineBarrier CmdPipelineBarrier} was recorded outside a render pass instance, the first <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-dependencies-scopes">synchronization scope</a> includes all commands that occur earlier in <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-submission-order">submission order</a>. If {@link #vkCmdPipelineBarrier CmdPipelineBarrier} was recorded inside a render pass instance, the first synchronization scope includes only commands that occur earlier in <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-submission-order">submission order</a> within the same subpass. In either case, the first synchronization scope is limited to operations on the pipeline stages determined by the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-pipeline-stages-masks">source stage mask</a> specified by {@code srcStageMask}.</p>
+     * <p>If {@link #vkCmdPipelineBarrier CmdPipelineBarrier} was recorded outside a render pass instance, the first <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-dependencies-scopes">synchronization scope</a> includes every command submitted to the same queue before it, including those in the same command buffer and batch. If {@link #vkCmdPipelineBarrier CmdPipelineBarrier} was recorded inside a render pass instance, the first synchronization scope includes only commands submitted before it within the same subpass. In either case, the first synchronization scope is limited to operations on the pipeline stages determined by the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-pipeline-stages-masks">source stage mask</a> specified by {@code srcStageMask}.</p>
      * 
-     * <p>If {@link #vkCmdPipelineBarrier CmdPipelineBarrier} was recorded outside a render pass instance, the second <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-dependencies-scopes">synchronization scope</a> includes all commands that occur later in <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-submission-order">submission order</a>. If {@link #vkCmdPipelineBarrier CmdPipelineBarrier} was recorded inside a render pass instance, the second synchronization scope includes only commands that occur later in <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-submission-order">submission order</a> within the same subpass. In either case, the second synchronization scope is limited to operations on the pipeline stages determined by the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-pipeline-stages-masks">destination stage mask</a> specified by {@code dstStageMask}.</p>
+     * <p>If {@link #vkCmdPipelineBarrier CmdPipelineBarrier} was recorded outside a render pass instance, the second <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-dependencies-scopes">synchronization scope</a> includes every command submitted to the same queue after it, including those in the same command buffer and batch. If {@link #vkCmdPipelineBarrier CmdPipelineBarrier} was recorded inside a render pass instance, the second synchronization scope includes only commands submitted after it within the same subpass. In either case, the second synchronization scope is limited to operations on the pipeline stages determined by the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-pipeline-stages-masks">destination stage mask</a> specified by {@code dstStageMask}.</p>
      * 
      * <p>The first <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-dependencies-access-scopes">access scope</a> is limited to access in the pipeline stages determined by the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-pipeline-stages-masks">source stage mask</a> specified by {@code srcStageMask}. Within that, the first access scope only includes the first access scopes defined by elements of the {@code pMemoryBarriers}, {@code pBufferMemoryBarriers} and {@code pImageMemoryBarriers} arrays, which each define a set of <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-memory-barriers">memory barriers</a>. If no memory barriers are specified, then the first access scope includes no accesses.</p>
      * 
@@ -13499,7 +13274,7 @@ public class VK10 {
      * <li>Any pipeline stage included in {@code srcStageMask} or {@code dstStageMask} <b>must</b> be supported by the capabilities of the queue family specified by the {@code queueFamilyIndex} member of the {@link VkCommandPoolCreateInfo} structure that was used to create the {@code VkCommandPool} that {@code commandBuffer} was allocated from, as specified in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-pipeline-stages-supported">table of supported pipeline stages</a>.</li>
      * <li>Each element of {@code pMemoryBarriers}, {@code pBufferMemoryBarriers} and {@code pImageMemoryBarriers} <b>must</b> not have any access flag included in its {@code srcAccessMask} member if that bit is not supported by any of the pipeline stages in {@code srcStageMask}, as specified in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-access-types-supported">table of supported access types</a>.</li>
      * <li>Each element of {@code pMemoryBarriers}, {@code pBufferMemoryBarriers} and {@code pImageMemoryBarriers} <b>must</b> not have any access flag included in its {@code dstAccessMask} member if that bit is not supported by any of the pipeline stages in {@code dstStageMask}, as specified in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-access-types-supported">table of supported access types</a>.</li>
-     * <li>If {@link #vkCmdPipelineBarrier CmdPipelineBarrier} is called outside of a render pass instance, {@code dependencyFlags} <b>must</b> not include {@link VK11#VK_DEPENDENCY_VIEW_LOCAL_BIT DEPENDENCY_VIEW_LOCAL_BIT}</li>
+     * <li>If {@link #vkCmdPipelineBarrier CmdPipelineBarrier} is called outside of a render pass instance, {@code dependencyFlags} <b>must</b> not include {@link KHXMultiview#VK_DEPENDENCY_VIEW_LOCAL_BIT_KHX DEPENDENCY_VIEW_LOCAL_BIT_KHX}</li>
      * </ul>
      * 
      * <h5>Valid Usage (Implicit)</h5>
@@ -13544,7 +13319,7 @@ public class VK10 {
      * @param pBufferMemoryBarriers a pointer to an array of {@link VkBufferMemoryBarrier} structures.
      * @param pImageMemoryBarriers  a pointer to an array of {@link VkImageMemoryBarrier} structures.
      */
-    public static void vkCmdPipelineBarrier(VkCommandBuffer commandBuffer, @NativeType("VkPipelineStageFlags") int srcStageMask, @NativeType("VkPipelineStageFlags") int dstStageMask, @NativeType("VkDependencyFlags") int dependencyFlags, @Nullable @NativeType("VkMemoryBarrier const *") VkMemoryBarrier.Buffer pMemoryBarriers, @Nullable @NativeType("VkBufferMemoryBarrier const *") VkBufferMemoryBarrier.Buffer pBufferMemoryBarriers, @Nullable @NativeType("VkImageMemoryBarrier const *") VkImageMemoryBarrier.Buffer pImageMemoryBarriers) {
+    public static void vkCmdPipelineBarrier(VkCommandBuffer commandBuffer, @NativeType("VkPipelineStageFlags") int srcStageMask, @NativeType("VkPipelineStageFlags") int dstStageMask, @NativeType("VkDependencyFlags") int dependencyFlags, @Nullable @NativeType("const VkMemoryBarrier *") VkMemoryBarrier.Buffer pMemoryBarriers, @Nullable @NativeType("const VkBufferMemoryBarrier *") VkBufferMemoryBarrier.Buffer pBufferMemoryBarriers, @Nullable @NativeType("const VkImageMemoryBarrier *") VkImageMemoryBarrier.Buffer pImageMemoryBarriers) {
         nvkCmdPipelineBarrier(commandBuffer, srcStageMask, dstStageMask, dependencyFlags, remainingSafe(pMemoryBarriers), memAddressSafe(pMemoryBarriers), remainingSafe(pBufferMemoryBarriers), memAddressSafe(pBufferMemoryBarriers), remainingSafe(pImageMemoryBarriers), memAddressSafe(pImageMemoryBarriers));
     }
 
@@ -13557,12 +13332,12 @@ public class VK10 {
      * 
      * <p>To begin a query, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * void vkCmdBeginQuery(
      *     VkCommandBuffer                             commandBuffer,
      *     VkQueryPool                                 queryPool,
      *     uint32_t                                    query,
-     *     VkQueryControlFlags                         flags);</code></pre>
+     *     VkQueryControlFlags                         flags);</pre></code>
      * 
      * <h5>Description</h5>
      * 
@@ -13573,14 +13348,16 @@ public class VK10 {
      * <h5>Valid Usage</h5>
      * 
      * <ul>
-     * <li>{@code queryPool} <b>must</b> have been created with a {@code queryType} that differs from that of any queries that are <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#queries-operation-active">active</a> within {@code commandBuffer}</li>
-     * <li>All queries used by the command <b>must</b> be unavailable</li>
+     * <li>The query identified by {@code queryPool} and {@code query} <b>must</b> currently not be <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#queries-operation-active">active</a></li>
+     * <li>The query identified by {@code queryPool} and {@code query} <b>must</b> be unavailable</li>
      * <li>If the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-features-occlusionQueryPrecise">precise occlusion queries</a> feature is not enabled, or the {@code queryType} used to create {@code queryPool} was not {@link #VK_QUERY_TYPE_OCCLUSION QUERY_TYPE_OCCLUSION}, {@code flags} <b>must</b> not contain {@link #VK_QUERY_CONTROL_PRECISE_BIT QUERY_CONTROL_PRECISE_BIT}</li>
+     * <li>{@code queryPool} <b>must</b> have been created with a {@code queryType} that differs from that of any other queries that have been made <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#queries-operation-active">active</a>, and are currently still active within {@code commandBuffer}</li>
      * <li>{@code query} <b>must</b> be less than the number of queries in {@code queryPool}</li>
      * <li>If the {@code queryType} used to create {@code queryPool} was {@link #VK_QUERY_TYPE_OCCLUSION QUERY_TYPE_OCCLUSION}, the {@code VkCommandPool} that {@code commandBuffer} was allocated from <b>must</b> support graphics operations</li>
      * <li>If the {@code queryType} used to create {@code queryPool} was {@link #VK_QUERY_TYPE_PIPELINE_STATISTICS QUERY_TYPE_PIPELINE_STATISTICS} and any of the {@code pipelineStatistics} indicate graphics operations, the {@code VkCommandPool} that {@code commandBuffer} was allocated from <b>must</b> support graphics operations</li>
      * <li>If the {@code queryType} used to create {@code queryPool} was {@link #VK_QUERY_TYPE_PIPELINE_STATISTICS QUERY_TYPE_PIPELINE_STATISTICS} and any of the {@code pipelineStatistics} indicate compute operations, the {@code VkCommandPool} that {@code commandBuffer} was allocated from <b>must</b> support compute operations</li>
-     * <li>{@code commandBuffer} <b>must</b> not be a protected command buffer</li>
+     * <li>All queries used by the command <b>must</b> not be active</li>
+     * <li>All queries used by the command <b>must</b> be unavailable</li>
      * <li>If {@link #vkCmdBeginQuery CmdBeginQuery} is called within a render pass instance, the sum of {@code query} and the number of bits set in the current subpass&#8217;s view mask <b>must</b> be less than or equal to the number of queries in {@code queryPool}</li>
      * </ul>
      * 
@@ -13628,11 +13405,11 @@ public class VK10 {
      * 
      * <p>To end a query after the set of desired draw or dispatch commands is executed, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * void vkCmdEndQuery(
      *     VkCommandBuffer                             commandBuffer,
      *     VkQueryPool                                 queryPool,
-     *     uint32_t                                    query);</code></pre>
+     *     uint32_t                                    query);</pre></code>
      * 
      * <h5>Description</h5>
      * 
@@ -13643,9 +13420,9 @@ public class VK10 {
      * <h5>Valid Usage</h5>
      * 
      * <ul>
-     * <li>All queries used by the command <b>must</b> be <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#queries-operation-active">active</a></li>
+     * <li>The query identified by {@code queryPool} and {@code query} <b>must</b> currently be <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#queries-operation-active">active</a></li>
      * <li>{@code query} <b>must</b> be less than the number of queries in {@code queryPool}</li>
-     * <li>{@code commandBuffer} <b>must</b> not be a protected command buffer</li>
+     * <li>All queries used by the command <b>must</b> be active</li>
      * <li>If {@link #vkCmdEndQuery CmdEndQuery} is called within a render pass instance, the sum of {@code query} and the number of bits set in the current subpass&#8217;s view mask <b>must</b> be less than or equal to the number of queries in {@code queryPool}</li>
      * </ul>
      * 
@@ -13691,12 +13468,12 @@ public class VK10 {
      * 
      * <p>To reset a range of queries in a query pool, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * void vkCmdResetQueryPool(
      *     VkCommandBuffer                             commandBuffer,
      *     VkQueryPool                                 queryPool,
      *     uint32_t                                    firstQuery,
-     *     uint32_t                                    queryCount);</code></pre>
+     *     uint32_t                                    queryCount);</pre></code>
      * 
      * <h5>Description</h5>
      * 
@@ -13753,12 +13530,12 @@ public class VK10 {
      * 
      * <p>To request a timestamp, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * void vkCmdWriteTimestamp(
      *     VkCommandBuffer                             commandBuffer,
      *     VkPipelineStageFlagBits                     pipelineStage,
      *     VkQueryPool                                 queryPool,
-     *     uint32_t                                    query);</code></pre>
+     *     uint32_t                                    query);</pre></code>
      * 
      * <h5>Description</h5>
      * 
@@ -13843,7 +13620,7 @@ public class VK10 {
      * 
      * <p>To copy query statuses and numerical results directly to buffer memory, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * void vkCmdCopyQueryPoolResults(
      *     VkCommandBuffer                             commandBuffer,
      *     VkQueryPool                                 queryPool,
@@ -13852,7 +13629,7 @@ public class VK10 {
      *     VkBuffer                                    dstBuffer,
      *     VkDeviceSize                                dstOffset,
      *     VkDeviceSize                                stride,
-     *     VkQueryResultFlags                          flags);</code></pre>
+     *     VkQueryResultFlags                          flags);</pre></code>
      * 
      * <h5>Description</h5>
      * 
@@ -13948,20 +13725,19 @@ public class VK10 {
      * 
      * <p>To update push constants, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * void vkCmdPushConstants(
      *     VkCommandBuffer                             commandBuffer,
      *     VkPipelineLayout                            layout,
      *     VkShaderStageFlags                          stageFlags,
      *     uint32_t                                    offset,
      *     uint32_t                                    size,
-     *     const void*                                 pValues);</code></pre>
+     *     const void*                                 pValues);</pre></code>
      * 
      * <h5>Valid Usage</h5>
      * 
      * <ul>
-     * <li>For each byte in the range specified by {@code offset} and {@code size} and for each shader stage in {@code stageFlags}, there <b>must</b> be a push constant range in {@code layout} that includes that byte and that stage</li>
-     * <li>For each byte in the range specified by {@code offset} and {@code size} and for each push constant range that overlaps that byte, {@code stageFlags} <b>must</b> include all stages in that push constant range&#8217;s {@link VkPushConstantRange}{@code ::stageFlags}</li>
+     * <li>{@code stageFlags} <b>must</b> match exactly the shader stages used in {@code layout} for the range specified by {@code offset} and {@code size}</li>
      * <li>{@code offset} <b>must</b> be a multiple of 4</li>
      * <li>{@code size} <b>must</b> be a multiple of 4</li>
      * <li>{@code offset} <b>must</b> be less than {@link VkPhysicalDeviceLimits}{@code ::maxPushConstantsSize}</li>
@@ -14002,7 +13778,7 @@ public class VK10 {
      * @param offset        the start offset of the push constant range to update, in units of bytes.
      * @param pValues       an array of {@code size} bytes containing the new push constant values.
      */
-    public static void vkCmdPushConstants(VkCommandBuffer commandBuffer, @NativeType("VkPipelineLayout") long layout, @NativeType("VkShaderStageFlags") int stageFlags, @NativeType("uint32_t") int offset, @NativeType("void const *") ByteBuffer pValues) {
+    public static void vkCmdPushConstants(VkCommandBuffer commandBuffer, @NativeType("VkPipelineLayout") long layout, @NativeType("VkShaderStageFlags") int stageFlags, @NativeType("uint32_t") int offset, @NativeType("const void *") ByteBuffer pValues) {
         nvkCmdPushConstants(commandBuffer, layout, stageFlags, offset, pValues.remaining(), memAddress(pValues));
     }
 
@@ -14013,20 +13789,19 @@ public class VK10 {
      * 
      * <p>To update push constants, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * void vkCmdPushConstants(
      *     VkCommandBuffer                             commandBuffer,
      *     VkPipelineLayout                            layout,
      *     VkShaderStageFlags                          stageFlags,
      *     uint32_t                                    offset,
      *     uint32_t                                    size,
-     *     const void*                                 pValues);</code></pre>
+     *     const void*                                 pValues);</pre></code>
      * 
      * <h5>Valid Usage</h5>
      * 
      * <ul>
-     * <li>For each byte in the range specified by {@code offset} and {@code size} and for each shader stage in {@code stageFlags}, there <b>must</b> be a push constant range in {@code layout} that includes that byte and that stage</li>
-     * <li>For each byte in the range specified by {@code offset} and {@code size} and for each push constant range that overlaps that byte, {@code stageFlags} <b>must</b> include all stages in that push constant range&#8217;s {@link VkPushConstantRange}{@code ::stageFlags}</li>
+     * <li>{@code stageFlags} <b>must</b> match exactly the shader stages used in {@code layout} for the range specified by {@code offset} and {@code size}</li>
      * <li>{@code offset} <b>must</b> be a multiple of 4</li>
      * <li>{@code size} <b>must</b> be a multiple of 4</li>
      * <li>{@code offset} <b>must</b> be less than {@link VkPhysicalDeviceLimits}{@code ::maxPushConstantsSize}</li>
@@ -14067,7 +13842,7 @@ public class VK10 {
      * @param offset        the start offset of the push constant range to update, in units of bytes.
      * @param pValues       an array of {@code size} bytes containing the new push constant values.
      */
-    public static void vkCmdPushConstants(VkCommandBuffer commandBuffer, @NativeType("VkPipelineLayout") long layout, @NativeType("VkShaderStageFlags") int stageFlags, @NativeType("uint32_t") int offset, @NativeType("void const *") ShortBuffer pValues) {
+    public static void vkCmdPushConstants(VkCommandBuffer commandBuffer, @NativeType("VkPipelineLayout") long layout, @NativeType("VkShaderStageFlags") int stageFlags, @NativeType("uint32_t") int offset, @NativeType("const void *") ShortBuffer pValues) {
         nvkCmdPushConstants(commandBuffer, layout, stageFlags, offset, pValues.remaining() << 1, memAddress(pValues));
     }
 
@@ -14078,20 +13853,19 @@ public class VK10 {
      * 
      * <p>To update push constants, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * void vkCmdPushConstants(
      *     VkCommandBuffer                             commandBuffer,
      *     VkPipelineLayout                            layout,
      *     VkShaderStageFlags                          stageFlags,
      *     uint32_t                                    offset,
      *     uint32_t                                    size,
-     *     const void*                                 pValues);</code></pre>
+     *     const void*                                 pValues);</pre></code>
      * 
      * <h5>Valid Usage</h5>
      * 
      * <ul>
-     * <li>For each byte in the range specified by {@code offset} and {@code size} and for each shader stage in {@code stageFlags}, there <b>must</b> be a push constant range in {@code layout} that includes that byte and that stage</li>
-     * <li>For each byte in the range specified by {@code offset} and {@code size} and for each push constant range that overlaps that byte, {@code stageFlags} <b>must</b> include all stages in that push constant range&#8217;s {@link VkPushConstantRange}{@code ::stageFlags}</li>
+     * <li>{@code stageFlags} <b>must</b> match exactly the shader stages used in {@code layout} for the range specified by {@code offset} and {@code size}</li>
      * <li>{@code offset} <b>must</b> be a multiple of 4</li>
      * <li>{@code size} <b>must</b> be a multiple of 4</li>
      * <li>{@code offset} <b>must</b> be less than {@link VkPhysicalDeviceLimits}{@code ::maxPushConstantsSize}</li>
@@ -14132,7 +13906,7 @@ public class VK10 {
      * @param offset        the start offset of the push constant range to update, in units of bytes.
      * @param pValues       an array of {@code size} bytes containing the new push constant values.
      */
-    public static void vkCmdPushConstants(VkCommandBuffer commandBuffer, @NativeType("VkPipelineLayout") long layout, @NativeType("VkShaderStageFlags") int stageFlags, @NativeType("uint32_t") int offset, @NativeType("void const *") IntBuffer pValues) {
+    public static void vkCmdPushConstants(VkCommandBuffer commandBuffer, @NativeType("VkPipelineLayout") long layout, @NativeType("VkShaderStageFlags") int stageFlags, @NativeType("uint32_t") int offset, @NativeType("const void *") IntBuffer pValues) {
         nvkCmdPushConstants(commandBuffer, layout, stageFlags, offset, pValues.remaining() << 2, memAddress(pValues));
     }
 
@@ -14143,20 +13917,19 @@ public class VK10 {
      * 
      * <p>To update push constants, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * void vkCmdPushConstants(
      *     VkCommandBuffer                             commandBuffer,
      *     VkPipelineLayout                            layout,
      *     VkShaderStageFlags                          stageFlags,
      *     uint32_t                                    offset,
      *     uint32_t                                    size,
-     *     const void*                                 pValues);</code></pre>
+     *     const void*                                 pValues);</pre></code>
      * 
      * <h5>Valid Usage</h5>
      * 
      * <ul>
-     * <li>For each byte in the range specified by {@code offset} and {@code size} and for each shader stage in {@code stageFlags}, there <b>must</b> be a push constant range in {@code layout} that includes that byte and that stage</li>
-     * <li>For each byte in the range specified by {@code offset} and {@code size} and for each push constant range that overlaps that byte, {@code stageFlags} <b>must</b> include all stages in that push constant range&#8217;s {@link VkPushConstantRange}{@code ::stageFlags}</li>
+     * <li>{@code stageFlags} <b>must</b> match exactly the shader stages used in {@code layout} for the range specified by {@code offset} and {@code size}</li>
      * <li>{@code offset} <b>must</b> be a multiple of 4</li>
      * <li>{@code size} <b>must</b> be a multiple of 4</li>
      * <li>{@code offset} <b>must</b> be less than {@link VkPhysicalDeviceLimits}{@code ::maxPushConstantsSize}</li>
@@ -14197,7 +13970,7 @@ public class VK10 {
      * @param offset        the start offset of the push constant range to update, in units of bytes.
      * @param pValues       an array of {@code size} bytes containing the new push constant values.
      */
-    public static void vkCmdPushConstants(VkCommandBuffer commandBuffer, @NativeType("VkPipelineLayout") long layout, @NativeType("VkShaderStageFlags") int stageFlags, @NativeType("uint32_t") int offset, @NativeType("void const *") LongBuffer pValues) {
+    public static void vkCmdPushConstants(VkCommandBuffer commandBuffer, @NativeType("VkPipelineLayout") long layout, @NativeType("VkShaderStageFlags") int stageFlags, @NativeType("uint32_t") int offset, @NativeType("const void *") LongBuffer pValues) {
         nvkCmdPushConstants(commandBuffer, layout, stageFlags, offset, pValues.remaining() << 3, memAddress(pValues));
     }
 
@@ -14208,20 +13981,19 @@ public class VK10 {
      * 
      * <p>To update push constants, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * void vkCmdPushConstants(
      *     VkCommandBuffer                             commandBuffer,
      *     VkPipelineLayout                            layout,
      *     VkShaderStageFlags                          stageFlags,
      *     uint32_t                                    offset,
      *     uint32_t                                    size,
-     *     const void*                                 pValues);</code></pre>
+     *     const void*                                 pValues);</pre></code>
      * 
      * <h5>Valid Usage</h5>
      * 
      * <ul>
-     * <li>For each byte in the range specified by {@code offset} and {@code size} and for each shader stage in {@code stageFlags}, there <b>must</b> be a push constant range in {@code layout} that includes that byte and that stage</li>
-     * <li>For each byte in the range specified by {@code offset} and {@code size} and for each push constant range that overlaps that byte, {@code stageFlags} <b>must</b> include all stages in that push constant range&#8217;s {@link VkPushConstantRange}{@code ::stageFlags}</li>
+     * <li>{@code stageFlags} <b>must</b> match exactly the shader stages used in {@code layout} for the range specified by {@code offset} and {@code size}</li>
      * <li>{@code offset} <b>must</b> be a multiple of 4</li>
      * <li>{@code size} <b>must</b> be a multiple of 4</li>
      * <li>{@code offset} <b>must</b> be less than {@link VkPhysicalDeviceLimits}{@code ::maxPushConstantsSize}</li>
@@ -14262,7 +14034,7 @@ public class VK10 {
      * @param offset        the start offset of the push constant range to update, in units of bytes.
      * @param pValues       an array of {@code size} bytes containing the new push constant values.
      */
-    public static void vkCmdPushConstants(VkCommandBuffer commandBuffer, @NativeType("VkPipelineLayout") long layout, @NativeType("VkShaderStageFlags") int stageFlags, @NativeType("uint32_t") int offset, @NativeType("void const *") FloatBuffer pValues) {
+    public static void vkCmdPushConstants(VkCommandBuffer commandBuffer, @NativeType("VkPipelineLayout") long layout, @NativeType("VkShaderStageFlags") int stageFlags, @NativeType("uint32_t") int offset, @NativeType("const void *") FloatBuffer pValues) {
         nvkCmdPushConstants(commandBuffer, layout, stageFlags, offset, pValues.remaining() << 2, memAddress(pValues));
     }
 
@@ -14273,20 +14045,19 @@ public class VK10 {
      * 
      * <p>To update push constants, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * void vkCmdPushConstants(
      *     VkCommandBuffer                             commandBuffer,
      *     VkPipelineLayout                            layout,
      *     VkShaderStageFlags                          stageFlags,
      *     uint32_t                                    offset,
      *     uint32_t                                    size,
-     *     const void*                                 pValues);</code></pre>
+     *     const void*                                 pValues);</pre></code>
      * 
      * <h5>Valid Usage</h5>
      * 
      * <ul>
-     * <li>For each byte in the range specified by {@code offset} and {@code size} and for each shader stage in {@code stageFlags}, there <b>must</b> be a push constant range in {@code layout} that includes that byte and that stage</li>
-     * <li>For each byte in the range specified by {@code offset} and {@code size} and for each push constant range that overlaps that byte, {@code stageFlags} <b>must</b> include all stages in that push constant range&#8217;s {@link VkPushConstantRange}{@code ::stageFlags}</li>
+     * <li>{@code stageFlags} <b>must</b> match exactly the shader stages used in {@code layout} for the range specified by {@code offset} and {@code size}</li>
      * <li>{@code offset} <b>must</b> be a multiple of 4</li>
      * <li>{@code size} <b>must</b> be a multiple of 4</li>
      * <li>{@code offset} <b>must</b> be less than {@link VkPhysicalDeviceLimits}{@code ::maxPushConstantsSize}</li>
@@ -14327,7 +14098,7 @@ public class VK10 {
      * @param offset        the start offset of the push constant range to update, in units of bytes.
      * @param pValues       an array of {@code size} bytes containing the new push constant values.
      */
-    public static void vkCmdPushConstants(VkCommandBuffer commandBuffer, @NativeType("VkPipelineLayout") long layout, @NativeType("VkShaderStageFlags") int stageFlags, @NativeType("uint32_t") int offset, @NativeType("void const *") DoubleBuffer pValues) {
+    public static void vkCmdPushConstants(VkCommandBuffer commandBuffer, @NativeType("VkPipelineLayout") long layout, @NativeType("VkShaderStageFlags") int stageFlags, @NativeType("uint32_t") int offset, @NativeType("const void *") DoubleBuffer pValues) {
         nvkCmdPushConstants(commandBuffer, layout, stageFlags, offset, pValues.remaining() << 3, memAddress(pValues));
     }
 
@@ -14349,11 +14120,11 @@ public class VK10 {
      * 
      * <p>To begin a render pass instance, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * void vkCmdBeginRenderPass(
      *     VkCommandBuffer                             commandBuffer,
      *     const VkRenderPassBeginInfo*                pRenderPassBegin,
-     *     VkSubpassContents                           contents);</code></pre>
+     *     VkSubpassContents                           contents);</pre></code>
      * 
      * <h5>Description</h5>
      * 
@@ -14363,7 +14134,7 @@ public class VK10 {
      * 
      * <ul>
      * <li>If any of the {@code initialLayout} or {@code finalLayout} member of the {@link VkAttachmentDescription} structures or the {@code layout} member of the {@link VkAttachmentReference} structures specified when creating the render pass specified in the {@code renderPass} member of {@code pRenderPassBegin} is {@link #VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL} then the corresponding attachment image subresource of the framebuffer specified in the {@code framebuffer} member of {@code pRenderPassBegin} <b>must</b> have been created with {@link #VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT IMAGE_USAGE_COLOR_ATTACHMENT_BIT} set</li>
-     * <li>If any of the {@code initialLayout} or {@code finalLayout} member of the {@link VkAttachmentDescription} structures or the {@code layout} member of the {@link VkAttachmentReference} structures specified when creating the render pass specified in the {@code renderPass} member of {@code pRenderPassBegin} is {@link VK11#VK_IMAGE_LAYOUT_DEPTH_READ_ONLY_STENCIL_ATTACHMENT_OPTIMAL IMAGE_LAYOUT_DEPTH_READ_ONLY_STENCIL_ATTACHMENT_OPTIMAL}, {@link VK11#VK_IMAGE_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_OPTIMAL IMAGE_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_OPTIMAL}, {@link #VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL}, or {@link #VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL} then the corresponding attachment image subresource of the framebuffer specified in the {@code framebuffer} member of {@code pRenderPassBegin} <b>must</b> have been created with {@link #VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT} set</li>
+     * <li>If any of the {@code initialLayout} or {@code finalLayout} member of the {@link VkAttachmentDescription} structures or the {@code layout} member of the {@link VkAttachmentReference} structures specified when creating the render pass specified in the {@code renderPass} member of {@code pRenderPassBegin} is {@link KHRMaintenance2#VK_IMAGE_LAYOUT_DEPTH_READ_ONLY_STENCIL_ATTACHMENT_OPTIMAL_KHR IMAGE_LAYOUT_DEPTH_READ_ONLY_STENCIL_ATTACHMENT_OPTIMAL_KHR}, {@link KHRMaintenance2#VK_IMAGE_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_OPTIMAL_KHR IMAGE_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_OPTIMAL_KHR}, {@link #VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL}, or {@link #VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL} then the corresponding attachment image subresource of the framebuffer specified in the {@code framebuffer} member of {@code pRenderPassBegin} <b>must</b> have been created with {@link #VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT} set</li>
      * <li>If any of the {@code initialLayout} or {@code finalLayout} member of the {@link VkAttachmentDescription} structures or the {@code layout} member of the {@link VkAttachmentReference} structures specified when creating the render pass specified in the {@code renderPass} member of {@code pRenderPassBegin} is {@link #VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL} then the corresponding attachment image subresource of the framebuffer specified in the {@code framebuffer} member of {@code pRenderPassBegin} <b>must</b> have been created with {@link #VK_IMAGE_USAGE_SAMPLED_BIT IMAGE_USAGE_SAMPLED_BIT} or {@link #VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT IMAGE_USAGE_INPUT_ATTACHMENT_BIT} set</li>
      * <li>If any of the {@code initialLayout} or {@code finalLayout} member of the {@link VkAttachmentDescription} structures or the {@code layout} member of the {@link VkAttachmentReference} structures specified when creating the render pass specified in the {@code renderPass} member of {@code pRenderPassBegin} is {@link #VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL} then the corresponding attachment image subresource of the framebuffer specified in the {@code framebuffer} member of {@code pRenderPassBegin} <b>must</b> have been created with {@link #VK_IMAGE_USAGE_TRANSFER_SRC_BIT IMAGE_USAGE_TRANSFER_SRC_BIT} set</li>
      * <li>If any of the {@code initialLayout} or {@code finalLayout} member of the {@link VkAttachmentDescription} structures or the {@code layout} member of the {@link VkAttachmentReference} structures specified when creating the render pass specified in the {@code renderPass} member of {@code pRenderPassBegin} is {@link #VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL} then the corresponding attachment image subresource of the framebuffer specified in the {@code framebuffer} member of {@code pRenderPassBegin} <b>must</b> have been created with {@link #VK_IMAGE_USAGE_TRANSFER_DST_BIT IMAGE_USAGE_TRANSFER_DST_BIT} set</li>
@@ -14402,10 +14173,10 @@ public class VK10 {
      * <p>{@link VkRenderPassBeginInfo}</p>
      *
      * @param commandBuffer    the command buffer in which to record the command.
-     * @param pRenderPassBegin a pointer to a {@link VkRenderPassBeginInfo} structure (defined below) which specifies the render pass to begin an instance of, and the framebuffer the instance uses.
+     * @param pRenderPassBegin a pointer to a {@link VkRenderPassBeginInfo} structure (defined below) which indicates the render pass to begin an instance of, and the framebuffer the instance uses.
      * @param contents         a {@code VkSubpassContents} value specifying how the commands in the first subpass will be provided.
      */
-    public static void vkCmdBeginRenderPass(VkCommandBuffer commandBuffer, @NativeType("VkRenderPassBeginInfo const *") VkRenderPassBeginInfo pRenderPassBegin, @NativeType("VkSubpassContents") int contents) {
+    public static void vkCmdBeginRenderPass(VkCommandBuffer commandBuffer, @NativeType("const VkRenderPassBeginInfo *") VkRenderPassBeginInfo pRenderPassBegin, @NativeType("VkSubpassContents") int contents) {
         nvkCmdBeginRenderPass(commandBuffer, pRenderPassBegin.address(), contents);
     }
 
@@ -14418,10 +14189,10 @@ public class VK10 {
      * 
      * <p>To transition to the next subpass in the render pass instance after recording the commands for a subpass, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * void vkCmdNextSubpass(
      *     VkCommandBuffer                             commandBuffer,
-     *     VkSubpassContents                           contents);</code></pre>
+     *     VkSubpassContents                           contents);</pre></code>
      * 
      * <h5>Description</h5>
      * 
@@ -14479,9 +14250,9 @@ public class VK10 {
      * 
      * <p>To record a command to end a render pass instance after recording the commands for the last subpass, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * void vkCmdEndRenderPass(
-     *     VkCommandBuffer                             commandBuffer);</code></pre>
+     *     VkCommandBuffer                             commandBuffer);</pre></code>
      * 
      * <h5>Description</h5>
      * 
@@ -14543,11 +14314,11 @@ public class VK10 {
      * 
      * <p>A secondary command buffer <b>must</b> not be directly submitted to a queue. Instead, secondary command buffers are recorded to execute as part of a primary command buffer with the command:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * void vkCmdExecuteCommands(
      *     VkCommandBuffer                             commandBuffer,
      *     uint32_t                                    commandBufferCount,
-     *     const VkCommandBuffer*                      pCommandBuffers);</code></pre>
+     *     const VkCommandBuffer*                      pCommandBuffers);</pre></code>
      * 
      * <h5>Description</h5>
      * 
@@ -14575,8 +14346,6 @@ public class VK10 {
      * <li>If {@code commandBuffer} has a {@link #VK_QUERY_TYPE_OCCLUSION QUERY_TYPE_OCCLUSION} query <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#queries-operation-active">active</a>, then each element of {@code pCommandBuffers} <b>must</b> have been recorded with {@link VkCommandBufferInheritanceInfo}{@code ::queryFlags} having all bits set that are set for the query</li>
      * <li>If {@code commandBuffer} has a {@link #VK_QUERY_TYPE_PIPELINE_STATISTICS QUERY_TYPE_PIPELINE_STATISTICS} query <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#queries-operation-active">active</a>, then each element of {@code pCommandBuffers} <b>must</b> have been recorded with {@link VkCommandBufferInheritanceInfo}{@code ::pipelineStatistics} having all bits set that are set in the {@code VkQueryPool} the query uses</li>
      * <li>Each element of {@code pCommandBuffers} <b>must</b> not begin any query types that are <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#queries-operation-active">active</a> in {@code commandBuffer}</li>
-     * <li>If {@code commandBuffer} is a protected command buffer, then each element of {@code pCommandBuffers} <b>must</b> be a protected command buffer.</li>
-     * <li>If {@code commandBuffer} is an unprotected command buffer, then each element of {@code pCommandBuffers} <b>must</b> be an unprotected command buffer.</li>
      * </ul>
      * 
      * <h5>Valid Usage (Implicit)</h5>
@@ -14608,7 +14377,7 @@ public class VK10 {
      * @param commandBuffer   a handle to a primary command buffer that the secondary command buffers are executed in.
      * @param pCommandBuffers an array of secondary command buffer handles, which are recorded to execute in the primary command buffer in the order they are listed in the array.
      */
-    public static void vkCmdExecuteCommands(VkCommandBuffer commandBuffer, @NativeType("VkCommandBuffer const *") PointerBuffer pCommandBuffers) {
+    public static void vkCmdExecuteCommands(VkCommandBuffer commandBuffer, @NativeType("const VkCommandBuffer *") PointerBuffer pCommandBuffers) {
         nvkCmdExecuteCommands(commandBuffer, pCommandBuffers.remaining(), memAddress(pCommandBuffers));
     }
 
@@ -14619,11 +14388,11 @@ public class VK10 {
      * 
      * <p>A secondary command buffer <b>must</b> not be directly submitted to a queue. Instead, secondary command buffers are recorded to execute as part of a primary command buffer with the command:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * void vkCmdExecuteCommands(
      *     VkCommandBuffer                             commandBuffer,
      *     uint32_t                                    commandBufferCount,
-     *     const VkCommandBuffer*                      pCommandBuffers);</code></pre>
+     *     const VkCommandBuffer*                      pCommandBuffers);</pre></code>
      * 
      * <h5>Description</h5>
      * 
@@ -14651,8 +14420,6 @@ public class VK10 {
      * <li>If {@code commandBuffer} has a {@link #VK_QUERY_TYPE_OCCLUSION QUERY_TYPE_OCCLUSION} query <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#queries-operation-active">active</a>, then each element of {@code pCommandBuffers} <b>must</b> have been recorded with {@link VkCommandBufferInheritanceInfo}{@code ::queryFlags} having all bits set that are set for the query</li>
      * <li>If {@code commandBuffer} has a {@link #VK_QUERY_TYPE_PIPELINE_STATISTICS QUERY_TYPE_PIPELINE_STATISTICS} query <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#queries-operation-active">active</a>, then each element of {@code pCommandBuffers} <b>must</b> have been recorded with {@link VkCommandBufferInheritanceInfo}{@code ::pipelineStatistics} having all bits set that are set in the {@code VkQueryPool} the query uses</li>
      * <li>Each element of {@code pCommandBuffers} <b>must</b> not begin any query types that are <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#queries-operation-active">active</a> in {@code commandBuffer}</li>
-     * <li>If {@code commandBuffer} is a protected command buffer, then each element of {@code pCommandBuffers} <b>must</b> be a protected command buffer.</li>
-     * <li>If {@code commandBuffer} is an unprotected command buffer, then each element of {@code pCommandBuffers} <b>must</b> be an unprotected command buffer.</li>
      * </ul>
      * 
      * <h5>Valid Usage (Implicit)</h5>
@@ -14683,7 +14450,7 @@ public class VK10 {
      *
      * @param commandBuffer a handle to a primary command buffer that the secondary command buffers are executed in.
      */
-    public static void vkCmdExecuteCommands(VkCommandBuffer commandBuffer, @NativeType("VkCommandBuffer const *") VkCommandBuffer pCommandBuffer) {
+    public static void vkCmdExecuteCommands(VkCommandBuffer commandBuffer, @NativeType("const VkCommandBuffer *") VkCommandBuffer pCommandBuffer) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
             PointerBuffer pCommandBuffers = stack.pointers(pCommandBuffer);
@@ -14745,7 +14512,7 @@ public class VK10 {
         return version & 0xFFF;
     }
 
-    /** Array version of: {@link #vkEnumeratePhysicalDevices EnumeratePhysicalDevices} */
+    /** register Array version of: {@link #vkEnumeratePhysicalDevices EnumeratePhysicalDevices} */
     @NativeType("VkResult")
     public static int vkEnumeratePhysicalDevices(VkInstance instance, @NativeType("uint32_t *") int[] pPhysicalDeviceCount, @Nullable @NativeType("VkPhysicalDevice *") PointerBuffer pPhysicalDevices) {
         long __functionAddress = instance.getCapabilities().vkEnumeratePhysicalDevices;
@@ -14756,7 +14523,7 @@ public class VK10 {
         return callPPPI(__functionAddress, instance.address(), pPhysicalDeviceCount, memAddressSafe(pPhysicalDevices));
     }
 
-    /** Array version of: {@link #vkGetPhysicalDeviceQueueFamilyProperties GetPhysicalDeviceQueueFamilyProperties} */
+    /** register Array version of: {@link #vkGetPhysicalDeviceQueueFamilyProperties GetPhysicalDeviceQueueFamilyProperties} */
     public static void vkGetPhysicalDeviceQueueFamilyProperties(VkPhysicalDevice physicalDevice, @NativeType("uint32_t *") int[] pQueueFamilyPropertyCount, @Nullable @NativeType("VkQueueFamilyProperties *") VkQueueFamilyProperties.Buffer pQueueFamilyProperties) {
         long __functionAddress = physicalDevice.getCapabilities().vkGetPhysicalDeviceQueueFamilyProperties;
         if (CHECKS) {
@@ -14766,9 +14533,9 @@ public class VK10 {
         callPPPV(__functionAddress, physicalDevice.address(), pQueueFamilyPropertyCount, memAddressSafe(pQueueFamilyProperties));
     }
 
-    /** Array version of: {@link #vkEnumerateInstanceExtensionProperties EnumerateInstanceExtensionProperties} */
+    /** register Array version of: {@link #vkEnumerateInstanceExtensionProperties EnumerateInstanceExtensionProperties} */
     @NativeType("VkResult")
-    public static int vkEnumerateInstanceExtensionProperties(@Nullable @NativeType("char const *") ByteBuffer pLayerName, @NativeType("uint32_t *") int[] pPropertyCount, @Nullable @NativeType("VkExtensionProperties *") VkExtensionProperties.Buffer pProperties) {
+    public static int vkEnumerateInstanceExtensionProperties(@Nullable @NativeType("const char *") ByteBuffer pLayerName, @NativeType("uint32_t *") int[] pPropertyCount, @Nullable @NativeType("VkExtensionProperties *") VkExtensionProperties.Buffer pProperties) {
         long __functionAddress = VK.getGlobalCommands().vkEnumerateInstanceExtensionProperties;
         if (CHECKS) {
             checkNT1Safe(pLayerName);
@@ -14778,9 +14545,9 @@ public class VK10 {
         return callPPPI(__functionAddress, memAddressSafe(pLayerName), pPropertyCount, memAddressSafe(pProperties));
     }
 
-    /** Array version of: {@link #vkEnumerateInstanceExtensionProperties EnumerateInstanceExtensionProperties} */
+    /** register Array version of: {@link #vkEnumerateInstanceExtensionProperties EnumerateInstanceExtensionProperties} */
     @NativeType("VkResult")
-    public static int vkEnumerateInstanceExtensionProperties(@Nullable @NativeType("char const *") CharSequence pLayerName, @NativeType("uint32_t *") int[] pPropertyCount, @Nullable @NativeType("VkExtensionProperties *") VkExtensionProperties.Buffer pProperties) {
+    public static int vkEnumerateInstanceExtensionProperties(@Nullable @NativeType("const char *") CharSequence pLayerName, @NativeType("uint32_t *") int[] pPropertyCount, @Nullable @NativeType("VkExtensionProperties *") VkExtensionProperties.Buffer pProperties) {
         long __functionAddress = VK.getGlobalCommands().vkEnumerateInstanceExtensionProperties;
         if (CHECKS) {
             check(pPropertyCount, 1);
@@ -14795,9 +14562,9 @@ public class VK10 {
         }
     }
 
-    /** Array version of: {@link #vkEnumerateDeviceExtensionProperties EnumerateDeviceExtensionProperties} */
+    /** register Array version of: {@link #vkEnumerateDeviceExtensionProperties EnumerateDeviceExtensionProperties} */
     @NativeType("VkResult")
-    public static int vkEnumerateDeviceExtensionProperties(VkPhysicalDevice physicalDevice, @Nullable @NativeType("char const *") ByteBuffer pLayerName, @NativeType("uint32_t *") int[] pPropertyCount, @Nullable @NativeType("VkExtensionProperties *") VkExtensionProperties.Buffer pProperties) {
+    public static int vkEnumerateDeviceExtensionProperties(VkPhysicalDevice physicalDevice, @Nullable @NativeType("const char *") ByteBuffer pLayerName, @NativeType("uint32_t *") int[] pPropertyCount, @Nullable @NativeType("VkExtensionProperties *") VkExtensionProperties.Buffer pProperties) {
         long __functionAddress = physicalDevice.getCapabilities().vkEnumerateDeviceExtensionProperties;
         if (CHECKS) {
             checkNT1Safe(pLayerName);
@@ -14807,9 +14574,9 @@ public class VK10 {
         return callPPPPI(__functionAddress, physicalDevice.address(), memAddressSafe(pLayerName), pPropertyCount, memAddressSafe(pProperties));
     }
 
-    /** Array version of: {@link #vkEnumerateDeviceExtensionProperties EnumerateDeviceExtensionProperties} */
+    /** register Array version of: {@link #vkEnumerateDeviceExtensionProperties EnumerateDeviceExtensionProperties} */
     @NativeType("VkResult")
-    public static int vkEnumerateDeviceExtensionProperties(VkPhysicalDevice physicalDevice, @Nullable @NativeType("char const *") CharSequence pLayerName, @NativeType("uint32_t *") int[] pPropertyCount, @Nullable @NativeType("VkExtensionProperties *") VkExtensionProperties.Buffer pProperties) {
+    public static int vkEnumerateDeviceExtensionProperties(VkPhysicalDevice physicalDevice, @Nullable @NativeType("const char *") CharSequence pLayerName, @NativeType("uint32_t *") int[] pPropertyCount, @Nullable @NativeType("VkExtensionProperties *") VkExtensionProperties.Buffer pProperties) {
         long __functionAddress = physicalDevice.getCapabilities().vkEnumerateDeviceExtensionProperties;
         if (CHECKS) {
             check(pPropertyCount, 1);
@@ -14824,7 +14591,7 @@ public class VK10 {
         }
     }
 
-    /** Array version of: {@link #vkEnumerateInstanceLayerProperties EnumerateInstanceLayerProperties} */
+    /** register Array version of: {@link #vkEnumerateInstanceLayerProperties EnumerateInstanceLayerProperties} */
     @NativeType("VkResult")
     public static int vkEnumerateInstanceLayerProperties(@NativeType("uint32_t *") int[] pPropertyCount, @Nullable @NativeType("VkLayerProperties *") VkLayerProperties.Buffer pProperties) {
         long __functionAddress = VK.getGlobalCommands().vkEnumerateInstanceLayerProperties;
@@ -14835,7 +14602,7 @@ public class VK10 {
         return callPPI(__functionAddress, pPropertyCount, memAddressSafe(pProperties));
     }
 
-    /** Array version of: {@link #vkEnumerateDeviceLayerProperties EnumerateDeviceLayerProperties} */
+    /** register Array version of: {@link #vkEnumerateDeviceLayerProperties EnumerateDeviceLayerProperties} */
     @NativeType("VkResult")
     public static int vkEnumerateDeviceLayerProperties(VkPhysicalDevice physicalDevice, @NativeType("uint32_t *") int[] pPropertyCount, @Nullable @NativeType("VkLayerProperties *") VkLayerProperties.Buffer pProperties) {
         long __functionAddress = physicalDevice.getCapabilities().vkEnumerateDeviceLayerProperties;
@@ -14846,9 +14613,9 @@ public class VK10 {
         return callPPPI(__functionAddress, physicalDevice.address(), pPropertyCount, memAddressSafe(pProperties));
     }
 
-    /** Array version of: {@link #vkAllocateMemory AllocateMemory} */
+    /** register Array version of: {@link #vkAllocateMemory AllocateMemory} */
     @NativeType("VkResult")
-    public static int vkAllocateMemory(VkDevice device, @NativeType("VkMemoryAllocateInfo const *") VkMemoryAllocateInfo pAllocateInfo, @Nullable @NativeType("VkAllocationCallbacks const *") VkAllocationCallbacks pAllocator, @NativeType("VkDeviceMemory *") long[] pMemory) {
+    public static int vkAllocateMemory(VkDevice device, @NativeType("const VkMemoryAllocateInfo *") VkMemoryAllocateInfo pAllocateInfo, @Nullable @NativeType("const VkAllocationCallbacks *") VkAllocationCallbacks pAllocator, @NativeType("VkDeviceMemory *") long[] pMemory) {
         long __functionAddress = device.getCapabilities().vkAllocateMemory;
         if (CHECKS) {
             check(pMemory, 1);
@@ -14857,7 +14624,7 @@ public class VK10 {
         return callPPPPI(__functionAddress, device.address(), pAllocateInfo.address(), memAddressSafe(pAllocator), pMemory);
     }
 
-    /** Array version of: {@link #vkGetDeviceMemoryCommitment GetDeviceMemoryCommitment} */
+    /** register Array version of: {@link #vkGetDeviceMemoryCommitment GetDeviceMemoryCommitment} */
     public static void vkGetDeviceMemoryCommitment(VkDevice device, @NativeType("VkDeviceMemory") long memory, @NativeType("VkDeviceSize *") long[] pCommittedMemoryInBytes) {
         long __functionAddress = device.getCapabilities().vkGetDeviceMemoryCommitment;
         if (CHECKS) {
@@ -14866,7 +14633,7 @@ public class VK10 {
         callPJPV(__functionAddress, device.address(), memory, pCommittedMemoryInBytes);
     }
 
-    /** Array version of: {@link #vkGetImageSparseMemoryRequirements GetImageSparseMemoryRequirements} */
+    /** register Array version of: {@link #vkGetImageSparseMemoryRequirements GetImageSparseMemoryRequirements} */
     public static void vkGetImageSparseMemoryRequirements(VkDevice device, @NativeType("VkImage") long image, @NativeType("uint32_t *") int[] pSparseMemoryRequirementCount, @Nullable @NativeType("VkSparseImageMemoryRequirements *") VkSparseImageMemoryRequirements.Buffer pSparseMemoryRequirements) {
         long __functionAddress = device.getCapabilities().vkGetImageSparseMemoryRequirements;
         if (CHECKS) {
@@ -14876,7 +14643,7 @@ public class VK10 {
         callPJPPV(__functionAddress, device.address(), image, pSparseMemoryRequirementCount, memAddressSafe(pSparseMemoryRequirements));
     }
 
-    /** Array version of: {@link #vkGetPhysicalDeviceSparseImageFormatProperties GetPhysicalDeviceSparseImageFormatProperties} */
+    /** register Array version of: {@link #vkGetPhysicalDeviceSparseImageFormatProperties GetPhysicalDeviceSparseImageFormatProperties} */
     public static void vkGetPhysicalDeviceSparseImageFormatProperties(VkPhysicalDevice physicalDevice, @NativeType("VkFormat") int format, @NativeType("VkImageType") int type, @NativeType("VkSampleCountFlagBits") int samples, @NativeType("VkImageUsageFlags") int usage, @NativeType("VkImageTiling") int tiling, @NativeType("uint32_t *") int[] pPropertyCount, @Nullable @NativeType("VkSparseImageFormatProperties *") VkSparseImageFormatProperties.Buffer pProperties) {
         long __functionAddress = physicalDevice.getCapabilities().vkGetPhysicalDeviceSparseImageFormatProperties;
         if (CHECKS) {
@@ -14886,9 +14653,9 @@ public class VK10 {
         callPPPV(__functionAddress, physicalDevice.address(), format, type, samples, usage, tiling, pPropertyCount, memAddressSafe(pProperties));
     }
 
-    /** Array version of: {@link #vkCreateFence CreateFence} */
+    /** register Array version of: {@link #vkCreateFence CreateFence} */
     @NativeType("VkResult")
-    public static int vkCreateFence(VkDevice device, @NativeType("VkFenceCreateInfo const *") VkFenceCreateInfo pCreateInfo, @Nullable @NativeType("VkAllocationCallbacks const *") VkAllocationCallbacks pAllocator, @NativeType("VkFence *") long[] pFence) {
+    public static int vkCreateFence(VkDevice device, @NativeType("const VkFenceCreateInfo *") VkFenceCreateInfo pCreateInfo, @Nullable @NativeType("const VkAllocationCallbacks *") VkAllocationCallbacks pAllocator, @NativeType("VkFence *") long[] pFence) {
         long __functionAddress = device.getCapabilities().vkCreateFence;
         if (CHECKS) {
             check(pFence, 1);
@@ -14897,23 +14664,23 @@ public class VK10 {
         return callPPPPI(__functionAddress, device.address(), pCreateInfo.address(), memAddressSafe(pAllocator), pFence);
     }
 
-    /** Array version of: {@link #vkResetFences ResetFences} */
+    /** register Array version of: {@link #vkResetFences ResetFences} */
     @NativeType("VkResult")
-    public static int vkResetFences(VkDevice device, @NativeType("VkFence const *") long[] pFences) {
+    public static int vkResetFences(VkDevice device, @NativeType("const VkFence *") long[] pFences) {
         long __functionAddress = device.getCapabilities().vkResetFences;
         return callPPI(__functionAddress, device.address(), pFences.length, pFences);
     }
 
-    /** Array version of: {@link #vkWaitForFences WaitForFences} */
+    /** register Array version of: {@link #vkWaitForFences WaitForFences} */
     @NativeType("VkResult")
-    public static int vkWaitForFences(VkDevice device, @NativeType("VkFence const *") long[] pFences, @NativeType("VkBool32") boolean waitAll, @NativeType("uint64_t") long timeout) {
+    public static int vkWaitForFences(VkDevice device, @NativeType("const VkFence *") long[] pFences, @NativeType("VkBool32") boolean waitAll, @NativeType("uint64_t") long timeout) {
         long __functionAddress = device.getCapabilities().vkWaitForFences;
         return callPPJI(__functionAddress, device.address(), pFences.length, pFences, waitAll ? 1 : 0, timeout);
     }
 
-    /** Array version of: {@link #vkCreateSemaphore CreateSemaphore} */
+    /** register Array version of: {@link #vkCreateSemaphore CreateSemaphore} */
     @NativeType("VkResult")
-    public static int vkCreateSemaphore(VkDevice device, @NativeType("VkSemaphoreCreateInfo const *") VkSemaphoreCreateInfo pCreateInfo, @Nullable @NativeType("VkAllocationCallbacks const *") VkAllocationCallbacks pAllocator, @NativeType("VkSemaphore *") long[] pSemaphore) {
+    public static int vkCreateSemaphore(VkDevice device, @NativeType("const VkSemaphoreCreateInfo *") VkSemaphoreCreateInfo pCreateInfo, @Nullable @NativeType("const VkAllocationCallbacks *") VkAllocationCallbacks pAllocator, @NativeType("VkSemaphore *") long[] pSemaphore) {
         long __functionAddress = device.getCapabilities().vkCreateSemaphore;
         if (CHECKS) {
             check(pSemaphore, 1);
@@ -14922,9 +14689,9 @@ public class VK10 {
         return callPPPPI(__functionAddress, device.address(), pCreateInfo.address(), memAddressSafe(pAllocator), pSemaphore);
     }
 
-    /** Array version of: {@link #vkCreateEvent CreateEvent} */
+    /** register Array version of: {@link #vkCreateEvent CreateEvent} */
     @NativeType("VkResult")
-    public static int vkCreateEvent(VkDevice device, @NativeType("VkEventCreateInfo const *") VkEventCreateInfo pCreateInfo, @Nullable @NativeType("VkAllocationCallbacks const *") VkAllocationCallbacks pAllocator, @NativeType("VkEvent *") long[] pEvent) {
+    public static int vkCreateEvent(VkDevice device, @NativeType("const VkEventCreateInfo *") VkEventCreateInfo pCreateInfo, @Nullable @NativeType("const VkAllocationCallbacks *") VkAllocationCallbacks pAllocator, @NativeType("VkEvent *") long[] pEvent) {
         long __functionAddress = device.getCapabilities().vkCreateEvent;
         if (CHECKS) {
             check(pEvent, 1);
@@ -14933,9 +14700,9 @@ public class VK10 {
         return callPPPPI(__functionAddress, device.address(), pCreateInfo.address(), memAddressSafe(pAllocator), pEvent);
     }
 
-    /** Array version of: {@link #vkCreateQueryPool CreateQueryPool} */
+    /** register Array version of: {@link #vkCreateQueryPool CreateQueryPool} */
     @NativeType("VkResult")
-    public static int vkCreateQueryPool(VkDevice device, @NativeType("VkQueryPoolCreateInfo const *") VkQueryPoolCreateInfo pCreateInfo, @Nullable @NativeType("VkAllocationCallbacks const *") VkAllocationCallbacks pAllocator, @NativeType("VkQueryPool *") long[] pQueryPool) {
+    public static int vkCreateQueryPool(VkDevice device, @NativeType("const VkQueryPoolCreateInfo *") VkQueryPoolCreateInfo pCreateInfo, @Nullable @NativeType("const VkAllocationCallbacks *") VkAllocationCallbacks pAllocator, @NativeType("VkQueryPool *") long[] pQueryPool) {
         long __functionAddress = device.getCapabilities().vkCreateQueryPool;
         if (CHECKS) {
             check(pQueryPool, 1);
@@ -14944,23 +14711,23 @@ public class VK10 {
         return callPPPPI(__functionAddress, device.address(), pCreateInfo.address(), memAddressSafe(pAllocator), pQueryPool);
     }
 
-    /** Array version of: {@link #vkGetQueryPoolResults GetQueryPoolResults} */
+    /** register Array version of: {@link #vkGetQueryPoolResults GetQueryPoolResults} */
     @NativeType("VkResult")
     public static int vkGetQueryPoolResults(VkDevice device, @NativeType("VkQueryPool") long queryPool, @NativeType("uint32_t") int firstQuery, @NativeType("uint32_t") int queryCount, @NativeType("void *") int[] pData, @NativeType("VkDeviceSize") long stride, @NativeType("VkQueryResultFlags") int flags) {
         long __functionAddress = device.getCapabilities().vkGetQueryPoolResults;
-        return callPJPPJI(__functionAddress, device.address(), queryPool, firstQuery, queryCount, Integer.toUnsignedLong(pData.length) << 2, pData, stride, flags);
+        return callPJPPJI(__functionAddress, device.address(), queryPool, firstQuery, queryCount, (long)(pData.length << 2), pData, stride, flags);
     }
 
-    /** Array version of: {@link #vkGetQueryPoolResults GetQueryPoolResults} */
+    /** register Array version of: {@link #vkGetQueryPoolResults GetQueryPoolResults} */
     @NativeType("VkResult")
     public static int vkGetQueryPoolResults(VkDevice device, @NativeType("VkQueryPool") long queryPool, @NativeType("uint32_t") int firstQuery, @NativeType("uint32_t") int queryCount, @NativeType("void *") long[] pData, @NativeType("VkDeviceSize") long stride, @NativeType("VkQueryResultFlags") int flags) {
         long __functionAddress = device.getCapabilities().vkGetQueryPoolResults;
-        return callPJPPJI(__functionAddress, device.address(), queryPool, firstQuery, queryCount, Integer.toUnsignedLong(pData.length) << 3, pData, stride, flags);
+        return callPJPPJI(__functionAddress, device.address(), queryPool, firstQuery, queryCount, (long)(pData.length << 3), pData, stride, flags);
     }
 
-    /** Array version of: {@link #vkCreateBuffer CreateBuffer} */
+    /** register Array version of: {@link #vkCreateBuffer CreateBuffer} */
     @NativeType("VkResult")
-    public static int vkCreateBuffer(VkDevice device, @NativeType("VkBufferCreateInfo const *") VkBufferCreateInfo pCreateInfo, @Nullable @NativeType("VkAllocationCallbacks const *") VkAllocationCallbacks pAllocator, @NativeType("VkBuffer *") long[] pBuffer) {
+    public static int vkCreateBuffer(VkDevice device, @NativeType("const VkBufferCreateInfo *") VkBufferCreateInfo pCreateInfo, @Nullable @NativeType("const VkAllocationCallbacks *") VkAllocationCallbacks pAllocator, @NativeType("VkBuffer *") long[] pBuffer) {
         long __functionAddress = device.getCapabilities().vkCreateBuffer;
         if (CHECKS) {
             check(pBuffer, 1);
@@ -14970,9 +14737,9 @@ public class VK10 {
         return callPPPPI(__functionAddress, device.address(), pCreateInfo.address(), memAddressSafe(pAllocator), pBuffer);
     }
 
-    /** Array version of: {@link #vkCreateBufferView CreateBufferView} */
+    /** register Array version of: {@link #vkCreateBufferView CreateBufferView} */
     @NativeType("VkResult")
-    public static int vkCreateBufferView(VkDevice device, @NativeType("VkBufferViewCreateInfo const *") VkBufferViewCreateInfo pCreateInfo, @Nullable @NativeType("VkAllocationCallbacks const *") VkAllocationCallbacks pAllocator, @NativeType("VkBufferView *") long[] pView) {
+    public static int vkCreateBufferView(VkDevice device, @NativeType("const VkBufferViewCreateInfo *") VkBufferViewCreateInfo pCreateInfo, @Nullable @NativeType("const VkAllocationCallbacks *") VkAllocationCallbacks pAllocator, @NativeType("VkBufferView *") long[] pView) {
         long __functionAddress = device.getCapabilities().vkCreateBufferView;
         if (CHECKS) {
             check(pView, 1);
@@ -14981,9 +14748,9 @@ public class VK10 {
         return callPPPPI(__functionAddress, device.address(), pCreateInfo.address(), memAddressSafe(pAllocator), pView);
     }
 
-    /** Array version of: {@link #vkCreateImage CreateImage} */
+    /** register Array version of: {@link #vkCreateImage CreateImage} */
     @NativeType("VkResult")
-    public static int vkCreateImage(VkDevice device, @NativeType("VkImageCreateInfo const *") VkImageCreateInfo pCreateInfo, @Nullable @NativeType("VkAllocationCallbacks const *") VkAllocationCallbacks pAllocator, @NativeType("VkImage *") long[] pImage) {
+    public static int vkCreateImage(VkDevice device, @NativeType("const VkImageCreateInfo *") VkImageCreateInfo pCreateInfo, @Nullable @NativeType("const VkAllocationCallbacks *") VkAllocationCallbacks pAllocator, @NativeType("VkImage *") long[] pImage) {
         long __functionAddress = device.getCapabilities().vkCreateImage;
         if (CHECKS) {
             check(pImage, 1);
@@ -14993,9 +14760,9 @@ public class VK10 {
         return callPPPPI(__functionAddress, device.address(), pCreateInfo.address(), memAddressSafe(pAllocator), pImage);
     }
 
-    /** Array version of: {@link #vkCreateImageView CreateImageView} */
+    /** register Array version of: {@link #vkCreateImageView CreateImageView} */
     @NativeType("VkResult")
-    public static int vkCreateImageView(VkDevice device, @NativeType("VkImageViewCreateInfo const *") VkImageViewCreateInfo pCreateInfo, @Nullable @NativeType("VkAllocationCallbacks const *") VkAllocationCallbacks pAllocator, @NativeType("VkImageView *") long[] pView) {
+    public static int vkCreateImageView(VkDevice device, @NativeType("const VkImageViewCreateInfo *") VkImageViewCreateInfo pCreateInfo, @Nullable @NativeType("const VkAllocationCallbacks *") VkAllocationCallbacks pAllocator, @NativeType("VkImageView *") long[] pView) {
         long __functionAddress = device.getCapabilities().vkCreateImageView;
         if (CHECKS) {
             check(pView, 1);
@@ -15004,9 +14771,9 @@ public class VK10 {
         return callPPPPI(__functionAddress, device.address(), pCreateInfo.address(), memAddressSafe(pAllocator), pView);
     }
 
-    /** Array version of: {@link #vkCreateShaderModule CreateShaderModule} */
+    /** register Array version of: {@link #vkCreateShaderModule CreateShaderModule} */
     @NativeType("VkResult")
-    public static int vkCreateShaderModule(VkDevice device, @NativeType("VkShaderModuleCreateInfo const *") VkShaderModuleCreateInfo pCreateInfo, @Nullable @NativeType("VkAllocationCallbacks const *") VkAllocationCallbacks pAllocator, @NativeType("VkShaderModule *") long[] pShaderModule) {
+    public static int vkCreateShaderModule(VkDevice device, @NativeType("const VkShaderModuleCreateInfo *") VkShaderModuleCreateInfo pCreateInfo, @Nullable @NativeType("const VkAllocationCallbacks *") VkAllocationCallbacks pAllocator, @NativeType("VkShaderModule *") long[] pShaderModule) {
         long __functionAddress = device.getCapabilities().vkCreateShaderModule;
         if (CHECKS) {
             check(pShaderModule, 1);
@@ -15016,9 +14783,9 @@ public class VK10 {
         return callPPPPI(__functionAddress, device.address(), pCreateInfo.address(), memAddressSafe(pAllocator), pShaderModule);
     }
 
-    /** Array version of: {@link #vkCreatePipelineCache CreatePipelineCache} */
+    /** register Array version of: {@link #vkCreatePipelineCache CreatePipelineCache} */
     @NativeType("VkResult")
-    public static int vkCreatePipelineCache(VkDevice device, @NativeType("VkPipelineCacheCreateInfo const *") VkPipelineCacheCreateInfo pCreateInfo, @Nullable @NativeType("VkAllocationCallbacks const *") VkAllocationCallbacks pAllocator, @NativeType("VkPipelineCache *") long[] pPipelineCache) {
+    public static int vkCreatePipelineCache(VkDevice device, @NativeType("const VkPipelineCacheCreateInfo *") VkPipelineCacheCreateInfo pCreateInfo, @Nullable @NativeType("const VkAllocationCallbacks *") VkAllocationCallbacks pAllocator, @NativeType("VkPipelineCache *") long[] pPipelineCache) {
         long __functionAddress = device.getCapabilities().vkCreatePipelineCache;
         if (CHECKS) {
             check(pPipelineCache, 1);
@@ -15028,16 +14795,16 @@ public class VK10 {
         return callPPPPI(__functionAddress, device.address(), pCreateInfo.address(), memAddressSafe(pAllocator), pPipelineCache);
     }
 
-    /** Array version of: {@link #vkMergePipelineCaches MergePipelineCaches} */
+    /** register Array version of: {@link #vkMergePipelineCaches MergePipelineCaches} */
     @NativeType("VkResult")
-    public static int vkMergePipelineCaches(VkDevice device, @NativeType("VkPipelineCache") long dstCache, @NativeType("VkPipelineCache const *") long[] pSrcCaches) {
+    public static int vkMergePipelineCaches(VkDevice device, @NativeType("VkPipelineCache") long dstCache, @NativeType("const VkPipelineCache *") long[] pSrcCaches) {
         long __functionAddress = device.getCapabilities().vkMergePipelineCaches;
         return callPJPI(__functionAddress, device.address(), dstCache, pSrcCaches.length, pSrcCaches);
     }
 
-    /** Array version of: {@link #vkCreateGraphicsPipelines CreateGraphicsPipelines} */
+    /** register Array version of: {@link #vkCreateGraphicsPipelines CreateGraphicsPipelines} */
     @NativeType("VkResult")
-    public static int vkCreateGraphicsPipelines(VkDevice device, @NativeType("VkPipelineCache") long pipelineCache, @NativeType("VkGraphicsPipelineCreateInfo const *") VkGraphicsPipelineCreateInfo.Buffer pCreateInfos, @Nullable @NativeType("VkAllocationCallbacks const *") VkAllocationCallbacks pAllocator, @NativeType("VkPipeline *") long[] pPipelines) {
+    public static int vkCreateGraphicsPipelines(VkDevice device, @NativeType("VkPipelineCache") long pipelineCache, @NativeType("const VkGraphicsPipelineCreateInfo *") VkGraphicsPipelineCreateInfo.Buffer pCreateInfos, @Nullable @NativeType("const VkAllocationCallbacks *") VkAllocationCallbacks pAllocator, @NativeType("VkPipeline *") long[] pPipelines) {
         long __functionAddress = device.getCapabilities().vkCreateGraphicsPipelines;
         if (CHECKS) {
             check(pPipelines, pCreateInfos.remaining());
@@ -15047,9 +14814,9 @@ public class VK10 {
         return callPJPPPI(__functionAddress, device.address(), pipelineCache, pCreateInfos.remaining(), pCreateInfos.address(), memAddressSafe(pAllocator), pPipelines);
     }
 
-    /** Array version of: {@link #vkCreateComputePipelines CreateComputePipelines} */
+    /** register Array version of: {@link #vkCreateComputePipelines CreateComputePipelines} */
     @NativeType("VkResult")
-    public static int vkCreateComputePipelines(VkDevice device, @NativeType("VkPipelineCache") long pipelineCache, @NativeType("VkComputePipelineCreateInfo const *") VkComputePipelineCreateInfo.Buffer pCreateInfos, @Nullable @NativeType("VkAllocationCallbacks const *") VkAllocationCallbacks pAllocator, @NativeType("VkPipeline *") long[] pPipelines) {
+    public static int vkCreateComputePipelines(VkDevice device, @NativeType("VkPipelineCache") long pipelineCache, @NativeType("const VkComputePipelineCreateInfo *") VkComputePipelineCreateInfo.Buffer pCreateInfos, @Nullable @NativeType("const VkAllocationCallbacks *") VkAllocationCallbacks pAllocator, @NativeType("VkPipeline *") long[] pPipelines) {
         long __functionAddress = device.getCapabilities().vkCreateComputePipelines;
         if (CHECKS) {
             check(pPipelines, pCreateInfos.remaining());
@@ -15059,9 +14826,9 @@ public class VK10 {
         return callPJPPPI(__functionAddress, device.address(), pipelineCache, pCreateInfos.remaining(), pCreateInfos.address(), memAddressSafe(pAllocator), pPipelines);
     }
 
-    /** Array version of: {@link #vkCreatePipelineLayout CreatePipelineLayout} */
+    /** register Array version of: {@link #vkCreatePipelineLayout CreatePipelineLayout} */
     @NativeType("VkResult")
-    public static int vkCreatePipelineLayout(VkDevice device, @NativeType("VkPipelineLayoutCreateInfo const *") VkPipelineLayoutCreateInfo pCreateInfo, @Nullable @NativeType("VkAllocationCallbacks const *") VkAllocationCallbacks pAllocator, @NativeType("VkPipelineLayout *") long[] pPipelineLayout) {
+    public static int vkCreatePipelineLayout(VkDevice device, @NativeType("const VkPipelineLayoutCreateInfo *") VkPipelineLayoutCreateInfo pCreateInfo, @Nullable @NativeType("const VkAllocationCallbacks *") VkAllocationCallbacks pAllocator, @NativeType("VkPipelineLayout *") long[] pPipelineLayout) {
         long __functionAddress = device.getCapabilities().vkCreatePipelineLayout;
         if (CHECKS) {
             check(pPipelineLayout, 1);
@@ -15071,9 +14838,9 @@ public class VK10 {
         return callPPPPI(__functionAddress, device.address(), pCreateInfo.address(), memAddressSafe(pAllocator), pPipelineLayout);
     }
 
-    /** Array version of: {@link #vkCreateSampler CreateSampler} */
+    /** register Array version of: {@link #vkCreateSampler CreateSampler} */
     @NativeType("VkResult")
-    public static int vkCreateSampler(VkDevice device, @NativeType("VkSamplerCreateInfo const *") VkSamplerCreateInfo pCreateInfo, @Nullable @NativeType("VkAllocationCallbacks const *") VkAllocationCallbacks pAllocator, @NativeType("VkSampler *") long[] pSampler) {
+    public static int vkCreateSampler(VkDevice device, @NativeType("const VkSamplerCreateInfo *") VkSamplerCreateInfo pCreateInfo, @Nullable @NativeType("const VkAllocationCallbacks *") VkAllocationCallbacks pAllocator, @NativeType("VkSampler *") long[] pSampler) {
         long __functionAddress = device.getCapabilities().vkCreateSampler;
         if (CHECKS) {
             check(pSampler, 1);
@@ -15082,9 +14849,9 @@ public class VK10 {
         return callPPPPI(__functionAddress, device.address(), pCreateInfo.address(), memAddressSafe(pAllocator), pSampler);
     }
 
-    /** Array version of: {@link #vkCreateDescriptorSetLayout CreateDescriptorSetLayout} */
+    /** register Array version of: {@link #vkCreateDescriptorSetLayout CreateDescriptorSetLayout} */
     @NativeType("VkResult")
-    public static int vkCreateDescriptorSetLayout(VkDevice device, @NativeType("VkDescriptorSetLayoutCreateInfo const *") VkDescriptorSetLayoutCreateInfo pCreateInfo, @Nullable @NativeType("VkAllocationCallbacks const *") VkAllocationCallbacks pAllocator, @NativeType("VkDescriptorSetLayout *") long[] pSetLayout) {
+    public static int vkCreateDescriptorSetLayout(VkDevice device, @NativeType("const VkDescriptorSetLayoutCreateInfo *") VkDescriptorSetLayoutCreateInfo pCreateInfo, @Nullable @NativeType("const VkAllocationCallbacks *") VkAllocationCallbacks pAllocator, @NativeType("VkDescriptorSetLayout *") long[] pSetLayout) {
         long __functionAddress = device.getCapabilities().vkCreateDescriptorSetLayout;
         if (CHECKS) {
             check(pSetLayout, 1);
@@ -15094,9 +14861,9 @@ public class VK10 {
         return callPPPPI(__functionAddress, device.address(), pCreateInfo.address(), memAddressSafe(pAllocator), pSetLayout);
     }
 
-    /** Array version of: {@link #vkCreateDescriptorPool CreateDescriptorPool} */
+    /** register Array version of: {@link #vkCreateDescriptorPool CreateDescriptorPool} */
     @NativeType("VkResult")
-    public static int vkCreateDescriptorPool(VkDevice device, @NativeType("VkDescriptorPoolCreateInfo const *") VkDescriptorPoolCreateInfo pCreateInfo, @Nullable @NativeType("VkAllocationCallbacks const *") VkAllocationCallbacks pAllocator, @NativeType("VkDescriptorPool *") long[] pDescriptorPool) {
+    public static int vkCreateDescriptorPool(VkDevice device, @NativeType("const VkDescriptorPoolCreateInfo *") VkDescriptorPoolCreateInfo pCreateInfo, @Nullable @NativeType("const VkAllocationCallbacks *") VkAllocationCallbacks pAllocator, @NativeType("VkDescriptorPool *") long[] pDescriptorPool) {
         long __functionAddress = device.getCapabilities().vkCreateDescriptorPool;
         if (CHECKS) {
             check(pDescriptorPool, 1);
@@ -15106,9 +14873,9 @@ public class VK10 {
         return callPPPPI(__functionAddress, device.address(), pCreateInfo.address(), memAddressSafe(pAllocator), pDescriptorPool);
     }
 
-    /** Array version of: {@link #vkAllocateDescriptorSets AllocateDescriptorSets} */
+    /** register Array version of: {@link #vkAllocateDescriptorSets AllocateDescriptorSets} */
     @NativeType("VkResult")
-    public static int vkAllocateDescriptorSets(VkDevice device, @NativeType("VkDescriptorSetAllocateInfo const *") VkDescriptorSetAllocateInfo pAllocateInfo, @NativeType("VkDescriptorSet *") long[] pDescriptorSets) {
+    public static int vkAllocateDescriptorSets(VkDevice device, @NativeType("const VkDescriptorSetAllocateInfo *") VkDescriptorSetAllocateInfo pAllocateInfo, @NativeType("VkDescriptorSet *") long[] pDescriptorSets) {
         long __functionAddress = device.getCapabilities().vkAllocateDescriptorSets;
         if (CHECKS) {
             check(pDescriptorSets, pAllocateInfo.descriptorSetCount());
@@ -15117,16 +14884,16 @@ public class VK10 {
         return callPPPI(__functionAddress, device.address(), pAllocateInfo.address(), pDescriptorSets);
     }
 
-    /** Array version of: {@link #vkFreeDescriptorSets FreeDescriptorSets} */
+    /** register Array version of: {@link #vkFreeDescriptorSets FreeDescriptorSets} */
     @NativeType("VkResult")
-    public static int vkFreeDescriptorSets(VkDevice device, @NativeType("VkDescriptorPool") long descriptorPool, @NativeType("VkDescriptorSet const *") long[] pDescriptorSets) {
+    public static int vkFreeDescriptorSets(VkDevice device, @NativeType("VkDescriptorPool") long descriptorPool, @NativeType("const VkDescriptorSet *") long[] pDescriptorSets) {
         long __functionAddress = device.getCapabilities().vkFreeDescriptorSets;
         return callPJPI(__functionAddress, device.address(), descriptorPool, pDescriptorSets.length, pDescriptorSets);
     }
 
-    /** Array version of: {@link #vkCreateFramebuffer CreateFramebuffer} */
+    /** register Array version of: {@link #vkCreateFramebuffer CreateFramebuffer} */
     @NativeType("VkResult")
-    public static int vkCreateFramebuffer(VkDevice device, @NativeType("VkFramebufferCreateInfo const *") VkFramebufferCreateInfo pCreateInfo, @Nullable @NativeType("VkAllocationCallbacks const *") VkAllocationCallbacks pAllocator, @NativeType("VkFramebuffer *") long[] pFramebuffer) {
+    public static int vkCreateFramebuffer(VkDevice device, @NativeType("const VkFramebufferCreateInfo *") VkFramebufferCreateInfo pCreateInfo, @Nullable @NativeType("const VkAllocationCallbacks *") VkAllocationCallbacks pAllocator, @NativeType("VkFramebuffer *") long[] pFramebuffer) {
         long __functionAddress = device.getCapabilities().vkCreateFramebuffer;
         if (CHECKS) {
             check(pFramebuffer, 1);
@@ -15136,9 +14903,9 @@ public class VK10 {
         return callPPPPI(__functionAddress, device.address(), pCreateInfo.address(), memAddressSafe(pAllocator), pFramebuffer);
     }
 
-    /** Array version of: {@link #vkCreateRenderPass CreateRenderPass} */
+    /** register Array version of: {@link #vkCreateRenderPass CreateRenderPass} */
     @NativeType("VkResult")
-    public static int vkCreateRenderPass(VkDevice device, @NativeType("VkRenderPassCreateInfo const *") VkRenderPassCreateInfo pCreateInfo, @Nullable @NativeType("VkAllocationCallbacks const *") VkAllocationCallbacks pAllocator, @NativeType("VkRenderPass *") long[] pRenderPass) {
+    public static int vkCreateRenderPass(VkDevice device, @NativeType("const VkRenderPassCreateInfo *") VkRenderPassCreateInfo pCreateInfo, @Nullable @NativeType("const VkAllocationCallbacks *") VkAllocationCallbacks pAllocator, @NativeType("VkRenderPass *") long[] pRenderPass) {
         long __functionAddress = device.getCapabilities().vkCreateRenderPass;
         if (CHECKS) {
             check(pRenderPass, 1);
@@ -15148,9 +14915,9 @@ public class VK10 {
         return callPPPPI(__functionAddress, device.address(), pCreateInfo.address(), memAddressSafe(pAllocator), pRenderPass);
     }
 
-    /** Array version of: {@link #vkCreateCommandPool CreateCommandPool} */
+    /** register Array version of: {@link #vkCreateCommandPool CreateCommandPool} */
     @NativeType("VkResult")
-    public static int vkCreateCommandPool(VkDevice device, @NativeType("VkCommandPoolCreateInfo const *") VkCommandPoolCreateInfo pCreateInfo, @Nullable @NativeType("VkAllocationCallbacks const *") VkAllocationCallbacks pAllocator, @NativeType("VkCommandPool *") long[] pCommandPool) {
+    public static int vkCreateCommandPool(VkDevice device, @NativeType("const VkCommandPoolCreateInfo *") VkCommandPoolCreateInfo pCreateInfo, @Nullable @NativeType("const VkAllocationCallbacks *") VkAllocationCallbacks pAllocator, @NativeType("VkCommandPool *") long[] pCommandPool) {
         long __functionAddress = device.getCapabilities().vkCreateCommandPool;
         if (CHECKS) {
             check(pCommandPool, 1);
@@ -15159,8 +14926,8 @@ public class VK10 {
         return callPPPPI(__functionAddress, device.address(), pCreateInfo.address(), memAddressSafe(pAllocator), pCommandPool);
     }
 
-    /** Array version of: {@link #vkCmdSetBlendConstants CmdSetBlendConstants} */
-    public static void vkCmdSetBlendConstants(VkCommandBuffer commandBuffer, @NativeType("float const *") float[] blendConstants) {
+    /** register Array version of: {@link #vkCmdSetBlendConstants CmdSetBlendConstants} */
+    public static void vkCmdSetBlendConstants(VkCommandBuffer commandBuffer, @NativeType("const float *") float[] blendConstants) {
         long __functionAddress = commandBuffer.getCapabilities().vkCmdSetBlendConstants;
         if (CHECKS) {
             check(blendConstants, 4);
@@ -15168,14 +14935,14 @@ public class VK10 {
         callPPV(__functionAddress, commandBuffer.address(), blendConstants);
     }
 
-    /** Array version of: {@link #vkCmdBindDescriptorSets CmdBindDescriptorSets} */
-    public static void vkCmdBindDescriptorSets(VkCommandBuffer commandBuffer, @NativeType("VkPipelineBindPoint") int pipelineBindPoint, @NativeType("VkPipelineLayout") long layout, @NativeType("uint32_t") int firstSet, @NativeType("VkDescriptorSet const *") long[] pDescriptorSets, @Nullable @NativeType("uint32_t const *") int[] pDynamicOffsets) {
+    /** register Array version of: {@link #vkCmdBindDescriptorSets CmdBindDescriptorSets} */
+    public static void vkCmdBindDescriptorSets(VkCommandBuffer commandBuffer, @NativeType("VkPipelineBindPoint") int pipelineBindPoint, @NativeType("VkPipelineLayout") long layout, @NativeType("uint32_t") int firstSet, @NativeType("const VkDescriptorSet *") long[] pDescriptorSets, @Nullable @NativeType("const uint32_t *") int[] pDynamicOffsets) {
         long __functionAddress = commandBuffer.getCapabilities().vkCmdBindDescriptorSets;
         callPJPPV(__functionAddress, commandBuffer.address(), pipelineBindPoint, layout, firstSet, pDescriptorSets.length, pDescriptorSets, lengthSafe(pDynamicOffsets), pDynamicOffsets);
     }
 
-    /** Array version of: {@link #vkCmdBindVertexBuffers CmdBindVertexBuffers} */
-    public static void vkCmdBindVertexBuffers(VkCommandBuffer commandBuffer, @NativeType("uint32_t") int firstBinding, @NativeType("VkBuffer const *") long[] pBuffers, @NativeType("VkDeviceSize const *") long[] pOffsets) {
+    /** register Array version of: {@link #vkCmdBindVertexBuffers CmdBindVertexBuffers} */
+    public static void vkCmdBindVertexBuffers(VkCommandBuffer commandBuffer, @NativeType("uint32_t") int firstBinding, @NativeType("const VkBuffer *") long[] pBuffers, @NativeType("const VkDeviceSize *") long[] pOffsets) {
         long __functionAddress = commandBuffer.getCapabilities().vkCmdBindVertexBuffers;
         if (CHECKS) {
             check(pOffsets, pBuffers.length);
@@ -15183,68 +14950,80 @@ public class VK10 {
         callPPPV(__functionAddress, commandBuffer.address(), firstBinding, pBuffers.length, pBuffers, pOffsets);
     }
 
-    /** Array version of: {@link #vkCmdUpdateBuffer CmdUpdateBuffer} */
-    public static void vkCmdUpdateBuffer(VkCommandBuffer commandBuffer, @NativeType("VkBuffer") long dstBuffer, @NativeType("VkDeviceSize") long dstOffset, @NativeType("void const *") short[] pData) {
+    /** register Array version of: {@link #vkCmdUpdateBuffer CmdUpdateBuffer} */
+    public static void vkCmdUpdateBuffer(VkCommandBuffer commandBuffer, @NativeType("VkBuffer") long dstBuffer, @NativeType("VkDeviceSize") long dstOffset, @NativeType("const void *") byte[] pData) {
+        long __functionAddress = commandBuffer.getCapabilities().vkCmdUpdateBuffer;
+        callPJJJPV(__functionAddress, commandBuffer.address(), dstBuffer, dstOffset, (long)(pData.length << 0), pData);
+    }
+
+    /** register Array version of: {@link #vkCmdUpdateBuffer CmdUpdateBuffer} */
+    public static void vkCmdUpdateBuffer(VkCommandBuffer commandBuffer, @NativeType("VkBuffer") long dstBuffer, @NativeType("VkDeviceSize") long dstOffset, @NativeType("const void *") short[] pData) {
         long __functionAddress = commandBuffer.getCapabilities().vkCmdUpdateBuffer;
         callPJJJPV(__functionAddress, commandBuffer.address(), dstBuffer, dstOffset, (long)(pData.length << 1), pData);
     }
 
-    /** Array version of: {@link #vkCmdUpdateBuffer CmdUpdateBuffer} */
-    public static void vkCmdUpdateBuffer(VkCommandBuffer commandBuffer, @NativeType("VkBuffer") long dstBuffer, @NativeType("VkDeviceSize") long dstOffset, @NativeType("void const *") int[] pData) {
+    /** register Array version of: {@link #vkCmdUpdateBuffer CmdUpdateBuffer} */
+    public static void vkCmdUpdateBuffer(VkCommandBuffer commandBuffer, @NativeType("VkBuffer") long dstBuffer, @NativeType("VkDeviceSize") long dstOffset, @NativeType("const void *") int[] pData) {
         long __functionAddress = commandBuffer.getCapabilities().vkCmdUpdateBuffer;
         callPJJJPV(__functionAddress, commandBuffer.address(), dstBuffer, dstOffset, (long)(pData.length << 2), pData);
     }
 
-    /** Array version of: {@link #vkCmdUpdateBuffer CmdUpdateBuffer} */
-    public static void vkCmdUpdateBuffer(VkCommandBuffer commandBuffer, @NativeType("VkBuffer") long dstBuffer, @NativeType("VkDeviceSize") long dstOffset, @NativeType("void const *") long[] pData) {
+    /** register Array version of: {@link #vkCmdUpdateBuffer CmdUpdateBuffer} */
+    public static void vkCmdUpdateBuffer(VkCommandBuffer commandBuffer, @NativeType("VkBuffer") long dstBuffer, @NativeType("VkDeviceSize") long dstOffset, @NativeType("const void *") long[] pData) {
         long __functionAddress = commandBuffer.getCapabilities().vkCmdUpdateBuffer;
         callPJJJPV(__functionAddress, commandBuffer.address(), dstBuffer, dstOffset, (long)(pData.length << 3), pData);
     }
 
-    /** Array version of: {@link #vkCmdUpdateBuffer CmdUpdateBuffer} */
-    public static void vkCmdUpdateBuffer(VkCommandBuffer commandBuffer, @NativeType("VkBuffer") long dstBuffer, @NativeType("VkDeviceSize") long dstOffset, @NativeType("void const *") float[] pData) {
+    /** register Array version of: {@link #vkCmdUpdateBuffer CmdUpdateBuffer} */
+    public static void vkCmdUpdateBuffer(VkCommandBuffer commandBuffer, @NativeType("VkBuffer") long dstBuffer, @NativeType("VkDeviceSize") long dstOffset, @NativeType("const void *") float[] pData) {
         long __functionAddress = commandBuffer.getCapabilities().vkCmdUpdateBuffer;
         callPJJJPV(__functionAddress, commandBuffer.address(), dstBuffer, dstOffset, (long)(pData.length << 2), pData);
     }
 
-    /** Array version of: {@link #vkCmdUpdateBuffer CmdUpdateBuffer} */
-    public static void vkCmdUpdateBuffer(VkCommandBuffer commandBuffer, @NativeType("VkBuffer") long dstBuffer, @NativeType("VkDeviceSize") long dstOffset, @NativeType("void const *") double[] pData) {
+    /** register Array version of: {@link #vkCmdUpdateBuffer CmdUpdateBuffer} */
+    public static void vkCmdUpdateBuffer(VkCommandBuffer commandBuffer, @NativeType("VkBuffer") long dstBuffer, @NativeType("VkDeviceSize") long dstOffset, @NativeType("const void *") double[] pData) {
         long __functionAddress = commandBuffer.getCapabilities().vkCmdUpdateBuffer;
         callPJJJPV(__functionAddress, commandBuffer.address(), dstBuffer, dstOffset, (long)(pData.length << 3), pData);
     }
 
-    /** Array version of: {@link #vkCmdWaitEvents CmdWaitEvents} */
-    public static void vkCmdWaitEvents(VkCommandBuffer commandBuffer, @NativeType("VkEvent const *") long[] pEvents, @NativeType("VkPipelineStageFlags") int srcStageMask, @NativeType("VkPipelineStageFlags") int dstStageMask, @Nullable @NativeType("VkMemoryBarrier const *") VkMemoryBarrier.Buffer pMemoryBarriers, @Nullable @NativeType("VkBufferMemoryBarrier const *") VkBufferMemoryBarrier.Buffer pBufferMemoryBarriers, @Nullable @NativeType("VkImageMemoryBarrier const *") VkImageMemoryBarrier.Buffer pImageMemoryBarriers) {
+    /** register Array version of: {@link #vkCmdWaitEvents CmdWaitEvents} */
+    public static void vkCmdWaitEvents(VkCommandBuffer commandBuffer, @NativeType("const VkEvent *") long[] pEvents, @NativeType("VkPipelineStageFlags") int srcStageMask, @NativeType("VkPipelineStageFlags") int dstStageMask, @Nullable @NativeType("const VkMemoryBarrier *") VkMemoryBarrier.Buffer pMemoryBarriers, @Nullable @NativeType("const VkBufferMemoryBarrier *") VkBufferMemoryBarrier.Buffer pBufferMemoryBarriers, @Nullable @NativeType("const VkImageMemoryBarrier *") VkImageMemoryBarrier.Buffer pImageMemoryBarriers) {
         long __functionAddress = commandBuffer.getCapabilities().vkCmdWaitEvents;
         callPPPPPV(__functionAddress, commandBuffer.address(), pEvents.length, pEvents, srcStageMask, dstStageMask, remainingSafe(pMemoryBarriers), memAddressSafe(pMemoryBarriers), remainingSafe(pBufferMemoryBarriers), memAddressSafe(pBufferMemoryBarriers), remainingSafe(pImageMemoryBarriers), memAddressSafe(pImageMemoryBarriers));
     }
 
-    /** Array version of: {@link #vkCmdPushConstants CmdPushConstants} */
-    public static void vkCmdPushConstants(VkCommandBuffer commandBuffer, @NativeType("VkPipelineLayout") long layout, @NativeType("VkShaderStageFlags") int stageFlags, @NativeType("uint32_t") int offset, @NativeType("void const *") short[] pValues) {
+    /** register Array version of: {@link #vkCmdPushConstants CmdPushConstants} */
+    public static void vkCmdPushConstants(VkCommandBuffer commandBuffer, @NativeType("VkPipelineLayout") long layout, @NativeType("VkShaderStageFlags") int stageFlags, @NativeType("uint32_t") int offset, @NativeType("const void *") byte[] pValues) {
+        long __functionAddress = commandBuffer.getCapabilities().vkCmdPushConstants;
+        callPJPV(__functionAddress, commandBuffer.address(), layout, stageFlags, offset, pValues.length << 0, pValues);
+    }
+
+    /** register Array version of: {@link #vkCmdPushConstants CmdPushConstants} */
+    public static void vkCmdPushConstants(VkCommandBuffer commandBuffer, @NativeType("VkPipelineLayout") long layout, @NativeType("VkShaderStageFlags") int stageFlags, @NativeType("uint32_t") int offset, @NativeType("const void *") short[] pValues) {
         long __functionAddress = commandBuffer.getCapabilities().vkCmdPushConstants;
         callPJPV(__functionAddress, commandBuffer.address(), layout, stageFlags, offset, pValues.length << 1, pValues);
     }
 
-    /** Array version of: {@link #vkCmdPushConstants CmdPushConstants} */
-    public static void vkCmdPushConstants(VkCommandBuffer commandBuffer, @NativeType("VkPipelineLayout") long layout, @NativeType("VkShaderStageFlags") int stageFlags, @NativeType("uint32_t") int offset, @NativeType("void const *") int[] pValues) {
+    /** register Array version of: {@link #vkCmdPushConstants CmdPushConstants} */
+    public static void vkCmdPushConstants(VkCommandBuffer commandBuffer, @NativeType("VkPipelineLayout") long layout, @NativeType("VkShaderStageFlags") int stageFlags, @NativeType("uint32_t") int offset, @NativeType("const void *") int[] pValues) {
         long __functionAddress = commandBuffer.getCapabilities().vkCmdPushConstants;
         callPJPV(__functionAddress, commandBuffer.address(), layout, stageFlags, offset, pValues.length << 2, pValues);
     }
 
-    /** Array version of: {@link #vkCmdPushConstants CmdPushConstants} */
-    public static void vkCmdPushConstants(VkCommandBuffer commandBuffer, @NativeType("VkPipelineLayout") long layout, @NativeType("VkShaderStageFlags") int stageFlags, @NativeType("uint32_t") int offset, @NativeType("void const *") long[] pValues) {
+    /** register Array version of: {@link #vkCmdPushConstants CmdPushConstants} */
+    public static void vkCmdPushConstants(VkCommandBuffer commandBuffer, @NativeType("VkPipelineLayout") long layout, @NativeType("VkShaderStageFlags") int stageFlags, @NativeType("uint32_t") int offset, @NativeType("const void *") long[] pValues) {
         long __functionAddress = commandBuffer.getCapabilities().vkCmdPushConstants;
         callPJPV(__functionAddress, commandBuffer.address(), layout, stageFlags, offset, pValues.length << 3, pValues);
     }
 
-    /** Array version of: {@link #vkCmdPushConstants CmdPushConstants} */
-    public static void vkCmdPushConstants(VkCommandBuffer commandBuffer, @NativeType("VkPipelineLayout") long layout, @NativeType("VkShaderStageFlags") int stageFlags, @NativeType("uint32_t") int offset, @NativeType("void const *") float[] pValues) {
+    /** register Array version of: {@link #vkCmdPushConstants CmdPushConstants} */
+    public static void vkCmdPushConstants(VkCommandBuffer commandBuffer, @NativeType("VkPipelineLayout") long layout, @NativeType("VkShaderStageFlags") int stageFlags, @NativeType("uint32_t") int offset, @NativeType("const void *") float[] pValues) {
         long __functionAddress = commandBuffer.getCapabilities().vkCmdPushConstants;
         callPJPV(__functionAddress, commandBuffer.address(), layout, stageFlags, offset, pValues.length << 2, pValues);
     }
 
-    /** Array version of: {@link #vkCmdPushConstants CmdPushConstants} */
-    public static void vkCmdPushConstants(VkCommandBuffer commandBuffer, @NativeType("VkPipelineLayout") long layout, @NativeType("VkShaderStageFlags") int stageFlags, @NativeType("uint32_t") int offset, @NativeType("void const *") double[] pValues) {
+    /** register Array version of: {@link #vkCmdPushConstants CmdPushConstants} */
+    public static void vkCmdPushConstants(VkCommandBuffer commandBuffer, @NativeType("VkPipelineLayout") long layout, @NativeType("VkShaderStageFlags") int stageFlags, @NativeType("uint32_t") int offset, @NativeType("const void *") double[] pValues) {
         long __functionAddress = commandBuffer.getCapabilities().vkCmdPushConstants;
         callPJPV(__functionAddress, commandBuffer.address(), layout, stageFlags, offset, pValues.length << 3, pValues);
     }

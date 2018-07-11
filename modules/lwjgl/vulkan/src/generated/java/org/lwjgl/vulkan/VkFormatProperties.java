@@ -29,7 +29,7 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <h5>See Also</h5>
  * 
- * <p>{@link VkFormatProperties2}, {@link VK10#vkGetPhysicalDeviceFormatProperties GetPhysicalDeviceFormatProperties}</p>
+ * <p>{@link VkFormatProperties2KHR}, {@link VK10#vkGetPhysicalDeviceFormatProperties GetPhysicalDeviceFormatProperties}</p>
  * 
  * <h3>Member documentation</h3>
  * 
@@ -41,19 +41,18 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct VkFormatProperties {
  *     VkFormatFeatureFlags linearTilingFeatures;
  *     VkFormatFeatureFlags optimalTilingFeatures;
  *     VkFormatFeatureFlags bufferFeatures;
- * }</code></pre>
+ * }</pre></code>
  */
 public class VkFormatProperties extends Struct implements NativeResource {
 
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */

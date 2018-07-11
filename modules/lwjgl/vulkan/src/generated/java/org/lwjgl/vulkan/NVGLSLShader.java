@@ -14,7 +14,7 @@ package org.lwjgl.vulkan;
  * 
  * <p>Passing in GLSL code</p>
  * 
- * <pre><code>
+ * <code><pre>
  *     char const vss[] =
  *         "#version 450 core\n"
  *         "layout(location = 0) in vec2 aVertex;\n"
@@ -30,7 +30,7 @@ package org.lwjgl.vulkan;
  *     vertexShaderInfo.codeSize = sizeof vss;
  *     vertexShaderInfo.pCode = vss;
  *     VkShaderModule vertexShader;
- *     vkCreateShaderModule(device, &amp;vertexShaderInfo, 0, &amp;vertexShader);</code></pre>
+ *     vkCreateShaderModule(device, &vertexShaderInfo, 0, &vertexShader);</pre></code>
  * 
  * <dl>
  * <dt><b>Name String</b></dt>
@@ -47,7 +47,7 @@ package org.lwjgl.vulkan;
  * </ul></dd>
  * <dt><b>Contact</b></dt>
  * <dd><ul>
- * <li>Piers Daniell @pdaniell-nv</li>
+ * <li>Piers Daniell @pdaniell</li>
  * </ul></dd>
  * <dt><b>Last Modified Date</b></dt>
  * <dd>2016-02-14</dd>

@@ -71,15 +71,15 @@ public class NVPointSprite {
 
     public static native void nglPointParameterivNV(int pname, long params);
 
-    public static void glPointParameterivNV(@NativeType("GLenum") int pname, @NativeType("GLint const *") IntBuffer params) {
+    public static void glPointParameterivNV(@NativeType("GLenum") int pname, @NativeType("const GLint *") IntBuffer params) {
         if (CHECKS) {
             check(params, 1);
         }
         nglPointParameterivNV(pname, memAddress(params));
     }
 
-    /** Array version of: {@link #glPointParameterivNV PointParameterivNV} */
-    public static void glPointParameterivNV(@NativeType("GLenum") int pname, @NativeType("GLint const *") int[] params) {
+    /** register Array version of: {@link #glPointParameterivNV PointParameterivNV} */
+    public static void glPointParameterivNV(@NativeType("GLenum") int pname, @NativeType("const GLint *") int[] params) {
         long __functionAddress = GL.getICD().glPointParameterivNV;
         if (CHECKS) {
             check(__functionAddress);

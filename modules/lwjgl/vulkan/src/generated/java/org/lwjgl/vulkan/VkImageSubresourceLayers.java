@@ -48,20 +48,19 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct VkImageSubresourceLayers {
  *     VkImageAspectFlags aspectMask;
  *     uint32_t mipLevel;
  *     uint32_t baseArrayLayer;
  *     uint32_t layerCount;
- * }</code></pre>
+ * }</pre></code>
  */
 public class VkImageSubresourceLayers extends Struct implements NativeResource {
 
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */

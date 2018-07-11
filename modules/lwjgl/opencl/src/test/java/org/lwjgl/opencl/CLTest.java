@@ -13,6 +13,7 @@ import javax.annotation.*;
 import java.nio.*;
 import java.util.concurrent.*;
 
+import static org.lwjgl.opencl.CL10.*;
 import static org.lwjgl.opencl.CL11.*;
 import static org.lwjgl.opencl.InfoUtil.*;
 import static org.lwjgl.system.MemoryStack.*;
@@ -30,9 +31,10 @@ public class CLTest {
     private void createCL() {
         try {
             CL.getFunctionProvider();
-            CL.destroy();
         } catch (Throwable t) {
             throw new SkipException("Skipped because OpenCL initialization failed [" + t.getMessage() + "]");
+        } finally {
+            CL.destroy();
         }
     }
 

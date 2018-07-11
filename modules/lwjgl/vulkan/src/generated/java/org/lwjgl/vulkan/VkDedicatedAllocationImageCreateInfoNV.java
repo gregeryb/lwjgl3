@@ -42,24 +42,23 @@ import static org.lwjgl.system.MemoryStack.*;
  * <ul>
  * <li>{@code sType} &ndash; the type of this structure.</li>
  * <li>{@code pNext} &ndash; {@code NULL} or a pointer to an extension-specific structure.</li>
- * <li>{@code dedicatedAllocation} &ndash; specifies whether the image will have a dedicated allocation bound to it.</li>
+ * <li>{@code dedicatedAllocation} &ndash; indicates whether the image will have a dedicated allocation bound to it.</li>
  * </ul>
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct VkDedicatedAllocationImageCreateInfoNV {
  *     VkStructureType sType;
- *     void const * pNext;
+ *     const void * pNext;
  *     VkBool32 dedicatedAllocation;
- * }</code></pre>
+ * }</pre></code>
  */
 public class VkDedicatedAllocationImageCreateInfoNV extends Struct implements NativeResource {
 
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */
@@ -104,7 +103,7 @@ public class VkDedicatedAllocationImageCreateInfoNV extends Struct implements Na
     @NativeType("VkStructureType")
     public int sType() { return nsType(address()); }
     /** Returns the value of the {@code pNext} field. */
-    @NativeType("void const *")
+    @NativeType("const void *")
     public long pNext() { return npNext(address()); }
     /** Returns the value of the {@code dedicatedAllocation} field. */
     @NativeType("VkBool32")
@@ -113,7 +112,7 @@ public class VkDedicatedAllocationImageCreateInfoNV extends Struct implements Na
     /** Sets the specified value to the {@code sType} field. */
     public VkDedicatedAllocationImageCreateInfoNV sType(@NativeType("VkStructureType") int value) { nsType(address(), value); return this; }
     /** Sets the specified value to the {@code pNext} field. */
-    public VkDedicatedAllocationImageCreateInfoNV pNext(@NativeType("void const *") long value) { npNext(address(), value); return this; }
+    public VkDedicatedAllocationImageCreateInfoNV pNext(@NativeType("const void *") long value) { npNext(address(), value); return this; }
     /** Sets the specified value to the {@code dedicatedAllocation} field. */
     public VkDedicatedAllocationImageCreateInfoNV dedicatedAllocation(@NativeType("VkBool32") boolean value) { ndedicatedAllocation(address(), value ? 1 : 0); return this; }
 
@@ -347,7 +346,7 @@ public class VkDedicatedAllocationImageCreateInfoNV extends Struct implements Na
         @NativeType("VkStructureType")
         public int sType() { return VkDedicatedAllocationImageCreateInfoNV.nsType(address()); }
         /** Returns the value of the {@code pNext} field. */
-        @NativeType("void const *")
+        @NativeType("const void *")
         public long pNext() { return VkDedicatedAllocationImageCreateInfoNV.npNext(address()); }
         /** Returns the value of the {@code dedicatedAllocation} field. */
         @NativeType("VkBool32")
@@ -356,7 +355,7 @@ public class VkDedicatedAllocationImageCreateInfoNV extends Struct implements Na
         /** Sets the specified value to the {@code sType} field. */
         public VkDedicatedAllocationImageCreateInfoNV.Buffer sType(@NativeType("VkStructureType") int value) { VkDedicatedAllocationImageCreateInfoNV.nsType(address(), value); return this; }
         /** Sets the specified value to the {@code pNext} field. */
-        public VkDedicatedAllocationImageCreateInfoNV.Buffer pNext(@NativeType("void const *") long value) { VkDedicatedAllocationImageCreateInfoNV.npNext(address(), value); return this; }
+        public VkDedicatedAllocationImageCreateInfoNV.Buffer pNext(@NativeType("const void *") long value) { VkDedicatedAllocationImageCreateInfoNV.npNext(address(), value); return this; }
         /** Sets the specified value to the {@code dedicatedAllocation} field. */
         public VkDedicatedAllocationImageCreateInfoNV.Buffer dedicatedAllocation(@NativeType("VkBool32") boolean value) { VkDedicatedAllocationImageCreateInfoNV.ndedicatedAllocation(address(), value ? 1 : 0); return this; }
 

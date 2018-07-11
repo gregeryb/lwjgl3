@@ -9,7 +9,6 @@ import java.util.*;
 
 import static java.lang.Character.*;
 import static org.lwjgl.system.APIUtil.*;
-import static org.lwjgl.system.MathUtil.*;
 import static org.lwjgl.system.MemoryAccessJNI.*;
 import static org.lwjgl.system.MemoryUtil.*;
 import static org.lwjgl.system.Pointer.*;
@@ -27,15 +26,18 @@ final class MemoryAccess {
     }
 
     static MemoryAccessor getInstance() {
+        MemoryAccessor accessor;
         try {
             // Depends on sun.misc.Unsafe
-            return new MemoryAccessorUnsafe();
+            accessor = new MemoryAccessorUnsafe();
         } catch (Throwable t) {
             t.printStackTrace(DEBUG_STREAM);
             DEBUG_STREAM
                 .println("[LWJGL] [MemoryAccessor] Unsupported JVM detected, this will likely result in low performance. Please inform LWJGL developers.");
-            return new MemoryAccessorJNI();
+            accessor = new MemoryAccessorJNI();
         }
+
+        return accessor;
     }
 
     /** Implements functionality for {@link MemoryUtil}. */
@@ -78,6 +80,7 @@ final class MemoryAccess {
         default long memGetLong(long ptr)                 { return getLong(ptr); }
         default float memGetFloat(long ptr)               { return getFloat(ptr); }
         default double memGetDouble(long ptr)             { return getDouble(ptr); }
+        default long memGetAddress(long ptr)              { return getAddress(ptr); }
 
         default void memPutByte(long ptr, byte value)     { putByte(ptr, value); }
         default void memPutShort(long ptr, short value)   { putShort(ptr, value); }
@@ -85,6 +88,7 @@ final class MemoryAccess {
         default void memPutLong(long ptr, long value)     { putLong(ptr, value); }
         default void memPutFloat(long ptr, float value)   { putFloat(ptr, value); }
         default void memPutDouble(long ptr, double value) { putDouble(ptr, value); }
+        default void memPutAddress(long ptr, long value)  { putAddress(ptr, value); }
 
         default MemoryTextUtil getTextUtil() {
             return new MemoryTextUtil();
@@ -331,62 +335,72 @@ final class MemoryAccess {
 
         @Override
         public byte memGetByte(long ptr) {
-            return UNSAFE.getByte(null, ptr);
+            return UNSAFE.getByte(ptr);
         }
 
         @Override
         public short memGetShort(long ptr) {
-            return UNSAFE.getShort(null, ptr);
+            return UNSAFE.getShort(ptr);
         }
 
         @Override
         public int memGetInt(long ptr) {
-            return UNSAFE.getInt(null, ptr);
+            return UNSAFE.getInt(ptr);
         }
 
         @Override
         public long memGetLong(long ptr) {
-            return UNSAFE.getLong(null, ptr);
+            return UNSAFE.getLong(ptr);
         }
 
         @Override
         public float memGetFloat(long ptr) {
-            return UNSAFE.getFloat(null, ptr);
+            return UNSAFE.getFloat(ptr);
         }
 
         @Override
         public double memGetDouble(long ptr) {
-            return UNSAFE.getDouble(null, ptr);
+            return UNSAFE.getDouble(ptr);
+        }
+
+        @Override
+        public long memGetAddress(long ptr) {
+            return UNSAFE.getAddress(ptr);
         }
 
         @Override
         public void memPutByte(long ptr, byte value) {
-            UNSAFE.putByte(null, ptr, value);
+            UNSAFE.putByte(ptr, value);
         }
 
         @Override
         public void memPutShort(long ptr, short value) {
-            UNSAFE.putShort(null, ptr, value);
+            UNSAFE.putShort(ptr, value);
         }
 
         @Override
         public void memPutInt(long ptr, int value) {
-            UNSAFE.putInt(null, ptr, value);
+            UNSAFE.putInt(ptr, value);
         }
 
         @Override
         public void memPutLong(long ptr, long value) {
-            UNSAFE.putLong(null, ptr, value);
+            UNSAFE.putLong(ptr, value);
         }
 
         @Override
         public void memPutFloat(long ptr, float value) {
-            UNSAFE.putFloat(null, ptr, value);
+            UNSAFE.putFloat(ptr, value);
         }
 
         @Override
         public void memPutDouble(long ptr, double value) {
-            UNSAFE.putDouble(null, ptr, value);
+            UNSAFE.putDouble(ptr, value);
+        }
+
+        @Override
+        public void memPutAddress(long ptr, long value) {
+            UNSAFE.putAddress(ptr, value);
         }
 
         @Override
@@ -409,24 +423,25 @@ final class MemoryAccess {
                     if (misalignment != 0) {
                         // Align to 8 bytes
                         for (int len = 8 - misalignment; i < len; i++) {
-                            if (UNSAFE.getByte(null, address + i) == 0) {
+                            if (UNSAFE.getByte(address + i) == 0) {
                                 return i;
                             }
                         }
                     }
 
                     // Aligned longs for performance
-                    while (i <= maxLength - 8) {
-                        if (mathHasZeroByte(UNSAFE.getLong(null, address + i))) {
+                    do {
+                        long v = UNSAFE.getLong(address + i);
+                        if (((v - 0x0101010101010101L) & ~v & 0x8080808080808080L) != 0) {
                             break;
                         }
                         i += 8;
-                    }
+                    } while (i <= maxLength - 8);
                 }
 
                 // Tail
                 for (; i < maxLength; i++) {
-                    if (UNSAFE.getByte(null, address + i) == 0) {
+                    if (UNSAFE.getByte(address + i) == 0) {
                         break;
                     }
                 }
@@ -443,24 +458,25 @@ final class MemoryAccess {
                     if (misalignment != 0) {
                         // Align to 8 bytes
                         for (int len = 8 - misalignment; i < len; i += 2) {
-                            if (UNSAFE.getShort(null, address + i) == 0) {
+                            if (UNSAFE.getShort(address + i) == 0) {
                                 return i;
                             }
                         }
                     }
 
                     // Aligned longs for performance
-                    while (i <= maxLength - 8) {
-                        if (mathHasZeroShort(UNSAFE.getLong(null, address + i))) {
+                    do {
+                        long v = UNSAFE.getLong(address + i);
+                        if (((v - 0x0001000100010001L) & ~v & 0x8000800080008000L) != 0) {
                             break;
                         }
                         i += 8;
-                    }
+                    } while (i <= maxLength - 8);
                 }
 
                 // Tail
                 for (; i < maxLength; i += 2) {
-                    if (UNSAFE.getShort(null, address + i) == 0) {
+                    if (UNSAFE.getShort(address + i) == 0) {
                         break;
                     }
                 }
@@ -477,24 +493,25 @@ final class MemoryAccess {
                     if (misalignment != 0) {
                         // Align to 4 bytes
                         for (int len = 4 - misalignment; i < len; i++) {
-                            if (UNSAFE.getByte(null, address + i) == 0) {
+                            if (UNSAFE.getByte(address + i) == 0) {
                                 return i;
                             }
                         }
                     }
 
                     // Aligned ints for performance
-                    while (i <= maxLength - 4) {
-                        if (mathHasZeroByte(UNSAFE.getInt(null, address + i))) {
+                    do {
+                        int v = UNSAFE.getInt(address + i);
+                        if (((v - 0x01010101) & ~v & 0x80808080) != 0) {
                             break;
                         }
                         i += 4;
-                    }
+                    } while (i <= maxLength - 4);
                 }
 
                 // Tail
                 for (; i < maxLength; i++) {
-                    if (UNSAFE.getByte(null, address + i) == 0) {
+                    if (UNSAFE.getByte(address + i) == 0) {
                         break;
                     }
                 }
@@ -511,24 +528,25 @@ final class MemoryAccess {
                     if (misalignment != 0) {
                         // Align to 4 bytes
                         for (int len = 4 - misalignment; i < len; i += 2) {
-                            if (UNSAFE.getShort(null, address + i) == 0) {
+                            if (UNSAFE.getShort(address + i) == 0) {
                                 return i;
                             }
                         }
                     }
 
                     // Aligned longs for performance
-                    while (i <= maxLength - 4) {
-                        if (mathHasZeroShort(UNSAFE.getInt(null, address + i))) {
+                    do {
+                        int v = UNSAFE.getInt(address + i);
+                        if (((v - 0x00010001) & ~v & 0x80008000) != 0) {
                             break;
                         }
                         i += 4;
-                    }
+                    } while (i <= maxLength - 4);
                 }
 
                 // Tail
                 for (; i < maxLength; i += 2) {
-                    if (UNSAFE.getShort(null, address + i) == 0) {
+                    if (UNSAFE.getShort(address + i) == 0) {
                         break;
                     }
                 }
@@ -608,16 +626,18 @@ final class MemoryAccess {
             }
 
             private static int encodeUTF16(CharSequence text, boolean nullTerminated, long target) {
-                int len = text.length();
-                for (int i = 0; i < len; i++) {
-                    UNSAFE.putShort(target + 2 * i, (short)text.charAt(i));
+                int p = 0, len = text.length();
+
+                for (int i = 0; i < len; i++, p += 2) {
+                    UNSAFE.putShort(target + p, (short)text.charAt(i));
                 }
 
                 if (nullTerminated) {
-                    UNSAFE.putShort(target + 2 * len, (short)0);
+                    UNSAFE.putShort(target + p, (short)0);
+                    p += 2;
                 }
 
-                return 2 * (len + (nullTerminated ? 1 : 0));
+                return p;
             }
         }
 

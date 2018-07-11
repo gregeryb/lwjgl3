@@ -25,12 +25,12 @@ import static org.lwjgl.system.MemoryUtil.*;
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct RenderModel_Vertex_t {
  *     {@link HmdVector3 HmdVector3_t} vPosition;
  *     {@link HmdVector3 HmdVector3_t} vNormal;
  *     float rfTextureCoord[2];
- * }</code></pre>
+ * }</pre></code>
  */
 @NativeType("struct RenderModel_Vertex_t")
 public class RenderModelVertex extends Struct {
@@ -38,7 +38,6 @@ public class RenderModelVertex extends Struct {
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */
@@ -82,13 +81,9 @@ public class RenderModelVertex extends Struct {
     /** Returns a {@link HmdVector3} view of the {@code vPosition} field. */
     @NativeType("HmdVector3_t")
     public HmdVector3 vPosition() { return nvPosition(address()); }
-    /** Passes the {@code vPosition} field to the specified {@link java.util.function.Consumer Consumer}. */
-    public RenderModelVertex vPosition(java.util.function.Consumer<HmdVector3> consumer) { consumer.accept(vPosition()); return this; }
     /** Returns a {@link HmdVector3} view of the {@code vNormal} field. */
     @NativeType("HmdVector3_t")
     public HmdVector3 vNormal() { return nvNormal(address()); }
-    /** Passes the {@code vNormal} field to the specified {@link java.util.function.Consumer Consumer}. */
-    public RenderModelVertex vNormal(java.util.function.Consumer<HmdVector3> consumer) { consumer.accept(vNormal()); return this; }
     /** Returns a {@link FloatBuffer} view of the {@code rfTextureCoord} field. */
     @NativeType("float[2]")
     public FloatBuffer rfTextureCoord() { return nrfTextureCoord(address()); }
@@ -134,7 +129,8 @@ public class RenderModelVertex extends Struct {
     public static FloatBuffer nrfTextureCoord(long struct) { return memFloatBuffer(struct + RenderModelVertex.RFTEXTURECOORD, 2); }
     /** Unsafe version of {@link #rfTextureCoord(int) rfTextureCoord}. */
     public static float nrfTextureCoord(long struct, int index) {
-        return memGetFloat(struct + RenderModelVertex.RFTEXTURECOORD + check(index, 2) * 4);
+        if (CHECKS) { check(index, 2); }
+        return memGetFloat(struct + RenderModelVertex.RFTEXTURECOORD + index * 4);
     }
 
     // -----------------------------------
@@ -186,13 +182,9 @@ public class RenderModelVertex extends Struct {
         /** Returns a {@link HmdVector3} view of the {@code vPosition} field. */
         @NativeType("HmdVector3_t")
         public HmdVector3 vPosition() { return RenderModelVertex.nvPosition(address()); }
-        /** Passes the {@code vPosition} field to the specified {@link java.util.function.Consumer Consumer}. */
-        public RenderModelVertex.Buffer vPosition(java.util.function.Consumer<HmdVector3> consumer) { consumer.accept(vPosition()); return this; }
         /** Returns a {@link HmdVector3} view of the {@code vNormal} field. */
         @NativeType("HmdVector3_t")
         public HmdVector3 vNormal() { return RenderModelVertex.nvNormal(address()); }
-        /** Passes the {@code vNormal} field to the specified {@link java.util.function.Consumer Consumer}. */
-        public RenderModelVertex.Buffer vNormal(java.util.function.Consumer<HmdVector3> consumer) { consumer.accept(vNormal()); return this; }
         /** Returns a {@link FloatBuffer} view of the {@code rfTextureCoord} field. */
         @NativeType("float[2]")
         public FloatBuffer rfTextureCoord() { return RenderModelVertex.nrfTextureCoord(address()); }

@@ -14,18 +14,63 @@ import org.lwjgl.system.*;
 import static org.lwjgl.system.MemoryUtil.*;
 
 /**
- * See {@link VkExternalImageFormatProperties}.
+ * Structure specifying supported external handle properties.
+ * 
+ * <h5>Valid Usage (Implicit)</h5>
+ * 
+ * <ul>
+ * <li>{@code sType} <b>must</b> be {@link KHRExternalMemoryCapabilities#VK_STRUCTURE_TYPE_EXTERNAL_IMAGE_FORMAT_PROPERTIES_KHR STRUCTURE_TYPE_EXTERNAL_IMAGE_FORMAT_PROPERTIES_KHR}</li>
+ * <li>{@code pNext} <b>must</b> be {@code NULL}</li>
+ * </ul>
+ * 
+ * <h5>See Also</h5>
+ * 
+ * <p>{@link VkExternalMemoryPropertiesKHR}</p>
+ * 
+ * <h3>Member documentation</h3>
+ * 
+ * <ul>
+ * <li>{@code sType} &ndash; the type of this structure.</li>
+ * <li>{@code pNext} &ndash; {@code NULL} or a pointer to an extension-specific structure.</li>
+ * <li>{@code externalMemoryProperties} &ndash; an instance of the {@link VkExternalMemoryPropertiesKHR} structure specifying various capabilities of the external handle type when used with the specified image creation parameters.</li>
+ * </ul>
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct VkExternalImageFormatPropertiesKHR {
  *     VkStructureType sType;
  *     void * pNext;
- *     {@link VkExternalMemoryProperties VkExternalMemoryProperties} externalMemoryProperties;
- * }</code></pre>
+ *     {@link VkExternalMemoryPropertiesKHR VkExternalMemoryPropertiesKHR} externalMemoryProperties;
+ * }</pre></code>
  */
-public class VkExternalImageFormatPropertiesKHR extends VkExternalImageFormatProperties {
+public class VkExternalImageFormatPropertiesKHR extends Struct {
+
+    /** The struct size in bytes. */
+    public static final int SIZEOF;
+
+    public static final int ALIGNOF;
+
+    /** The struct member offsets. */
+    public static final int
+        STYPE,
+        PNEXT,
+        EXTERNALMEMORYPROPERTIES;
+
+    static {
+        Layout layout = __struct(
+            __member(4),
+            __member(POINTER_SIZE),
+            __member(VkExternalMemoryPropertiesKHR.SIZEOF, VkExternalMemoryPropertiesKHR.ALIGNOF)
+        );
+
+        SIZEOF = layout.getSize();
+        ALIGNOF = layout.getAlignment();
+
+        STYPE = layout.offsetof(0);
+        PNEXT = layout.offsetof(1);
+        EXTERNALMEMORYPROPERTIES = layout.offsetof(2);
+    }
 
     VkExternalImageFormatPropertiesKHR(long address, @Nullable ByteBuffer container) {
         super(address, container);
@@ -41,36 +86,17 @@ public class VkExternalImageFormatPropertiesKHR extends VkExternalImageFormatPro
         this(memAddress(container), __checkContainer(container, SIZEOF));
     }
 
-    /** Sets the specified value to the {@code sType} field. */
     @Override
-    public VkExternalImageFormatPropertiesKHR sType(@NativeType("VkStructureType") int value) { nsType(address(), value); return this; }
-    /** Sets the specified value to the {@code pNext} field. */
-    @Override
-    public VkExternalImageFormatPropertiesKHR pNext(@NativeType("void *") long value) { npNext(address(), value); return this; }
+    public int sizeof() { return SIZEOF; }
 
-    /** Initializes this struct with the specified values. */
-    @Override
-    public VkExternalImageFormatPropertiesKHR set(
-        int sType,
-        long pNext
-    ) {
-        sType(sType);
-        pNext(pNext);
-
-        return this;
-    }
-
-    /**
-     * Copies the specified struct data to this struct.
-     *
-     * @param src the source struct
-     *
-     * @return this struct
-     */
-    public VkExternalImageFormatPropertiesKHR set(VkExternalImageFormatPropertiesKHR src) {
-        memCopy(src.address(), address(), SIZEOF);
-        return this;
-    }
+    /** Returns the value of the {@code sType} field. */
+    @NativeType("VkStructureType")
+    public int sType() { return nsType(address()); }
+    /** Returns the value of the {@code pNext} field. */
+    @NativeType("void *")
+    public long pNext() { return npNext(address()); }
+    /** Returns a {@link VkExternalMemoryPropertiesKHR} view of the {@code externalMemoryProperties} field. */
+    public VkExternalMemoryPropertiesKHR externalMemoryProperties() { return nexternalMemoryProperties(address()); }
 
     // -----------------------------------
 
@@ -103,8 +129,17 @@ public class VkExternalImageFormatPropertiesKHR extends VkExternalImageFormatPro
 
     // -----------------------------------
 
+    /** Unsafe version of {@link #sType}. */
+    public static int nsType(long struct) { return memGetInt(struct + VkExternalImageFormatPropertiesKHR.STYPE); }
+    /** Unsafe version of {@link #pNext}. */
+    public static long npNext(long struct) { return memGetAddress(struct + VkExternalImageFormatPropertiesKHR.PNEXT); }
+    /** Unsafe version of {@link #externalMemoryProperties}. */
+    public static VkExternalMemoryPropertiesKHR nexternalMemoryProperties(long struct) { return VkExternalMemoryPropertiesKHR.create(struct + VkExternalImageFormatPropertiesKHR.EXTERNALMEMORYPROPERTIES); }
+
+    // -----------------------------------
+
     /** An array of {@link VkExternalImageFormatPropertiesKHR} structs. */
-    public static class Buffer extends VkExternalImageFormatProperties.Buffer {
+    public static class Buffer extends StructBuffer<VkExternalImageFormatPropertiesKHR, Buffer> {
 
         /**
          * Creates a new {@link VkExternalImageFormatPropertiesKHR.Buffer} instance backed by the specified container.
@@ -116,7 +151,7 @@ public class VkExternalImageFormatPropertiesKHR extends VkExternalImageFormatPro
          * <p>The created buffer instance holds a strong reference to the container object.</p>
          */
         public Buffer(ByteBuffer container) {
-            super(container);
+            super(container, container.remaining() / SIZEOF);
         }
 
         public Buffer(long address, int cap) {
@@ -142,12 +177,19 @@ public class VkExternalImageFormatPropertiesKHR extends VkExternalImageFormatPro
             return new VkExternalImageFormatPropertiesKHR(address, container);
         }
 
-        /** Sets the specified value to the {@code sType} field. */
         @Override
-        public VkExternalImageFormatPropertiesKHR.Buffer sType(@NativeType("VkStructureType") int value) { VkExternalImageFormatPropertiesKHR.nsType(address(), value); return this; }
-        /** Sets the specified value to the {@code pNext} field. */
-        @Override
-        public VkExternalImageFormatPropertiesKHR.Buffer pNext(@NativeType("void *") long value) { VkExternalImageFormatPropertiesKHR.npNext(address(), value); return this; }
+        public int sizeof() {
+            return SIZEOF;
+        }
+
+        /** Returns the value of the {@code sType} field. */
+        @NativeType("VkStructureType")
+        public int sType() { return VkExternalImageFormatPropertiesKHR.nsType(address()); }
+        /** Returns the value of the {@code pNext} field. */
+        @NativeType("void *")
+        public long pNext() { return VkExternalImageFormatPropertiesKHR.npNext(address()); }
+        /** Returns a {@link VkExternalMemoryPropertiesKHR} view of the {@code externalMemoryProperties} field. */
+        public VkExternalMemoryPropertiesKHR externalMemoryProperties() { return VkExternalImageFormatPropertiesKHR.nexternalMemoryProperties(address()); }
 
     }
 

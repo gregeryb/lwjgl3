@@ -52,7 +52,7 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <h5>See Also</h5>
  * 
- * <p>{@link VkExtent3D}, {@link VkQueueFamilyProperties2}, {@link VK10#vkGetPhysicalDeviceQueueFamilyProperties GetPhysicalDeviceQueueFamilyProperties}</p>
+ * <p>{@link VkExtent3D}, {@link VkQueueFamilyProperties2KHR}, {@link VK10#vkGetPhysicalDeviceQueueFamilyProperties GetPhysicalDeviceQueueFamilyProperties}</p>
  * 
  * <h3>Member documentation</h3>
  * 
@@ -65,20 +65,19 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct VkQueueFamilyProperties {
  *     VkQueueFlags queueFlags;
  *     uint32_t queueCount;
  *     uint32_t timestampValidBits;
  *     {@link VkExtent3D VkExtent3D} minImageTransferGranularity;
- * }</code></pre>
+ * }</pre></code>
  */
 public class VkQueueFamilyProperties extends Struct implements NativeResource {
 
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */
@@ -133,8 +132,6 @@ public class VkQueueFamilyProperties extends Struct implements NativeResource {
     public int timestampValidBits() { return ntimestampValidBits(address()); }
     /** Returns a {@link VkExtent3D} view of the {@code minImageTransferGranularity} field. */
     public VkExtent3D minImageTransferGranularity() { return nminImageTransferGranularity(address()); }
-    /** Passes the {@code minImageTransferGranularity} field to the specified {@link java.util.function.Consumer Consumer}. */
-    public VkQueueFamilyProperties minImageTransferGranularity(java.util.function.Consumer<VkExtent3D> consumer) { consumer.accept(minImageTransferGranularity()); return this; }
 
     // -----------------------------------
 
@@ -343,8 +340,6 @@ public class VkQueueFamilyProperties extends Struct implements NativeResource {
         public int timestampValidBits() { return VkQueueFamilyProperties.ntimestampValidBits(address()); }
         /** Returns a {@link VkExtent3D} view of the {@code minImageTransferGranularity} field. */
         public VkExtent3D minImageTransferGranularity() { return VkQueueFamilyProperties.nminImageTransferGranularity(address()); }
-        /** Passes the {@code minImageTransferGranularity} field to the specified {@link java.util.function.Consumer Consumer}. */
-        public VkQueueFamilyProperties.Buffer minImageTransferGranularity(java.util.function.Consumer<VkExtent3D> consumer) { consumer.accept(minImageTransferGranularity()); return this; }
 
     }
 

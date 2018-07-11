@@ -24,12 +24,12 @@ import static org.lwjgl.system.MemoryUtil.*;
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct NSVGimage {
  *     float width;
  *     float height;
  *     {@link NSVGShape NSVGshape} * shapes;
- * }</code></pre>
+ * }</pre></code>
  */
 @NativeType("struct NSVGimage")
 public class NSVGImage extends Struct {
@@ -37,7 +37,6 @@ public class NSVGImage extends Struct {
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */

@@ -29,22 +29,17 @@ public class WindowsLibrary extends SharedLibrary.Default {
     }
 
     public WindowsLibrary(String name) {
-        this(name, loadLibrary(name));
-    }
+        super(loadLibrary(name), name);
 
-    public WindowsLibrary(String name, long handle) {
-        super(name, handle);
+        if (address() == NULL) {
+            throw new UnsatisfiedLinkError("Failed to load library: " + name + " (error code = " + getLastError() + ")");
+        }
     }
 
     private static long loadLibrary(String name) {
-        long handle;
         try (MemoryStack stack = stackPush()) {
-            handle = LoadLibrary(stack.UTF16(name));
+            return LoadLibrary(stack.UTF16(name));
         }
-        if (handle == NULL) {
-            throw new UnsatisfiedLinkError("Failed to load library: " + name + " (error code = " + getLastError() + ")");
-        }
-        return handle;
     }
 
     @Override

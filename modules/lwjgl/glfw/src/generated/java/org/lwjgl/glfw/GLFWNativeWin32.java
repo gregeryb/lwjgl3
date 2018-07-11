@@ -57,7 +57,7 @@ public class GLFWNativeWin32 {
      * @since version 3.1
      */
     @Nullable
-    @NativeType("char const *")
+    @NativeType("const char *")
     public static String glfwGetWin32Adapter(@NativeType("GLFWmonitor *") long monitor) {
         long __result = nglfwGetWin32Adapter(monitor);
         return memUTF8Safe(__result);
@@ -86,7 +86,7 @@ public class GLFWNativeWin32 {
      * @since version 3.1
      */
     @Nullable
-    @NativeType("char const *")
+    @NativeType("const char *")
     public static String glfwGetWin32Monitor(@NativeType("GLFWmonitor *") long monitor) {
         long __result = nglfwGetWin32Monitor(monitor);
         return memUTF8Safe(__result);

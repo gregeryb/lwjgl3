@@ -10,6 +10,8 @@ import java.nio.*;
 import org.lwjgl.system.*;
 
 import static org.lwjgl.system.Checks.*;
+import static org.lwjgl.system.MemoryStack.*;
+import static org.lwjgl.system.MemoryUtil.*;
 
 /**
  * Native bindings to the <a target="_blank" href="https://www.khronos.org/registry/OpenGL/extensions/ARB/ARB_blend_func_extended.txt">ARB_blend_func_extended</a> extension.
@@ -54,8 +56,21 @@ public class ARBBlendFuncExtended {
     // --- [ glBindFragDataLocationIndexed ] ---
 
     /** Unsafe version of: {@link #glBindFragDataLocationIndexed BindFragDataLocationIndexed} */
-    public static void nglBindFragDataLocationIndexed(int program, int colorNumber, int index, long name) {
-        GL33C.nglBindFragDataLocationIndexed(program, colorNumber, index, name);
+    public static native void nglBindFragDataLocationIndexed(int program, int colorNumber, int index, long name);
+
+    /**
+     * Binds a user-defined varying out variable to a fragment shader color number and index.
+     *
+     * @param program     the name of the program containing varying out variable whose binding to modify
+     * @param colorNumber the color number to bind the user-defined varying out variable to
+     * @param index       the index of the color input to bind the user-defined varying out variable to
+     * @param name        the name of the user-defined varying out variable whose binding to modify
+     */
+    public static void glBindFragDataLocationIndexed(@NativeType("GLuint") int program, @NativeType("GLuint") int colorNumber, @NativeType("GLuint") int index, @NativeType("const GLchar *") ByteBuffer name) {
+        if (CHECKS) {
+            checkNT1(name);
+        }
+        nglBindFragDataLocationIndexed(program, colorNumber, index, memAddress(name));
     }
 
     /**
@@ -66,27 +81,33 @@ public class ARBBlendFuncExtended {
      * @param index       the index of the color input to bind the user-defined varying out variable to
      * @param name        the name of the user-defined varying out variable whose binding to modify
      */
-    public static void glBindFragDataLocationIndexed(@NativeType("GLuint") int program, @NativeType("GLuint") int colorNumber, @NativeType("GLuint") int index, @NativeType("GLchar const *") ByteBuffer name) {
-        GL33C.glBindFragDataLocationIndexed(program, colorNumber, index, name);
-    }
-
-    /**
-     * Binds a user-defined varying out variable to a fragment shader color number and index.
-     *
-     * @param program     the name of the program containing varying out variable whose binding to modify
-     * @param colorNumber the color number to bind the user-defined varying out variable to
-     * @param index       the index of the color input to bind the user-defined varying out variable to
-     * @param name        the name of the user-defined varying out variable whose binding to modify
-     */
-    public static void glBindFragDataLocationIndexed(@NativeType("GLuint") int program, @NativeType("GLuint") int colorNumber, @NativeType("GLuint") int index, @NativeType("GLchar const *") CharSequence name) {
-        GL33C.glBindFragDataLocationIndexed(program, colorNumber, index, name);
+    public static void glBindFragDataLocationIndexed(@NativeType("GLuint") int program, @NativeType("GLuint") int colorNumber, @NativeType("GLuint") int index, @NativeType("const GLchar *") CharSequence name) {
+        MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
+        try {
+            ByteBuffer nameEncoded = stack.ASCII(name);
+            nglBindFragDataLocationIndexed(program, colorNumber, index, memAddress(nameEncoded));
+        } finally {
+            stack.setPointer(stackPointer);
+        }
     }
 
     // --- [ glGetFragDataIndex ] ---
 
     /** Unsafe version of: {@link #glGetFragDataIndex GetFragDataIndex} */
-    public static int nglGetFragDataIndex(int program, long name) {
-        return GL33C.nglGetFragDataIndex(program, name);
+    public static native int nglGetFragDataIndex(int program, long name);
+
+    /**
+     * Queries the bindings of color indices to user-defined varying out variables.
+     *
+     * @param program the name of the program containing varying out variable whose binding to query
+     * @param name    the name of the user-defined varying out variable whose index to query
+     */
+    @NativeType("GLint")
+    public static int glGetFragDataIndex(@NativeType("GLuint") int program, @NativeType("const GLchar *") ByteBuffer name) {
+        if (CHECKS) {
+            checkNT1(name);
+        }
+        return nglGetFragDataIndex(program, memAddress(name));
     }
 
     /**
@@ -96,19 +117,14 @@ public class ARBBlendFuncExtended {
      * @param name    the name of the user-defined varying out variable whose index to query
      */
     @NativeType("GLint")
-    public static int glGetFragDataIndex(@NativeType("GLuint") int program, @NativeType("GLchar const *") ByteBuffer name) {
-        return GL33C.glGetFragDataIndex(program, name);
-    }
-
-    /**
-     * Queries the bindings of color indices to user-defined varying out variables.
-     *
-     * @param program the name of the program containing varying out variable whose binding to query
-     * @param name    the name of the user-defined varying out variable whose index to query
-     */
-    @NativeType("GLint")
-    public static int glGetFragDataIndex(@NativeType("GLuint") int program, @NativeType("GLchar const *") CharSequence name) {
-        return GL33C.glGetFragDataIndex(program, name);
+    public static int glGetFragDataIndex(@NativeType("GLuint") int program, @NativeType("const GLchar *") CharSequence name) {
+        MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
+        try {
+            ByteBuffer nameEncoded = stack.ASCII(name);
+            return nglGetFragDataIndex(program, memAddress(nameEncoded));
+        } finally {
+            stack.setPointer(stackPointer);
+        }
     }
 
 }

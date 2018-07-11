@@ -18,13 +18,13 @@ import static org.lwjgl.system.MemoryStack.*;
 /**
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct nk_rect {
  *     float x;
  *     float y;
  *     float w;
  *     float h;
- * }</code></pre>
+ * }</pre></code>
  */
 @NativeType("struct nk_rect")
 public class NkRect extends Struct implements NativeResource {
@@ -32,7 +32,6 @@ public class NkRect extends Struct implements NativeResource {
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */

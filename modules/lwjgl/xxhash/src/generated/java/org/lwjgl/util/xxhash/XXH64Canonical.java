@@ -27,10 +27,10 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct XXH64_canonical_t {
  *     unsigned char digest[8];
- * }</code></pre>
+ * }</pre></code>
  */
 @NativeType("struct XXH64_canonical_t")
 public class XXH64Canonical extends Struct implements NativeResource {
@@ -38,7 +38,6 @@ public class XXH64Canonical extends Struct implements NativeResource {
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */
@@ -225,7 +224,8 @@ public class XXH64Canonical extends Struct implements NativeResource {
     public static ByteBuffer ndigest(long struct) { return memByteBuffer(struct + XXH64Canonical.DIGEST, 8); }
     /** Unsafe version of {@link #digest(int) digest}. */
     public static byte ndigest(long struct, int index) {
-        return memGetByte(struct + XXH64Canonical.DIGEST + check(index, 8) * 1);
+        if (CHECKS) { check(index, 8); }
+        return memGetByte(struct + XXH64Canonical.DIGEST + index * 1);
     }
 
     // -----------------------------------

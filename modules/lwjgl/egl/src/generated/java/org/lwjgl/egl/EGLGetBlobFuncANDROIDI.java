@@ -14,19 +14,19 @@ import static org.lwjgl.system.dyncall.DynCallback.*;
  * 
  * <h3>Type</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * EGLsizeiANDROID (*) (
- *     void const *key,
+ *     const void *key,
  *     EGLsizeiANDROID keySize,
  *     void *value,
  *     EGLsizeiANDROID valueSize
- * )</code></pre>
+ * )</pre></code>
  */
 @FunctionalInterface
 @NativeType("EGLGetBlobFuncANDROID")
 public interface EGLGetBlobFuncANDROIDI extends CallbackI.P {
 
-    String SIGNATURE = Callback.__stdcall("(pppp)p");
+    String SIGNATURE = "(pppp)p";
 
     @Override
     default String getSignature() { return SIGNATURE; }
@@ -41,6 +41,6 @@ public interface EGLGetBlobFuncANDROIDI extends CallbackI.P {
         );
     }
 
-    @NativeType("EGLsizeiANDROID") long invoke(@NativeType("void const *") long key, @NativeType("EGLsizeiANDROID") long keySize, @NativeType("void *") long value, @NativeType("EGLsizeiANDROID") long valueSize);
+    @NativeType("EGLsizeiANDROID") long invoke(@NativeType("const void *") long key, @NativeType("EGLsizeiANDROID") long keySize, @NativeType("void *") long value, @NativeType("EGLsizeiANDROID") long valueSize);
 
 }

@@ -113,10 +113,6 @@ enum class Access(val modifier: String) {
     PRIVATE("private ")
 }
 
-@DslMarker
-annotation class GeneratorDslMarker
-
-@GeneratorDslMarker
 abstract class GeneratorTarget(
     val module: Module,
     val className: String
@@ -179,6 +175,21 @@ abstract class GeneratorTarget(
         preamble.nativeImport(*files)
         return this
     }
+
+    fun NativeType.IN(name: String, javadoc: String, links: String = "", linkMode: LinkMode = LinkMode.SINGLE) = createParameter(name, ParameterType.IN, javadoc, links, linkMode)
+    fun PointerType.OUT(name: String, javadoc: String, links: String = "", linkMode: LinkMode = LinkMode.SINGLE) = createParameter(name, ParameterType.OUT, javadoc, links, linkMode)
+    fun PointerType.INOUT(name: String, javadoc: String, links: String = "", linkMode: LinkMode = LinkMode.SINGLE) = createParameter(name, ParameterType.INOUT, javadoc, links, linkMode)
+
+    private fun NativeType.createParameter(
+        name: String,
+        paramType: ParameterType,
+        javadoc: String,
+        links: String,
+        linkMode: LinkMode = LinkMode.SINGLE
+    ) = if (links.isEmpty() || !links.contains('+'))
+        Parameter(this, name, paramType, javadoc, links, linkMode)
+    else
+        Parameter(this, name, paramType) { linkMode.appendLinks(javadoc, linksFromRegex(links)) }
 
     protected fun linksFromRegex(pattern: String) = pattern.toRegex().let { regex ->
         Generator.tokens[module]!!

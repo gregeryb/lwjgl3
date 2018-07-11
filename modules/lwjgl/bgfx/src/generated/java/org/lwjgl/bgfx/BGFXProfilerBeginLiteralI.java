@@ -14,17 +14,17 @@ import static org.lwjgl.system.dyncall.DynCallback.*;
  * 
  * <h3>Type</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * void (*) (
  *     bgfx_callback_interface_t *_this,
- *     char const *_name,
+ *     const char *_name,
  *     uint32_t _abgr,
- *     char const *_filePath,
+ *     const char *_filePath,
  *     uint16_t _line
- * )</code></pre>
+ * )</pre></code>
  */
 @FunctionalInterface
-@NativeType("void (*) (bgfx_callback_interface_t *, char const *, uint32_t, char const *, uint16_t)")
+@NativeType("void (*) (bgfx_callback_interface_t *, const char *, uint32_t, const char *, uint16_t)")
 public interface BGFXProfilerBeginLiteralI extends CallbackI.V {
 
     String SIGNATURE = "(ppips)v";
@@ -54,6 +54,6 @@ public interface BGFXProfilerBeginLiteralI extends CallbackI.V {
      * @param _filePath file path where {@code profiler_begin_literal} was called
      * @param _line     line where {@code profiler_begin_literal} was called
      */
-    void invoke(@NativeType("bgfx_callback_interface_t *") long _this, @NativeType("char const *") long _name, @NativeType("uint32_t") int _abgr, @NativeType("char const *") long _filePath, @NativeType("uint16_t") short _line);
+    void invoke(@NativeType("bgfx_callback_interface_t *") long _this, @NativeType("const char *") long _name, @NativeType("uint32_t") int _abgr, @NativeType("const char *") long _filePath, @NativeType("uint16_t") short _line);
 
 }

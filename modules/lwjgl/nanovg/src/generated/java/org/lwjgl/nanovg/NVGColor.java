@@ -31,7 +31,7 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct NVGcolor {
  *     union {
  *         float rgba[4];
@@ -42,7 +42,7 @@ import static org.lwjgl.system.MemoryStack.*;
  *             float a;
  *         };
  *     };
- * }</code></pre>
+ * }</pre></code>
  */
 @NativeType("struct NVGcolor")
 public class NVGColor extends Struct implements NativeResource {
@@ -50,7 +50,6 @@ public class NVGColor extends Struct implements NativeResource {
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */
@@ -285,7 +284,8 @@ public class NVGColor extends Struct implements NativeResource {
     public static FloatBuffer nrgba(long struct) { return memFloatBuffer(struct + NVGColor.RGBA, 4); }
     /** Unsafe version of {@link #rgba(int) rgba}. */
     public static float nrgba(long struct, int index) {
-        return memGetFloat(struct + NVGColor.RGBA + check(index, 4) * 4);
+        if (CHECKS) { check(index, 4); }
+        return memGetFloat(struct + NVGColor.RGBA + index * 4);
     }
     /** Unsafe version of {@link #r}. */
     public static float nr(long struct) { return memGetFloat(struct + NVGColor.R); }
@@ -303,7 +303,8 @@ public class NVGColor extends Struct implements NativeResource {
     }
     /** Unsafe version of {@link #rgba(int, float) rgba}. */
     public static void nrgba(long struct, int index, float value) {
-        memPutFloat(struct + NVGColor.RGBA + check(index, 4) * 4, value);
+        if (CHECKS) { check(index, 4); }
+        memPutFloat(struct + NVGColor.RGBA + index * 4, value);
     }
     /** Unsafe version of {@link #r(float) r}. */
     public static void nr(long struct, float value) { memPutFloat(struct + NVGColor.R, value); }

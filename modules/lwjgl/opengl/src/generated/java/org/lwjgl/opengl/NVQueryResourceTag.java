@@ -61,11 +61,11 @@ public class NVQueryResourceTag {
 
     public static native void nglDeleteQueryResourceTagNV(int n, long tagIds);
 
-    public static void glDeleteQueryResourceTagNV(@NativeType("GLuint const *") IntBuffer tagIds) {
+    public static void glDeleteQueryResourceTagNV(@NativeType("const GLuint *") IntBuffer tagIds) {
         nglDeleteQueryResourceTagNV(tagIds.remaining(), memAddress(tagIds));
     }
 
-    public static void glDeleteQueryResourceTagNV(@NativeType("GLuint const *") int tagId) {
+    public static void glDeleteQueryResourceTagNV(@NativeType("const GLuint *") int tagId) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
             IntBuffer tagIds = stack.ints(tagId);
@@ -79,14 +79,14 @@ public class NVQueryResourceTag {
 
     public static native void nglQueryResourceTagNV(int tagId, long tagString);
 
-    public static void glQueryResourceTagNV(@NativeType("GLuint") int tagId, @NativeType("GLchar const *") ByteBuffer tagString) {
+    public static void glQueryResourceTagNV(@NativeType("GLuint") int tagId, @NativeType("const GLchar *") ByteBuffer tagString) {
         if (CHECKS) {
             checkNT1(tagString);
         }
         nglQueryResourceTagNV(tagId, memAddress(tagString));
     }
 
-    public static void glQueryResourceTagNV(@NativeType("GLuint") int tagId, @NativeType("GLchar const *") CharSequence tagString) {
+    public static void glQueryResourceTagNV(@NativeType("GLuint") int tagId, @NativeType("const GLchar *") CharSequence tagString) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
             ByteBuffer tagStringEncoded = stack.ASCII(tagString);
@@ -96,7 +96,7 @@ public class NVQueryResourceTag {
         }
     }
 
-    /** Array version of: {@link #glGenQueryResourceTagNV GenQueryResourceTagNV} */
+    /** register Array version of: {@link #glGenQueryResourceTagNV GenQueryResourceTagNV} */
     public static void glGenQueryResourceTagNV(@NativeType("GLuint *") int[] tagIds) {
         long __functionAddress = GL.getICD().glGenQueryResourceTagNV;
         if (CHECKS) {
@@ -105,8 +105,8 @@ public class NVQueryResourceTag {
         callPV(__functionAddress, tagIds.length, tagIds);
     }
 
-    /** Array version of: {@link #glDeleteQueryResourceTagNV DeleteQueryResourceTagNV} */
-    public static void glDeleteQueryResourceTagNV(@NativeType("GLuint const *") int[] tagIds) {
+    /** register Array version of: {@link #glDeleteQueryResourceTagNV DeleteQueryResourceTagNV} */
+    public static void glDeleteQueryResourceTagNV(@NativeType("const GLuint *") int[] tagIds) {
         long __functionAddress = GL.getICD().glDeleteQueryResourceTagNV;
         if (CHECKS) {
             check(__functionAddress);

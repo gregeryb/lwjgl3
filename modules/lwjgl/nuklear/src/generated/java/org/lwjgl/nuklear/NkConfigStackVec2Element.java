@@ -16,11 +16,11 @@ import static org.lwjgl.system.MemoryUtil.*;
 /**
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct nk_config_stack_vec2_element {
  *     {@link NkVec2 struct nk_vec2} * pValues;
  *     {@link NkVec2 struct nk_vec2} old_value;
- * }</code></pre>
+ * }</pre></code>
  */
 @NativeType("struct nk_config_stack_vec2_element")
 class NkConfigStackVec2Element extends Struct {
@@ -28,7 +28,6 @@ class NkConfigStackVec2Element extends Struct {
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */
@@ -72,8 +71,6 @@ class NkConfigStackVec2Element extends Struct {
     /** Returns a {@link NkVec2} view of the {@code old_value} field. */
     @NativeType("struct nk_vec2")
     public NkVec2 old_value() { return nold_value(address()); }
-    /** Passes the {@code old_value} field to the specified {@link java.util.function.Consumer Consumer}. */
-    public NkConfigStackVec2Element old_value(java.util.function.Consumer<NkVec2> consumer) { consumer.accept(old_value()); return this; }
 
     // -----------------------------------
 
@@ -163,8 +160,6 @@ class NkConfigStackVec2Element extends Struct {
         /** Returns a {@link NkVec2} view of the {@code old_value} field. */
         @NativeType("struct nk_vec2")
         public NkVec2 old_value() { return NkConfigStackVec2Element.nold_value(address()); }
-        /** Passes the {@code old_value} field to the specified {@link java.util.function.Consumer Consumer}. */
-        public NkConfigStackVec2Element.Buffer old_value(java.util.function.Consumer<NkVec2> consumer) { consumer.accept(old_value()); return this; }
 
     }
 

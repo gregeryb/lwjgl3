@@ -9,16 +9,14 @@ import javax.annotation.*;
 
 import java.nio.*;
 
-import org.lwjgl.*;
 import org.lwjgl.system.*;
 
 import static org.lwjgl.system.MemoryUtil.*;
-import static org.lwjgl.system.MemoryStack.*;
 
 /**
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct nk_text_edit {
  *     {@link NkClipboard struct nk_clipboard} clip;
  *     {@link NkStr struct nk_str} string;
@@ -36,15 +34,14 @@ import static org.lwjgl.system.MemoryStack.*;
  *     char[1];
  *     float preferred_x;
  *     {@link NkTextUndoState struct nk_text_undo_state} undo;
- * }</code></pre>
+ * }</pre></code>
  */
 @NativeType("struct nk_text_edit")
-class NkTextEdit extends Struct implements NativeResource {
+class NkTextEdit extends Struct {
 
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */
@@ -125,8 +122,6 @@ class NkTextEdit extends Struct implements NativeResource {
     /** Returns a {@link NkClipboard} view of the {@code clip} field. */
     @NativeType("struct nk_clipboard")
     public NkClipboard clip() { return nclip(address()); }
-    /** Passes the {@code clip} field to the specified {@link java.util.function.Consumer Consumer}. */
-    public NkTextEdit clip(java.util.function.Consumer<NkClipboard> consumer) { consumer.accept(clip()); return this; }
     /** Returns a {@link NkStr} view of the {@code string} field. */
     @NativeType("struct nk_str")
     public NkStr string() { return nstring(address()); }
@@ -137,8 +132,6 @@ class NkTextEdit extends Struct implements NativeResource {
     /** Returns a {@link NkVec2} view of the {@code scrollbar} field. */
     @NativeType("struct nk_vec2")
     public NkVec2 scrollbar() { return nscrollbar(address()); }
-    /** Passes the {@code scrollbar} field to the specified {@link java.util.function.Consumer Consumer}. */
-    public NkTextEdit scrollbar(java.util.function.Consumer<NkVec2> consumer) { consumer.accept(scrollbar()); return this; }
     /** Returns the value of the {@code cursor} field. */
     public int cursor() { return ncursor(address()); }
     /** Returns the value of the {@code select_start} field. */
@@ -171,21 +164,6 @@ class NkTextEdit extends Struct implements NativeResource {
 
     // -----------------------------------
 
-    /** Returns a new {@link NkTextEdit} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed. */
-    public static NkTextEdit malloc() {
-        return create(nmemAllocChecked(SIZEOF));
-    }
-
-    /** Returns a new {@link NkTextEdit} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed. */
-    public static NkTextEdit calloc() {
-        return create(nmemCallocChecked(1, SIZEOF));
-    }
-
-    /** Returns a new {@link NkTextEdit} instance allocated with {@link BufferUtils}. */
-    public static NkTextEdit create() {
-        return new NkTextEdit(BufferUtils.createByteBuffer(SIZEOF));
-    }
-
     /** Returns a new {@link NkTextEdit} instance for the specified memory address. */
     public static NkTextEdit create(long address) {
         return new NkTextEdit(address, null);
@@ -195,33 +173,6 @@ class NkTextEdit extends Struct implements NativeResource {
     @Nullable
     public static NkTextEdit createSafe(long address) {
         return address == NULL ? null : create(address);
-    }
-
-    /**
-     * Returns a new {@link NkTextEdit.Buffer} instance allocated with {@link MemoryUtil#memAlloc memAlloc}. The instance must be explicitly freed.
-     *
-     * @param capacity the buffer capacity
-     */
-    public static NkTextEdit.Buffer malloc(int capacity) {
-        return create(__malloc(capacity, SIZEOF), capacity);
-    }
-
-    /**
-     * Returns a new {@link NkTextEdit.Buffer} instance allocated with {@link MemoryUtil#memCalloc memCalloc}. The instance must be explicitly freed.
-     *
-     * @param capacity the buffer capacity
-     */
-    public static NkTextEdit.Buffer calloc(int capacity) {
-        return create(nmemCallocChecked(capacity, SIZEOF), capacity);
-    }
-
-    /**
-     * Returns a new {@link NkTextEdit.Buffer} instance allocated with {@link BufferUtils}.
-     *
-     * @param capacity the buffer capacity
-     */
-    public static NkTextEdit.Buffer create(int capacity) {
-        return new Buffer(__create(capacity, SIZEOF));
     }
 
     /**
@@ -238,74 +189,6 @@ class NkTextEdit extends Struct implements NativeResource {
     @Nullable
     public static NkTextEdit.Buffer createSafe(long address, int capacity) {
         return address == NULL ? null : create(address, capacity);
-    }
-
-    // -----------------------------------
-
-    /** Returns a new {@link NkTextEdit} instance allocated on the thread-local {@link MemoryStack}. */
-    public static NkTextEdit mallocStack() {
-        return mallocStack(stackGet());
-    }
-
-    /** Returns a new {@link NkTextEdit} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero. */
-    public static NkTextEdit callocStack() {
-        return callocStack(stackGet());
-    }
-
-    /**
-     * Returns a new {@link NkTextEdit} instance allocated on the specified {@link MemoryStack}.
-     *
-     * @param stack the stack from which to allocate
-     */
-    public static NkTextEdit mallocStack(MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, SIZEOF));
-    }
-
-    /**
-     * Returns a new {@link NkTextEdit} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
-     *
-     * @param stack the stack from which to allocate
-     */
-    public static NkTextEdit callocStack(MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, 1, SIZEOF));
-    }
-
-    /**
-     * Returns a new {@link NkTextEdit.Buffer} instance allocated on the thread-local {@link MemoryStack}.
-     *
-     * @param capacity the buffer capacity
-     */
-    public static NkTextEdit.Buffer mallocStack(int capacity) {
-        return mallocStack(capacity, stackGet());
-    }
-
-    /**
-     * Returns a new {@link NkTextEdit.Buffer} instance allocated on the thread-local {@link MemoryStack} and initializes all its bits to zero.
-     *
-     * @param capacity the buffer capacity
-     */
-    public static NkTextEdit.Buffer callocStack(int capacity) {
-        return callocStack(capacity, stackGet());
-    }
-
-    /**
-     * Returns a new {@link NkTextEdit.Buffer} instance allocated on the specified {@link MemoryStack}.
-     *
-     * @param stack the stack from which to allocate
-     * @param capacity the buffer capacity
-     */
-    public static NkTextEdit.Buffer mallocStack(int capacity, MemoryStack stack) {
-        return create(stack.nmalloc(ALIGNOF, capacity * SIZEOF), capacity);
-    }
-
-    /**
-     * Returns a new {@link NkTextEdit.Buffer} instance allocated on the specified {@link MemoryStack} and initializes all its bits to zero.
-     *
-     * @param stack the stack from which to allocate
-     * @param capacity the buffer capacity
-     */
-    public static NkTextEdit.Buffer callocStack(int capacity, MemoryStack stack) {
-        return create(stack.ncalloc(ALIGNOF, capacity, SIZEOF), capacity);
     }
 
     // -----------------------------------
@@ -344,7 +227,7 @@ class NkTextEdit extends Struct implements NativeResource {
     // -----------------------------------
 
     /** An array of {@link NkTextEdit} structs. */
-    public static class Buffer extends StructBuffer<NkTextEdit, Buffer> implements NativeResource {
+    public static class Buffer extends StructBuffer<NkTextEdit, Buffer> {
 
         /**
          * Creates a new {@link NkTextEdit.Buffer} instance backed by the specified container.
@@ -390,8 +273,6 @@ class NkTextEdit extends Struct implements NativeResource {
         /** Returns a {@link NkClipboard} view of the {@code clip} field. */
         @NativeType("struct nk_clipboard")
         public NkClipboard clip() { return NkTextEdit.nclip(address()); }
-        /** Passes the {@code clip} field to the specified {@link java.util.function.Consumer Consumer}. */
-        public NkTextEdit.Buffer clip(java.util.function.Consumer<NkClipboard> consumer) { consumer.accept(clip()); return this; }
         /** Returns a {@link NkStr} view of the {@code string} field. */
         @NativeType("struct nk_str")
         public NkStr string() { return NkTextEdit.nstring(address()); }
@@ -402,8 +283,6 @@ class NkTextEdit extends Struct implements NativeResource {
         /** Returns a {@link NkVec2} view of the {@code scrollbar} field. */
         @NativeType("struct nk_vec2")
         public NkVec2 scrollbar() { return NkTextEdit.nscrollbar(address()); }
-        /** Passes the {@code scrollbar} field to the specified {@link java.util.function.Consumer Consumer}. */
-        public NkTextEdit.Buffer scrollbar(java.util.function.Consumer<NkVec2> consumer) { consumer.accept(scrollbar()); return this; }
         /** Returns the value of the {@code cursor} field. */
         public int cursor() { return NkTextEdit.ncursor(address()); }
         /** Returns the value of the {@code select_start} field. */

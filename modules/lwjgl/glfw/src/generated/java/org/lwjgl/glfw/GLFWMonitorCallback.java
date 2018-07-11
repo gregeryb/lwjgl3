@@ -18,11 +18,11 @@ import static org.lwjgl.glfw.GLFW.*;
  * 
  * <h3>Type</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * void (*) (
  *     GLFWmonitor *monitor,
  *     int event
- * )</code></pre>
+ * )</pre></code>
  *
  * @since version 3.0
  */

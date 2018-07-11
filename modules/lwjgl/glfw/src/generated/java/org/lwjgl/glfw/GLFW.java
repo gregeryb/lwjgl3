@@ -425,11 +425,6 @@ public class GLFW {
      * alpha channel will be used to combine the framebuffer with the background. This does not affect window decorations.
      * </li>
      * <li>{@link #GLFW_HOVERED HOVERED} - {@code GetWindowAttrib}: indicates whether the cursor is currently directly over the client area of the window, with no other windows between.</li>
-     * <li>{@link #GLFW_FOCUS_ON_SHOW FOCUS_ON_SHOW} - 
-     * {@code WindowHint}: specifies whether input focuses on calling show window.
-     * 
-     * <p>{@code GetWindowAttrib}: Indicates whether input focuses on calling show window.</p>
-     * </li>
      * </ul>
      */
     public static final int
@@ -443,8 +438,7 @@ public class GLFW {
         GLFW_MAXIMIZED               = 0x20008,
         GLFW_CENTER_CURSOR           = 0x20009,
         GLFW_TRANSPARENT_FRAMEBUFFER = 0x2000A,
-        GLFW_HOVERED                 = 0x2000A,
-        GLFW_FOCUS_ON_SHOW           = 0x2000C;
+        GLFW_HOVERED                 = 0x2000A;
 
     /** Input options. */
     public static final int
@@ -936,7 +930,7 @@ public class GLFW {
      *
      * @since version 3.0
      */
-    @NativeType("char const *")
+    @NativeType("const char *")
     public static String glfwGetVersionString() {
         long __result = nglfwGetVersionString();
         return memASCII(__result);
@@ -971,7 +965,7 @@ public class GLFW {
      *
      * @since version 3.3
      */
-    public static int glfwGetError(@Nullable @NativeType("char const **") PointerBuffer description) {
+    public static int glfwGetError(@Nullable @NativeType("const char **") PointerBuffer description) {
         if (CHECKS) {
             checkSafe(description, 1);
         }
@@ -1212,7 +1206,7 @@ public class GLFW {
      * @since version 3.0
      */
     @Nullable
-    @NativeType("char const *")
+    @NativeType("const char *")
     public static String glfwGetMonitorName(@NativeType("GLFWmonitor *") long monitor) {
         long __result = nglfwGetMonitorName(monitor);
         return memUTF8Safe(__result);
@@ -1325,7 +1319,7 @@ public class GLFW {
      * @since version 1.0
      */
     @Nullable
-    @NativeType("GLFWvidmode const *")
+    @NativeType("const GLFWvidmode *")
     public static GLFWVidMode.Buffer glfwGetVideoModes(@NativeType("GLFWmonitor *") long monitor) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         IntBuffer count = stack.callocInt(1);
@@ -1364,7 +1358,7 @@ public class GLFW {
      * @since version 3.0
      */
     @Nullable
-    @NativeType("GLFWvidmode const *")
+    @NativeType("const GLFWvidmode *")
     public static GLFWVidMode glfwGetVideoMode(@NativeType("GLFWmonitor *") long monitor) {
         long __result = nglfwGetVideoMode(monitor);
         return GLFWVidMode.createSafe(__result);
@@ -1433,7 +1427,7 @@ public class GLFW {
      * @since version 3.0
      */
     @Nullable
-    @NativeType("GLFWgammaramp const *")
+    @NativeType("const GLFWgammaramp *")
     public static GLFWGammaRamp glfwGetGammaRamp(@NativeType("GLFWmonitor *") long monitor) {
         long __result = nglfwGetGammaRamp(monitor);
         return GLFWGammaRamp.createSafe(__result);
@@ -1475,7 +1469,7 @@ public class GLFW {
      *
      * @since version 3.0
      */
-    public static void glfwSetGammaRamp(@NativeType("GLFWmonitor *") long monitor, @NativeType("GLFWgammaramp const *") GLFWGammaRamp ramp) {
+    public static void glfwSetGammaRamp(@NativeType("GLFWmonitor *") long monitor, @NativeType("const GLFWgammaramp *") GLFWGammaRamp ramp) {
         nglfwSetGammaRamp(monitor, ramp.address());
     }
 
@@ -1509,7 +1503,7 @@ public class GLFW {
      * 
      * <h5>Supported and default values</h5>
      * 
-     * <table class=striped>
+     * <table class=lwjgl>
      * <tr><th>Name</th><th>Default value</th><th>Supported values</th></tr>
      * <tr><td>{@link #GLFW_RESIZABLE RESIZABLE}</td><td>{@link #GLFW_TRUE TRUE}</td><td>{@link #GLFW_TRUE TRUE} or {@link #GLFW_FALSE FALSE}</td></tr>
      * <tr><td>{@link #GLFW_VISIBLE VISIBLE}</td><td>{@link #GLFW_TRUE TRUE}</td><td>{@link #GLFW_TRUE TRUE} or {@link #GLFW_FALSE FALSE}</td></tr>
@@ -1552,7 +1546,7 @@ public class GLFW {
      * 
      * <p>This function must only be called from the main thread.</p>
      *
-     * @param hint  the window hint to set. One of:<br><table><tr><td>{@link #GLFW_FOCUSED FOCUSED}</td><td>{@link #GLFW_RESIZABLE RESIZABLE}</td><td>{@link #GLFW_VISIBLE VISIBLE}</td><td>{@link #GLFW_DECORATED DECORATED}</td><td>{@link #GLFW_AUTO_ICONIFY AUTO_ICONIFY}</td></tr><tr><td>{@link #GLFW_FLOATING FLOATING}</td><td>{@link #GLFW_MAXIMIZED MAXIMIZED}</td><td>{@link #GLFW_CENTER_CURSOR CENTER_CURSOR}</td><td>{@link #GLFW_TRANSPARENT_FRAMEBUFFER TRANSPARENT_FRAMEBUFFER}</td><td>{@link #GLFW_FOCUS_ON_SHOW FOCUS_ON_SHOW}</td></tr><tr><td>{@link #GLFW_CLIENT_API CLIENT_API}</td><td>{@link #GLFW_CONTEXT_VERSION_MAJOR CONTEXT_VERSION_MAJOR}</td><td>{@link #GLFW_CONTEXT_VERSION_MINOR CONTEXT_VERSION_MINOR}</td><td>{@link #GLFW_CONTEXT_ROBUSTNESS CONTEXT_ROBUSTNESS}</td><td>{@link #GLFW_OPENGL_FORWARD_COMPAT OPENGL_FORWARD_COMPAT}</td></tr><tr><td>{@link #GLFW_OPENGL_DEBUG_CONTEXT OPENGL_DEBUG_CONTEXT}</td><td>{@link #GLFW_OPENGL_PROFILE OPENGL_PROFILE}</td><td>{@link #GLFW_CONTEXT_RELEASE_BEHAVIOR CONTEXT_RELEASE_BEHAVIOR}</td><td>{@link #GLFW_CONTEXT_NO_ERROR CONTEXT_NO_ERROR}</td><td>{@link #GLFW_CONTEXT_CREATION_API CONTEXT_CREATION_API}</td></tr><tr><td>{@link #GLFW_RED_BITS RED_BITS}</td><td>{@link #GLFW_GREEN_BITS GREEN_BITS}</td><td>{@link #GLFW_BLUE_BITS BLUE_BITS}</td><td>{@link #GLFW_ALPHA_BITS ALPHA_BITS}</td><td>{@link #GLFW_DEPTH_BITS DEPTH_BITS}</td></tr><tr><td>{@link #GLFW_STENCIL_BITS STENCIL_BITS}</td><td>{@link #GLFW_ACCUM_RED_BITS ACCUM_RED_BITS}</td><td>{@link #GLFW_ACCUM_GREEN_BITS ACCUM_GREEN_BITS}</td><td>{@link #GLFW_ACCUM_BLUE_BITS ACCUM_BLUE_BITS}</td><td>{@link #GLFW_ACCUM_ALPHA_BITS ACCUM_ALPHA_BITS}</td></tr><tr><td>{@link #GLFW_AUX_BUFFERS AUX_BUFFERS}</td><td>{@link #GLFW_STEREO STEREO}</td><td>{@link #GLFW_SAMPLES SAMPLES}</td><td>{@link #GLFW_SRGB_CAPABLE SRGB_CAPABLE}</td><td>{@link #GLFW_REFRESH_RATE REFRESH_RATE}</td></tr><tr><td>{@link #GLFW_DOUBLEBUFFER DOUBLEBUFFER}</td><td>{@link #GLFW_COCOA_RETINA_FRAMEBUFFER COCOA_RETINA_FRAMEBUFFER}</td><td>{@link #GLFW_COCOA_GRAPHICS_SWITCHING COCOA_GRAPHICS_SWITCHING}</td></tr></table>
+     * @param hint  the window hint to set. One of:<br><table><tr><td>{@link #GLFW_FOCUSED FOCUSED}</td><td>{@link #GLFW_RESIZABLE RESIZABLE}</td><td>{@link #GLFW_VISIBLE VISIBLE}</td><td>{@link #GLFW_DECORATED DECORATED}</td><td>{@link #GLFW_AUTO_ICONIFY AUTO_ICONIFY}</td></tr><tr><td>{@link #GLFW_FLOATING FLOATING}</td><td>{@link #GLFW_MAXIMIZED MAXIMIZED}</td><td>{@link #GLFW_CENTER_CURSOR CENTER_CURSOR}</td><td>{@link #GLFW_TRANSPARENT_FRAMEBUFFER TRANSPARENT_FRAMEBUFFER}</td><td>{@link #GLFW_CLIENT_API CLIENT_API}</td></tr><tr><td>{@link #GLFW_CONTEXT_VERSION_MAJOR CONTEXT_VERSION_MAJOR}</td><td>{@link #GLFW_CONTEXT_VERSION_MINOR CONTEXT_VERSION_MINOR}</td><td>{@link #GLFW_CONTEXT_ROBUSTNESS CONTEXT_ROBUSTNESS}</td><td>{@link #GLFW_OPENGL_FORWARD_COMPAT OPENGL_FORWARD_COMPAT}</td><td>{@link #GLFW_OPENGL_DEBUG_CONTEXT OPENGL_DEBUG_CONTEXT}</td></tr><tr><td>{@link #GLFW_OPENGL_PROFILE OPENGL_PROFILE}</td><td>{@link #GLFW_CONTEXT_RELEASE_BEHAVIOR CONTEXT_RELEASE_BEHAVIOR}</td><td>{@link #GLFW_CONTEXT_NO_ERROR CONTEXT_NO_ERROR}</td><td>{@link #GLFW_CONTEXT_CREATION_API CONTEXT_CREATION_API}</td><td>{@link #GLFW_RED_BITS RED_BITS}</td></tr><tr><td>{@link #GLFW_GREEN_BITS GREEN_BITS}</td><td>{@link #GLFW_BLUE_BITS BLUE_BITS}</td><td>{@link #GLFW_ALPHA_BITS ALPHA_BITS}</td><td>{@link #GLFW_DEPTH_BITS DEPTH_BITS}</td><td>{@link #GLFW_STENCIL_BITS STENCIL_BITS}</td></tr><tr><td>{@link #GLFW_ACCUM_RED_BITS ACCUM_RED_BITS}</td><td>{@link #GLFW_ACCUM_GREEN_BITS ACCUM_GREEN_BITS}</td><td>{@link #GLFW_ACCUM_BLUE_BITS ACCUM_BLUE_BITS}</td><td>{@link #GLFW_ACCUM_ALPHA_BITS ACCUM_ALPHA_BITS}</td><td>{@link #GLFW_AUX_BUFFERS AUX_BUFFERS}</td></tr><tr><td>{@link #GLFW_STEREO STEREO}</td><td>{@link #GLFW_SAMPLES SAMPLES}</td><td>{@link #GLFW_SRGB_CAPABLE SRGB_CAPABLE}</td><td>{@link #GLFW_REFRESH_RATE REFRESH_RATE}</td><td>{@link #GLFW_DOUBLEBUFFER DOUBLEBUFFER}</td></tr><tr><td>{@link #GLFW_COCOA_RETINA_FRAMEBUFFER COCOA_RETINA_FRAMEBUFFER}</td><td>{@link #GLFW_COCOA_GRAPHICS_SWITCHING COCOA_GRAPHICS_SWITCHING}</td></tr></table>
      * @param value the new value of the window hint
      *
      * @since version 2.2
@@ -1586,7 +1580,7 @@ public class GLFW {
      * 
      * <h5>Supported and default values</h5>
      * 
-     * <table class=striped>
+     * <table class=lwjgl>
      * <tr><th>Name</th><th>Default value</th><th>Supported values</th></tr>
      * <tr><td>{@link #GLFW_COCOA_FRAME_NAME COCOA_FRAME_NAME}</td><td>""</td><td>A UTF-8 encoded frame autosave name</td></tr>
      * <tr><td>{@link #GLFW_X11_CLASS_NAME X11_CLASS_NAME}</td><td>""</td><td>An ASCII encoded {@code WM_CLASS} class name</td></tr>
@@ -1600,7 +1594,7 @@ public class GLFW {
      *
      * @since version 3.3
      */
-    public static void glfwWindowHintString(int hint, @NativeType("char const *") ByteBuffer value) {
+    public static void glfwWindowHintString(int hint, @NativeType("const char *") ByteBuffer value) {
         if (CHECKS) {
             checkNT1(value);
         }
@@ -1623,7 +1617,7 @@ public class GLFW {
      * 
      * <h5>Supported and default values</h5>
      * 
-     * <table class=striped>
+     * <table class=lwjgl>
      * <tr><th>Name</th><th>Default value</th><th>Supported values</th></tr>
      * <tr><td>{@link #GLFW_COCOA_FRAME_NAME COCOA_FRAME_NAME}</td><td>""</td><td>A UTF-8 encoded frame autosave name</td></tr>
      * <tr><td>{@link #GLFW_X11_CLASS_NAME X11_CLASS_NAME}</td><td>""</td><td>An ASCII encoded {@code WM_CLASS} class name</td></tr>
@@ -1637,7 +1631,7 @@ public class GLFW {
      *
      * @since version 3.3
      */
-    public static void glfwWindowHintString(int hint, @NativeType("char const *") CharSequence value) {
+    public static void glfwWindowHintString(int hint, @NativeType("const char *") CharSequence value) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
             ByteBuffer valueEncoded = stack.UTF8(value);
@@ -1719,9 +1713,8 @@ public class GLFW {
      * <li><b>X11</b>: The class part of the {@code WM_CLASS} window property will by default be set to the window title passed to this function. The instance
      * part will use the contents of the {@code RESOURCE_NAME} environment variable, if present and not empty, or fall back to the window title. Set the
      * {@link #GLFW_X11_CLASS_NAME X11_CLASS_NAME} and {@link #GLFW_X11_INSTANCE_NAME X11_INSTANCE_NAME} window hints to override this.</li>
-     * <li><b>Wayland</b>: The window frame is currently very simple, only allowing window resize or move. A compositor can still emit close, maximize or
-     * fullscreen events, using for example a keybind mechanism. Additionally, the {@code wp_viewporter} protocol is required for this feature, otherwise
-     * the window will not be decorated.</li>
+     * <li><b>Wayland</b>: The window frame is currently unimplemented, as if {@link #GLFW_DECORATED DECORATED}) was always set to {@link #GLFW_FALSE FALSE}. A compositor can still emit close, resize
+     * or maximize events, using for example a keybind mechanism.</li>
      * <li><b>Wayland</b>: A full screen window will not attempt to change the mode, no matter what the requested size or refresh rate.</li>
      * <li><b>Wayland</b>: Screensaver inhibition requires the idle-inhibit protocol to be implemented in the user's compositor.</li>
      * </ul></div>
@@ -1737,7 +1730,7 @@ public class GLFW {
      * @since version 1.0
      */
     @NativeType("GLFWwindow *")
-    public static long glfwCreateWindow(int width, int height, @NativeType("char const *") ByteBuffer title, @NativeType("GLFWmonitor *") long monitor, @NativeType("GLFWwindow *") long share) {
+    public static long glfwCreateWindow(int width, int height, @NativeType("const char *") ByteBuffer title, @NativeType("GLFWmonitor *") long monitor, @NativeType("GLFWwindow *") long share) {
         EventLoop.OffScreen.check();
         if (CHECKS) {
             checkNT1(title);
@@ -1809,9 +1802,8 @@ public class GLFW {
      * <li><b>X11</b>: The class part of the {@code WM_CLASS} window property will by default be set to the window title passed to this function. The instance
      * part will use the contents of the {@code RESOURCE_NAME} environment variable, if present and not empty, or fall back to the window title. Set the
      * {@link #GLFW_X11_CLASS_NAME X11_CLASS_NAME} and {@link #GLFW_X11_INSTANCE_NAME X11_INSTANCE_NAME} window hints to override this.</li>
-     * <li><b>Wayland</b>: The window frame is currently very simple, only allowing window resize or move. A compositor can still emit close, maximize or
-     * fullscreen events, using for example a keybind mechanism. Additionally, the {@code wp_viewporter} protocol is required for this feature, otherwise
-     * the window will not be decorated.</li>
+     * <li><b>Wayland</b>: The window frame is currently unimplemented, as if {@link #GLFW_DECORATED DECORATED}) was always set to {@link #GLFW_FALSE FALSE}. A compositor can still emit close, resize
+     * or maximize events, using for example a keybind mechanism.</li>
      * <li><b>Wayland</b>: A full screen window will not attempt to change the mode, no matter what the requested size or refresh rate.</li>
      * <li><b>Wayland</b>: Screensaver inhibition requires the idle-inhibit protocol to be implemented in the user's compositor.</li>
      * </ul></div>
@@ -1827,7 +1819,7 @@ public class GLFW {
      * @since version 1.0
      */
     @NativeType("GLFWwindow *")
-    public static long glfwCreateWindow(int width, int height, @NativeType("char const *") CharSequence title, @NativeType("GLFWmonitor *") long monitor, @NativeType("GLFWwindow *") long share) {
+    public static long glfwCreateWindow(int width, int height, @NativeType("const char *") CharSequence title, @NativeType("GLFWmonitor *") long monitor, @NativeType("GLFWwindow *") long share) {
         EventLoop.OffScreen.check();
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
@@ -1928,7 +1920,7 @@ public class GLFW {
      *
      * @since version 1.0
      */
-    public static void glfwSetWindowTitle(@NativeType("GLFWwindow *") long window, @NativeType("char const *") ByteBuffer title) {
+    public static void glfwSetWindowTitle(@NativeType("GLFWwindow *") long window, @NativeType("const char *") ByteBuffer title) {
         if (CHECKS) {
             checkNT1(title);
         }
@@ -1947,7 +1939,7 @@ public class GLFW {
      *
      * @since version 1.0
      */
-    public static void glfwSetWindowTitle(@NativeType("GLFWwindow *") long window, @NativeType("char const *") CharSequence title) {
+    public static void glfwSetWindowTitle(@NativeType("GLFWwindow *") long window, @NativeType("const char *") CharSequence title) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
             ByteBuffer titleEncoded = stack.UTF8(title);
@@ -2001,7 +1993,7 @@ public class GLFW {
      *
      * @since version 3.2
      */
-    public static void glfwSetWindowIcon(@NativeType("GLFWwindow *") long window, @Nullable @NativeType("GLFWimage const *") GLFWImage.Buffer images) {
+    public static void glfwSetWindowIcon(@NativeType("GLFWwindow *") long window, @Nullable @NativeType("const GLFWimage *") GLFWImage.Buffer images) {
         nglfwSetWindowIcon(window, remainingSafe(images), memAddressSafe(images));
     }
 
@@ -2261,7 +2253,12 @@ public class GLFW {
      * 
      * <p>Any or all of the size arguments may be {@code NULL}. If an error occurs, all non-{@code NULL} size arguments will be set to zero.</p>
      * 
-     * <p>This function must only be called from the main thread.</p>
+     * <p>Notes:</p>
+     * 
+     * <ul>
+     * <li>This function must only be called from the main thread.</li>
+     * <li><b>Wayland</b>: The window frame is currently unimplemented, as if {@link #GLFW_DECORATED DECORATED} was always set to {@link #GLFW_FALSE FALSE}, so the returned values will always be zero.</li>
+     * </ul>
      *
      * @param window the window whose frame size to query
      * @param left   where to store the size, in screen coordinates, of the left edge of the window frame, or {@code NULL}
@@ -2446,9 +2443,6 @@ public class GLFW {
     /**
      * Makes the specified window visible if it was previously hidden. If the window is already visible or is in full screen mode, this function does nothing.
      * 
-     * <p>By default, windowed mode windows are focused when shown. Set the {@link #GLFW_FOCUS_ON_SHOW FOCUS_ON_SHOW} window hint to change this behavior for all newly created windows, or
-     * change the behavior for an existing window with {@link #glfwSetWindowAttrib SetWindowAttrib}.</p>
-     * 
      * <p>This function must only be called from the main thread.</p>
      *
      * @param window the window to make visible
@@ -2489,8 +2483,6 @@ public class GLFW {
      * Brings the specified window to front and sets input focus. The window should already be visible and not iconified.
      * 
      * <p>By default, both windowed and full screen mode windows are focused when initially created. Set the {@link #GLFW_FOCUSED FOCUSED} hint to disable this behavior.</p>
-     * 
-     * <p>Also by default, windowed mode windows are focused when shown with {@link #glfwShowWindow ShowWindow}. Set the {@link #GLFW_FOCUS_ON_SHOW FOCUS_ON_SHOW} window hint to disable this behavior.</p>
      * 
      * <p><b>Do not use this function</b> to steal focus from other applications unless you are certain that is what the user wants. Focus stealing can be
      * extremely disruptive.</p>
@@ -2624,7 +2616,7 @@ public class GLFW {
      * function should not fail as long as it is passed valid arguments and the library has been initialized.</p>
      *
      * @param window the window to query
-     * @param attrib the <a href="http://www.glfw.org/docs/latest/window.html#window_attribs">window attribute</a> whose value to return. One of:<br><table><tr><td>{@link #GLFW_FOCUSED FOCUSED}</td><td>{@link #GLFW_ICONIFIED ICONIFIED}</td><td>{@link #GLFW_RESIZABLE RESIZABLE}</td><td>{@link #GLFW_VISIBLE VISIBLE}</td><td>{@link #GLFW_DECORATED DECORATED}</td></tr><tr><td>{@link #GLFW_FLOATING FLOATING}</td><td>{@link #GLFW_MAXIMIZED MAXIMIZED}</td><td>{@link #GLFW_CENTER_CURSOR CENTER_CURSOR}</td><td>{@link #GLFW_TRANSPARENT_FRAMEBUFFER TRANSPARENT_FRAMEBUFFER}</td><td>{@link #GLFW_HOVERED HOVERED}</td></tr><tr><td>{@link #GLFW_FOCUS_ON_SHOW FOCUS_ON_SHOW}</td><td>{@link #GLFW_CLIENT_API CLIENT_API}</td><td>{@link #GLFW_CONTEXT_VERSION_MAJOR CONTEXT_VERSION_MAJOR}</td><td>{@link #GLFW_CONTEXT_VERSION_MINOR CONTEXT_VERSION_MINOR}</td><td>{@link #GLFW_CONTEXT_REVISION CONTEXT_REVISION}</td></tr><tr><td>{@link #GLFW_CONTEXT_ROBUSTNESS CONTEXT_ROBUSTNESS}</td><td>{@link #GLFW_OPENGL_FORWARD_COMPAT OPENGL_FORWARD_COMPAT}</td><td>{@link #GLFW_OPENGL_DEBUG_CONTEXT OPENGL_DEBUG_CONTEXT}</td><td>{@link #GLFW_OPENGL_PROFILE OPENGL_PROFILE}</td><td>{@link #GLFW_CONTEXT_RELEASE_BEHAVIOR CONTEXT_RELEASE_BEHAVIOR}</td></tr><tr><td>{@link #GLFW_CONTEXT_NO_ERROR CONTEXT_NO_ERROR}</td><td>{@link #GLFW_CONTEXT_CREATION_API CONTEXT_CREATION_API}</td></tr></table>
+     * @param attrib the <a href="http://www.glfw.org/docs/latest/window.html#window_attribs">window attribute</a> whose value to return. One of:<br><table><tr><td>{@link #GLFW_FOCUSED FOCUSED}</td><td>{@link #GLFW_ICONIFIED ICONIFIED}</td><td>{@link #GLFW_RESIZABLE RESIZABLE}</td><td>{@link #GLFW_VISIBLE VISIBLE}</td><td>{@link #GLFW_DECORATED DECORATED}</td></tr><tr><td>{@link #GLFW_FLOATING FLOATING}</td><td>{@link #GLFW_MAXIMIZED MAXIMIZED}</td><td>{@link #GLFW_CENTER_CURSOR CENTER_CURSOR}</td><td>{@link #GLFW_TRANSPARENT_FRAMEBUFFER TRANSPARENT_FRAMEBUFFER}</td><td>{@link #GLFW_HOVERED HOVERED}</td></tr><tr><td>{@link #GLFW_CLIENT_API CLIENT_API}</td><td>{@link #GLFW_CONTEXT_VERSION_MAJOR CONTEXT_VERSION_MAJOR}</td><td>{@link #GLFW_CONTEXT_VERSION_MINOR CONTEXT_VERSION_MINOR}</td><td>{@link #GLFW_CONTEXT_REVISION CONTEXT_REVISION}</td><td>{@link #GLFW_CONTEXT_ROBUSTNESS CONTEXT_ROBUSTNESS}</td></tr><tr><td>{@link #GLFW_OPENGL_FORWARD_COMPAT OPENGL_FORWARD_COMPAT}</td><td>{@link #GLFW_OPENGL_DEBUG_CONTEXT OPENGL_DEBUG_CONTEXT}</td><td>{@link #GLFW_OPENGL_PROFILE OPENGL_PROFILE}</td><td>{@link #GLFW_CONTEXT_RELEASE_BEHAVIOR CONTEXT_RELEASE_BEHAVIOR}</td><td>{@link #GLFW_CONTEXT_NO_ERROR CONTEXT_NO_ERROR}</td></tr><tr><td>{@link #GLFW_CONTEXT_CREATION_API CONTEXT_CREATION_API}</td></tr></table>
      *
      * @return the value of the attribute, or zero if an error occurred
      *
@@ -2652,7 +2644,7 @@ public class GLFW {
      *               
      *               <p>Some of these attributes are ignored for windowed mode windows. The new value will take effect if the window is later made full screen.</p>
      *               
-     *               <p>Calling {@link #glfwGetWindowAttrib GetWindowAttrib} will always return the latest value, even if that value is ignored by the current mode of the window. One of:<br></p><table><tr><td>{@link #GLFW_DECORATED DECORATED}</td><td>{@link #GLFW_RESIZABLE RESIZABLE}</td><td>{@link #GLFW_FLOATING FLOATING}</td><td>{@link #GLFW_AUTO_ICONIFY AUTO_ICONIFY}</td><td>{@link #GLFW_FOCUS_ON_SHOW FOCUS_ON_SHOW}</td></tr></table>
+     *               <p>Calling {@link #glfwGetWindowAttrib GetWindowAttrib} will always return the latest value, even if that value is ignored by the current mode of the window. One of:<br></p><table><tr><td>{@link #GLFW_DECORATED DECORATED}</td><td>{@link #GLFW_RESIZABLE RESIZABLE}</td><td>{@link #GLFW_FLOATING FLOATING}</td><td>{@link #GLFW_AUTO_ICONIFY AUTO_ICONIFY}</td></tr></table>
      * @param value  the value to set
      *
      * @since version 3.3
@@ -3261,7 +3253,7 @@ public class GLFW {
      * @since version 3.2
      */
     @Nullable
-    @NativeType("char const *")
+    @NativeType("const char *")
     public static String glfwGetKeyName(int key, int scancode) {
         long __result = nglfwGetKeyName(key, scancode);
         return memUTF8Safe(__result);
@@ -3460,7 +3452,7 @@ public class GLFW {
      * @since version 3.1
      */
     @NativeType("GLFWcursor *")
-    public static long glfwCreateCursor(@NativeType("GLFWimage const *") GLFWImage image, int xhot, int yhot) {
+    public static long glfwCreateCursor(@NativeType("const GLFWimage *") GLFWImage image, int xhot, int yhot) {
         return nglfwCreateCursor(image.address(), xhot, yhot);
     }
 
@@ -3469,7 +3461,12 @@ public class GLFW {
     /**
      * Returns a cursor with a standard shape, that can be set for a window with {@link #glfwSetCursor SetCursor}.
      * 
-     * <p>This function must only be called from the main thread.</p>
+     * <div style="margin-left: 26px; border-left: 1px solid gray; padding-left: 14px;"><h5>Note</h5>
+     * 
+     * <ul>
+     * <li>This function must only be called from the main thread.</li>
+     * <li>The specified image data is copied before this function returns.</li>
+     * </ul></div>
      *
      * @param shape one of the standard shapes. One of:<br><table><tr><td>{@link #GLFW_ARROW_CURSOR ARROW_CURSOR}</td><td>{@link #GLFW_IBEAM_CURSOR IBEAM_CURSOR}</td><td>{@link #GLFW_CROSSHAIR_CURSOR CROSSHAIR_CURSOR}</td><td>{@link #GLFW_HAND_CURSOR HAND_CURSOR}</td><td>{@link #GLFW_HRESIZE_CURSOR HRESIZE_CURSOR}</td><td>{@link #GLFW_VRESIZE_CURSOR VRESIZE_CURSOR}</td></tr></table>
      *
@@ -3853,7 +3850,7 @@ public class GLFW {
      * @since version 2.2
      */
     @Nullable
-    @NativeType("float const *")
+    @NativeType("const float *")
     public static FloatBuffer glfwGetJoystickAxes(int jid) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         IntBuffer count = stack.callocInt(1);
@@ -3899,7 +3896,7 @@ public class GLFW {
      * @since version 2.2
      */
     @Nullable
-    @NativeType("unsigned char const *")
+    @NativeType("const unsigned char *")
     public static ByteBuffer glfwGetJoystickButtons(int jid) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         IntBuffer count = stack.callocInt(1);
@@ -3928,7 +3925,7 @@ public class GLFW {
      * 
      * <p>This function returns the state of all hats of the specified joystick. Each element in the array is one of the following values:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * Name                | Value
      * ------------------- | ------------------------------
      * GLFW_HAT_CENTERED   | 0
@@ -3939,16 +3936,16 @@ public class GLFW {
      * GLFW_HAT_RIGHT_UP   | GLFW_HAT_RIGHT | GLFW_HAT_UP
      * GLFW_HAT_RIGHT_DOWN | GLFW_HAT_RIGHT | GLFW_HAT_DOWN
      * GLFW_HAT_LEFT_UP    | GLFW_HAT_LEFT  | GLFW_HAT_UP
-     * GLFW_HAT_LEFT_DOWN  | GLFW_HAT_LEFT  | GLFW_HAT_DOWN</code></pre>
+     * GLFW_HAT_LEFT_DOWN  | GLFW_HAT_LEFT  | GLFW_HAT_DOWN</pre></code>
      * 
      * <p>The diagonal directions are bitwise combinations of the primary (up, right, down and left) directions and you can test for these individually by ANDing
      * it with the corresponding direction.</p>
      * 
-     * <pre><code>
-     * if (hats[2] &amp; GLFW_HAT_RIGHT)
+     * <code><pre>
+     * if (hats[2] & GLFW_HAT_RIGHT)
      * {
      *     // State of hat 2 could be right-up, right or right-down
-     * }</code></pre>
+     * }</pre></code>
      * 
      * <p>If the specified joystick is not present this function will return {@code NULL} but will not generate an error. This can be used instead of first calling
      * {@link #glfwJoystickPresent JoystickPresent}.</p>
@@ -3968,7 +3965,7 @@ public class GLFW {
      * @since version 3.3
      */
     @Nullable
-    @NativeType("unsigned char const *")
+    @NativeType("const unsigned char *")
     public static ByteBuffer glfwGetJoystickHats(int jid) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         IntBuffer count = stack.callocInt(1);
@@ -4006,7 +4003,7 @@ public class GLFW {
      * @since version 3.0
      */
     @Nullable
-    @NativeType("char const *")
+    @NativeType("const char *")
     public static String glfwGetJoystickName(int jid) {
         long __result = nglfwGetJoystickName(jid);
         return memUTF8Safe(__result);
@@ -4045,7 +4042,7 @@ public class GLFW {
      * @since version 3.3
      */
     @Nullable
-    @NativeType("char const *")
+    @NativeType("const char *")
     public static String glfwGetJoystickGUID(int jid) {
         long __result = nglfwGetJoystickGUID(jid);
         return memUTF8Safe(__result);
@@ -4178,7 +4175,7 @@ public class GLFW {
      * @since version 3.3
      */
     @NativeType("int")
-    public static boolean glfwUpdateGamepadMappings(@NativeType("char const *") ByteBuffer string) {
+    public static boolean glfwUpdateGamepadMappings(@NativeType("const char *") ByteBuffer string) {
         if (CHECKS) {
             checkNT1(string);
         }
@@ -4206,7 +4203,7 @@ public class GLFW {
      * @since version 3.3
      */
     @NativeType("int")
-    public static boolean glfwUpdateGamepadMappings(@NativeType("char const *") CharSequence string) {
+    public static boolean glfwUpdateGamepadMappings(@NativeType("const char *") CharSequence string) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
             ByteBuffer stringEncoded = stack.ASCII(string);
@@ -4242,7 +4239,7 @@ public class GLFW {
      * @since version 3.3
      */
     @Nullable
-    @NativeType("char const *")
+    @NativeType("const char *")
     public static String glfwGetGamepadName(int jid) {
         long __result = nglfwGetGamepadName(jid);
         return memUTF8Safe(__result);
@@ -4264,7 +4261,7 @@ public class GLFW {
      * 
      * <p>The Guide button may not be available for input as it is often hooked by the system or the Steam client.</p>
      * 
-     * <p>Not all devices have all the buttons or axes provided by {@link GLFWGamepadState}. Unavailable buttons and axes will always report {@link #GLFW_RELEASE RELEASE} and 0.0
+     * <p>Not all devices have all the buttons or axes provided by {@link GLFWGamepadState}. Unavailable buttons and axes will always report {@link #GLFW_RELEASE RELEASE} and 1.0
      * respectively.</p>
      *
      * @param jid   the joystick to query
@@ -4304,7 +4301,7 @@ public class GLFW {
      *
      * @since version 3.0
      */
-    public static void glfwSetClipboardString(@NativeType("GLFWwindow *") long window, @NativeType("char const *") ByteBuffer string) {
+    public static void glfwSetClipboardString(@NativeType("GLFWwindow *") long window, @NativeType("const char *") ByteBuffer string) {
         if (CHECKS) {
             checkNT1(string);
         }
@@ -4328,7 +4325,7 @@ public class GLFW {
      *
      * @since version 3.0
      */
-    public static void glfwSetClipboardString(@NativeType("GLFWwindow *") long window, @NativeType("char const *") CharSequence string) {
+    public static void glfwSetClipboardString(@NativeType("GLFWwindow *") long window, @NativeType("const char *") CharSequence string) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
             ByteBuffer stringEncoded = stack.UTF8(string);
@@ -4369,7 +4366,7 @@ public class GLFW {
      * @since version 3.0
      */
     @Nullable
-    @NativeType("char const *")
+    @NativeType("const char *")
     public static String glfwGetClipboardString(@NativeType("GLFWwindow *") long window) {
         long __result = nglfwGetClipboardString(window);
         return memUTF8Safe(__result);
@@ -4586,7 +4583,7 @@ public class GLFW {
      * @since version 1.0
      */
     @NativeType("int")
-    public static boolean glfwExtensionSupported(@NativeType("char const *") ByteBuffer extension) {
+    public static boolean glfwExtensionSupported(@NativeType("const char *") ByteBuffer extension) {
         if (CHECKS) {
             checkNT1(extension);
         }
@@ -4614,7 +4611,7 @@ public class GLFW {
      * @since version 1.0
      */
     @NativeType("int")
-    public static boolean glfwExtensionSupported(@NativeType("char const *") CharSequence extension) {
+    public static boolean glfwExtensionSupported(@NativeType("const char *") CharSequence extension) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
             ByteBuffer extensionEncoded = stack.ASCII(extension);
@@ -4656,8 +4653,8 @@ public class GLFW {
      *
      * @since version 1.0
      */
-    @NativeType("GLFWglproc")
-    public static long glfwGetProcAddress(@NativeType("char const *") ByteBuffer procname) {
+    @NativeType("GLFWglproc *")
+    public static long glfwGetProcAddress(@NativeType("const char *") ByteBuffer procname) {
         if (CHECKS) {
             checkNT1(procname);
         }
@@ -4688,8 +4685,8 @@ public class GLFW {
      *
      * @since version 1.0
      */
-    @NativeType("GLFWglproc")
-    public static long glfwGetProcAddress(@NativeType("char const *") CharSequence procname) {
+    @NativeType("GLFWglproc *")
+    public static long glfwGetProcAddress(@NativeType("const char *") CharSequence procname) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
             ByteBuffer procnameEncoded = stack.ASCII(procname);
@@ -4699,7 +4696,7 @@ public class GLFW {
         }
     }
 
-    /** Array version of: {@link #glfwGetVersion GetVersion} */
+    /** register Array version of: {@link #glfwGetVersion GetVersion} */
     public static void glfwGetVersion(@Nullable @NativeType("int *") int[] major, @Nullable @NativeType("int *") int[] minor, @Nullable @NativeType("int *") int[] rev) {
         long __functionAddress = Functions.GetVersion;
         if (CHECKS) {
@@ -4710,7 +4707,7 @@ public class GLFW {
         invokePPPV(__functionAddress, major, minor, rev);
     }
 
-    /** Array version of: {@link #glfwGetMonitorPos GetMonitorPos} */
+    /** register Array version of: {@link #glfwGetMonitorPos GetMonitorPos} */
     public static void glfwGetMonitorPos(@NativeType("GLFWmonitor *") long monitor, @Nullable @NativeType("int *") int[] xpos, @Nullable @NativeType("int *") int[] ypos) {
         long __functionAddress = Functions.GetMonitorPos;
         if (CHECKS) {
@@ -4721,7 +4718,7 @@ public class GLFW {
         invokePPPV(__functionAddress, monitor, xpos, ypos);
     }
 
-    /** Array version of: {@link #glfwGetMonitorPhysicalSize GetMonitorPhysicalSize} */
+    /** register Array version of: {@link #glfwGetMonitorPhysicalSize GetMonitorPhysicalSize} */
     public static void glfwGetMonitorPhysicalSize(@NativeType("GLFWmonitor *") long monitor, @Nullable @NativeType("int *") int[] widthMM, @Nullable @NativeType("int *") int[] heightMM) {
         long __functionAddress = Functions.GetMonitorPhysicalSize;
         if (CHECKS) {
@@ -4732,7 +4729,7 @@ public class GLFW {
         invokePPPV(__functionAddress, monitor, widthMM, heightMM);
     }
 
-    /** Array version of: {@link #glfwGetMonitorContentScale GetMonitorContentScale} */
+    /** register Array version of: {@link #glfwGetMonitorContentScale GetMonitorContentScale} */
     public static void glfwGetMonitorContentScale(@NativeType("GLFWmonitor *") long monitor, @Nullable @NativeType("float *") float[] xscale, @Nullable @NativeType("float *") float[] yscale) {
         long __functionAddress = Functions.GetMonitorContentScale;
         if (CHECKS) {
@@ -4743,7 +4740,7 @@ public class GLFW {
         invokePPPV(__functionAddress, monitor, xscale, yscale);
     }
 
-    /** Array version of: {@link #glfwGetWindowPos GetWindowPos} */
+    /** register Array version of: {@link #glfwGetWindowPos GetWindowPos} */
     public static void glfwGetWindowPos(@NativeType("GLFWwindow *") long window, @Nullable @NativeType("int *") int[] xpos, @Nullable @NativeType("int *") int[] ypos) {
         long __functionAddress = Functions.GetWindowPos;
         if (CHECKS) {
@@ -4754,7 +4751,7 @@ public class GLFW {
         invokePPPV(__functionAddress, window, xpos, ypos);
     }
 
-    /** Array version of: {@link #glfwGetWindowSize GetWindowSize} */
+    /** register Array version of: {@link #glfwGetWindowSize GetWindowSize} */
     public static void glfwGetWindowSize(@NativeType("GLFWwindow *") long window, @Nullable @NativeType("int *") int[] width, @Nullable @NativeType("int *") int[] height) {
         long __functionAddress = Functions.GetWindowSize;
         if (CHECKS) {
@@ -4765,7 +4762,7 @@ public class GLFW {
         invokePPPV(__functionAddress, window, width, height);
     }
 
-    /** Array version of: {@link #glfwGetFramebufferSize GetFramebufferSize} */
+    /** register Array version of: {@link #glfwGetFramebufferSize GetFramebufferSize} */
     public static void glfwGetFramebufferSize(@NativeType("GLFWwindow *") long window, @Nullable @NativeType("int *") int[] width, @Nullable @NativeType("int *") int[] height) {
         long __functionAddress = Functions.GetFramebufferSize;
         if (CHECKS) {
@@ -4776,7 +4773,7 @@ public class GLFW {
         invokePPPV(__functionAddress, window, width, height);
     }
 
-    /** Array version of: {@link #glfwGetWindowFrameSize GetWindowFrameSize} */
+    /** register Array version of: {@link #glfwGetWindowFrameSize GetWindowFrameSize} */
     public static void glfwGetWindowFrameSize(@NativeType("GLFWwindow *") long window, @Nullable @NativeType("int *") int[] left, @Nullable @NativeType("int *") int[] top, @Nullable @NativeType("int *") int[] right, @Nullable @NativeType("int *") int[] bottom) {
         long __functionAddress = Functions.GetWindowFrameSize;
         if (CHECKS) {
@@ -4789,7 +4786,7 @@ public class GLFW {
         invokePPPPPV(__functionAddress, window, left, top, right, bottom);
     }
 
-    /** Array version of: {@link #glfwGetWindowContentScale GetWindowContentScale} */
+    /** register Array version of: {@link #glfwGetWindowContentScale GetWindowContentScale} */
     public static void glfwGetWindowContentScale(@NativeType("GLFWwindow *") long window, @Nullable @NativeType("float *") float[] xscale, @Nullable @NativeType("float *") float[] yscale) {
         long __functionAddress = Functions.GetWindowContentScale;
         if (CHECKS) {
@@ -4800,7 +4797,7 @@ public class GLFW {
         invokePPPV(__functionAddress, window, xscale, yscale);
     }
 
-    /** Array version of: {@link #glfwGetCursorPos GetCursorPos} */
+    /** register Array version of: {@link #glfwGetCursorPos GetCursorPos} */
     public static void glfwGetCursorPos(@NativeType("GLFWwindow *") long window, @Nullable @NativeType("double *") double[] xpos, @Nullable @NativeType("double *") double[] ypos) {
         long __functionAddress = Functions.GetCursorPos;
         if (CHECKS) {

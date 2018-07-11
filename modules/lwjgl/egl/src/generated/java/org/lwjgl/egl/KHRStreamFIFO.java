@@ -74,7 +74,7 @@ public class KHRStreamFIFO {
         return neglQueryStreamTimeKHR(dpy, stream, attribute, memAddress(value)) != 0;
     }
 
-    /** Array version of: {@link #eglQueryStreamTimeKHR QueryStreamTimeKHR} */
+    /** register Array version of: {@link #eglQueryStreamTimeKHR QueryStreamTimeKHR} */
     @NativeType("EGLBoolean")
     public static boolean eglQueryStreamTimeKHR(@NativeType("EGLDisplay") long dpy, @NativeType("EGLStreamKHR") long stream, @NativeType("EGLenum") int attribute, @NativeType("EGLTimeKHR *") long[] value) {
         long __functionAddress = EGL.getCapabilities().eglQueryStreamTimeKHR;

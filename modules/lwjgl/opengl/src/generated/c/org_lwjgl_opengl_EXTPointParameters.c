@@ -7,19 +7,19 @@
 #include "opengl.h"
 
 typedef void (APIENTRY *glPointParameterfEXTPROC) (jint, jfloat);
-typedef void (APIENTRY *glPointParameterfvEXTPROC) (jint, intptr_t);
+typedef void (APIENTRY *glPointParameterfvEXTPROC) (jint, const intptr_t);
 
 EXTERN_C_ENTER
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTPointParameters_glPointParameterfEXT(JNIEnv *__env, jclass clazz, jint pname, jfloat param) {
-    glPointParameterfEXTPROC glPointParameterfEXT = (glPointParameterfEXTPROC)tlsGetFunction(1776);
+    glPointParameterfEXTPROC glPointParameterfEXT = (glPointParameterfEXTPROC)tlsGetFunction(1248);
     UNUSED_PARAM(clazz)
     glPointParameterfEXT(pname, param);
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_opengl_EXTPointParameters_nglPointParameterfvEXT__IJ(JNIEnv *__env, jclass clazz, jint pname, jlong paramsAddress) {
-    glPointParameterfvEXTPROC glPointParameterfvEXT = (glPointParameterfvEXTPROC)tlsGetFunction(1777);
-    intptr_t params = (intptr_t)paramsAddress;
+    glPointParameterfvEXTPROC glPointParameterfvEXT = (glPointParameterfvEXTPROC)tlsGetFunction(1251);
+    const intptr_t params = (const intptr_t)paramsAddress;
     UNUSED_PARAM(clazz)
     glPointParameterfvEXT(pname, params);
 }

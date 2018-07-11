@@ -23,7 +23,7 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <p>Applications <b>must</b> ensure that all accesses to memory that backs image subresources used as attachments in a given renderpass instance either happen-before the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#renderpass-load-store-ops">load operations</a> for those attachments, or happen-after the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#renderpass-load-store-ops">store operations</a> for those attachments.</p>
  * 
- * <p>For depth/stencil attachments, each aspect <b>can</b> be used separately as attachments and non-attachments as long as the non-attachment accesses are also via an image subresource in either the {@link VK11#VK_IMAGE_LAYOUT_DEPTH_READ_ONLY_STENCIL_ATTACHMENT_OPTIMAL IMAGE_LAYOUT_DEPTH_READ_ONLY_STENCIL_ATTACHMENT_OPTIMAL} layout or the {@link VK11#VK_IMAGE_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_OPTIMAL IMAGE_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_OPTIMAL} layout, and the attachment resource uses whichever of those two layouts the image accesses do not. Use of non-attachment aspects in this case is only well defined if the attachment is used in the subpass where the non-attachment access is being made, or the layout of the image subresource is constant throughout the entire render pass instance, including the {@code initialLayout} and {@code finalLayout}.</p>
+ * <p>For depth/stencil attachments, each aspect <b>can</b> be used separately as attachments and non-attachments as long as the non-attachment accesses are also via an image subresource in either the {@link KHRMaintenance2#VK_IMAGE_LAYOUT_DEPTH_READ_ONLY_STENCIL_ATTACHMENT_OPTIMAL_KHR IMAGE_LAYOUT_DEPTH_READ_ONLY_STENCIL_ATTACHMENT_OPTIMAL_KHR} layout or the {@link KHRMaintenance2#VK_IMAGE_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_OPTIMAL_KHR IMAGE_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_OPTIMAL_KHR} layout, and the attachment resource uses whichever of those two layouts the image accesses do not. Use of non-attachment aspects in this case is only well defined if the attachment is used in the subpass where the non-attachment access is being made, or the layout of the image subresource is constant throughout the entire render pass instance, including the {@code initialLayout} and {@code finalLayout}.</p>
  * 
  * <div style="margin-left: 26px; border-left: 1px solid gray; padding-left: 14px;"><h5>Note</h5>
  * 
@@ -84,25 +84,24 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct VkFramebufferCreateInfo {
  *     VkStructureType sType;
- *     void const * pNext;
+ *     const void * pNext;
  *     VkFramebufferCreateFlags flags;
  *     VkRenderPass renderPass;
  *     uint32_t attachmentCount;
- *     VkImageView const * pAttachments;
+ *     const VkImageView * pAttachments;
  *     uint32_t width;
  *     uint32_t height;
  *     uint32_t layers;
- * }</code></pre>
+ * }</pre></code>
  */
 public class VkFramebufferCreateInfo extends Struct implements NativeResource {
 
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */
@@ -165,7 +164,7 @@ public class VkFramebufferCreateInfo extends Struct implements NativeResource {
     @NativeType("VkStructureType")
     public int sType() { return nsType(address()); }
     /** Returns the value of the {@code pNext} field. */
-    @NativeType("void const *")
+    @NativeType("const void *")
     public long pNext() { return npNext(address()); }
     /** Returns the value of the {@code flags} field. */
     @NativeType("VkFramebufferCreateFlags")
@@ -178,7 +177,7 @@ public class VkFramebufferCreateInfo extends Struct implements NativeResource {
     public int attachmentCount() { return nattachmentCount(address()); }
     /** Returns a {@link LongBuffer} view of the data pointed to by the {@code pAttachments} field. */
     @Nullable
-    @NativeType("VkImageView const *")
+    @NativeType("const VkImageView *")
     public LongBuffer pAttachments() { return npAttachments(address()); }
     /** Returns the value of the {@code width} field. */
     @NativeType("uint32_t")
@@ -193,13 +192,13 @@ public class VkFramebufferCreateInfo extends Struct implements NativeResource {
     /** Sets the specified value to the {@code sType} field. */
     public VkFramebufferCreateInfo sType(@NativeType("VkStructureType") int value) { nsType(address(), value); return this; }
     /** Sets the specified value to the {@code pNext} field. */
-    public VkFramebufferCreateInfo pNext(@NativeType("void const *") long value) { npNext(address(), value); return this; }
+    public VkFramebufferCreateInfo pNext(@NativeType("const void *") long value) { npNext(address(), value); return this; }
     /** Sets the specified value to the {@code flags} field. */
     public VkFramebufferCreateInfo flags(@NativeType("VkFramebufferCreateFlags") int value) { nflags(address(), value); return this; }
     /** Sets the specified value to the {@code renderPass} field. */
     public VkFramebufferCreateInfo renderPass(@NativeType("VkRenderPass") long value) { nrenderPass(address(), value); return this; }
     /** Sets the address of the specified {@link LongBuffer} to the {@code pAttachments} field. */
-    public VkFramebufferCreateInfo pAttachments(@Nullable @NativeType("VkImageView const *") LongBuffer value) { npAttachments(address(), value); return this; }
+    public VkFramebufferCreateInfo pAttachments(@Nullable @NativeType("const VkImageView *") LongBuffer value) { npAttachments(address(), value); return this; }
     /** Sets the specified value to the {@code width} field. */
     public VkFramebufferCreateInfo width(@NativeType("uint32_t") int value) { nwidth(address(), value); return this; }
     /** Sets the specified value to the {@code height} field. */
@@ -213,7 +212,7 @@ public class VkFramebufferCreateInfo extends Struct implements NativeResource {
         long pNext,
         int flags,
         long renderPass,
-        @Nullable LongBuffer pAttachments,
+        LongBuffer pAttachments,
         int width,
         int height,
         int layers
@@ -494,7 +493,7 @@ public class VkFramebufferCreateInfo extends Struct implements NativeResource {
         @NativeType("VkStructureType")
         public int sType() { return VkFramebufferCreateInfo.nsType(address()); }
         /** Returns the value of the {@code pNext} field. */
-        @NativeType("void const *")
+        @NativeType("const void *")
         public long pNext() { return VkFramebufferCreateInfo.npNext(address()); }
         /** Returns the value of the {@code flags} field. */
         @NativeType("VkFramebufferCreateFlags")
@@ -507,7 +506,7 @@ public class VkFramebufferCreateInfo extends Struct implements NativeResource {
         public int attachmentCount() { return VkFramebufferCreateInfo.nattachmentCount(address()); }
         /** Returns a {@link LongBuffer} view of the data pointed to by the {@code pAttachments} field. */
         @Nullable
-        @NativeType("VkImageView const *")
+        @NativeType("const VkImageView *")
         public LongBuffer pAttachments() { return VkFramebufferCreateInfo.npAttachments(address()); }
         /** Returns the value of the {@code width} field. */
         @NativeType("uint32_t")
@@ -522,13 +521,13 @@ public class VkFramebufferCreateInfo extends Struct implements NativeResource {
         /** Sets the specified value to the {@code sType} field. */
         public VkFramebufferCreateInfo.Buffer sType(@NativeType("VkStructureType") int value) { VkFramebufferCreateInfo.nsType(address(), value); return this; }
         /** Sets the specified value to the {@code pNext} field. */
-        public VkFramebufferCreateInfo.Buffer pNext(@NativeType("void const *") long value) { VkFramebufferCreateInfo.npNext(address(), value); return this; }
+        public VkFramebufferCreateInfo.Buffer pNext(@NativeType("const void *") long value) { VkFramebufferCreateInfo.npNext(address(), value); return this; }
         /** Sets the specified value to the {@code flags} field. */
         public VkFramebufferCreateInfo.Buffer flags(@NativeType("VkFramebufferCreateFlags") int value) { VkFramebufferCreateInfo.nflags(address(), value); return this; }
         /** Sets the specified value to the {@code renderPass} field. */
         public VkFramebufferCreateInfo.Buffer renderPass(@NativeType("VkRenderPass") long value) { VkFramebufferCreateInfo.nrenderPass(address(), value); return this; }
         /** Sets the address of the specified {@link LongBuffer} to the {@code pAttachments} field. */
-        public VkFramebufferCreateInfo.Buffer pAttachments(@Nullable @NativeType("VkImageView const *") LongBuffer value) { VkFramebufferCreateInfo.npAttachments(address(), value); return this; }
+        public VkFramebufferCreateInfo.Buffer pAttachments(@Nullable @NativeType("const VkImageView *") LongBuffer value) { VkFramebufferCreateInfo.npAttachments(address(), value); return this; }
         /** Sets the specified value to the {@code width} field. */
         public VkFramebufferCreateInfo.Buffer width(@NativeType("uint32_t") int value) { VkFramebufferCreateInfo.nwidth(address(), value); return this; }
         /** Sets the specified value to the {@code height} field. */

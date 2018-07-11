@@ -16,12 +16,12 @@ import static org.lwjgl.system.MemoryUtil.*;
 /**
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct nk_mouse_button {
  *     int down;
  *     unsigned int clicked;
  *     {@link NkVec2 struct nk_vec2} clicked_pos;
- * }</code></pre>
+ * }</pre></code>
  */
 @NativeType("struct nk_mouse_button")
 public class NkMouseButton extends Struct {
@@ -29,7 +29,6 @@ public class NkMouseButton extends Struct {
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */
@@ -78,8 +77,6 @@ public class NkMouseButton extends Struct {
     /** Returns a {@link NkVec2} view of the {@code clicked_pos} field. */
     @NativeType("struct nk_vec2")
     public NkVec2 clicked_pos() { return nclicked_pos(address()); }
-    /** Passes the {@code clicked_pos} field to the specified {@link java.util.function.Consumer Consumer}. */
-    public NkMouseButton clicked_pos(java.util.function.Consumer<NkVec2> consumer) { consumer.accept(clicked_pos()); return this; }
 
     // -----------------------------------
 
@@ -173,8 +170,6 @@ public class NkMouseButton extends Struct {
         /** Returns a {@link NkVec2} view of the {@code clicked_pos} field. */
         @NativeType("struct nk_vec2")
         public NkVec2 clicked_pos() { return NkMouseButton.nclicked_pos(address()); }
-        /** Passes the {@code clicked_pos} field to the specified {@link java.util.function.Consumer Consumer}. */
-        public NkMouseButton.Buffer clicked_pos(java.util.function.Consumer<NkVec2> consumer) { consumer.accept(clicked_pos()); return this; }
 
     }
 

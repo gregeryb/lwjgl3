@@ -43,7 +43,7 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct aiAnimMesh {
  *     {@link AIVector3D struct aiVector3D} * mVertices;
  *     {@link AIVector3D struct aiVector3D} * mNormals;
@@ -52,7 +52,7 @@ import static org.lwjgl.system.MemoryStack.*;
  *     {@link AIColor4D struct aiColor4D} * mColors[Assimp.AI_MAX_NUMBER_OF_COLOR_SETS];
  *     {@link AIVector3D struct aiVector3D} * mTextureCoords[Assimp.AI_MAX_NUMBER_OF_TEXTURECOORDS];
  *     unsigned int mNumVertices;
- * }</code></pre>
+ * }</pre></code>
  */
 @NativeType("struct aiAnimMesh")
 public class AIAnimMesh extends Struct implements NativeResource {
@@ -60,7 +60,6 @@ public class AIAnimMesh extends Struct implements NativeResource {
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */
@@ -168,10 +167,10 @@ public class AIAnimMesh extends Struct implements NativeResource {
 
     /** Initializes this struct with the specified values. */
     public AIAnimMesh set(
-        @Nullable AIVector3D.Buffer mVertices,
-        @Nullable AIVector3D.Buffer mNormals,
-        @Nullable AIVector3D.Buffer mTangents,
-        @Nullable AIVector3D.Buffer mBitangents,
+        AIVector3D.Buffer mVertices,
+        AIVector3D.Buffer mNormals,
+        AIVector3D.Buffer mTangents,
+        AIVector3D.Buffer mBitangents,
         PointerBuffer mColors,
         PointerBuffer mTextureCoords,
         int mNumVertices
@@ -352,13 +351,15 @@ public class AIAnimMesh extends Struct implements NativeResource {
     public static PointerBuffer nmColors(long struct) { return memPointerBuffer(struct + AIAnimMesh.MCOLORS, Assimp.AI_MAX_NUMBER_OF_COLOR_SETS); }
     /** Unsafe version of {@link #mColors(int) mColors}. */
     @Nullable public static AIColor4D.Buffer nmColors(long struct, int index) {
-        return AIColor4D.createSafe(memGetAddress(struct + AIAnimMesh.MCOLORS + check(index, Assimp.AI_MAX_NUMBER_OF_COLOR_SETS) * POINTER_SIZE), nmNumVertices(struct));
+        if (CHECKS) { check(index, Assimp.AI_MAX_NUMBER_OF_COLOR_SETS); }
+        return AIColor4D.createSafe(memGetAddress(struct + AIAnimMesh.MCOLORS + index * POINTER_SIZE), nmNumVertices(struct));
     }
     /** Unsafe version of {@link #mTextureCoords}. */
     public static PointerBuffer nmTextureCoords(long struct) { return memPointerBuffer(struct + AIAnimMesh.MTEXTURECOORDS, Assimp.AI_MAX_NUMBER_OF_TEXTURECOORDS); }
     /** Unsafe version of {@link #mTextureCoords(int) mTextureCoords}. */
     @Nullable public static AIVector3D.Buffer nmTextureCoords(long struct, int index) {
-        return AIVector3D.createSafe(memGetAddress(struct + AIAnimMesh.MTEXTURECOORDS + check(index, Assimp.AI_MAX_NUMBER_OF_TEXTURECOORDS) * POINTER_SIZE), nmNumVertices(struct));
+        if (CHECKS) { check(index, Assimp.AI_MAX_NUMBER_OF_TEXTURECOORDS); }
+        return AIVector3D.createSafe(memGetAddress(struct + AIAnimMesh.MTEXTURECOORDS + index * POINTER_SIZE), nmNumVertices(struct));
     }
     /** Unsafe version of {@link #mNumVertices}. */
     public static int nmNumVertices(long struct) { return memGetInt(struct + AIAnimMesh.MNUMVERTICES); }
@@ -378,7 +379,8 @@ public class AIAnimMesh extends Struct implements NativeResource {
     }
     /** Unsafe version of {@link #mColors(int, AIColor4D.Buffer) mColors}. */
     public static void nmColors(long struct, int index, @Nullable AIColor4D.Buffer value) {
-        memPutAddress(struct + AIAnimMesh.MCOLORS + check(index, Assimp.AI_MAX_NUMBER_OF_COLOR_SETS) * POINTER_SIZE, memAddressSafe(value));
+        if (CHECKS) { check(index, Assimp.AI_MAX_NUMBER_OF_COLOR_SETS); }
+        memPutAddress(struct + AIAnimMesh.MCOLORS + index * POINTER_SIZE, memAddressSafe(value));
     }
     /** Unsafe version of {@link #mTextureCoords(PointerBuffer) mTextureCoords}. */
     public static void nmTextureCoords(long struct, PointerBuffer value) {
@@ -387,7 +389,8 @@ public class AIAnimMesh extends Struct implements NativeResource {
     }
     /** Unsafe version of {@link #mTextureCoords(int, AIVector3D.Buffer) mTextureCoords}. */
     public static void nmTextureCoords(long struct, int index, @Nullable AIVector3D.Buffer value) {
-        memPutAddress(struct + AIAnimMesh.MTEXTURECOORDS + check(index, Assimp.AI_MAX_NUMBER_OF_TEXTURECOORDS) * POINTER_SIZE, memAddressSafe(value));
+        if (CHECKS) { check(index, Assimp.AI_MAX_NUMBER_OF_TEXTURECOORDS); }
+        memPutAddress(struct + AIAnimMesh.MTEXTURECOORDS + index * POINTER_SIZE, memAddressSafe(value));
     }
     /** Sets the specified value to the {@code mNumVertices} field of the specified {@code struct}. */
     public static void nmNumVertices(long struct, int value) { memPutInt(struct + AIAnimMesh.MNUMVERTICES, value); }

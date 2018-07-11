@@ -14,8 +14,8 @@ import static org.lwjgl.system.dyncall.DynCallback.*;
  * 
  * <h3>Type</h3>
  * 
- * <pre><code>
- * void * (*) (
+ * <code><pre>
+ * void* (*) (
  *     extent_hooks_t *extent_hooks,
  *     void *new_addr,
  *     size_t size,
@@ -23,7 +23,7 @@ import static org.lwjgl.system.dyncall.DynCallback.*;
  *     bool *zero,
  *     bool *commit,
  *     unsigned int arena_ind
- * )</code></pre>
+ * )</pre></code>
  */
 @FunctionalInterface
 @NativeType("extent_alloc_t")
@@ -59,6 +59,14 @@ public interface ExtentAllocI extends CallbackI.P {
      * Committed memory may be committed in absolute terms as on a system that does not overcommit, or in implicit terms as on a system that overcommits and
      * satisfies physical memory needs on demand via soft page faults. Note that replacing the default extent allocation function makes the arena's
      * {@code arena.i.dss} setting irrelevant.</p>
+     *
+     * @param extent_hooks 
+     * @param new_addr     
+     * @param size         
+     * @param alignment    
+     * @param zero         
+     * @param commit       
+     * @param arena_ind    
      */
     @NativeType("void *") long invoke(@NativeType("extent_hooks_t *") long extent_hooks, @NativeType("void *") long new_addr, @NativeType("size_t") long size, @NativeType("size_t") long alignment, @NativeType("bool *") long zero, @NativeType("bool *") long commit, @NativeType("unsigned int") int arena_ind);
 

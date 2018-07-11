@@ -28,19 +28,18 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct VkMemoryWin32HandlePropertiesKHR {
  *     VkStructureType sType;
  *     void * pNext;
  *     uint32_t memoryTypeBits;
- * }</code></pre>
+ * }</pre></code>
  */
 public class VkMemoryWin32HandlePropertiesKHR extends Struct implements NativeResource {
 
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */
@@ -90,34 +89,6 @@ public class VkMemoryWin32HandlePropertiesKHR extends Struct implements NativeRe
     /** Returns the value of the {@code memoryTypeBits} field. */
     @NativeType("uint32_t")
     public int memoryTypeBits() { return nmemoryTypeBits(address()); }
-
-    /** Sets the specified value to the {@code sType} field. */
-    public VkMemoryWin32HandlePropertiesKHR sType(@NativeType("VkStructureType") int value) { nsType(address(), value); return this; }
-    /** Sets the specified value to the {@code pNext} field. */
-    public VkMemoryWin32HandlePropertiesKHR pNext(@NativeType("void *") long value) { npNext(address(), value); return this; }
-
-    /** Initializes this struct with the specified values. */
-    public VkMemoryWin32HandlePropertiesKHR set(
-        int sType,
-        long pNext
-    ) {
-        sType(sType);
-        pNext(pNext);
-
-        return this;
-    }
-
-    /**
-     * Copies the specified struct data to this struct.
-     *
-     * @param src the source struct
-     *
-     * @return this struct
-     */
-    public VkMemoryWin32HandlePropertiesKHR set(VkMemoryWin32HandlePropertiesKHR src) {
-        memCopy(src.address(), address(), SIZEOF);
-        return this;
-    }
 
     // -----------------------------------
 
@@ -267,11 +238,6 @@ public class VkMemoryWin32HandlePropertiesKHR extends Struct implements NativeRe
     /** Unsafe version of {@link #memoryTypeBits}. */
     public static int nmemoryTypeBits(long struct) { return memGetInt(struct + VkMemoryWin32HandlePropertiesKHR.MEMORYTYPEBITS); }
 
-    /** Unsafe version of {@link #sType(int) sType}. */
-    public static void nsType(long struct, int value) { memPutInt(struct + VkMemoryWin32HandlePropertiesKHR.STYPE, value); }
-    /** Unsafe version of {@link #pNext(long) pNext}. */
-    public static void npNext(long struct, long value) { memPutAddress(struct + VkMemoryWin32HandlePropertiesKHR.PNEXT, value); }
-
     // -----------------------------------
 
     /** An array of {@link VkMemoryWin32HandlePropertiesKHR} structs. */
@@ -327,11 +293,6 @@ public class VkMemoryWin32HandlePropertiesKHR extends Struct implements NativeRe
         /** Returns the value of the {@code memoryTypeBits} field. */
         @NativeType("uint32_t")
         public int memoryTypeBits() { return VkMemoryWin32HandlePropertiesKHR.nmemoryTypeBits(address()); }
-
-        /** Sets the specified value to the {@code sType} field. */
-        public VkMemoryWin32HandlePropertiesKHR.Buffer sType(@NativeType("VkStructureType") int value) { VkMemoryWin32HandlePropertiesKHR.nsType(address(), value); return this; }
-        /** Sets the specified value to the {@code pNext} field. */
-        public VkMemoryWin32HandlePropertiesKHR.Buffer pNext(@NativeType("void *") long value) { VkMemoryWin32HandlePropertiesKHR.npNext(address(), value); return this; }
 
     }
 

@@ -16,20 +16,75 @@ import static org.lwjgl.system.MemoryUtil.*;
 import static org.lwjgl.system.MemoryStack.*;
 
 /**
- * See {@link VkExternalFenceProperties}.
+ * Structure describing supported external fence handle features.
+ * 
+ * <h5>Description</h5>
+ * 
+ * <p>If {@code handleType} is not supported by the implementation, then {@link VkExternalFencePropertiesKHR}{@code ::externalFenceFeatures} will be set to zero.</p>
+ * 
+ * <h5>Valid Usage (Implicit)</h5>
+ * 
+ * <ul>
+ * <li>{@code sType} <b>must</b> be {@link KHRExternalFenceCapabilities#VK_STRUCTURE_TYPE_EXTERNAL_FENCE_PROPERTIES_KHR STRUCTURE_TYPE_EXTERNAL_FENCE_PROPERTIES_KHR}</li>
+ * <li>{@code pNext} <b>must</b> be {@code NULL}</li>
+ * </ul>
+ * 
+ * <h5>See Also</h5>
+ * 
+ * <p>{@link KHRExternalFenceCapabilities#vkGetPhysicalDeviceExternalFencePropertiesKHR GetPhysicalDeviceExternalFencePropertiesKHR}</p>
+ * 
+ * <h3>Member documentation</h3>
+ * 
+ * <ul>
+ * <li>{@code exportFromImportedHandleTypes} &ndash; a bitmask of {@code VkExternalFenceHandleTypeFlagBitsKHR} indicating which types of imported handle {@code handleType} <b>can</b> be exported from.</li>
+ * <li>{@code compatibleHandleTypes} &ndash; a bitmask of {@code VkExternalFenceHandleTypeFlagBitsKHR} specifying handle types which <b>can</b> be specified at the same time as {@code handleType} when creating a fence.</li>
+ * <li>{@code externalFenceFeatures} &ndash; a bitmask of {@code VkExternalFenceFeatureFlagBitsKHR} indicating the features of {@code handleType}.</li>
+ * </ul>
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct VkExternalFencePropertiesKHR {
  *     VkStructureType sType;
  *     void * pNext;
- *     VkExternalFenceHandleTypeFlags exportFromImportedHandleTypes;
- *     VkExternalFenceHandleTypeFlags compatibleHandleTypes;
- *     VkExternalFenceFeatureFlags externalFenceFeatures;
- * }</code></pre>
+ *     VkExternalFenceHandleTypeFlagsKHR exportFromImportedHandleTypes;
+ *     VkExternalFenceHandleTypeFlagsKHR compatibleHandleTypes;
+ *     VkExternalFenceFeatureFlagsKHR externalFenceFeatures;
+ * }</pre></code>
  */
-public class VkExternalFencePropertiesKHR extends VkExternalFenceProperties {
+public class VkExternalFencePropertiesKHR extends Struct implements NativeResource {
+
+    /** The struct size in bytes. */
+    public static final int SIZEOF;
+
+    public static final int ALIGNOF;
+
+    /** The struct member offsets. */
+    public static final int
+        STYPE,
+        PNEXT,
+        EXPORTFROMIMPORTEDHANDLETYPES,
+        COMPATIBLEHANDLETYPES,
+        EXTERNALFENCEFEATURES;
+
+    static {
+        Layout layout = __struct(
+            __member(4),
+            __member(POINTER_SIZE),
+            __member(4),
+            __member(4),
+            __member(4)
+        );
+
+        SIZEOF = layout.getSize();
+        ALIGNOF = layout.getAlignment();
+
+        STYPE = layout.offsetof(0);
+        PNEXT = layout.offsetof(1);
+        EXPORTFROMIMPORTEDHANDLETYPES = layout.offsetof(2);
+        COMPATIBLEHANDLETYPES = layout.offsetof(3);
+        EXTERNALFENCEFEATURES = layout.offsetof(4);
+    }
 
     VkExternalFencePropertiesKHR(long address, @Nullable ByteBuffer container) {
         super(address, container);
@@ -45,36 +100,24 @@ public class VkExternalFencePropertiesKHR extends VkExternalFenceProperties {
         this(memAddress(container), __checkContainer(container, SIZEOF));
     }
 
-    /** Sets the specified value to the {@code sType} field. */
     @Override
-    public VkExternalFencePropertiesKHR sType(@NativeType("VkStructureType") int value) { nsType(address(), value); return this; }
-    /** Sets the specified value to the {@code pNext} field. */
-    @Override
-    public VkExternalFencePropertiesKHR pNext(@NativeType("void *") long value) { npNext(address(), value); return this; }
+    public int sizeof() { return SIZEOF; }
 
-    /** Initializes this struct with the specified values. */
-    @Override
-    public VkExternalFencePropertiesKHR set(
-        int sType,
-        long pNext
-    ) {
-        sType(sType);
-        pNext(pNext);
-
-        return this;
-    }
-
-    /**
-     * Copies the specified struct data to this struct.
-     *
-     * @param src the source struct
-     *
-     * @return this struct
-     */
-    public VkExternalFencePropertiesKHR set(VkExternalFencePropertiesKHR src) {
-        memCopy(src.address(), address(), SIZEOF);
-        return this;
-    }
+    /** Returns the value of the {@code sType} field. */
+    @NativeType("VkStructureType")
+    public int sType() { return nsType(address()); }
+    /** Returns the value of the {@code pNext} field. */
+    @NativeType("void *")
+    public long pNext() { return npNext(address()); }
+    /** Returns the value of the {@code exportFromImportedHandleTypes} field. */
+    @NativeType("VkExternalFenceHandleTypeFlagsKHR")
+    public int exportFromImportedHandleTypes() { return nexportFromImportedHandleTypes(address()); }
+    /** Returns the value of the {@code compatibleHandleTypes} field. */
+    @NativeType("VkExternalFenceHandleTypeFlagsKHR")
+    public int compatibleHandleTypes() { return ncompatibleHandleTypes(address()); }
+    /** Returns the value of the {@code externalFenceFeatures} field. */
+    @NativeType("VkExternalFenceFeatureFlagsKHR")
+    public int externalFenceFeatures() { return nexternalFenceFeatures(address()); }
 
     // -----------------------------------
 
@@ -217,8 +260,21 @@ public class VkExternalFencePropertiesKHR extends VkExternalFenceProperties {
 
     // -----------------------------------
 
+    /** Unsafe version of {@link #sType}. */
+    public static int nsType(long struct) { return memGetInt(struct + VkExternalFencePropertiesKHR.STYPE); }
+    /** Unsafe version of {@link #pNext}. */
+    public static long npNext(long struct) { return memGetAddress(struct + VkExternalFencePropertiesKHR.PNEXT); }
+    /** Unsafe version of {@link #exportFromImportedHandleTypes}. */
+    public static int nexportFromImportedHandleTypes(long struct) { return memGetInt(struct + VkExternalFencePropertiesKHR.EXPORTFROMIMPORTEDHANDLETYPES); }
+    /** Unsafe version of {@link #compatibleHandleTypes}. */
+    public static int ncompatibleHandleTypes(long struct) { return memGetInt(struct + VkExternalFencePropertiesKHR.COMPATIBLEHANDLETYPES); }
+    /** Unsafe version of {@link #externalFenceFeatures}. */
+    public static int nexternalFenceFeatures(long struct) { return memGetInt(struct + VkExternalFencePropertiesKHR.EXTERNALFENCEFEATURES); }
+
+    // -----------------------------------
+
     /** An array of {@link VkExternalFencePropertiesKHR} structs. */
-    public static class Buffer extends VkExternalFenceProperties.Buffer {
+    public static class Buffer extends StructBuffer<VkExternalFencePropertiesKHR, Buffer> implements NativeResource {
 
         /**
          * Creates a new {@link VkExternalFencePropertiesKHR.Buffer} instance backed by the specified container.
@@ -230,7 +286,7 @@ public class VkExternalFencePropertiesKHR extends VkExternalFenceProperties {
          * <p>The created buffer instance holds a strong reference to the container object.</p>
          */
         public Buffer(ByteBuffer container) {
-            super(container);
+            super(container, container.remaining() / SIZEOF);
         }
 
         public Buffer(long address, int cap) {
@@ -256,12 +312,26 @@ public class VkExternalFencePropertiesKHR extends VkExternalFenceProperties {
             return new VkExternalFencePropertiesKHR(address, container);
         }
 
-        /** Sets the specified value to the {@code sType} field. */
         @Override
-        public VkExternalFencePropertiesKHR.Buffer sType(@NativeType("VkStructureType") int value) { VkExternalFencePropertiesKHR.nsType(address(), value); return this; }
-        /** Sets the specified value to the {@code pNext} field. */
-        @Override
-        public VkExternalFencePropertiesKHR.Buffer pNext(@NativeType("void *") long value) { VkExternalFencePropertiesKHR.npNext(address(), value); return this; }
+        public int sizeof() {
+            return SIZEOF;
+        }
+
+        /** Returns the value of the {@code sType} field. */
+        @NativeType("VkStructureType")
+        public int sType() { return VkExternalFencePropertiesKHR.nsType(address()); }
+        /** Returns the value of the {@code pNext} field. */
+        @NativeType("void *")
+        public long pNext() { return VkExternalFencePropertiesKHR.npNext(address()); }
+        /** Returns the value of the {@code exportFromImportedHandleTypes} field. */
+        @NativeType("VkExternalFenceHandleTypeFlagsKHR")
+        public int exportFromImportedHandleTypes() { return VkExternalFencePropertiesKHR.nexportFromImportedHandleTypes(address()); }
+        /** Returns the value of the {@code compatibleHandleTypes} field. */
+        @NativeType("VkExternalFenceHandleTypeFlagsKHR")
+        public int compatibleHandleTypes() { return VkExternalFencePropertiesKHR.ncompatibleHandleTypes(address()); }
+        /** Returns the value of the {@code externalFenceFeatures} field. */
+        @NativeType("VkExternalFenceFeatureFlagsKHR")
+        public int externalFenceFeatures() { return VkExternalFencePropertiesKHR.nexternalFenceFeatures(address()); }
 
     }
 

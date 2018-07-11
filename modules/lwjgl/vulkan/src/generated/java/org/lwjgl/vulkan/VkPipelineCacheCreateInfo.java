@@ -51,21 +51,20 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct VkPipelineCacheCreateInfo {
  *     VkStructureType sType;
- *     void const * pNext;
+ *     const void * pNext;
  *     VkPipelineCacheCreateFlags flags;
  *     size_t initialDataSize;
- *     void const * pInitialData;
- * }</code></pre>
+ *     const void * pInitialData;
+ * }</pre></code>
  */
 public class VkPipelineCacheCreateInfo extends Struct implements NativeResource {
 
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */
@@ -116,7 +115,7 @@ public class VkPipelineCacheCreateInfo extends Struct implements NativeResource 
     @NativeType("VkStructureType")
     public int sType() { return nsType(address()); }
     /** Returns the value of the {@code pNext} field. */
-    @NativeType("void const *")
+    @NativeType("const void *")
     public long pNext() { return npNext(address()); }
     /** Returns the value of the {@code flags} field. */
     @NativeType("VkPipelineCacheCreateFlags")
@@ -126,24 +125,24 @@ public class VkPipelineCacheCreateInfo extends Struct implements NativeResource 
     public long initialDataSize() { return ninitialDataSize(address()); }
     /** Returns a {@link ByteBuffer} view of the data pointed to by the {@code pInitialData} field. */
     @Nullable
-    @NativeType("void const *")
+    @NativeType("const void *")
     public ByteBuffer pInitialData() { return npInitialData(address()); }
 
     /** Sets the specified value to the {@code sType} field. */
     public VkPipelineCacheCreateInfo sType(@NativeType("VkStructureType") int value) { nsType(address(), value); return this; }
     /** Sets the specified value to the {@code pNext} field. */
-    public VkPipelineCacheCreateInfo pNext(@NativeType("void const *") long value) { npNext(address(), value); return this; }
+    public VkPipelineCacheCreateInfo pNext(@NativeType("const void *") long value) { npNext(address(), value); return this; }
     /** Sets the specified value to the {@code flags} field. */
     public VkPipelineCacheCreateInfo flags(@NativeType("VkPipelineCacheCreateFlags") int value) { nflags(address(), value); return this; }
     /** Sets the address of the specified {@link ByteBuffer} to the {@code pInitialData} field. */
-    public VkPipelineCacheCreateInfo pInitialData(@Nullable @NativeType("void const *") ByteBuffer value) { npInitialData(address(), value); return this; }
+    public VkPipelineCacheCreateInfo pInitialData(@Nullable @NativeType("const void *") ByteBuffer value) { npInitialData(address(), value); return this; }
 
     /** Initializes this struct with the specified values. */
     public VkPipelineCacheCreateInfo set(
         int sType,
         long pNext,
         int flags,
-        @Nullable ByteBuffer pInitialData
+        ByteBuffer pInitialData
     ) {
         sType(sType);
         pNext(pNext);
@@ -401,7 +400,7 @@ public class VkPipelineCacheCreateInfo extends Struct implements NativeResource 
         @NativeType("VkStructureType")
         public int sType() { return VkPipelineCacheCreateInfo.nsType(address()); }
         /** Returns the value of the {@code pNext} field. */
-        @NativeType("void const *")
+        @NativeType("const void *")
         public long pNext() { return VkPipelineCacheCreateInfo.npNext(address()); }
         /** Returns the value of the {@code flags} field. */
         @NativeType("VkPipelineCacheCreateFlags")
@@ -411,17 +410,17 @@ public class VkPipelineCacheCreateInfo extends Struct implements NativeResource 
         public long initialDataSize() { return VkPipelineCacheCreateInfo.ninitialDataSize(address()); }
         /** Returns a {@link ByteBuffer} view of the data pointed to by the {@code pInitialData} field. */
         @Nullable
-        @NativeType("void const *")
+        @NativeType("const void *")
         public ByteBuffer pInitialData() { return VkPipelineCacheCreateInfo.npInitialData(address()); }
 
         /** Sets the specified value to the {@code sType} field. */
         public VkPipelineCacheCreateInfo.Buffer sType(@NativeType("VkStructureType") int value) { VkPipelineCacheCreateInfo.nsType(address(), value); return this; }
         /** Sets the specified value to the {@code pNext} field. */
-        public VkPipelineCacheCreateInfo.Buffer pNext(@NativeType("void const *") long value) { VkPipelineCacheCreateInfo.npNext(address(), value); return this; }
+        public VkPipelineCacheCreateInfo.Buffer pNext(@NativeType("const void *") long value) { VkPipelineCacheCreateInfo.npNext(address(), value); return this; }
         /** Sets the specified value to the {@code flags} field. */
         public VkPipelineCacheCreateInfo.Buffer flags(@NativeType("VkPipelineCacheCreateFlags") int value) { VkPipelineCacheCreateInfo.nflags(address(), value); return this; }
         /** Sets the address of the specified {@link ByteBuffer} to the {@code pInitialData} field. */
-        public VkPipelineCacheCreateInfo.Buffer pInitialData(@Nullable @NativeType("void const *") ByteBuffer value) { VkPipelineCacheCreateInfo.npInitialData(address(), value); return this; }
+        public VkPipelineCacheCreateInfo.Buffer pInitialData(@Nullable @NativeType("const void *") ByteBuffer value) { VkPipelineCacheCreateInfo.npInitialData(address(), value); return this; }
 
     }
 

@@ -208,7 +208,7 @@ public class GLXSGIXPbuffer {
         nglXGetSelectedEventSGIX(display, drawable, memAddress(mask));
     }
 
-    /** Array version of: {@link #glXCreateGLXPbufferSGIX CreateGLXPbufferSGIX} */
+    /** register Array version of: {@link #glXCreateGLXPbufferSGIX CreateGLXPbufferSGIX} */
     @NativeType("GLXPbuffer")
     public static long glXCreateGLXPbufferSGIX(@NativeType("Display *") long display, @NativeType("GLXFBConfig") long config, @NativeType("unsigned int") int width, @NativeType("unsigned int") int height, @Nullable @NativeType("int *") int[] attrib_list) {
         long __functionAddress = GL.getCapabilitiesGLXClient().glXCreateGLXPbufferSGIX;
@@ -221,7 +221,7 @@ public class GLXSGIXPbuffer {
         return callPPPP(__functionAddress, display, config, width, height, attrib_list);
     }
 
-    /** Array version of: {@link #glXQueryGLXPbufferSGIX QueryGLXPbufferSGIX} */
+    /** register Array version of: {@link #glXQueryGLXPbufferSGIX QueryGLXPbufferSGIX} */
     public static void glXQueryGLXPbufferSGIX(@NativeType("Display *") long display, @NativeType("GLXPbuffer") long pbuf, int attribute, @NativeType("unsigned int *") int[] value) {
         long __functionAddress = GL.getCapabilitiesGLXClient().glXQueryGLXPbufferSGIX;
         if (CHECKS) {

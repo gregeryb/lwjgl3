@@ -37,19 +37,18 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct VkPipelineRasterizationStateRasterizationOrderAMD {
  *     VkStructureType sType;
- *     void const * pNext;
+ *     const void * pNext;
  *     VkRasterizationOrderAMD rasterizationOrder;
- * }</code></pre>
+ * }</pre></code>
  */
 public class VkPipelineRasterizationStateRasterizationOrderAMD extends Struct implements NativeResource {
 
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */
@@ -94,7 +93,7 @@ public class VkPipelineRasterizationStateRasterizationOrderAMD extends Struct im
     @NativeType("VkStructureType")
     public int sType() { return nsType(address()); }
     /** Returns the value of the {@code pNext} field. */
-    @NativeType("void const *")
+    @NativeType("const void *")
     public long pNext() { return npNext(address()); }
     /** Returns the value of the {@code rasterizationOrder} field. */
     @NativeType("VkRasterizationOrderAMD")
@@ -103,7 +102,7 @@ public class VkPipelineRasterizationStateRasterizationOrderAMD extends Struct im
     /** Sets the specified value to the {@code sType} field. */
     public VkPipelineRasterizationStateRasterizationOrderAMD sType(@NativeType("VkStructureType") int value) { nsType(address(), value); return this; }
     /** Sets the specified value to the {@code pNext} field. */
-    public VkPipelineRasterizationStateRasterizationOrderAMD pNext(@NativeType("void const *") long value) { npNext(address(), value); return this; }
+    public VkPipelineRasterizationStateRasterizationOrderAMD pNext(@NativeType("const void *") long value) { npNext(address(), value); return this; }
     /** Sets the specified value to the {@code rasterizationOrder} field. */
     public VkPipelineRasterizationStateRasterizationOrderAMD rasterizationOrder(@NativeType("VkRasterizationOrderAMD") int value) { nrasterizationOrder(address(), value); return this; }
 
@@ -337,7 +336,7 @@ public class VkPipelineRasterizationStateRasterizationOrderAMD extends Struct im
         @NativeType("VkStructureType")
         public int sType() { return VkPipelineRasterizationStateRasterizationOrderAMD.nsType(address()); }
         /** Returns the value of the {@code pNext} field. */
-        @NativeType("void const *")
+        @NativeType("const void *")
         public long pNext() { return VkPipelineRasterizationStateRasterizationOrderAMD.npNext(address()); }
         /** Returns the value of the {@code rasterizationOrder} field. */
         @NativeType("VkRasterizationOrderAMD")
@@ -346,7 +345,7 @@ public class VkPipelineRasterizationStateRasterizationOrderAMD extends Struct im
         /** Sets the specified value to the {@code sType} field. */
         public VkPipelineRasterizationStateRasterizationOrderAMD.Buffer sType(@NativeType("VkStructureType") int value) { VkPipelineRasterizationStateRasterizationOrderAMD.nsType(address(), value); return this; }
         /** Sets the specified value to the {@code pNext} field. */
-        public VkPipelineRasterizationStateRasterizationOrderAMD.Buffer pNext(@NativeType("void const *") long value) { VkPipelineRasterizationStateRasterizationOrderAMD.npNext(address(), value); return this; }
+        public VkPipelineRasterizationStateRasterizationOrderAMD.Buffer pNext(@NativeType("const void *") long value) { VkPipelineRasterizationStateRasterizationOrderAMD.npNext(address(), value); return this; }
         /** Sets the specified value to the {@code rasterizationOrder} field. */
         public VkPipelineRasterizationStateRasterizationOrderAMD.Buffer rasterizationOrder(@NativeType("VkRasterizationOrderAMD") int value) { VkPipelineRasterizationStateRasterizationOrderAMD.nrasterizationOrder(address(), value); return this; }
 

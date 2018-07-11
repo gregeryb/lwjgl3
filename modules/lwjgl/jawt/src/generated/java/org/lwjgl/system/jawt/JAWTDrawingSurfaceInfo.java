@@ -29,14 +29,14 @@ import static org.lwjgl.system.MemoryUtil.*;
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct JAWT_DrawingSurfaceInfo {
  *     void * platformInfo;
  *     {@link JAWTDrawingSurface JAWT_DrawingSurface} * ds;
  *     {@link JAWTRectangle JAWT_Rectangle} bounds;
  *     jint clipSize;
  *     {@link JAWTRectangle JAWT_Rectangle} * clip;
- * }</code></pre>
+ * }</pre></code>
  */
 @NativeType("struct JAWT_DrawingSurfaceInfo")
 public class JAWTDrawingSurfaceInfo extends Struct {
@@ -44,7 +44,6 @@ public class JAWTDrawingSurfaceInfo extends Struct {
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */
@@ -100,8 +99,6 @@ public class JAWTDrawingSurfaceInfo extends Struct {
     /** Returns a {@link JAWTRectangle} view of the {@code bounds} field. */
     @NativeType("JAWT_Rectangle")
     public JAWTRectangle bounds() { return nbounds(address()); }
-    /** Passes the {@code bounds} field to the specified {@link java.util.function.Consumer Consumer}. */
-    public JAWTDrawingSurfaceInfo bounds(java.util.function.Consumer<JAWTRectangle> consumer) { consumer.accept(bounds()); return this; }
     /** Returns the value of the {@code clipSize} field. */
     @NativeType("jint")
     public int clipSize() { return nclipSize(address()); }
@@ -206,8 +203,6 @@ public class JAWTDrawingSurfaceInfo extends Struct {
         /** Returns a {@link JAWTRectangle} view of the {@code bounds} field. */
         @NativeType("JAWT_Rectangle")
         public JAWTRectangle bounds() { return JAWTDrawingSurfaceInfo.nbounds(address()); }
-        /** Passes the {@code bounds} field to the specified {@link java.util.function.Consumer Consumer}. */
-        public JAWTDrawingSurfaceInfo.Buffer bounds(java.util.function.Consumer<JAWTRectangle> consumer) { consumer.accept(bounds()); return this; }
         /** Returns the value of the {@code clipSize} field. */
         @NativeType("jint")
         public int clipSize() { return JAWTDrawingSurfaceInfo.nclipSize(address()); }

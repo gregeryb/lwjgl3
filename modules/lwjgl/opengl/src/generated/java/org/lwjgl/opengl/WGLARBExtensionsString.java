@@ -51,7 +51,7 @@ public class WGLARBExtensionsString {
      * @param hdc the device context to query extensions for
      */
     @Nullable
-    @NativeType("char const *")
+    @NativeType("const char *")
     public static String wglGetExtensionsStringARB(@NativeType("HDC") long hdc) {
         long __result = nwglGetExtensionsStringARB(hdc);
         return memASCIISafe(__result);

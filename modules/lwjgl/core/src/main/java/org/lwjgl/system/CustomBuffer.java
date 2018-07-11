@@ -51,7 +51,7 @@ public abstract class CustomBuffer<SELF extends CustomBuffer<SELF>> implements P
 
     /** Returns the memory address at the specified buffer position. */
     public long address(int position) {
-        return address + Integer.toUnsignedLong(position) * sizeof();
+        return address + (long)position * sizeof();
     }
 
     /**
@@ -84,18 +84,18 @@ public abstract class CustomBuffer<SELF extends CustomBuffer<SELF>> implements P
     /**
      * Sets this buffer's position. If the mark is defined and larger than the new position then it is discarded.
      *
-     * @param position the new position value; must be non-negative and no larger than the current limit
+     * @param newPosition the new position value; must be non-negative and no larger than the current limit
      *
      * @return This buffer
      *
-     * @throws IllegalArgumentException If the preconditions on {@code newPosition} do not hold
+     * @throws IllegalArgumentException If the preconditions on <tt>newPosition</tt> do not hold
      */
-    public SELF position(int position) {
-        if (position < 0 || limit < position) {
+    public SELF position(int newPosition) {
+        if ((newPosition > limit) || (newPosition < 0)) {
             throw new IllegalArgumentException();
         }
-        this.position = position;
-        if (position < mark) {
+        position = newPosition;
+        if (mark > position) {
             mark = -1;
         }
         return self();
@@ -114,21 +114,21 @@ public abstract class CustomBuffer<SELF extends CustomBuffer<SELF>> implements P
      * Sets this buffer's limit. If the position is larger than the new limit then it is set to the new limit. If the mark is defined and larger than the new
      * limit then it is discarded.
      *
-     * @param limit the new limit value; must be non-negative and no larger than this buffer's capacity
+     * @param newLimit the new limit value; must be non-negative and no larger than this buffer's capacity
      *
      * @return This buffer
      *
-     * @throws IllegalArgumentException If the preconditions on {@code newLimit} do not hold
+     * @throws IllegalArgumentException If the preconditions on <tt>newLimit</tt> do not hold
      */
-    public SELF limit(int limit) {
-        if (limit < 0 || capacity < limit) {
+    public SELF limit(int newLimit) {
+        if ((newLimit > capacity) || (newLimit < 0)) {
             throw new IllegalArgumentException();
         }
-        this.limit = limit;
-        if (limit < position) {
+        limit = newLimit;
+        if (position > limit) {
             position = limit;
         }
-        if (limit < mark) {
+        if (mark > limit) {
             mark = -1;
         }
         return self();
@@ -237,7 +237,7 @@ public abstract class CustomBuffer<SELF extends CustomBuffer<SELF>> implements P
     /**
      * Tells whether there are any elements between the current position and the limit.
      *
-     * @return {@code true} if, and only if, there is at least one element remaining in this buffer
+     * @return <tt>true</tt> if, and only if, there is at least one element remaining in this buffer
      */
     public boolean hasRemaining() {
         return position < limit;
@@ -269,15 +269,15 @@ public abstract class CustomBuffer<SELF extends CustomBuffer<SELF>> implements P
      * @return the sliced buffer
      */
     public SELF slice(int offset, int capacity) {
-        if (offset < 0 || remaining() < offset) {
+        if (offset < 0 || limit < position + offset) {
             throw new IllegalArgumentException();
         }
 
-        if (capacity < 0 || this.capacity - position - offset < capacity) {
+        if (capacity < 0 || this.capacity < position + offset + capacity) {
             throw new IllegalArgumentException();
         }
 
-        return newBufferInstance(address() + Integer.toUnsignedLong(offset) * sizeof(), container, -1, 0, capacity, capacity);
+        return newBufferInstance(address() + (long)offset * sizeof(), container, -1, 0, capacity, capacity);
     }
 
     /**
@@ -300,13 +300,13 @@ public abstract class CustomBuffer<SELF extends CustomBuffer<SELF>> implements P
      * Relative bulk <i>put</i> method&nbsp;&nbsp;<i>(optional operation)</i>.
      *
      * <p>This method transfers the elements remaining in the specified source buffer into this buffer. If there are more elements remaining in the source
-     * buffer than in this buffer, that is, if {@code src.remaining()}&nbsp;{@code &gt;}&nbsp;{@code remaining()}, then no elements are transferred and a
+     * buffer than in this buffer, that is, if <tt>src.remaining()</tt>&nbsp;<tt>&gt;</tt>&nbsp;<tt>remaining()</tt>, then no elements are transferred and a
      * {@link java.nio.BufferOverflowException} is thrown.
      *
-     * <p>Otherwise, this method copies <i>n</i>&nbsp;=&nbsp;{@code src.remaining()} elements from the specified buffer into this buffer, starting at each
+     * <p>Otherwise, this method copies <i>n</i>&nbsp;=&nbsp;<tt>src.remaining()</tt> elements from the specified buffer into this buffer, starting at each
      * buffer's current position. The positions of both buffers are then incremented by <i>n</i>.</p>
      *
-     * <p>In other words, an invocation of this method of the form {@code dst.put(src)} has exactly the same effect as the loop</p>
+     * <p>In other words, an invocation of this method of the form <tt>dst.put(src)</tt> has exactly the same effect as the loop</p>
      *
      * <pre>
      *     while (src.hasRemaining())
@@ -327,11 +327,11 @@ public abstract class CustomBuffer<SELF extends CustomBuffer<SELF>> implements P
             throw new IllegalArgumentException();
         }
         int n = src.remaining();
-        if (remaining() < n) {
+        if (n > remaining()) {
             throw new BufferOverflowException();
         }
 
-        memCopy(src.address(), this.address(), Integer.toUnsignedLong(n) * sizeof());
+        memCopy(src.address(), this.address(), (long)n * sizeof());
         position += n;
 
         return self();
@@ -341,8 +341,8 @@ public abstract class CustomBuffer<SELF extends CustomBuffer<SELF>> implements P
      * Compacts this buffer&nbsp;&nbsp;<i>(optional operation)</i>.
      *
      * <p>The elements between the buffer's current position and its limit, if any, are copied to the beginning of the buffer. That is, the element at index
-     * <i>p</i>&nbsp;=&nbsp;{@code position()} is copied to index zero, the element at index <i>p</i>&nbsp;+&nbsp;1 is copied to index one, and so forth until
-     * the element at index {@code limit()}&nbsp;-&nbsp;1 is copied to index <i>n</i>&nbsp;=&nbsp;{@code limit()}&nbsp;-&nbsp;{@code 1}&nbsp;-&nbsp;
+     * <i>p</i>&nbsp;=&nbsp;<tt>position()</tt> is copied to index zero, the element at index <i>p</i>&nbsp;+&nbsp;1 is copied to index one, and so forth until
+     * the element at index <tt>limit()</tt>&nbsp;-&nbsp;1 is copied to index <i>n</i>&nbsp;=&nbsp;<tt>limit()</tt>&nbsp;-&nbsp;<tt>1</tt>&nbsp;-&nbsp;
      * <i>p</i>.
      * The buffer's position is then set to <i>n+1</i> and its limit is set to its capacity. The mark, if defined, is discarded.
      *
@@ -354,7 +354,7 @@ public abstract class CustomBuffer<SELF extends CustomBuffer<SELF>> implements P
      * @throws java.nio.ReadOnlyBufferException If this buffer is read-only
      */
     public SELF compact() {
-        memCopy(address(), address, Integer.toUnsignedLong(remaining()) * sizeof());
+        memCopy(address(), address, (long)remaining() * sizeof());
         position(remaining());
         limit(capacity());
         mark = -1;
@@ -377,18 +377,25 @@ public abstract class CustomBuffer<SELF extends CustomBuffer<SELF>> implements P
 
     protected abstract SELF newBufferInstance(long address, @Nullable ByteBuffer container, int mark, int position, int limit, int capacity);
 
-    protected final long nextGetIndex() {
-        if (position < limit) {
-            return Integer.toUnsignedLong(position++);
+    protected long nextGetIndex() {
+        if (position >= limit) {
+            throw new BufferUnderflowException();
         }
-        throw new BufferUnderflowException();
+        return position++;
     }
 
-    protected final long nextPutIndex() {
-        if (position < limit) {
-            return Integer.toUnsignedLong(position++);
+    protected long nextPutIndex() {
+        if (position >= limit) {
+            throw new BufferOverflowException();
         }
-        throw new BufferOverflowException();
+        return position++;
+    }
+
+    protected long checkIndex(int index) {
+        if (index < 0 || limit < index) {
+            throw new IndexOutOfBoundsException();
+        }
+        return index;
     }
 
 }

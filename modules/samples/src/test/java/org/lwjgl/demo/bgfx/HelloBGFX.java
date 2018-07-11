@@ -72,21 +72,15 @@ public final class HelloBGFX {
             }
 
             bgfx_set_platform_data(platformData);
+        }
 
-            BGFXInit init = BGFXInit.mallocStack(stack);
-            bgfx_init_ctor(init);
-            init
-                .resolution(it -> it
-                    .width(width)
-                    .height(height)
-                    .reset(BGFX_RESET_VSYNC));
-
-            if (!bgfx_init(init)) {
-                throw new RuntimeException("Error initializing bgfx renderer");
-            }
+        if (!bgfx_init(BGFX_RENDERER_TYPE_COUNT, BGFX_PCI_ID_NONE, 0, null, null)) {
+            throw new RuntimeException("Error initializing bgfx renderer");
         }
 
         System.out.println("bgfx renderer: " + bgfx_get_renderer_name(bgfx_get_renderer_type()));
+
+        bgfx_reset(width, height, BGFX_RESET_VSYNC);
 
         // Enable debug text.
         bgfx_set_debug(BGFX_DEBUG_TEXT);

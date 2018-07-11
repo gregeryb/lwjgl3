@@ -19,10 +19,10 @@ import static org.lwjgl.system.MemoryStack.*;
 /**
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct HmdVector3d_t {
  *     double v[3];
- * }</code></pre>
+ * }</pre></code>
  */
 @NativeType("struct HmdVector3d_t")
 public class HmdVector3d extends Struct implements NativeResource {
@@ -30,7 +30,6 @@ public class HmdVector3d extends Struct implements NativeResource {
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */
@@ -233,7 +232,8 @@ public class HmdVector3d extends Struct implements NativeResource {
     public static DoubleBuffer nv(long struct) { return memDoubleBuffer(struct + HmdVector3d.V, 3); }
     /** Unsafe version of {@link #v(int) v}. */
     public static double nv(long struct, int index) {
-        return memGetDouble(struct + HmdVector3d.V + check(index, 3) * 8);
+        if (CHECKS) { check(index, 3); }
+        return memGetDouble(struct + HmdVector3d.V + index * 8);
     }
 
     /** Unsafe version of {@link #v(DoubleBuffer) v}. */
@@ -243,7 +243,8 @@ public class HmdVector3d extends Struct implements NativeResource {
     }
     /** Unsafe version of {@link #v(int, double) v}. */
     public static void nv(long struct, int index, double value) {
-        memPutDouble(struct + HmdVector3d.V + check(index, 3) * 8, value);
+        if (CHECKS) { check(index, 3); }
+        memPutDouble(struct + HmdVector3d.V + index * 8, value);
     }
 
     // -----------------------------------

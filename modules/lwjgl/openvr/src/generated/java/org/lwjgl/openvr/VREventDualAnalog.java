@@ -25,14 +25,14 @@ import static org.lwjgl.system.MemoryUtil.*;
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct VREvent_DualAnalog_t {
  *     float x;
  *     float y;
  *     float transformedX;
  *     float transformedY;
  *     EDualAnalogWhich which;
- * }</code></pre>
+ * }</pre></code>
  */
 @NativeType("struct VREvent_DualAnalog_t")
 public class VREventDualAnalog extends Struct {
@@ -40,7 +40,6 @@ public class VREventDualAnalog extends Struct {
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */

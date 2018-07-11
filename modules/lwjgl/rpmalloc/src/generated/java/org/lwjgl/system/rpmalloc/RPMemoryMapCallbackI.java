@@ -14,17 +14,16 @@ import static org.lwjgl.system.dyncall.DynCallback.*;
  * 
  * <h3>Type</h3>
  * 
- * <pre><code>
- * void * (*) (
- *     size_t size,
- *     size_t *offset
- * )</code></pre>
+ * <code><pre>
+ * void* (*) (
+ *     size_t size
+ * )</pre></code>
  */
 @FunctionalInterface
-@NativeType("void * (*) (size_t, size_t *)")
+@NativeType("void* (*) (size_t)")
 public interface RPMemoryMapCallbackI extends CallbackI.P {
 
-    String SIGNATURE = "(pp)p";
+    String SIGNATURE = "(p)p";
 
     @Override
     default String getSignature() { return SIGNATURE; }
@@ -32,7 +31,6 @@ public interface RPMemoryMapCallbackI extends CallbackI.P {
     @Override
     default long callback(long args) {
         return invoke(
-            dcbArgPointer(args),
             dcbArgPointer(args)
         );
     }
@@ -40,17 +38,11 @@ public interface RPMemoryMapCallbackI extends CallbackI.P {
     /**
      * Map memory pages for the given number of bytes.
      * 
-     * <p>The returned address MUST be aligned to the rpmalloc span size, which will always be a power of two. Optionally the function can store an alignment
-     * offset in the offset variable in case it performs alignment and the returned pointer is offset from the actual start of the memory region due to this
-     * alignment. The alignment offset will be passed to the memory unmap function. The alignment offset MUST NOT be larger than 65535 (storable in an
-     * {@code uint16_t}), if it is you must use natural alignment to shift it into 16 bits.</p>
-     * 
-     * <p>If you set a {@code memory_map} function, you must also set a {@code memory_unmap} function or else the default implementation will be used for
-     * both.</p>
+     * <p>The returned address MUST be 2 byte aligned, and should ideally be 64KiB aligned. If memory returned is not 64KiB aligned rpmalloc will call unmap and
+     * then another map request with size padded by 64KiB in order to align it internally.</p>
      *
-     * @param size   the number of bytes to map
-     * @param offset the alignment offset
+     * @param size the number of bytes to map
      */
-    @NativeType("void *") long invoke(@NativeType("size_t") long size, @NativeType("size_t *") long offset);
+    @NativeType("void *") long invoke(@NativeType("size_t") long size);
 
 }

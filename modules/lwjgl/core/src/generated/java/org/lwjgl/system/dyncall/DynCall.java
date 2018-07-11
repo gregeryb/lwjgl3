@@ -347,6 +347,7 @@ public class DynCall {
      * Binds a struct argument.
      *
      * @param vm    a {@code CallVM} instance
+     * @param s     
      * @param value the argument value
      */
     public static void dcArgStruct(@NativeType("DCCallVM *") long vm, @NativeType("DCstruct *") long s, @NativeType("DCpointer") long value) {
@@ -599,8 +600,10 @@ public class DynCall {
      * <p>After the invocation of the foreign function call, the argument values are still bound and a second call using the same arguments can be issued. If you
      * need to clear the argument bindings, you have to reset the {@code CallVM}.</p>
      *
-     * @param vm      a {@code CallVM} instance
-     * @param funcptr the function pointer
+     * @param vm          a {@code CallVM} instance
+     * @param funcptr     the function pointer
+     * @param s           
+     * @param returnValue 
      */
     public static void dcCallStruct(@NativeType("DCCallVM *") long vm, @NativeType("DCpointer") long funcptr, @NativeType("DCstruct *") long s, @NativeType("DCpointer") long returnValue) {
         if (CHECKS) {
@@ -650,7 +653,7 @@ public class DynCall {
      * Adds a field to the specified struct.
      *
      * @param s           the struct
-     * @param type        the field type. One of:<br><table><tr><td>{@link #DC_SIGCHAR_VOID SIGCHAR_VOID}</td><td>{@link #DC_SIGCHAR_BOOL SIGCHAR_BOOL}</td><td>{@link #DC_SIGCHAR_CHAR SIGCHAR_CHAR}</td><td>{@link #DC_SIGCHAR_UCHAR SIGCHAR_UCHAR}</td><td>{@link #DC_SIGCHAR_SHORT SIGCHAR_SHORT}</td><td>{@link #DC_SIGCHAR_USHORT SIGCHAR_USHORT}</td></tr><tr><td>{@link #DC_SIGCHAR_INT SIGCHAR_INT}</td><td>{@link #DC_SIGCHAR_UINT SIGCHAR_UINT}</td><td>{@link #DC_SIGCHAR_LONG SIGCHAR_LONG}</td><td>{@link #DC_SIGCHAR_ULONG SIGCHAR_ULONG}</td><td>{@link #DC_SIGCHAR_LONGLONG SIGCHAR_LONGLONG}</td><td>{@link #DC_SIGCHAR_ULONGLONG SIGCHAR_ULONGLONG}</td></tr><tr><td>{@link #DC_SIGCHAR_FLOAT SIGCHAR_FLOAT}</td><td>{@link #DC_SIGCHAR_DOUBLE SIGCHAR_DOUBLE}</td><td>{@link #DC_SIGCHAR_POINTER SIGCHAR_POINTER}</td><td>{@link #DC_SIGCHAR_STRING SIGCHAR_STRING}</td><td>{@link #DC_SIGCHAR_STRUCT SIGCHAR_STRUCT}</td><td>{@link #DC_SIGCHAR_ENDARG SIGCHAR_ENDARG}</td></tr></table>
+     * @param type        the field type
      * @param alignment   a custom field alignment, or 0 to calculate automatically
      * @param arrayLength 1 or a higher value if the field is an array
      */
@@ -762,7 +765,7 @@ public class DynCall {
      * @param signature the struct signature
      */
     @NativeType("DCstruct *")
-    public static long dcDefineStruct(@NativeType("char const *") ByteBuffer signature) {
+    public static long dcDefineStruct(@NativeType("const char *") ByteBuffer signature) {
         if (CHECKS) {
             checkNT1(signature);
         }
@@ -775,7 +778,7 @@ public class DynCall {
      * @param signature the struct signature
      */
     @NativeType("DCstruct *")
-    public static long dcDefineStruct(@NativeType("char const *") CharSequence signature) {
+    public static long dcDefineStruct(@NativeType("const char *") CharSequence signature) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
             ByteBuffer signatureEncoded = stack.ASCII(signature);

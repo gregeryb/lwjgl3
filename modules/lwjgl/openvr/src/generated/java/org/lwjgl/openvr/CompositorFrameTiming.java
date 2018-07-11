@@ -42,7 +42,7 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct Compositor_FrameTiming {
  *     uint32_t m_nSize;
  *     uint32_t m_nFrameIndex;
@@ -68,7 +68,7 @@ import static org.lwjgl.system.MemoryStack.*;
  *     float m_flCompositorUpdateEndMs;
  *     float m_flCompositorRenderStartMs;
  *     {@link TrackedDevicePose TrackedDevicePose_t} m_HmdPose;
- * }</code></pre>
+ * }</pre></code>
  */
 @NativeType("struct Compositor_FrameTiming")
 public class CompositorFrameTiming extends Struct implements NativeResource {
@@ -76,7 +76,6 @@ public class CompositorFrameTiming extends Struct implements NativeResource {
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */
@@ -235,8 +234,6 @@ public class CompositorFrameTiming extends Struct implements NativeResource {
     /** Returns a {@link TrackedDevicePose} view of the {@code m_HmdPose} field. */
     @NativeType("TrackedDevicePose_t")
     public TrackedDevicePose m_HmdPose() { return nm_HmdPose(address()); }
-    /** Passes the {@code m_HmdPose} field to the specified {@link java.util.function.Consumer Consumer}. */
-    public CompositorFrameTiming m_HmdPose(java.util.function.Consumer<TrackedDevicePose> consumer) { consumer.accept(m_HmdPose()); return this; }
 
     // -----------------------------------
 
@@ -529,8 +526,6 @@ public class CompositorFrameTiming extends Struct implements NativeResource {
         /** Returns a {@link TrackedDevicePose} view of the {@code m_HmdPose} field. */
         @NativeType("TrackedDevicePose_t")
         public TrackedDevicePose m_HmdPose() { return CompositorFrameTiming.nm_HmdPose(address()); }
-        /** Passes the {@code m_HmdPose} field to the specified {@link java.util.function.Consumer Consumer}. */
-        public CompositorFrameTiming.Buffer m_HmdPose(java.util.function.Consumer<TrackedDevicePose> consumer) { consumer.accept(m_HmdPose()); return this; }
 
     }
 

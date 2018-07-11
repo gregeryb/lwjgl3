@@ -73,10 +73,9 @@ public class KHRExternalSemaphoreFd {
         throw new UnsupportedOperationException();
     }
 
-    static boolean checkCapsDevice(FunctionProvider provider, java.util.Map<String, Long> caps, java.util.Set<String> ext) {
-        return ext.contains("VK_KHR_external_semaphore_fd") && VK.checkExtension("VK_KHR_external_semaphore_fd",
-               VK.isSupported(provider, "vkImportSemaphoreFdKHR", caps)
-            && VK.isSupported(provider, "vkGetSemaphoreFdKHR", caps)
+    static boolean isAvailable(VKCapabilitiesDevice caps) {
+        return checkFunctions(
+            caps.vkImportSemaphoreFdKHR, caps.vkGetSemaphoreFdKHR
         );
     }
 
@@ -98,10 +97,10 @@ public class KHRExternalSemaphoreFd {
      * 
      * <p>To import a semaphore payload from a POSIX file descriptor, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * VkResult vkImportSemaphoreFdKHR(
      *     VkDevice                                    device,
-     *     const VkImportSemaphoreFdInfoKHR*           pImportSemaphoreFdInfo);</code></pre>
+     *     const VkImportSemaphoreFdInfoKHR*           pImportSemaphoreFdInfo);</pre></code>
      * 
      * <h5>Description</h5>
      * 
@@ -132,7 +131,7 @@ public class KHRExternalSemaphoreFd {
      * <dt>On failure, this command returns</dt>
      * <dd><ul>
      * <li>{@link VK10#VK_ERROR_OUT_OF_HOST_MEMORY ERROR_OUT_OF_HOST_MEMORY}</li>
-     * <li>{@link VK11#VK_ERROR_INVALID_EXTERNAL_HANDLE ERROR_INVALID_EXTERNAL_HANDLE}</li>
+     * <li>{@link KHRExternalMemory#VK_ERROR_INVALID_EXTERNAL_HANDLE_KHR ERROR_INVALID_EXTERNAL_HANDLE_KHR}</li>
      * </ul></dd>
      * </dl>
      * 
@@ -144,7 +143,7 @@ public class KHRExternalSemaphoreFd {
      * @param pImportSemaphoreFdInfo points to a {@link VkImportSemaphoreFdInfoKHR} structure specifying the semaphore and import parameters.
      */
     @NativeType("VkResult")
-    public static int vkImportSemaphoreFdKHR(VkDevice device, @NativeType("VkImportSemaphoreFdInfoKHR const *") VkImportSemaphoreFdInfoKHR pImportSemaphoreFdInfo) {
+    public static int vkImportSemaphoreFdKHR(VkDevice device, @NativeType("const VkImportSemaphoreFdInfoKHR *") VkImportSemaphoreFdInfoKHR pImportSemaphoreFdInfo) {
         return nvkImportSemaphoreFdKHR(device, pImportSemaphoreFdInfo.address());
     }
 
@@ -166,11 +165,11 @@ public class KHRExternalSemaphoreFd {
      * 
      * <p>To export a POSIX file descriptor representing the payload of a semaphore, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * VkResult vkGetSemaphoreFdKHR(
      *     VkDevice                                    device,
      *     const VkSemaphoreGetFdInfoKHR*              pGetFdInfo,
-     *     int*                                        pFd);</code></pre>
+     *     int*                                        pFd);</pre></code>
      * 
      * <h5>Description</h5>
      * 
@@ -216,16 +215,16 @@ public class KHRExternalSemaphoreFd {
      * @param pFd        will return the file descriptor representing the semaphore payload.
      */
     @NativeType("VkResult")
-    public static int vkGetSemaphoreFdKHR(VkDevice device, @NativeType("VkSemaphoreGetFdInfoKHR const *") VkSemaphoreGetFdInfoKHR pGetFdInfo, @NativeType("int *") IntBuffer pFd) {
+    public static int vkGetSemaphoreFdKHR(VkDevice device, @NativeType("const VkSemaphoreGetFdInfoKHR *") VkSemaphoreGetFdInfoKHR pGetFdInfo, @NativeType("int *") IntBuffer pFd) {
         if (CHECKS) {
             check(pFd, 1);
         }
         return nvkGetSemaphoreFdKHR(device, pGetFdInfo.address(), memAddress(pFd));
     }
 
-    /** Array version of: {@link #vkGetSemaphoreFdKHR GetSemaphoreFdKHR} */
+    /** register Array version of: {@link #vkGetSemaphoreFdKHR GetSemaphoreFdKHR} */
     @NativeType("VkResult")
-    public static int vkGetSemaphoreFdKHR(VkDevice device, @NativeType("VkSemaphoreGetFdInfoKHR const *") VkSemaphoreGetFdInfoKHR pGetFdInfo, @NativeType("int *") int[] pFd) {
+    public static int vkGetSemaphoreFdKHR(VkDevice device, @NativeType("const VkSemaphoreGetFdInfoKHR *") VkSemaphoreGetFdInfoKHR pGetFdInfo, @NativeType("int *") int[] pFd) {
         long __functionAddress = device.getCapabilities().vkGetSemaphoreFdKHR;
         if (CHECKS) {
             check(__functionAddress);

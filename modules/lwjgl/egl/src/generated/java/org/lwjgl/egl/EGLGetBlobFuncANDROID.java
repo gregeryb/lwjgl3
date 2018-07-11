@@ -16,13 +16,13 @@ import static org.lwjgl.system.MemoryUtil.*;
  * 
  * <h3>Type</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * EGLsizeiANDROID (*) (
- *     void const *key,
+ *     const void *key,
  *     EGLsizeiANDROID keySize,
  *     void *value,
  *     EGLsizeiANDROID valueSize
- * )</code></pre>
+ * )</pre></code>
  */
 public abstract class EGLGetBlobFuncANDROID extends Callback implements EGLGetBlobFuncANDROIDI {
 

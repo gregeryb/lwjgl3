@@ -14,12 +14,12 @@ import static org.lwjgl.system.dyncall.DynCallback.*;
  * 
  * <h3>Type</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * float (*) (
  *     void *userdata,
  *     int selected,
- *     char const **item
- * )</code></pre>
+ *     const char **item
+ * )</pre></code>
  */
 @FunctionalInterface
 @NativeType("nk_item_getter")
@@ -39,6 +39,6 @@ public interface NkItemGetterI extends CallbackI.F {
         );
     }
 
-    float invoke(@NativeType("void *") long userdata, int selected, @NativeType("char const **") long item);
+    float invoke(@NativeType("void *") long userdata, int selected, @NativeType("const char **") long item);
 
 }

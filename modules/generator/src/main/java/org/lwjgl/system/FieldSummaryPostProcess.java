@@ -21,8 +21,8 @@ final class FieldSummaryPostProcess {
     private static final Pattern FIELD = Pattern.compile(
         "<tr\\s+class=\"(\\w+)\">\\s*" +
         "<td\\s+class=\"colFirst\"><code>([^<]+)</code></td>\\s*" +
-        "<th\\s+class=\"colSecond\" scope=\"row\"><code><span\\s+class=\"memberNameLink\"><a href=\"([^\"]+)\">\\s*(\\w+)\\s*</a></span></code></th>\\s*" +
-        "<td\\s+class=\"colLast\">\\s*(&nbsp;|<div\\s+class=\"block\">(.+?)</div>)\\s*" +
+        "<td\\s+class=\"colLast\"><code><span\\s+class=\"memberNameLink\"><a href=\"([^\"]+)\">\\s*(\\w+)\\s*</a></span></code>\\s*" +
+        "(&nbsp;|<div\\s+class=\"block\">(.+?)</div>)\\s*" +
         "</td>\\s*" +
         "</tr>(\\s*)",
         Pattern.DOTALL
@@ -43,7 +43,7 @@ final class FieldSummaryPostProcess {
         boolean       altColor = false;
         while (m.find()) {
             if (lastMatch == null) {
-                out.append(html, 0, m.start());
+                out.append(html.substring(0, m.start()));
 
                 matches.add(lastMatch = new Match(m));
                 continue;
@@ -86,7 +86,7 @@ final class FieldSummaryPostProcess {
             .append(altColor ? "altColor" : "rowColor")
             .append("\">\n<td class=\"colFirst\"><code>")
             .append(ref.type)
-            .append("</code></td>\n<th class=\"colSecond\"><code><span class=\"memberNameLink\">");
+            .append("</code></td>\n<td class=\"colLast\"><code><span class=\"memberNameLink\">");
 
         for (Match contiguous : matches) {
             if (contiguous != ref) {
@@ -100,7 +100,7 @@ final class FieldSummaryPostProcess {
                 .append("</a>");
         }
 
-        out.append("</span></code></th>\n<td class=\"colLast\">");
+        out.append("</span></code>");
 
         if (ref.comment.isEmpty()) {
             out.append("&nbsp;");

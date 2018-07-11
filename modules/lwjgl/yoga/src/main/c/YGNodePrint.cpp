@@ -1,8 +1,10 @@
 /*
  * Copyright (c) 2017-present, Facebook, Inc.
+ * All rights reserved.
  *
- * This source code is licensed under the MIT license found in the
- * LICENSE file in the root directory of this source tree.
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree. An additional grant
+ * of patent rights can be found in the PATENTS file in the same directory.
  */
 
 #include "YGNodePrint.h"
@@ -39,12 +41,10 @@ static void appendFormatedString(string* str, const char* fmt, ...) {
   str->append(result);
 }
 
-static void appendFloatOptionalIfDefined(
-    string* base,
-    const string key,
-    const YGFloatOptional num) {
-  if (!num.isUndefined()) {
-    appendFormatedString(base, "%s: %g; ", key.c_str(), num.getValue());
+static void
+appendFloatIfNotUndefined(string* base, const string key, const float num) {
+  if (!YGFloatIsUndefined(num)) {
+    appendFormatedString(base, "%s: %g; ", key.c_str(), num);
   }
 }
 
@@ -72,10 +72,7 @@ appendNumberIfNotAuto(string* base, const string& key, const YGValue number) {
 
 static void
 appendNumberIfNotZero(string* base, const string& str, const YGValue number) {
-
-  if (number.unit == YGUnitAuto) {
-    base->append(str + ": auto; ");
-  } else if (!YGFloatsEqual(number.value, 0)) {
+  if (!YGFloatsEqual(number.value, 0)) {
     appendNumberIfNotUndefined(base, str, number);
   }
 }
@@ -157,11 +154,10 @@ void YGNodeToString(
       appendFormatedString(
           str, "align-self: %s; ", YGAlignToString(node->getStyle().alignSelf));
     }
-    appendFloatOptionalIfDefined(str, "flex-grow", node->getStyle().flexGrow);
-    appendFloatOptionalIfDefined(
-        str, "flex-shrink", node->getStyle().flexShrink);
+    appendFloatIfNotUndefined(str, "flex-grow", node->getStyle().flexGrow);
+    appendFloatIfNotUndefined(str, "flex-shrink", node->getStyle().flexShrink);
     appendNumberIfNotAuto(str, "flex-basis", node->getStyle().flexBasis);
-    appendFloatOptionalIfDefined(str, "flex", node->getStyle().flex);
+    appendFloatIfNotUndefined(str, "flex", node->getStyle().flex);
 
     if (node->getStyle().flexWrap != YGNode().getStyle().flexWrap) {
       appendFormatedString(

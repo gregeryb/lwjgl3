@@ -59,7 +59,7 @@ public class NVViewportArray {
 
     public static native void nglViewportArrayvNV(int first, int count, long v);
 
-    public static void glViewportArrayvNV(@NativeType("GLuint") int first, @NativeType("GLfloat const *") FloatBuffer v) {
+    public static void glViewportArrayvNV(@NativeType("GLuint") int first, @NativeType("const GLfloat *") FloatBuffer v) {
         nglViewportArrayvNV(first, v.remaining() >> 2, memAddress(v));
     }
 
@@ -71,7 +71,7 @@ public class NVViewportArray {
 
     public static native void nglViewportIndexedfvNV(int index, long v);
 
-    public static void glViewportIndexedfvNV(@NativeType("GLuint") int index, @NativeType("GLfloat const *") FloatBuffer v) {
+    public static void glViewportIndexedfvNV(@NativeType("GLuint") int index, @NativeType("const GLfloat *") FloatBuffer v) {
         if (CHECKS) {
             check(v, 4);
         }
@@ -82,7 +82,7 @@ public class NVViewportArray {
 
     public static native void nglScissorArrayvNV(int first, int count, long v);
 
-    public static void glScissorArrayvNV(@NativeType("GLuint") int first, @NativeType("GLint const *") IntBuffer v) {
+    public static void glScissorArrayvNV(@NativeType("GLuint") int first, @NativeType("const GLint *") IntBuffer v) {
         nglScissorArrayvNV(first, v.remaining() >> 2, memAddress(v));
     }
 
@@ -94,7 +94,7 @@ public class NVViewportArray {
 
     public static native void nglScissorIndexedvNV(int index, long v);
 
-    public static void glScissorIndexedvNV(@NativeType("GLuint") int index, @NativeType("GLint const *") IntBuffer v) {
+    public static void glScissorIndexedvNV(@NativeType("GLuint") int index, @NativeType("const GLint *") IntBuffer v) {
         if (CHECKS) {
             check(v, 4);
         }
@@ -105,7 +105,7 @@ public class NVViewportArray {
 
     public static native void nglDepthRangeArrayfvNV(int first, int count, long v);
 
-    public static void glDepthRangeArrayfvNV(@NativeType("GLuint") int first, @NativeType("GLfloat const *") FloatBuffer v) {
+    public static void glDepthRangeArrayfvNV(@NativeType("GLuint") int first, @NativeType("const GLfloat *") FloatBuffer v) {
         nglDepthRangeArrayfvNV(first, v.remaining() >> 1, memAddress(v));
     }
 
@@ -149,8 +149,8 @@ public class NVViewportArray {
     @NativeType("GLboolean")
     public static native boolean glIsEnablediNV(@NativeType("GLenum") int target, @NativeType("GLuint") int index);
 
-    /** Array version of: {@link #glViewportArrayvNV ViewportArrayvNV} */
-    public static void glViewportArrayvNV(@NativeType("GLuint") int first, @NativeType("GLfloat const *") float[] v) {
+    /** register Array version of: {@link #glViewportArrayvNV ViewportArrayvNV} */
+    public static void glViewportArrayvNV(@NativeType("GLuint") int first, @NativeType("const GLfloat *") float[] v) {
         long __functionAddress = GLES.getICD().glViewportArrayvNV;
         if (CHECKS) {
             check(__functionAddress);
@@ -158,8 +158,8 @@ public class NVViewportArray {
         callPV(__functionAddress, first, v.length >> 2, v);
     }
 
-    /** Array version of: {@link #glViewportIndexedfvNV ViewportIndexedfvNV} */
-    public static void glViewportIndexedfvNV(@NativeType("GLuint") int index, @NativeType("GLfloat const *") float[] v) {
+    /** register Array version of: {@link #glViewportIndexedfvNV ViewportIndexedfvNV} */
+    public static void glViewportIndexedfvNV(@NativeType("GLuint") int index, @NativeType("const GLfloat *") float[] v) {
         long __functionAddress = GLES.getICD().glViewportIndexedfvNV;
         if (CHECKS) {
             check(__functionAddress);
@@ -168,8 +168,8 @@ public class NVViewportArray {
         callPV(__functionAddress, index, v);
     }
 
-    /** Array version of: {@link #glScissorArrayvNV ScissorArrayvNV} */
-    public static void glScissorArrayvNV(@NativeType("GLuint") int first, @NativeType("GLint const *") int[] v) {
+    /** register Array version of: {@link #glScissorArrayvNV ScissorArrayvNV} */
+    public static void glScissorArrayvNV(@NativeType("GLuint") int first, @NativeType("const GLint *") int[] v) {
         long __functionAddress = GLES.getICD().glScissorArrayvNV;
         if (CHECKS) {
             check(__functionAddress);
@@ -177,8 +177,8 @@ public class NVViewportArray {
         callPV(__functionAddress, first, v.length >> 2, v);
     }
 
-    /** Array version of: {@link #glScissorIndexedvNV ScissorIndexedvNV} */
-    public static void glScissorIndexedvNV(@NativeType("GLuint") int index, @NativeType("GLint const *") int[] v) {
+    /** register Array version of: {@link #glScissorIndexedvNV ScissorIndexedvNV} */
+    public static void glScissorIndexedvNV(@NativeType("GLuint") int index, @NativeType("const GLint *") int[] v) {
         long __functionAddress = GLES.getICD().glScissorIndexedvNV;
         if (CHECKS) {
             check(__functionAddress);
@@ -187,8 +187,8 @@ public class NVViewportArray {
         callPV(__functionAddress, index, v);
     }
 
-    /** Array version of: {@link #glDepthRangeArrayfvNV DepthRangeArrayfvNV} */
-    public static void glDepthRangeArrayfvNV(@NativeType("GLuint") int first, @NativeType("GLfloat const *") float[] v) {
+    /** register Array version of: {@link #glDepthRangeArrayfvNV DepthRangeArrayfvNV} */
+    public static void glDepthRangeArrayfvNV(@NativeType("GLuint") int first, @NativeType("const GLfloat *") float[] v) {
         long __functionAddress = GLES.getICD().glDepthRangeArrayfvNV;
         if (CHECKS) {
             check(__functionAddress);
@@ -196,7 +196,7 @@ public class NVViewportArray {
         callPV(__functionAddress, first, v.length >> 1, v);
     }
 
-    /** Array version of: {@link #glGetFloati_vNV GetFloati_vNV} */
+    /** register Array version of: {@link #glGetFloati_vNV GetFloati_vNV} */
     public static void glGetFloati_vNV(@NativeType("GLenum") int target, @NativeType("GLuint") int index, @NativeType("GLfloat *") float[] data) {
         long __functionAddress = GLES.getICD().glGetFloati_vNV;
         if (CHECKS) {

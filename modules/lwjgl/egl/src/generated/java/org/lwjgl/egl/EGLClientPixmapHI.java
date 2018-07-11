@@ -35,13 +35,13 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct EGLClientPixmapHI {
  *     void * pData;
  *     EGLint iWidth;
  *     EGLint iHeight;
  *     EGLint iStride;
- * }</code></pre>
+ * }</pre></code>
  */
 @NativeType("struct EGLClientPixmapHI")
 public class EGLClientPixmapHI extends Struct implements NativeResource {
@@ -49,7 +49,6 @@ public class EGLClientPixmapHI extends Struct implements NativeResource {
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */

@@ -28,11 +28,11 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct GLFWgamepadstate {
  *     unsigned char buttons[15];
  *     float axes[6];
- * }</code></pre>
+ * }</pre></code>
  *
  * @since version 3.3
  */
@@ -42,7 +42,6 @@ public class GLFWGamepadState extends Struct implements NativeResource {
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */
@@ -269,13 +268,15 @@ public class GLFWGamepadState extends Struct implements NativeResource {
     public static ByteBuffer nbuttons(long struct) { return memByteBuffer(struct + GLFWGamepadState.BUTTONS, 15); }
     /** Unsafe version of {@link #buttons(int) buttons}. */
     public static byte nbuttons(long struct, int index) {
-        return memGetByte(struct + GLFWGamepadState.BUTTONS + check(index, 15) * 1);
+        if (CHECKS) { check(index, 15); }
+        return memGetByte(struct + GLFWGamepadState.BUTTONS + index * 1);
     }
     /** Unsafe version of {@link #axes}. */
     public static FloatBuffer naxes(long struct) { return memFloatBuffer(struct + GLFWGamepadState.AXES, 6); }
     /** Unsafe version of {@link #axes(int) axes}. */
     public static float naxes(long struct, int index) {
-        return memGetFloat(struct + GLFWGamepadState.AXES + check(index, 6) * 4);
+        if (CHECKS) { check(index, 6); }
+        return memGetFloat(struct + GLFWGamepadState.AXES + index * 4);
     }
 
     /** Unsafe version of {@link #buttons(ByteBuffer) buttons}. */
@@ -285,7 +286,8 @@ public class GLFWGamepadState extends Struct implements NativeResource {
     }
     /** Unsafe version of {@link #buttons(int, byte) buttons}. */
     public static void nbuttons(long struct, int index, byte value) {
-        memPutByte(struct + GLFWGamepadState.BUTTONS + check(index, 15) * 1, value);
+        if (CHECKS) { check(index, 15); }
+        memPutByte(struct + GLFWGamepadState.BUTTONS + index * 1, value);
     }
     /** Unsafe version of {@link #axes(FloatBuffer) axes}. */
     public static void naxes(long struct, FloatBuffer value) {
@@ -294,7 +296,8 @@ public class GLFWGamepadState extends Struct implements NativeResource {
     }
     /** Unsafe version of {@link #axes(int, float) axes}. */
     public static void naxes(long struct, int index, float value) {
-        memPutFloat(struct + GLFWGamepadState.AXES + check(index, 6) * 4, value);
+        if (CHECKS) { check(index, 6); }
+        memPutFloat(struct + GLFWGamepadState.AXES + index * 4, value);
     }
 
     // -----------------------------------

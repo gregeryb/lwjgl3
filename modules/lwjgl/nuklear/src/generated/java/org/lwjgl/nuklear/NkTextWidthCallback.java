@@ -16,13 +16,13 @@ import static org.lwjgl.system.MemoryUtil.*;
  * 
  * <h3>Type</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * float (*) (
  *     nk_handle handle,
  *     float h,
- *     char const *text,
+ *     const char *text,
  *     int len
- * )</code></pre>
+ * )</pre></code>
  */
 public abstract class NkTextWidthCallback extends Callback implements NkTextWidthCallbackI {
 

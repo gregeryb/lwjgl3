@@ -11,10 +11,7 @@ import java.nio.*;
 
 import org.lwjgl.system.*;
 
-import static org.lwjgl.system.Checks.*;
 import static org.lwjgl.system.MemoryUtil.*;
-
-import static org.lwjgl.bgfx.BGFX.BGFX_TOPOLOGY_COUNT;
 
 /**
  * Renderer statistics data.
@@ -47,11 +44,6 @@ import static org.lwjgl.bgfx.BGFX.BGFX_TOPOLOGY_COUNT;
  * <li>{@code numUniforms} &ndash; number of used uniforms</li>
  * <li>{@code numVertexBuffers} &ndash; number of used vertex buffers</li>
  * <li>{@code numVertexDecls} &ndash; number of used vertex declarations</li>
- * <li>{@code textureMemoryUsed} &ndash; estimate of texture memory used</li>
- * <li>{@code rtMemoryUsed} &ndash; estimate of render target memory used</li>
- * <li>{@code transientVbUsed} &ndash; amount of transient vertex buffer used</li>
- * <li>{@code transientIbUsed} &ndash; amount of transient index buffer used</li>
- * <li>{@code numPrims} &ndash; number of primitives rendered</li>
  * <li>{@code gpuMemoryMax} &ndash; maximum available GPU memory for application</li>
  * <li>{@code gpuMemoryUsed} &ndash; amount of GPU memory used by the application</li>
  * <li>{@code width} &ndash; backbuffer width in pixels</li>
@@ -66,7 +58,7 @@ import static org.lwjgl.bgfx.BGFX.BGFX_TOPOLOGY_COUNT;
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct bgfx_stats_t {
  *     int64_t cpuTimeFrame;
  *     int64_t cpuTimeBegin;
@@ -91,11 +83,6 @@ import static org.lwjgl.bgfx.BGFX.BGFX_TOPOLOGY_COUNT;
  *     uint16_t numUniforms;
  *     uint16_t numVertexBuffers;
  *     uint16_t numVertexDecls;
- *     int64_t textureMemoryUsed;
- *     int64_t rtMemoryUsed;
- *     int32_t transientVbUsed;
- *     int32_t transientIbUsed;
- *     uint32_t numPrims[BGFX_TOPOLOGY_COUNT];
  *     int64_t gpuMemoryMax;
  *     int64_t gpuMemoryUsed;
  *     uint16_t width;
@@ -106,7 +93,7 @@ import static org.lwjgl.bgfx.BGFX.BGFX_TOPOLOGY_COUNT;
  *     {@link BGFXViewStats bgfx_view_stats_t} * viewStats;
  *     uint16_t numEncoder;
  *     {@link BGFXEncoderStats bgfx_encoder_stats_t} * encoderStats;
- * }</code></pre>
+ * }</pre></code>
  */
 @NativeType("struct bgfx_stats_t")
 public class BGFXStats extends Struct {
@@ -114,7 +101,6 @@ public class BGFXStats extends Struct {
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */
@@ -142,11 +128,6 @@ public class BGFXStats extends Struct {
         NUMUNIFORMS,
         NUMVERTEXBUFFERS,
         NUMVERTEXDECLS,
-        TEXTUREMEMORYUSED,
-        RTMEMORYUSED,
-        TRANSIENTVBUSED,
-        TRANSIENTIBUSED,
-        NUMPRIMS,
         GPUMEMORYMAX,
         GPUMEMORYUSED,
         WIDTH,
@@ -185,11 +166,6 @@ public class BGFXStats extends Struct {
             __member(2),
             __member(8),
             __member(8),
-            __member(4),
-            __member(4),
-            __array(4, BGFX_TOPOLOGY_COUNT),
-            __member(8),
-            __member(8),
             __member(2),
             __member(2),
             __member(2),
@@ -226,21 +202,16 @@ public class BGFXStats extends Struct {
         NUMUNIFORMS = layout.offsetof(20);
         NUMVERTEXBUFFERS = layout.offsetof(21);
         NUMVERTEXDECLS = layout.offsetof(22);
-        TEXTUREMEMORYUSED = layout.offsetof(23);
-        RTMEMORYUSED = layout.offsetof(24);
-        TRANSIENTVBUSED = layout.offsetof(25);
-        TRANSIENTIBUSED = layout.offsetof(26);
-        NUMPRIMS = layout.offsetof(27);
-        GPUMEMORYMAX = layout.offsetof(28);
-        GPUMEMORYUSED = layout.offsetof(29);
-        WIDTH = layout.offsetof(30);
-        HEIGHT = layout.offsetof(31);
-        TEXTWIDTH = layout.offsetof(32);
-        TEXTHEIGHT = layout.offsetof(33);
-        NUMVIEWS = layout.offsetof(34);
-        VIEWSTATS = layout.offsetof(35);
-        NUMENCODER = layout.offsetof(36);
-        ENCODERSTATS = layout.offsetof(37);
+        GPUMEMORYMAX = layout.offsetof(23);
+        GPUMEMORYUSED = layout.offsetof(24);
+        WIDTH = layout.offsetof(25);
+        HEIGHT = layout.offsetof(26);
+        TEXTWIDTH = layout.offsetof(27);
+        TEXTHEIGHT = layout.offsetof(28);
+        NUMVIEWS = layout.offsetof(29);
+        VIEWSTATS = layout.offsetof(30);
+        NUMENCODER = layout.offsetof(31);
+        ENCODERSTATS = layout.offsetof(32);
     }
 
     BGFXStats(long address, @Nullable ByteBuffer container) {
@@ -329,24 +300,6 @@ public class BGFXStats extends Struct {
     /** Returns the value of the {@code numVertexDecls} field. */
     @NativeType("uint16_t")
     public short numVertexDecls() { return nnumVertexDecls(address()); }
-    /** Returns the value of the {@code textureMemoryUsed} field. */
-    @NativeType("int64_t")
-    public long textureMemoryUsed() { return ntextureMemoryUsed(address()); }
-    /** Returns the value of the {@code rtMemoryUsed} field. */
-    @NativeType("int64_t")
-    public long rtMemoryUsed() { return nrtMemoryUsed(address()); }
-    /** Returns the value of the {@code transientVbUsed} field. */
-    @NativeType("int32_t")
-    public int transientVbUsed() { return ntransientVbUsed(address()); }
-    /** Returns the value of the {@code transientIbUsed} field. */
-    @NativeType("int32_t")
-    public int transientIbUsed() { return ntransientIbUsed(address()); }
-    /** Returns a {@link IntBuffer} view of the {@code numPrims} field. */
-    @NativeType("uint32_t[BGFX_TOPOLOGY_COUNT]")
-    public IntBuffer numPrims() { return nnumPrims(address()); }
-    /** Returns the value at the specified index of the {@code numPrims} field. */
-    @NativeType("uint32_t")
-    public int numPrims(int index) { return nnumPrims(address(), index); }
     /** Returns the value of the {@code gpuMemoryMax} field. */
     @NativeType("int64_t")
     public long gpuMemoryMax() { return ngpuMemoryMax(address()); }
@@ -455,20 +408,6 @@ public class BGFXStats extends Struct {
     public static short nnumVertexBuffers(long struct) { return memGetShort(struct + BGFXStats.NUMVERTEXBUFFERS); }
     /** Unsafe version of {@link #numVertexDecls}. */
     public static short nnumVertexDecls(long struct) { return memGetShort(struct + BGFXStats.NUMVERTEXDECLS); }
-    /** Unsafe version of {@link #textureMemoryUsed}. */
-    public static long ntextureMemoryUsed(long struct) { return memGetLong(struct + BGFXStats.TEXTUREMEMORYUSED); }
-    /** Unsafe version of {@link #rtMemoryUsed}. */
-    public static long nrtMemoryUsed(long struct) { return memGetLong(struct + BGFXStats.RTMEMORYUSED); }
-    /** Unsafe version of {@link #transientVbUsed}. */
-    public static int ntransientVbUsed(long struct) { return memGetInt(struct + BGFXStats.TRANSIENTVBUSED); }
-    /** Unsafe version of {@link #transientIbUsed}. */
-    public static int ntransientIbUsed(long struct) { return memGetInt(struct + BGFXStats.TRANSIENTIBUSED); }
-    /** Unsafe version of {@link #numPrims}. */
-    public static IntBuffer nnumPrims(long struct) { return memIntBuffer(struct + BGFXStats.NUMPRIMS, BGFX_TOPOLOGY_COUNT); }
-    /** Unsafe version of {@link #numPrims(int) numPrims}. */
-    public static int nnumPrims(long struct, int index) {
-        return memGetInt(struct + BGFXStats.NUMPRIMS + check(index, BGFX_TOPOLOGY_COUNT) * 4);
-    }
     /** Unsafe version of {@link #gpuMemoryMax}. */
     public static long ngpuMemoryMax(long struct) { return memGetLong(struct + BGFXStats.GPUMEMORYMAX); }
     /** Unsafe version of {@link #gpuMemoryUsed}. */
@@ -605,24 +544,6 @@ public class BGFXStats extends Struct {
         /** Returns the value of the {@code numVertexDecls} field. */
         @NativeType("uint16_t")
         public short numVertexDecls() { return BGFXStats.nnumVertexDecls(address()); }
-        /** Returns the value of the {@code textureMemoryUsed} field. */
-        @NativeType("int64_t")
-        public long textureMemoryUsed() { return BGFXStats.ntextureMemoryUsed(address()); }
-        /** Returns the value of the {@code rtMemoryUsed} field. */
-        @NativeType("int64_t")
-        public long rtMemoryUsed() { return BGFXStats.nrtMemoryUsed(address()); }
-        /** Returns the value of the {@code transientVbUsed} field. */
-        @NativeType("int32_t")
-        public int transientVbUsed() { return BGFXStats.ntransientVbUsed(address()); }
-        /** Returns the value of the {@code transientIbUsed} field. */
-        @NativeType("int32_t")
-        public int transientIbUsed() { return BGFXStats.ntransientIbUsed(address()); }
-        /** Returns a {@link IntBuffer} view of the {@code numPrims} field. */
-        @NativeType("uint32_t[BGFX_TOPOLOGY_COUNT]")
-        public IntBuffer numPrims() { return BGFXStats.nnumPrims(address()); }
-        /** Returns the value at the specified index of the {@code numPrims} field. */
-        @NativeType("uint32_t")
-        public int numPrims(int index) { return BGFXStats.nnumPrims(address(), index); }
         /** Returns the value of the {@code gpuMemoryMax} field. */
         @NativeType("int64_t")
         public long gpuMemoryMax() { return BGFXStats.ngpuMemoryMax(address()); }

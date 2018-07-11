@@ -5,13 +5,13 @@
  */
 package org.lwjgl.egl;
 
-import javax.annotation.*;
-
 import java.nio.*;
 
 import org.lwjgl.system.*;
 
 import static org.lwjgl.system.Checks.*;
+import static org.lwjgl.system.JNI.*;
+import static org.lwjgl.system.MemoryUtil.*;
 
 /**
  * Native bindings to the <a target="_blank" href="https://www.khronos.org/registry/EGL/extensions/KHR/EGL_KHR_fence_sync.txt">KHR_fence_sync</a> extension.
@@ -55,49 +55,91 @@ public class KHRFenceSync {
     // --- [ eglCreateSyncKHR ] ---
 
     public static long neglCreateSyncKHR(long dpy, int type, long attrib_list) {
-        return KHRReusableSync.neglCreateSyncKHR(dpy, type, attrib_list);
+        long __functionAddress = EGL.getCapabilities().eglCreateSyncKHR;
+        if (CHECKS) {
+            check(__functionAddress);
+            check(dpy);
+        }
+        return callPPP(__functionAddress, dpy, type, attrib_list);
     }
 
     @NativeType("EGLSyncKHR")
-    public static long eglCreateSyncKHR(@NativeType("EGLDisplay") long dpy, @NativeType("EGLenum") int type, @Nullable @NativeType("EGLint const *") IntBuffer attrib_list) {
-        return KHRReusableSync.eglCreateSyncKHR(dpy, type, attrib_list);
+    public static long eglCreateSyncKHR(@NativeType("EGLDisplay") long dpy, @NativeType("EGLenum") int type, @NativeType("const EGLint *") IntBuffer attrib_list) {
+        if (CHECKS) {
+            checkNT(attrib_list, EGL10.EGL_NONE);
+        }
+        return neglCreateSyncKHR(dpy, type, memAddress(attrib_list));
     }
 
     // --- [ eglDestroySyncKHR ] ---
 
     @NativeType("EGLBoolean")
     public static boolean eglDestroySyncKHR(@NativeType("EGLDisplay") long dpy, @NativeType("EGLSyncKHR") long sync) {
-        return KHRReusableSync.eglDestroySyncKHR(dpy, sync);
+        long __functionAddress = EGL.getCapabilities().eglDestroySyncKHR;
+        if (CHECKS) {
+            check(__functionAddress);
+            check(dpy);
+            check(sync);
+        }
+        return callPPI(__functionAddress, dpy, sync) != 0;
     }
 
     // --- [ eglClientWaitSyncKHR ] ---
 
     @NativeType("EGLint")
     public static int eglClientWaitSyncKHR(@NativeType("EGLDisplay") long dpy, @NativeType("EGLSyncKHR") long sync, @NativeType("EGLint") int flags, @NativeType("EGLTimeKHR") long timeout) {
-        return KHRReusableSync.eglClientWaitSyncKHR(dpy, sync, flags, timeout);
+        long __functionAddress = EGL.getCapabilities().eglClientWaitSyncKHR;
+        if (CHECKS) {
+            check(__functionAddress);
+            check(dpy);
+            check(sync);
+        }
+        return callPPJI(__functionAddress, dpy, sync, flags, timeout);
     }
 
     // --- [ eglGetSyncAttribKHR ] ---
 
     public static int neglGetSyncAttribKHR(long dpy, long sync, int attribute, long value) {
-        return KHRReusableSync.neglGetSyncAttribKHR(dpy, sync, attribute, value);
+        long __functionAddress = EGL.getCapabilities().eglGetSyncAttribKHR;
+        if (CHECKS) {
+            check(__functionAddress);
+            check(dpy);
+            check(sync);
+        }
+        return callPPPI(__functionAddress, dpy, sync, attribute, value);
     }
 
     @NativeType("EGLBoolean")
     public static boolean eglGetSyncAttribKHR(@NativeType("EGLDisplay") long dpy, @NativeType("EGLSyncKHR") long sync, @NativeType("EGLint") int attribute, @NativeType("EGLint *") IntBuffer value) {
-        return KHRReusableSync.eglGetSyncAttribKHR(dpy, sync, attribute, value);
+        if (CHECKS) {
+            check(value, 1);
+        }
+        return neglGetSyncAttribKHR(dpy, sync, attribute, memAddress(value)) != 0;
     }
 
-    /** Array version of: {@link #eglCreateSyncKHR CreateSyncKHR} */
+    /** register Array version of: {@link #eglCreateSyncKHR CreateSyncKHR} */
     @NativeType("EGLSyncKHR")
-    public static long eglCreateSyncKHR(@NativeType("EGLDisplay") long dpy, @NativeType("EGLenum") int type, @Nullable @NativeType("EGLint const *") int[] attrib_list) {
-        return KHRReusableSync.eglCreateSyncKHR(dpy, type, attrib_list);
+    public static long eglCreateSyncKHR(@NativeType("EGLDisplay") long dpy, @NativeType("EGLenum") int type, @NativeType("const EGLint *") int[] attrib_list) {
+        long __functionAddress = EGL.getCapabilities().eglCreateSyncKHR;
+        if (CHECKS) {
+            check(__functionAddress);
+            check(dpy);
+            checkNT(attrib_list, EGL10.EGL_NONE);
+        }
+        return callPPP(__functionAddress, dpy, type, attrib_list);
     }
 
-    /** Array version of: {@link #eglGetSyncAttribKHR GetSyncAttribKHR} */
+    /** register Array version of: {@link #eglGetSyncAttribKHR GetSyncAttribKHR} */
     @NativeType("EGLBoolean")
     public static boolean eglGetSyncAttribKHR(@NativeType("EGLDisplay") long dpy, @NativeType("EGLSyncKHR") long sync, @NativeType("EGLint") int attribute, @NativeType("EGLint *") int[] value) {
-        return KHRReusableSync.eglGetSyncAttribKHR(dpy, sync, attribute, value);
+        long __functionAddress = EGL.getCapabilities().eglGetSyncAttribKHR;
+        if (CHECKS) {
+            check(__functionAddress);
+            check(dpy);
+            check(sync);
+            check(value, 1);
+        }
+        return callPPPI(__functionAddress, dpy, sync, attribute, value) != 0;
     }
 
 }

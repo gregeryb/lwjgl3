@@ -10,7 +10,6 @@ import java.nio.charset.*;
 import java.nio.file.*;
 import java.util.*;
 import java.util.regex.*;
-import java.util.stream.*;
 
 public final class URLValidator {
 
@@ -26,11 +25,9 @@ public final class URLValidator {
         if (0 < args.length) {
             parseDirectory(Paths.get("modules/lwjgl", args[0], "src/generated/java/org/lwjgl"));
         } else {
-            try (Stream<Path> modules = Files.list(Paths.get("modules/lwjgl"))) {
-                modules
-                    .filter(it -> Files.isDirectory(it))
-                    .forEach(it -> parseDirectory(it.resolve("src/generated/java/org/lwjgl")));
-            }
+            Files.list(Paths.get("modules/lwjgl"))
+                .filter(it -> Files.isDirectory(it))
+                .forEach(it -> parseDirectory(it.resolve("src/generated/java/org/lwjgl")));
         }
 
         System.out.println("Found " + LINKS.size() + " links.");
@@ -85,8 +82,8 @@ public final class URLValidator {
     }
 
     private static void parseDirectory(Path path) {
-        try (Stream<Path> files = Files.list(path)) {
-            files
+        try {
+            Files.list(path)
                 .forEach((it) -> {
                     try {
                         if (Files.isDirectory(it)) {

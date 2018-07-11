@@ -16,18 +16,63 @@ import static org.lwjgl.system.MemoryUtil.*;
 import static org.lwjgl.system.MemoryStack.*;
 
 /**
- * See {@link VkMemoryRequirements2}.
+ * Structure specifying memory requirements.
+ * 
+ * <h5>Valid Usage (Implicit)</h5>
+ * 
+ * <ul>
+ * <li>{@code sType} <b>must</b> be {@link KHRGetMemoryRequirements2#VK_STRUCTURE_TYPE_MEMORY_REQUIREMENTS_2_KHR STRUCTURE_TYPE_MEMORY_REQUIREMENTS_2_KHR}</li>
+ * <li>{@code pNext} <b>must</b> be {@code NULL} or a pointer to a valid instance of {@link VkMemoryDedicatedRequirementsKHR}</li>
+ * </ul>
+ * 
+ * <h5>See Also</h5>
+ * 
+ * <p>{@link VkMemoryRequirements}, {@link KHRGetMemoryRequirements2#vkGetBufferMemoryRequirements2KHR GetBufferMemoryRequirements2KHR}, {@link KHRGetMemoryRequirements2#vkGetImageMemoryRequirements2KHR GetImageMemoryRequirements2KHR}</p>
+ * 
+ * <h3>Member documentation</h3>
+ * 
+ * <ul>
+ * <li>{@code sType} &ndash; the type of this structure.</li>
+ * <li>{@code pNext} &ndash; {@code NULL} or a pointer to an extension-specific structure.</li>
+ * <li>{@code memoryRequirements} &ndash; a structure of type {@link VkMemoryRequirements} describing the memory requirements of the resource.</li>
+ * </ul>
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct VkMemoryRequirements2KHR {
  *     VkStructureType sType;
  *     void * pNext;
  *     {@link VkMemoryRequirements VkMemoryRequirements} memoryRequirements;
- * }</code></pre>
+ * }</pre></code>
  */
-public class VkMemoryRequirements2KHR extends VkMemoryRequirements2 {
+public class VkMemoryRequirements2KHR extends Struct implements NativeResource {
+
+    /** The struct size in bytes. */
+    public static final int SIZEOF;
+
+    public static final int ALIGNOF;
+
+    /** The struct member offsets. */
+    public static final int
+        STYPE,
+        PNEXT,
+        MEMORYREQUIREMENTS;
+
+    static {
+        Layout layout = __struct(
+            __member(4),
+            __member(POINTER_SIZE),
+            __member(VkMemoryRequirements.SIZEOF, VkMemoryRequirements.ALIGNOF)
+        );
+
+        SIZEOF = layout.getSize();
+        ALIGNOF = layout.getAlignment();
+
+        STYPE = layout.offsetof(0);
+        PNEXT = layout.offsetof(1);
+        MEMORYREQUIREMENTS = layout.offsetof(2);
+    }
 
     VkMemoryRequirements2KHR(long address, @Nullable ByteBuffer container) {
         super(address, container);
@@ -43,36 +88,17 @@ public class VkMemoryRequirements2KHR extends VkMemoryRequirements2 {
         this(memAddress(container), __checkContainer(container, SIZEOF));
     }
 
-    /** Sets the specified value to the {@code sType} field. */
     @Override
-    public VkMemoryRequirements2KHR sType(@NativeType("VkStructureType") int value) { nsType(address(), value); return this; }
-    /** Sets the specified value to the {@code pNext} field. */
-    @Override
-    public VkMemoryRequirements2KHR pNext(@NativeType("void *") long value) { npNext(address(), value); return this; }
+    public int sizeof() { return SIZEOF; }
 
-    /** Initializes this struct with the specified values. */
-    @Override
-    public VkMemoryRequirements2KHR set(
-        int sType,
-        long pNext
-    ) {
-        sType(sType);
-        pNext(pNext);
-
-        return this;
-    }
-
-    /**
-     * Copies the specified struct data to this struct.
-     *
-     * @param src the source struct
-     *
-     * @return this struct
-     */
-    public VkMemoryRequirements2KHR set(VkMemoryRequirements2KHR src) {
-        memCopy(src.address(), address(), SIZEOF);
-        return this;
-    }
+    /** Returns the value of the {@code sType} field. */
+    @NativeType("VkStructureType")
+    public int sType() { return nsType(address()); }
+    /** Returns the value of the {@code pNext} field. */
+    @NativeType("void *")
+    public long pNext() { return npNext(address()); }
+    /** Returns a {@link VkMemoryRequirements} view of the {@code memoryRequirements} field. */
+    public VkMemoryRequirements memoryRequirements() { return nmemoryRequirements(address()); }
 
     // -----------------------------------
 
@@ -215,8 +241,17 @@ public class VkMemoryRequirements2KHR extends VkMemoryRequirements2 {
 
     // -----------------------------------
 
+    /** Unsafe version of {@link #sType}. */
+    public static int nsType(long struct) { return memGetInt(struct + VkMemoryRequirements2KHR.STYPE); }
+    /** Unsafe version of {@link #pNext}. */
+    public static long npNext(long struct) { return memGetAddress(struct + VkMemoryRequirements2KHR.PNEXT); }
+    /** Unsafe version of {@link #memoryRequirements}. */
+    public static VkMemoryRequirements nmemoryRequirements(long struct) { return VkMemoryRequirements.create(struct + VkMemoryRequirements2KHR.MEMORYREQUIREMENTS); }
+
+    // -----------------------------------
+
     /** An array of {@link VkMemoryRequirements2KHR} structs. */
-    public static class Buffer extends VkMemoryRequirements2.Buffer {
+    public static class Buffer extends StructBuffer<VkMemoryRequirements2KHR, Buffer> implements NativeResource {
 
         /**
          * Creates a new {@link VkMemoryRequirements2KHR.Buffer} instance backed by the specified container.
@@ -228,7 +263,7 @@ public class VkMemoryRequirements2KHR extends VkMemoryRequirements2 {
          * <p>The created buffer instance holds a strong reference to the container object.</p>
          */
         public Buffer(ByteBuffer container) {
-            super(container);
+            super(container, container.remaining() / SIZEOF);
         }
 
         public Buffer(long address, int cap) {
@@ -254,12 +289,19 @@ public class VkMemoryRequirements2KHR extends VkMemoryRequirements2 {
             return new VkMemoryRequirements2KHR(address, container);
         }
 
-        /** Sets the specified value to the {@code sType} field. */
         @Override
-        public VkMemoryRequirements2KHR.Buffer sType(@NativeType("VkStructureType") int value) { VkMemoryRequirements2KHR.nsType(address(), value); return this; }
-        /** Sets the specified value to the {@code pNext} field. */
-        @Override
-        public VkMemoryRequirements2KHR.Buffer pNext(@NativeType("void *") long value) { VkMemoryRequirements2KHR.npNext(address(), value); return this; }
+        public int sizeof() {
+            return SIZEOF;
+        }
+
+        /** Returns the value of the {@code sType} field. */
+        @NativeType("VkStructureType")
+        public int sType() { return VkMemoryRequirements2KHR.nsType(address()); }
+        /** Returns the value of the {@code pNext} field. */
+        @NativeType("void *")
+        public long pNext() { return VkMemoryRequirements2KHR.npNext(address()); }
+        /** Returns a {@link VkMemoryRequirements} view of the {@code memoryRequirements} field. */
+        public VkMemoryRequirements memoryRequirements() { return VkMemoryRequirements2KHR.nmemoryRequirements(address()); }
 
     }
 

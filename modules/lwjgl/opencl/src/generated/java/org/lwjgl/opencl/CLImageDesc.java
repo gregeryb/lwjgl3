@@ -56,7 +56,7 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct cl_image_desc {
  *     cl_mem_object_type image_type;
  *     size_t image_width;
@@ -68,7 +68,7 @@ import static org.lwjgl.system.MemoryStack.*;
  *     cl_uint num_mip_levels;
  *     cl_uint num_samples;
  *     cl_mem buffer;
- * }</code></pre>
+ * }</pre></code>
  */
 @NativeType("struct cl_image_desc")
 public class CLImageDesc extends Struct implements NativeResource {
@@ -76,7 +76,6 @@ public class CLImageDesc extends Struct implements NativeResource {
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */

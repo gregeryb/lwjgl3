@@ -16,18 +16,66 @@ import static org.lwjgl.system.MemoryUtil.*;
 import static org.lwjgl.system.MemoryStack.*;
 
 /**
- * See {@link VkBindImagePlaneMemoryInfo}.
+ * Structure specifying how to bind an image plane to memory.
+ * 
+ * <h5>Valid Usage</h5>
+ * 
+ * <ul>
+ * <li>{@code planeAspect} <b>must</b> be a single valid plane aspect for the image format (that is, {@code planeAspect} <b>must</b> be {@link KHRSamplerYcbcrConversion#VK_IMAGE_ASPECT_PLANE_0_BIT_KHR IMAGE_ASPECT_PLANE_0_BIT_KHR} or {@link KHRSamplerYcbcrConversion#VK_IMAGE_ASPECT_PLANE_1_BIT_KHR IMAGE_ASPECT_PLANE_1_BIT_KHR} for “{@code _2PLANE}” formats and {@code planeAspect} <b>must</b> be {@link KHRSamplerYcbcrConversion#VK_IMAGE_ASPECT_PLANE_0_BIT_KHR IMAGE_ASPECT_PLANE_0_BIT_KHR}, {@link KHRSamplerYcbcrConversion#VK_IMAGE_ASPECT_PLANE_1_BIT_KHR IMAGE_ASPECT_PLANE_1_BIT_KHR}, or {@link KHRSamplerYcbcrConversion#VK_IMAGE_ASPECT_PLANE_2_BIT_KHR IMAGE_ASPECT_PLANE_2_BIT_KHR} for “{@code _3PLANE}” formats)</li>
+ * <li>A single call to {@link KHRBindMemory2#vkBindImageMemory2KHR BindImageMemory2KHR} <b>must</b> bind all or none of the planes of an image (i.e. bindings to all planes of an image <b>must</b> be made in a single {@link KHRBindMemory2#vkBindImageMemory2KHR BindImageMemory2KHR} call), as separate bindings</li>
+ * </ul>
+ * 
+ * <h5>Valid Usage (Implicit)</h5>
+ * 
+ * <ul>
+ * <li>{@code sType} <b>must</b> be {@link KHRSamplerYcbcrConversion#VK_STRUCTURE_TYPE_BIND_IMAGE_PLANE_MEMORY_INFO_KHR STRUCTURE_TYPE_BIND_IMAGE_PLANE_MEMORY_INFO_KHR}</li>
+ * <li>{@code planeAspect} <b>must</b> be a valid {@code VkImageAspectFlagBits} value</li>
+ * </ul>
+ * 
+ * <h3>Member documentation</h3>
+ * 
+ * <ul>
+ * <li>{@code sType} &ndash; the type of this structure.</li>
+ * <li>{@code pNext} &ndash; {@code NULL} or a pointer to an extension-specific structure.</li>
+ * <li>{@code planeAspect} &ndash; the aspect of the disjoint image plane to bind.</li>
+ * </ul>
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct VkBindImagePlaneMemoryInfoKHR {
  *     VkStructureType sType;
- *     void const * pNext;
+ *     const void * pNext;
  *     VkImageAspectFlagBits planeAspect;
- * }</code></pre>
+ * }</pre></code>
  */
-public class VkBindImagePlaneMemoryInfoKHR extends VkBindImagePlaneMemoryInfo {
+public class VkBindImagePlaneMemoryInfoKHR extends Struct implements NativeResource {
+
+    /** The struct size in bytes. */
+    public static final int SIZEOF;
+
+    public static final int ALIGNOF;
+
+    /** The struct member offsets. */
+    public static final int
+        STYPE,
+        PNEXT,
+        PLANEASPECT;
+
+    static {
+        Layout layout = __struct(
+            __member(4),
+            __member(POINTER_SIZE),
+            __member(4)
+        );
+
+        SIZEOF = layout.getSize();
+        ALIGNOF = layout.getAlignment();
+
+        STYPE = layout.offsetof(0);
+        PNEXT = layout.offsetof(1);
+        PLANEASPECT = layout.offsetof(2);
+    }
 
     VkBindImagePlaneMemoryInfoKHR(long address, @Nullable ByteBuffer container) {
         super(address, container);
@@ -43,18 +91,27 @@ public class VkBindImagePlaneMemoryInfoKHR extends VkBindImagePlaneMemoryInfo {
         this(memAddress(container), __checkContainer(container, SIZEOF));
     }
 
-    /** Sets the specified value to the {@code sType} field. */
     @Override
+    public int sizeof() { return SIZEOF; }
+
+    /** Returns the value of the {@code sType} field. */
+    @NativeType("VkStructureType")
+    public int sType() { return nsType(address()); }
+    /** Returns the value of the {@code pNext} field. */
+    @NativeType("const void *")
+    public long pNext() { return npNext(address()); }
+    /** Returns the value of the {@code planeAspect} field. */
+    @NativeType("VkImageAspectFlagBits")
+    public int planeAspect() { return nplaneAspect(address()); }
+
+    /** Sets the specified value to the {@code sType} field. */
     public VkBindImagePlaneMemoryInfoKHR sType(@NativeType("VkStructureType") int value) { nsType(address(), value); return this; }
     /** Sets the specified value to the {@code pNext} field. */
-    @Override
-    public VkBindImagePlaneMemoryInfoKHR pNext(@NativeType("void const *") long value) { npNext(address(), value); return this; }
+    public VkBindImagePlaneMemoryInfoKHR pNext(@NativeType("const void *") long value) { npNext(address(), value); return this; }
     /** Sets the specified value to the {@code planeAspect} field. */
-    @Override
     public VkBindImagePlaneMemoryInfoKHR planeAspect(@NativeType("VkImageAspectFlagBits") int value) { nplaneAspect(address(), value); return this; }
 
     /** Initializes this struct with the specified values. */
-    @Override
     public VkBindImagePlaneMemoryInfoKHR set(
         int sType,
         long pNext,
@@ -220,8 +277,24 @@ public class VkBindImagePlaneMemoryInfoKHR extends VkBindImagePlaneMemoryInfo {
 
     // -----------------------------------
 
+    /** Unsafe version of {@link #sType}. */
+    public static int nsType(long struct) { return memGetInt(struct + VkBindImagePlaneMemoryInfoKHR.STYPE); }
+    /** Unsafe version of {@link #pNext}. */
+    public static long npNext(long struct) { return memGetAddress(struct + VkBindImagePlaneMemoryInfoKHR.PNEXT); }
+    /** Unsafe version of {@link #planeAspect}. */
+    public static int nplaneAspect(long struct) { return memGetInt(struct + VkBindImagePlaneMemoryInfoKHR.PLANEASPECT); }
+
+    /** Unsafe version of {@link #sType(int) sType}. */
+    public static void nsType(long struct, int value) { memPutInt(struct + VkBindImagePlaneMemoryInfoKHR.STYPE, value); }
+    /** Unsafe version of {@link #pNext(long) pNext}. */
+    public static void npNext(long struct, long value) { memPutAddress(struct + VkBindImagePlaneMemoryInfoKHR.PNEXT, value); }
+    /** Unsafe version of {@link #planeAspect(int) planeAspect}. */
+    public static void nplaneAspect(long struct, int value) { memPutInt(struct + VkBindImagePlaneMemoryInfoKHR.PLANEASPECT, value); }
+
+    // -----------------------------------
+
     /** An array of {@link VkBindImagePlaneMemoryInfoKHR} structs. */
-    public static class Buffer extends VkBindImagePlaneMemoryInfo.Buffer {
+    public static class Buffer extends StructBuffer<VkBindImagePlaneMemoryInfoKHR, Buffer> implements NativeResource {
 
         /**
          * Creates a new {@link VkBindImagePlaneMemoryInfoKHR.Buffer} instance backed by the specified container.
@@ -233,7 +306,7 @@ public class VkBindImagePlaneMemoryInfoKHR extends VkBindImagePlaneMemoryInfo {
          * <p>The created buffer instance holds a strong reference to the container object.</p>
          */
         public Buffer(ByteBuffer container) {
-            super(container);
+            super(container, container.remaining() / SIZEOF);
         }
 
         public Buffer(long address, int cap) {
@@ -259,14 +332,26 @@ public class VkBindImagePlaneMemoryInfoKHR extends VkBindImagePlaneMemoryInfo {
             return new VkBindImagePlaneMemoryInfoKHR(address, container);
         }
 
-        /** Sets the specified value to the {@code sType} field. */
         @Override
+        public int sizeof() {
+            return SIZEOF;
+        }
+
+        /** Returns the value of the {@code sType} field. */
+        @NativeType("VkStructureType")
+        public int sType() { return VkBindImagePlaneMemoryInfoKHR.nsType(address()); }
+        /** Returns the value of the {@code pNext} field. */
+        @NativeType("const void *")
+        public long pNext() { return VkBindImagePlaneMemoryInfoKHR.npNext(address()); }
+        /** Returns the value of the {@code planeAspect} field. */
+        @NativeType("VkImageAspectFlagBits")
+        public int planeAspect() { return VkBindImagePlaneMemoryInfoKHR.nplaneAspect(address()); }
+
+        /** Sets the specified value to the {@code sType} field. */
         public VkBindImagePlaneMemoryInfoKHR.Buffer sType(@NativeType("VkStructureType") int value) { VkBindImagePlaneMemoryInfoKHR.nsType(address(), value); return this; }
         /** Sets the specified value to the {@code pNext} field. */
-        @Override
-        public VkBindImagePlaneMemoryInfoKHR.Buffer pNext(@NativeType("void const *") long value) { VkBindImagePlaneMemoryInfoKHR.npNext(address(), value); return this; }
+        public VkBindImagePlaneMemoryInfoKHR.Buffer pNext(@NativeType("const void *") long value) { VkBindImagePlaneMemoryInfoKHR.npNext(address(), value); return this; }
         /** Sets the specified value to the {@code planeAspect} field. */
-        @Override
         public VkBindImagePlaneMemoryInfoKHR.Buffer planeAspect(@NativeType("VkImageAspectFlagBits") int value) { VkBindImagePlaneMemoryInfoKHR.nplaneAspect(address(), value); return this; }
 
     }

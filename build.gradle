@@ -195,15 +195,10 @@ enum Artifacts {
         "A 3D triangle mesh optimization library that improves on existing mesh preprocessing techniques.",
         Platforms.ALL
     ),
-    VMA(
-        "lwjgl-vma", "LWJGL - Vulkan Memory Allocator bindings",
-        "An easy to integrate Vulkan memory allocation library.",
-        Platforms.ALL
-    ),
     VULKAN(
         "lwjgl-vulkan", "LWJGL - Vulkan bindings",
         "A new generation graphics and compute API that provides high-efficiency, cross-platform access to modern GPUs used in a wide variety of devices from PCs and consoles to mobile phones and embedded platforms.",
-        Platforms.MACOS
+        Platforms.JAVA_ONLY
     ),
     XXHASH(
         "lwjgl-xxhash", "LWJGL - xxHash bindings",
@@ -284,11 +279,11 @@ artifacts {
     the above example is going to look like this in Gradle:
     -------------------------------------------
     compile 'org.lwjgl:lwjgl:$lwjglVersion' // NOTE: this is optional, all binding artifacts have a dependency on lwjgl
-        compile 'org.lwjgl:lwjgl:$lwjglVersion:natives-$lwjglArch'
+        runtime 'org.lwjgl:lwjgl:$lwjglVersion:natives-$lwjglArch'
     compile 'org.lwjgl:lwjgl-glfw:$lwjglVersion'
-        compile 'org.lwjgl:lwjgl-glfw:$lwjglVersion:natives-$lwjglArch'
+        runtime 'org.lwjgl:lwjgl-glfw:$lwjglVersion:natives-$lwjglArch'
     compile 'org.lwjgl:lwjgl-stb:$lwjglVersion'
-        compile 'org.lwjgl:lwjgl-stb:$lwjglVersion:natives-$lwjglArch'
+        runtime 'org.lwjgl:lwjgl-stb:$lwjglVersion:natives-$lwjglArch'
     -------------------------------------------
     and a whole lot more verbose in Maven. Hopefully, the automation
     is going to alleviate the pain.

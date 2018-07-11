@@ -40,21 +40,20 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct VkPastPresentationTimingGOOGLE {
  *     uint32_t presentID;
  *     uint64_t desiredPresentTime;
  *     uint64_t actualPresentTime;
  *     uint64_t earliestPresentTime;
  *     uint64_t presentMargin;
- * }</code></pre>
+ * }</pre></code>
  */
 public class VkPastPresentationTimingGOOGLE extends Struct implements NativeResource {
 
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */

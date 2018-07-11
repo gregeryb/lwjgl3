@@ -140,20 +140,7 @@ public final class MemoryUtil {
      * @return the {@link MemoryAllocator} instance
      */
     public static MemoryAllocator getAllocator() {
-        return getAllocator(false);
-    }
-
-    /**
-     * Returns the {@link MemoryAllocator} instance used internally by the explicit memory management API ({@link #memAlloc}, {@link #memFree}, etc).
-     *
-     * @param tracked whether allocations will be tracked for memory leaks, if {@link Configuration#DEBUG_MEMORY_ALLOCATOR} is enabled.
-     *
-     * @return the {@link MemoryAllocator} instance
-     */
-    public static MemoryAllocator getAllocator(boolean tracked) {
-        return tracked
-            ? ALLOCATOR
-            : ALLOCATOR_IMPL;
+        return ALLOCATOR_IMPL;
     }
 
     // --- [ memAlloc ] ---
@@ -563,13 +550,12 @@ public final class MemoryUtil {
         /**
          * Reports allocated memory.
          *
-         * @param address    the address of the memory allocated. May be {@link #NULL}.
          * @param memory     the amount of memory allocated, in bytes
          * @param threadId   id of the thread that allocated the memory. May be {@link #NULL}.
          * @param threadName name of the thread that allocated the memory. May be {@code null}.
          * @param stacktrace the allocation stacktrace. May be {@code null}.
          */
-        void invoke(long address, long memory, long threadId, @Nullable String threadName, @Nullable StackTraceElement... stacktrace);
+        void invoke(long memory, long threadId, @Nullable String threadName, @Nullable StackTraceElement... stacktrace);
 
         /** Specifies how to aggregate the reported allocations. */
         enum Aggregate {
@@ -1179,7 +1165,7 @@ public final class MemoryUtil {
      * @param ptr   the starting memory address
      * @param value the value to set (memSet will convert it to unsigned byte)
      */
-    public static <T extends CustomBuffer<T>> void memSet(T ptr, int value) { memSet(memAddress(ptr), value, Integer.toUnsignedLong(ptr.remaining()) * ptr.sizeof()); }
+    public static <T extends CustomBuffer<T>> void memSet(T ptr, int value) { memSet(memAddress(ptr), value, (long)ptr.remaining() * ptr.sizeof()); }
 
     /**
      * Sets all bytes in a specified block of memory to a copy of another block.
@@ -1282,7 +1268,7 @@ public final class MemoryUtil {
         if (CHECKS) {
             check(src, dst.remaining());
         }
-        memCopy(memAddress(src), memAddress(dst), Integer.toUnsignedLong(src.remaining()) * src.sizeof());
+        memCopy(memAddress(src), memAddress(dst), (long)src.remaining() * src.sizeof());
     }
 
     /*  -------------------------------------
@@ -1321,34 +1307,22 @@ public final class MemoryUtil {
         ACCESSOR.memCopy(src, dst, bytes);
     }
 
-    public static boolean memGetBoolean(long ptr) { return ACCESSOR.memGetByte(ptr) != 0; }
-    public static byte memGetByte(long ptr)       { return ACCESSOR.memGetByte(ptr); }
-    public static short memGetShort(long ptr)     { return ACCESSOR.memGetShort(ptr); }
-    public static int memGetInt(long ptr)         { return ACCESSOR.memGetInt(ptr); }
-    public static long memGetLong(long ptr)       { return ACCESSOR.memGetLong(ptr); }
-    public static float memGetFloat(long ptr)     { return ACCESSOR.memGetFloat(ptr); }
-    public static double memGetDouble(long ptr)   { return ACCESSOR.memGetDouble(ptr); }
-    public static long memGetAddress(long ptr) {
-        if (BITS64) {
-            return memGetLong(ptr);
-        } else {
-            return Integer.toUnsignedLong(memGetInt(ptr));
-        }
-    }
+    public static boolean memGetBoolean(long ptr)           { return ACCESSOR.memGetByte(ptr) != 0; }
+    public static byte memGetByte(long ptr)                 { return ACCESSOR.memGetByte(ptr); }
+    public static short memGetShort(long ptr)               { return ACCESSOR.memGetShort(ptr); }
+    public static int memGetInt(long ptr)                   { return ACCESSOR.memGetInt(ptr); }
+    public static long memGetLong(long ptr)                 { return ACCESSOR.memGetLong(ptr);}
+    public static float memGetFloat(long ptr)               { return ACCESSOR.memGetFloat(ptr);}
+    public static double memGetDouble(long ptr)             { return ACCESSOR.memGetDouble(ptr);}
+    public static long memGetAddress(long ptr)              { return ACCESSOR.memGetAddress(ptr);}
 
-    public static void memPutByte(long ptr, byte value)     { ACCESSOR.memPutByte(ptr, value); }
-    public static void memPutShort(long ptr, short value)   { ACCESSOR.memPutShort(ptr, value); }
-    public static void memPutInt(long ptr, int value)       { ACCESSOR.memPutInt(ptr, value); }
-    public static void memPutLong(long ptr, long value)     { ACCESSOR.memPutLong(ptr, value); }
-    public static void memPutFloat(long ptr, float value)   { ACCESSOR.memPutFloat(ptr, value); }
-    public static void memPutDouble(long ptr, double value) { ACCESSOR.memPutDouble(ptr, value); }
-    public static void memPutAddress(long ptr, long value) {
-        if (BITS64) {
-            memPutLong(ptr, value);
-        } else {
-            memPutInt(ptr, (int)value);
-        }
-    }
+    public static void memPutByte(long ptr, byte value)     { ACCESSOR.memPutByte(ptr, value);}
+    public static void memPutShort(long ptr, short value)   { ACCESSOR.memPutShort(ptr, value);}
+    public static void memPutInt(long ptr, int value)       { ACCESSOR.memPutInt(ptr, value);}
+    public static void memPutLong(long ptr, long value)     { ACCESSOR.memPutLong(ptr, value);}
+    public static void memPutFloat(long ptr, float value)   { ACCESSOR.memPutFloat(ptr, value);}
+    public static void memPutDouble(long ptr, double value) { ACCESSOR.memPutDouble(ptr, value);}
+    public static void memPutAddress(long ptr, long value)  { ACCESSOR.memPutAddress(ptr, value);}
 
     /*  -------------------------------------
         -------------------------------------
@@ -1389,7 +1363,7 @@ public final class MemoryUtil {
      *
      * @param text the text to encode
      *
-     * @return the encoded text. The returned buffer must be deallocated manually with {@link #memFree}.
+     * @return the encoded text
      */
     public static ByteBuffer memASCII(CharSequence text) {
         return memASCII(text, true);
@@ -1407,7 +1381,7 @@ public final class MemoryUtil {
      * @param text           the text to encode
      * @param nullTerminated if true, the text will be terminated with a '\0'.
      *
-     * @return the encoded text. The returned buffer must be deallocated manually with {@link #memFree}.
+     * @return the encoded text
      */
     public static ByteBuffer memASCII(CharSequence text, boolean nullTerminated) {
         ByteBuffer target = memAlloc(memLengthASCII(text, nullTerminated));
@@ -1467,7 +1441,7 @@ public final class MemoryUtil {
      *
      * @param text the text to encode
      *
-     * @return the encoded text. The returned buffer must be deallocated manually with {@link #memFree}.
+     * @return the encoded text
      */
     public static ByteBuffer memUTF8(CharSequence text) {
         return memUTF8(text, true);
@@ -1485,7 +1459,7 @@ public final class MemoryUtil {
      * @param text           the text to encode
      * @param nullTerminated if true, the text will be terminated with a '\0'.
      *
-     * @return the encoded text. The returned buffer must be deallocated manually with {@link #memFree}.
+     * @return the encoded text
      */
     public static ByteBuffer memUTF8(CharSequence text, boolean nullTerminated) {
         ByteBuffer target = memAlloc(memLengthUTF8(text, nullTerminated));
@@ -1547,7 +1521,7 @@ public final class MemoryUtil {
      *
      * @param text the text to encode
      *
-     * @return the encoded text. The returned buffer must be deallocated manually with {@link #memFree}.
+     * @return the encoded text
      */
     public static ByteBuffer memUTF16(CharSequence text) {
         return memUTF16(text, true);
@@ -1565,7 +1539,7 @@ public final class MemoryUtil {
      * @param text           the text to encode
      * @param nullTerminated if true, the text will be terminated with a '\0'.
      *
-     * @return the encoded text. The returned buffer must be deallocated manually with {@link #memFree}.
+     * @return the encoded text
      */
     public static ByteBuffer memUTF16(CharSequence text, boolean nullTerminated) {
         ByteBuffer target = memAlloc(memLengthUTF16(text, nullTerminated));
@@ -1812,7 +1786,7 @@ public final class MemoryUtil {
      * @return the decoded {@link String}
      */
     public static String memASCII(ByteBuffer buffer, int length) {
-        return MemoryTextDecoding.decodeASCII(buffer, length, buffer.position());
+        return MemoryTextUtil.decodeASCII(buffer, length, buffer.position());
     }
 
     /**
@@ -1828,7 +1802,7 @@ public final class MemoryUtil {
      */
     public static String memASCII(ByteBuffer buffer, int length, int offset) {
         Objects.requireNonNull(buffer);
-        return MemoryTextDecoding.decodeASCII(buffer, length, offset);
+        return MemoryTextUtil.decodeASCII(buffer, length, offset);
     }
 
     /**
@@ -1879,7 +1853,7 @@ public final class MemoryUtil {
      * @return the decoded {@link String}
      */
     public static String memUTF8(ByteBuffer buffer, int length) {
-        return MemoryTextDecoding.decodeUTF8(buffer, length, buffer.position());
+        return MemoryTextUtil.decodeUTF8(buffer, length, buffer.position());
     }
 
     /**
@@ -1895,7 +1869,7 @@ public final class MemoryUtil {
      */
     public static String memUTF8(ByteBuffer buffer, int length, int offset) {
         Objects.requireNonNull(buffer);
-        return MemoryTextDecoding.decodeUTF8(buffer, length, offset);
+        return MemoryTextUtil.decodeUTF8(buffer, length, offset);
     }
 
     /**
@@ -1937,7 +1911,7 @@ public final class MemoryUtil {
     /**
      * Decodes the bytes with index {@code [position(), position()+(length*2)}) in {@code buffer}, as a UTF-16 string.
      *
-     * <p>The current {@code position} and {@code limit} of the specified {@code buffer} are not affected by this operation.</p>
+     * <p>The current {@code position} and {@code limit} of the specified {@code buffer} are not affected by this operation.></p>
      *
      * @param buffer the {@link ByteBuffer} to decode
      * @param length the number of characters to decode
@@ -1945,7 +1919,7 @@ public final class MemoryUtil {
      * @return the decoded {@link String}
      */
     public static String memUTF16(ByteBuffer buffer, int length) {
-        return MemoryTextDecoding.decodeUTF16(buffer, length, buffer.position());
+        return MemoryTextUtil.decodeUTF16(buffer, length, buffer.position());
     }
 
     /**
@@ -1961,7 +1935,7 @@ public final class MemoryUtil {
      */
     public static String memUTF16(ByteBuffer buffer, int length, int offset) {
         Objects.requireNonNull(buffer);
-        return MemoryTextDecoding.decodeUTF16(buffer, length, offset);
+        return MemoryTextUtil.decodeUTF16(buffer, length, offset);
     }
 
 }

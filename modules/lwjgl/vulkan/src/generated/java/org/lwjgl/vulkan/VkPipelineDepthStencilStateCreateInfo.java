@@ -58,10 +58,10 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct VkPipelineDepthStencilStateCreateInfo {
  *     VkStructureType sType;
- *     void const * pNext;
+ *     const void * pNext;
  *     VkPipelineDepthStencilStateCreateFlags flags;
  *     VkBool32 depthTestEnable;
  *     VkBool32 depthWriteEnable;
@@ -72,14 +72,13 @@ import static org.lwjgl.system.MemoryStack.*;
  *     {@link VkStencilOpState VkStencilOpState} back;
  *     float minDepthBounds;
  *     float maxDepthBounds;
- * }</code></pre>
+ * }</pre></code>
  */
 public class VkPipelineDepthStencilStateCreateInfo extends Struct implements NativeResource {
 
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */
@@ -151,7 +150,7 @@ public class VkPipelineDepthStencilStateCreateInfo extends Struct implements Nat
     @NativeType("VkStructureType")
     public int sType() { return nsType(address()); }
     /** Returns the value of the {@code pNext} field. */
-    @NativeType("void const *")
+    @NativeType("const void *")
     public long pNext() { return npNext(address()); }
     /** Returns the value of the {@code flags} field. */
     @NativeType("VkPipelineDepthStencilStateCreateFlags")
@@ -173,12 +172,8 @@ public class VkPipelineDepthStencilStateCreateInfo extends Struct implements Nat
     public boolean stencilTestEnable() { return nstencilTestEnable(address()) != 0; }
     /** Returns a {@link VkStencilOpState} view of the {@code front} field. */
     public VkStencilOpState front() { return nfront(address()); }
-    /** Passes the {@code front} field to the specified {@link java.util.function.Consumer Consumer}. */
-    public VkPipelineDepthStencilStateCreateInfo front(java.util.function.Consumer<VkStencilOpState> consumer) { consumer.accept(front()); return this; }
     /** Returns a {@link VkStencilOpState} view of the {@code back} field. */
     public VkStencilOpState back() { return nback(address()); }
-    /** Passes the {@code back} field to the specified {@link java.util.function.Consumer Consumer}. */
-    public VkPipelineDepthStencilStateCreateInfo back(java.util.function.Consumer<VkStencilOpState> consumer) { consumer.accept(back()); return this; }
     /** Returns the value of the {@code minDepthBounds} field. */
     public float minDepthBounds() { return nminDepthBounds(address()); }
     /** Returns the value of the {@code maxDepthBounds} field. */
@@ -187,7 +182,7 @@ public class VkPipelineDepthStencilStateCreateInfo extends Struct implements Nat
     /** Sets the specified value to the {@code sType} field. */
     public VkPipelineDepthStencilStateCreateInfo sType(@NativeType("VkStructureType") int value) { nsType(address(), value); return this; }
     /** Sets the specified value to the {@code pNext} field. */
-    public VkPipelineDepthStencilStateCreateInfo pNext(@NativeType("void const *") long value) { npNext(address(), value); return this; }
+    public VkPipelineDepthStencilStateCreateInfo pNext(@NativeType("const void *") long value) { npNext(address(), value); return this; }
     /** Sets the specified value to the {@code flags} field. */
     public VkPipelineDepthStencilStateCreateInfo flags(@NativeType("VkPipelineDepthStencilStateCreateFlags") int value) { nflags(address(), value); return this; }
     /** Sets the specified value to the {@code depthTestEnable} field. */
@@ -493,7 +488,7 @@ public class VkPipelineDepthStencilStateCreateInfo extends Struct implements Nat
         @NativeType("VkStructureType")
         public int sType() { return VkPipelineDepthStencilStateCreateInfo.nsType(address()); }
         /** Returns the value of the {@code pNext} field. */
-        @NativeType("void const *")
+        @NativeType("const void *")
         public long pNext() { return VkPipelineDepthStencilStateCreateInfo.npNext(address()); }
         /** Returns the value of the {@code flags} field. */
         @NativeType("VkPipelineDepthStencilStateCreateFlags")
@@ -515,12 +510,8 @@ public class VkPipelineDepthStencilStateCreateInfo extends Struct implements Nat
         public boolean stencilTestEnable() { return VkPipelineDepthStencilStateCreateInfo.nstencilTestEnable(address()) != 0; }
         /** Returns a {@link VkStencilOpState} view of the {@code front} field. */
         public VkStencilOpState front() { return VkPipelineDepthStencilStateCreateInfo.nfront(address()); }
-        /** Passes the {@code front} field to the specified {@link java.util.function.Consumer Consumer}. */
-        public VkPipelineDepthStencilStateCreateInfo.Buffer front(java.util.function.Consumer<VkStencilOpState> consumer) { consumer.accept(front()); return this; }
         /** Returns a {@link VkStencilOpState} view of the {@code back} field. */
         public VkStencilOpState back() { return VkPipelineDepthStencilStateCreateInfo.nback(address()); }
-        /** Passes the {@code back} field to the specified {@link java.util.function.Consumer Consumer}. */
-        public VkPipelineDepthStencilStateCreateInfo.Buffer back(java.util.function.Consumer<VkStencilOpState> consumer) { consumer.accept(back()); return this; }
         /** Returns the value of the {@code minDepthBounds} field. */
         public float minDepthBounds() { return VkPipelineDepthStencilStateCreateInfo.nminDepthBounds(address()); }
         /** Returns the value of the {@code maxDepthBounds} field. */
@@ -529,7 +520,7 @@ public class VkPipelineDepthStencilStateCreateInfo extends Struct implements Nat
         /** Sets the specified value to the {@code sType} field. */
         public VkPipelineDepthStencilStateCreateInfo.Buffer sType(@NativeType("VkStructureType") int value) { VkPipelineDepthStencilStateCreateInfo.nsType(address(), value); return this; }
         /** Sets the specified value to the {@code pNext} field. */
-        public VkPipelineDepthStencilStateCreateInfo.Buffer pNext(@NativeType("void const *") long value) { VkPipelineDepthStencilStateCreateInfo.npNext(address(), value); return this; }
+        public VkPipelineDepthStencilStateCreateInfo.Buffer pNext(@NativeType("const void *") long value) { VkPipelineDepthStencilStateCreateInfo.npNext(address(), value); return this; }
         /** Sets the specified value to the {@code flags} field. */
         public VkPipelineDepthStencilStateCreateInfo.Buffer flags(@NativeType("VkPipelineDepthStencilStateCreateFlags") int value) { VkPipelineDepthStencilStateCreateInfo.nflags(address(), value); return this; }
         /** Sets the specified value to the {@code depthTestEnable} field. */

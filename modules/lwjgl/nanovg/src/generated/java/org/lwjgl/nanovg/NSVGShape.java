@@ -38,7 +38,7 @@ import static org.lwjgl.system.MemoryUtil.*;
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct NSVGshape {
  *     char id[64];
  *     {@link NSVGPaint NSVGpaint} fill;
@@ -56,7 +56,7 @@ import static org.lwjgl.system.MemoryUtil.*;
  *     float bounds[4];
  *     {@link NSVGPath NSVGpath} * paths;
  *     {@link NSVGShape NSVGshape} * next;
- * }</code></pre>
+ * }</pre></code>
  */
 @NativeType("struct NSVGshape")
 public class NSVGShape extends Struct {
@@ -64,7 +64,6 @@ public class NSVGShape extends Struct {
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */
@@ -231,7 +230,8 @@ public class NSVGShape extends Struct {
     public static ByteBuffer nid(long struct) { return memByteBuffer(struct + NSVGShape.ID, 64); }
     /** Unsafe version of {@link #id(int) id}. */
     public static byte nid(long struct, int index) {
-        return memGetByte(struct + NSVGShape.ID + check(index, 64) * 1);
+        if (CHECKS) { check(index, 64); }
+        return memGetByte(struct + NSVGShape.ID + index * 1);
     }
     /** Unsafe version of {@link #fill}. */
     public static NSVGPaint nfill(long struct) { return NSVGPaint.create(struct + NSVGShape.FILL); }
@@ -247,7 +247,8 @@ public class NSVGShape extends Struct {
     public static FloatBuffer nstrokeDashArray(long struct) { return memFloatBuffer(struct + NSVGShape.STROKEDASHARRAY, 8); }
     /** Unsafe version of {@link #strokeDashArray(int) strokeDashArray}. */
     public static float nstrokeDashArray(long struct, int index) {
-        return memGetFloat(struct + NSVGShape.STROKEDASHARRAY + check(index, 8) * 4);
+        if (CHECKS) { check(index, 8); }
+        return memGetFloat(struct + NSVGShape.STROKEDASHARRAY + index * 4);
     }
     /** Unsafe version of {@link #strokeDashCount}. */
     public static byte nstrokeDashCount(long struct) { return memGetByte(struct + NSVGShape.STROKEDASHCOUNT); }
@@ -265,7 +266,8 @@ public class NSVGShape extends Struct {
     public static FloatBuffer nbounds(long struct) { return memFloatBuffer(struct + NSVGShape.BOUNDS, 4); }
     /** Unsafe version of {@link #bounds(int) bounds}. */
     public static float nbounds(long struct, int index) {
-        return memGetFloat(struct + NSVGShape.BOUNDS + check(index, 4) * 4);
+        if (CHECKS) { check(index, 4); }
+        return memGetFloat(struct + NSVGShape.BOUNDS + index * 4);
     }
     /** Unsafe version of {@link #paths}. */
     public static NSVGPath npaths(long struct) { return NSVGPath.create(memGetAddress(struct + NSVGShape.PATHS)); }

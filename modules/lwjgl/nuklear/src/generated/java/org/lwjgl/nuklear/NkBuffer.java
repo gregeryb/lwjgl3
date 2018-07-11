@@ -33,7 +33,7 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct nk_buffer {
  *     {@link NkBufferMarker struct nk_buffer_marker} marker[2];
  *     {@link NkAllocator struct nk_allocator} pool;
@@ -44,7 +44,7 @@ import static org.lwjgl.system.MemoryStack.*;
  *     nk_size needed;
  *     nk_size calls;
  *     nk_size size;
- * }</code></pre>
+ * }</pre></code>
  */
 @NativeType("struct nk_buffer")
 public class NkBuffer extends Struct implements NativeResource {
@@ -52,7 +52,6 @@ public class NkBuffer extends Struct implements NativeResource {
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */
@@ -120,8 +119,6 @@ public class NkBuffer extends Struct implements NativeResource {
     /** Returns a {@link NkAllocator} view of the {@code pool} field. */
     @NativeType("struct nk_allocator")
     public NkAllocator pool() { return npool(address()); }
-    /** Passes the {@code pool} field to the specified {@link java.util.function.Consumer Consumer}. */
-    public NkBuffer pool(java.util.function.Consumer<NkAllocator> consumer) { consumer.accept(pool()); return this; }
     /** Returns the value of the {@code type} field. */
     @NativeType("enum nk_allocation_type")
     public int type() { return ntype(address()); }
@@ -288,7 +285,8 @@ public class NkBuffer extends Struct implements NativeResource {
     public static NkBufferMarker.Buffer nmarker(long struct) { return NkBufferMarker.create(struct + NkBuffer.MARKER, 2); }
     /** Unsafe version of {@link #marker(int) marker}. */
     public static NkBufferMarker nmarker(long struct, int index) {
-        return NkBufferMarker.create(struct + NkBuffer.MARKER + check(index, 2) * NkBufferMarker.SIZEOF);
+        if (CHECKS) { check(index, 2); }
+        return NkBufferMarker.create(struct + NkBuffer.MARKER + index * NkBufferMarker.SIZEOF);
     }
     /** Unsafe version of {@link #pool}. */
     public static NkAllocator npool(long struct) { return NkAllocator.create(struct + NkBuffer.POOL); }
@@ -362,8 +360,6 @@ public class NkBuffer extends Struct implements NativeResource {
         /** Returns a {@link NkAllocator} view of the {@code pool} field. */
         @NativeType("struct nk_allocator")
         public NkAllocator pool() { return NkBuffer.npool(address()); }
-        /** Passes the {@code pool} field to the specified {@link java.util.function.Consumer Consumer}. */
-        public NkBuffer.Buffer pool(java.util.function.Consumer<NkAllocator> consumer) { consumer.accept(pool()); return this; }
         /** Returns the value of the {@code type} field. */
         @NativeType("enum nk_allocation_type")
         public int type() { return NkBuffer.ntype(address()); }

@@ -15,7 +15,7 @@ import java.util.*;
 
 import static org.lwjgl.glfw.Callbacks.*;
 import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.opengl.GL11C.*;
+import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryUtil.*;
 import static org.lwjgl.util.nfd.NativeFileDialog.*;
 
@@ -97,8 +97,6 @@ public final class HelloNFD {
             glfwSwapBuffers(window);
         }
 
-        GL.setCapabilities(null);
-
         glfwFreeCallbacks(window);
         glfwDestroyWindow(window);
         glfwTerminate();
@@ -171,7 +169,7 @@ public final class HelloNFD {
             case NFD_OKAY:
                 System.out.println("Success!");
                 System.out.println(path.getStringUTF8(0));
-                nNFD_Free(path.get(0));
+                nNFDi_Free(path.get(0));
                 break;
             case NFD_CANCEL:
                 System.out.println("User pressed cancel.");

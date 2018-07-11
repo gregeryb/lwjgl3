@@ -36,6 +36,7 @@ import org.lwjgl.system.windows.*;
  * 
  * <ul>
  * <li>{@code sType} <b>must</b> be {@link NVExternalMemoryWin32#VK_STRUCTURE_TYPE_IMPORT_MEMORY_WIN32_HANDLE_INFO_NV STRUCTURE_TYPE_IMPORT_MEMORY_WIN32_HANDLE_INFO_NV}</li>
+ * <li>{@code pNext} <b>must</b> be {@code NULL}</li>
  * <li>{@code handleType} <b>must</b> be a valid combination of {@code VkExternalMemoryHandleTypeFlagBitsNV} values</li>
  * </ul>
  * 
@@ -50,20 +51,19 @@ import org.lwjgl.system.windows.*;
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct VkImportMemoryWin32HandleInfoNV {
  *     VkStructureType sType;
- *     void const * pNext;
+ *     const void * pNext;
  *     VkExternalMemoryHandleTypeFlagsNV handleType;
  *     HANDLE handle;
- * }</code></pre>
+ * }</pre></code>
  */
 public class VkImportMemoryWin32HandleInfoNV extends Struct implements NativeResource {
 
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */
@@ -111,7 +111,7 @@ public class VkImportMemoryWin32HandleInfoNV extends Struct implements NativeRes
     @NativeType("VkStructureType")
     public int sType() { return nsType(address()); }
     /** Returns the value of the {@code pNext} field. */
-    @NativeType("void const *")
+    @NativeType("const void *")
     public long pNext() { return npNext(address()); }
     /** Returns the value of the {@code handleType} field. */
     @NativeType("VkExternalMemoryHandleTypeFlagsNV")
@@ -123,7 +123,7 @@ public class VkImportMemoryWin32HandleInfoNV extends Struct implements NativeRes
     /** Sets the specified value to the {@code sType} field. */
     public VkImportMemoryWin32HandleInfoNV sType(@NativeType("VkStructureType") int value) { nsType(address(), value); return this; }
     /** Sets the specified value to the {@code pNext} field. */
-    public VkImportMemoryWin32HandleInfoNV pNext(@NativeType("void const *") long value) { npNext(address(), value); return this; }
+    public VkImportMemoryWin32HandleInfoNV pNext(@NativeType("const void *") long value) { npNext(address(), value); return this; }
     /** Sets the specified value to the {@code handleType} field. */
     public VkImportMemoryWin32HandleInfoNV handleType(@NativeType("VkExternalMemoryHandleTypeFlagsNV") int value) { nhandleType(address(), value); return this; }
     /** Sets the specified value to the {@code handle} field. */
@@ -386,7 +386,7 @@ public class VkImportMemoryWin32HandleInfoNV extends Struct implements NativeRes
         @NativeType("VkStructureType")
         public int sType() { return VkImportMemoryWin32HandleInfoNV.nsType(address()); }
         /** Returns the value of the {@code pNext} field. */
-        @NativeType("void const *")
+        @NativeType("const void *")
         public long pNext() { return VkImportMemoryWin32HandleInfoNV.npNext(address()); }
         /** Returns the value of the {@code handleType} field. */
         @NativeType("VkExternalMemoryHandleTypeFlagsNV")
@@ -398,7 +398,7 @@ public class VkImportMemoryWin32HandleInfoNV extends Struct implements NativeRes
         /** Sets the specified value to the {@code sType} field. */
         public VkImportMemoryWin32HandleInfoNV.Buffer sType(@NativeType("VkStructureType") int value) { VkImportMemoryWin32HandleInfoNV.nsType(address(), value); return this; }
         /** Sets the specified value to the {@code pNext} field. */
-        public VkImportMemoryWin32HandleInfoNV.Buffer pNext(@NativeType("void const *") long value) { VkImportMemoryWin32HandleInfoNV.npNext(address(), value); return this; }
+        public VkImportMemoryWin32HandleInfoNV.Buffer pNext(@NativeType("const void *") long value) { VkImportMemoryWin32HandleInfoNV.npNext(address(), value); return this; }
         /** Sets the specified value to the {@code handleType} field. */
         public VkImportMemoryWin32HandleInfoNV.Buffer handleType(@NativeType("VkExternalMemoryHandleTypeFlagsNV") int value) { VkImportMemoryWin32HandleInfoNV.nhandleType(address(), value); return this; }
         /** Sets the specified value to the {@code handle} field. */

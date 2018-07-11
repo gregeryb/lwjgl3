@@ -21,7 +21,7 @@ import static org.lwjgl.system.MemoryUtil.*;
  * 
  * <p>The raster brightness of a point is a function of the point area, point color, point transparency, and the response of the display's electron gun and
  * phosphor. The point area and the point transparency are derived from the point size, currently provided with the {@code size} parameter of
- * {@link GL11C#glPointSize PointSize}.</p>
+ * {@link GL11#glPointSize PointSize}.</p>
  * 
  * <p>The primary motivation is to allow the size of a point to be affected by distance attenuation. When distance attenuation has an effect, the final point
  * size decreases as the distance of the point from the eye increases.</p>
@@ -74,15 +74,15 @@ public class ARBPointParameters {
      * @param pname  the parameter to set. Must be:<br><table><tr><td>{@link #GL_POINT_DISTANCE_ATTENUATION_ARB POINT_DISTANCE_ATTENUATION_ARB}</td></tr></table>
      * @param params the parameter value
      */
-    public static void glPointParameterfvARB(@NativeType("GLenum") int pname, @NativeType("GLfloat const *") FloatBuffer params) {
+    public static void glPointParameterfvARB(@NativeType("GLenum") int pname, @NativeType("const GLfloat *") FloatBuffer params) {
         if (CHECKS) {
             check(params, 3);
         }
         nglPointParameterfvARB(pname, memAddress(params));
     }
 
-    /** Array version of: {@link #glPointParameterfvARB PointParameterfvARB} */
-    public static void glPointParameterfvARB(@NativeType("GLenum") int pname, @NativeType("GLfloat const *") float[] params) {
+    /** register Array version of: {@link #glPointParameterfvARB PointParameterfvARB} */
+    public static void glPointParameterfvARB(@NativeType("GLenum") int pname, @NativeType("const GLfloat *") float[] params) {
         long __functionAddress = GL.getICD().glPointParameterfvARB;
         if (CHECKS) {
             check(__functionAddress);

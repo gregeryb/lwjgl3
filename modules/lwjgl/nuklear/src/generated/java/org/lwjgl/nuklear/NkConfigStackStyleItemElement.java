@@ -16,11 +16,11 @@ import static org.lwjgl.system.MemoryUtil.*;
 /**
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct nk_config_stack_style_item_element {
  *     {@link NkStyleItem struct nk_style_item} * pValues;
  *     {@link NkStyleItem struct nk_style_item} old_value;
- * }</code></pre>
+ * }</pre></code>
  */
 @NativeType("struct nk_config_stack_style_item_element")
 class NkConfigStackStyleItemElement extends Struct {
@@ -28,7 +28,6 @@ class NkConfigStackStyleItemElement extends Struct {
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */
@@ -72,8 +71,6 @@ class NkConfigStackStyleItemElement extends Struct {
     /** Returns a {@link NkStyleItem} view of the {@code old_value} field. */
     @NativeType("struct nk_style_item")
     public NkStyleItem old_value() { return nold_value(address()); }
-    /** Passes the {@code old_value} field to the specified {@link java.util.function.Consumer Consumer}. */
-    public NkConfigStackStyleItemElement old_value(java.util.function.Consumer<NkStyleItem> consumer) { consumer.accept(old_value()); return this; }
 
     // -----------------------------------
 
@@ -163,8 +160,6 @@ class NkConfigStackStyleItemElement extends Struct {
         /** Returns a {@link NkStyleItem} view of the {@code old_value} field. */
         @NativeType("struct nk_style_item")
         public NkStyleItem old_value() { return NkConfigStackStyleItemElement.nold_value(address()); }
-        /** Passes the {@code old_value} field to the specified {@link java.util.function.Consumer Consumer}. */
-        public NkConfigStackStyleItemElement.Buffer old_value(java.util.function.Consumer<NkStyleItem> consumer) { consumer.accept(old_value()); return this; }
 
     }
 

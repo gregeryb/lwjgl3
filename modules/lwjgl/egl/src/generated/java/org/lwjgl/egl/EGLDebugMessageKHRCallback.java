@@ -16,15 +16,15 @@ import static org.lwjgl.system.MemoryUtil.*;
  * 
  * <h3>Type</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * void (*) (
  *     EGLenum error,
- *     char const *command,
+ *     const char *command,
  *     EGLint messageType,
  *     EGLLabelKHR threadLabel,
  *     EGLLabelKHR objectLabel,
- *     char const *message
- * )</code></pre>
+ *     const char *message
+ * )</pre></code>
  */
 public abstract class EGLDebugMessageKHRCallback extends Callback implements EGLDebugMessageKHRCallbackI {
 

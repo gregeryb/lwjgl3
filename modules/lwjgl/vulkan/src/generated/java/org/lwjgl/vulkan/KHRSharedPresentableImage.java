@@ -87,9 +87,9 @@ public class KHRSharedPresentableImage {
         throw new UnsupportedOperationException();
     }
 
-    static boolean checkCapsDevice(FunctionProvider provider, java.util.Map<String, Long> caps, java.util.Set<String> ext) {
-        return ext.contains("VK_KHR_shared_presentable_image") && VK.checkExtension("VK_KHR_shared_presentable_image",
-               VK.isSupported(provider, "vkGetSwapchainStatusKHR", caps)
+    static boolean isAvailable(VKCapabilitiesDevice caps) {
+        return checkFunctions(
+            caps.vkGetSwapchainStatusKHR
         );
     }
 
@@ -102,10 +102,10 @@ public class KHRSharedPresentableImage {
      * 
      * <p>In order to query a swapchain's status when rendering to a shared presentable image, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * VkResult vkGetSwapchainStatusKHR(
      *     VkDevice                                    device,
-     *     VkSwapchainKHR                              swapchain);</code></pre>
+     *     VkSwapchainKHR                              swapchain);</pre></code>
      * 
      * <h5>Valid Usage (Implicit)</h5>
      * 

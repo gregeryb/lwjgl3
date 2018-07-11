@@ -17,11 +17,11 @@ import static org.lwjgl.system.MemoryUtil.*;
 /**
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct nk_config_stack_style_item {
  *     int head;
  *     {@link NkConfigStackStyleItemElement struct nk_config_stack_style_item_element} elements[16];
- * }</code></pre>
+ * }</pre></code>
  */
 @NativeType("struct nk_config_stack_style_item")
 class NkConfigStackStyleItem extends Struct {
@@ -29,7 +29,6 @@ class NkConfigStackStyleItem extends Struct {
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */
@@ -113,7 +112,8 @@ class NkConfigStackStyleItem extends Struct {
     public static NkConfigStackStyleItemElement.Buffer nelements(long struct) { return NkConfigStackStyleItemElement.create(struct + NkConfigStackStyleItem.ELEMENTS, 16); }
     /** Unsafe version of {@link #elements(int) elements}. */
     public static NkConfigStackStyleItemElement nelements(long struct, int index) {
-        return NkConfigStackStyleItemElement.create(struct + NkConfigStackStyleItem.ELEMENTS + check(index, 16) * NkConfigStackStyleItemElement.SIZEOF);
+        if (CHECKS) { check(index, 16); }
+        return NkConfigStackStyleItemElement.create(struct + NkConfigStackStyleItem.ELEMENTS + index * NkConfigStackStyleItemElement.SIZEOF);
     }
 
     // -----------------------------------

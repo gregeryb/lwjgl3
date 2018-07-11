@@ -53,27 +53,26 @@ import static org.lwjgl.system.MemoryStack.*;
  * <li>{@code descriptorCount} &ndash; the number of descriptors contained in the binding, accessed in a shader as an array. If {@code descriptorCount} is zero this binding entry is reserved and the resource <b>must</b> not be accessed from any stage via this binding within any pipeline using the set layout.</li>
  * <li>{@code stageFlags} &ndash; member is a bitmask of {@code VkShaderStageFlagBits} specifying which pipeline shader stages <b>can</b> access a resource for this binding. {@link VK10#VK_SHADER_STAGE_ALL SHADER_STAGE_ALL} is a shorthand specifying that all defined shader stages, including any additional stages defined by extensions, <b>can</b> access the resource.
  * 
- * <p>If a shader stage is not included in {@code stageFlags}, then a resource <b>must</b> not be accessed from that stage via this binding within any pipeline using the set layout. Other than input attachments which are limited to the fragment shader, there are no limitations on what combinations of stages <b>can</b> use a descriptor binding, and in particular a binding <b>can</b> be used by both graphics stages and the compute stage.</p></li>
+ * <p>If a shader stage is not included in {@code stageFlags}, then a resource <b>must</b> not be accessed from that stage via this binding within any pipeline using the set layout. Other than input attachments which are limited to the fragment shader, there are no limitations on what combinations of stages <b>can</b> be used by a descriptor binding, and in particular a binding <b>can</b> be used by both graphics stages and the compute stage.</p></li>
  * <li>{@code pImmutableSamplers} &ndash; affects initialization of samplers. If {@code descriptorType} specifies a {@link VK10#VK_DESCRIPTOR_TYPE_SAMPLER DESCRIPTOR_TYPE_SAMPLER} or {@link VK10#VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER} type descriptor, then {@code pImmutableSamplers} <b>can</b> be used to initialize a set of <em>immutable samplers</em>. Immutable samplers are permanently bound into the set layout; later binding a sampler into an immutable sampler slot in a descriptor set is not allowed. If {@code pImmutableSamplers} is not {@code NULL}, then it is considered to be a pointer to an array of sampler handles that will be consumed by the set layout and used for the corresponding binding. If {@code pImmutableSamplers} is {@code NULL}, then the sampler slots are dynamic and sampler handles <b>must</b> be bound into descriptor sets using this layout. If {@code descriptorType} is not one of these descriptor types, then {@code pImmutableSamplers} is ignored.</li>
  * </ul>
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct VkDescriptorSetLayoutBinding {
  *     uint32_t binding;
  *     VkDescriptorType descriptorType;
  *     uint32_t descriptorCount;
  *     VkShaderStageFlags stageFlags;
- *     VkSampler const * pImmutableSamplers;
- * }</code></pre>
+ *     const VkSampler * pImmutableSamplers;
+ * }</pre></code>
  */
 public class VkDescriptorSetLayoutBinding extends Struct implements NativeResource {
 
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */
@@ -134,7 +133,7 @@ public class VkDescriptorSetLayoutBinding extends Struct implements NativeResour
     public int stageFlags() { return nstageFlags(address()); }
     /** Returns a {@link LongBuffer} view of the data pointed to by the {@code pImmutableSamplers} field. */
     @Nullable
-    @NativeType("VkSampler const *")
+    @NativeType("const VkSampler *")
     public LongBuffer pImmutableSamplers() { return npImmutableSamplers(address()); }
 
     /** Sets the specified value to the {@code binding} field. */
@@ -146,7 +145,7 @@ public class VkDescriptorSetLayoutBinding extends Struct implements NativeResour
     /** Sets the specified value to the {@code stageFlags} field. */
     public VkDescriptorSetLayoutBinding stageFlags(@NativeType("VkShaderStageFlags") int value) { nstageFlags(address(), value); return this; }
     /** Sets the address of the specified {@link LongBuffer} to the {@code pImmutableSamplers} field. */
-    public VkDescriptorSetLayoutBinding pImmutableSamplers(@Nullable @NativeType("VkSampler const *") LongBuffer value) { npImmutableSamplers(address(), value); return this; }
+    public VkDescriptorSetLayoutBinding pImmutableSamplers(@Nullable @NativeType("const VkSampler *") LongBuffer value) { npImmutableSamplers(address(), value); return this; }
 
     /** Initializes this struct with the specified values. */
     public VkDescriptorSetLayoutBinding set(
@@ -154,7 +153,7 @@ public class VkDescriptorSetLayoutBinding extends Struct implements NativeResour
         int descriptorType,
         int descriptorCount,
         int stageFlags,
-        @Nullable LongBuffer pImmutableSamplers
+        LongBuffer pImmutableSamplers
     ) {
         binding(binding);
         descriptorType(descriptorType);
@@ -400,7 +399,7 @@ public class VkDescriptorSetLayoutBinding extends Struct implements NativeResour
         public int stageFlags() { return VkDescriptorSetLayoutBinding.nstageFlags(address()); }
         /** Returns a {@link LongBuffer} view of the data pointed to by the {@code pImmutableSamplers} field. */
         @Nullable
-        @NativeType("VkSampler const *")
+        @NativeType("const VkSampler *")
         public LongBuffer pImmutableSamplers() { return VkDescriptorSetLayoutBinding.npImmutableSamplers(address()); }
 
         /** Sets the specified value to the {@code binding} field. */
@@ -412,7 +411,7 @@ public class VkDescriptorSetLayoutBinding extends Struct implements NativeResour
         /** Sets the specified value to the {@code stageFlags} field. */
         public VkDescriptorSetLayoutBinding.Buffer stageFlags(@NativeType("VkShaderStageFlags") int value) { VkDescriptorSetLayoutBinding.nstageFlags(address(), value); return this; }
         /** Sets the address of the specified {@link LongBuffer} to the {@code pImmutableSamplers} field. */
-        public VkDescriptorSetLayoutBinding.Buffer pImmutableSamplers(@Nullable @NativeType("VkSampler const *") LongBuffer value) { VkDescriptorSetLayoutBinding.npImmutableSamplers(address(), value); return this; }
+        public VkDescriptorSetLayoutBinding.Buffer pImmutableSamplers(@Nullable @NativeType("const VkSampler *") LongBuffer value) { VkDescriptorSetLayoutBinding.npImmutableSamplers(address(), value); return this; }
 
     }
 

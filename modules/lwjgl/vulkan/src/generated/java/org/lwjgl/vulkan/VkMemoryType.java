@@ -25,18 +25,17 @@ import static org.lwjgl.system.MemoryUtil.*;
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct VkMemoryType {
  *     VkMemoryPropertyFlags propertyFlags;
  *     uint32_t heapIndex;
- * }</code></pre>
+ * }</pre></code>
  */
 public class VkMemoryType extends Struct {
 
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */

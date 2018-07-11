@@ -16,8 +16,8 @@ import static org.lwjgl.system.MemoryUtil.*;
  * 
  * <h3>Type</h3>
  * 
- * <pre><code>
- * void * (*) (
+ * <code><pre>
+ * void* (*) (
  *     extent_hooks_t *extent_hooks,
  *     void *new_addr,
  *     size_t size,
@@ -25,7 +25,7 @@ import static org.lwjgl.system.MemoryUtil.*;
  *     bool *zero,
  *     bool *commit,
  *     unsigned int arena_ind
- * )</code></pre>
+ * )</pre></code>
  */
 public abstract class ExtentAlloc extends Callback implements ExtentAllocI {
 

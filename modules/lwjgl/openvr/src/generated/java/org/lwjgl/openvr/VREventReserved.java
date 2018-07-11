@@ -18,13 +18,11 @@ import static org.lwjgl.system.MemoryUtil.*;
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct VREvent_Reserved_t {
  *     uint64_t reserved0;
  *     uint64_t reserved1;
- *     uint64_t reserved2;
- *     uint64_t reserved3;
- * }</code></pre>
+ * }</pre></code>
  */
 @NativeType("struct VREvent_Reserved_t")
 public class VREventReserved extends Struct {
@@ -32,20 +30,15 @@ public class VREventReserved extends Struct {
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */
     public static final int
         RESERVED0,
-        RESERVED1,
-        RESERVED2,
-        RESERVED3;
+        RESERVED1;
 
     static {
         Layout layout = __struct(
-            __member(8),
-            __member(8),
             __member(8),
             __member(8)
         );
@@ -55,8 +48,6 @@ public class VREventReserved extends Struct {
 
         RESERVED0 = layout.offsetof(0);
         RESERVED1 = layout.offsetof(1);
-        RESERVED2 = layout.offsetof(2);
-        RESERVED3 = layout.offsetof(3);
     }
 
     VREventReserved(long address, @Nullable ByteBuffer container) {
@@ -82,12 +73,6 @@ public class VREventReserved extends Struct {
     /** Returns the value of the {@code reserved1} field. */
     @NativeType("uint64_t")
     public long reserved1() { return nreserved1(address()); }
-    /** Returns the value of the {@code reserved2} field. */
-    @NativeType("uint64_t")
-    public long reserved2() { return nreserved2(address()); }
-    /** Returns the value of the {@code reserved3} field. */
-    @NativeType("uint64_t")
-    public long reserved3() { return nreserved3(address()); }
 
     // -----------------------------------
 
@@ -124,10 +109,6 @@ public class VREventReserved extends Struct {
     public static long nreserved0(long struct) { return memGetLong(struct + VREventReserved.RESERVED0); }
     /** Unsafe version of {@link #reserved1}. */
     public static long nreserved1(long struct) { return memGetLong(struct + VREventReserved.RESERVED1); }
-    /** Unsafe version of {@link #reserved2}. */
-    public static long nreserved2(long struct) { return memGetLong(struct + VREventReserved.RESERVED2); }
-    /** Unsafe version of {@link #reserved3}. */
-    public static long nreserved3(long struct) { return memGetLong(struct + VREventReserved.RESERVED3); }
 
     // -----------------------------------
 
@@ -181,12 +162,6 @@ public class VREventReserved extends Struct {
         /** Returns the value of the {@code reserved1} field. */
         @NativeType("uint64_t")
         public long reserved1() { return VREventReserved.nreserved1(address()); }
-        /** Returns the value of the {@code reserved2} field. */
-        @NativeType("uint64_t")
-        public long reserved2() { return VREventReserved.nreserved2(address()); }
-        /** Returns the value of the {@code reserved3} field. */
-        @NativeType("uint64_t")
-        public long reserved3() { return VREventReserved.nreserved3(address()); }
 
     }
 

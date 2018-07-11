@@ -10,6 +10,9 @@ import java.nio.*;
 import org.lwjgl.system.*;
 
 import static org.lwjgl.system.Checks.*;
+import static org.lwjgl.system.JNI.*;
+import static org.lwjgl.system.MemoryStack.*;
+import static org.lwjgl.system.MemoryUtil.*;
 
 /**
  * Native bindings to the <a target="_blank" href="https://www.khronos.org/registry/OpenGL/extensions/ARB/ARB_internalformat_query.txt">ARB_internalformat_query</a> extension.
@@ -46,9 +49,7 @@ public class ARBInternalformatQuery {
      *
      * @param bufSize the maximum number of values that may be written to params by the function
      */
-    public static void nglGetInternalformativ(int target, int internalformat, int pname, int bufSize, long params) {
-        GL42C.nglGetInternalformativ(target, internalformat, pname, bufSize, params);
-    }
+    public static native void nglGetInternalformativ(int target, int internalformat, int pname, int bufSize, long params);
 
     /**
      * Retrieves information about implementation-dependent support for internal formats.
@@ -59,7 +60,7 @@ public class ARBInternalformatQuery {
      * @param params         a variable into which to write the retrieved information
      */
     public static void glGetInternalformativ(@NativeType("GLenum") int target, @NativeType("GLenum") int internalformat, @NativeType("GLenum") int pname, @NativeType("GLint *") IntBuffer params) {
-        GL42C.glGetInternalformativ(target, internalformat, pname, params);
+        nglGetInternalformativ(target, internalformat, pname, params.remaining(), memAddress(params));
     }
 
     /**
@@ -71,12 +72,23 @@ public class ARBInternalformatQuery {
      */
     @NativeType("void")
     public static int glGetInternalformati(@NativeType("GLenum") int target, @NativeType("GLenum") int internalformat, @NativeType("GLenum") int pname) {
-        return GL42C.glGetInternalformati(target, internalformat, pname);
+        MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
+        try {
+            IntBuffer params = stack.callocInt(1);
+            nglGetInternalformativ(target, internalformat, pname, 1, memAddress(params));
+            return params.get(0);
+        } finally {
+            stack.setPointer(stackPointer);
+        }
     }
 
-    /** Array version of: {@link #glGetInternalformativ GetInternalformativ} */
+    /** register Array version of: {@link #glGetInternalformativ GetInternalformativ} */
     public static void glGetInternalformativ(@NativeType("GLenum") int target, @NativeType("GLenum") int internalformat, @NativeType("GLenum") int pname, @NativeType("GLint *") int[] params) {
-        GL42C.glGetInternalformativ(target, internalformat, pname, params);
+        long __functionAddress = GL.getICD().glGetInternalformativ;
+        if (CHECKS) {
+            check(__functionAddress);
+        }
+        callPV(__functionAddress, target, internalformat, pname, params.length, params);
     }
 
 }

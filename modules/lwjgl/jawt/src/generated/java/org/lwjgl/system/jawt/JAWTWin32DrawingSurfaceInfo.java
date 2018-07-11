@@ -30,7 +30,7 @@ import org.lwjgl.system.windows.User32;
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct JAWT_Win32DrawingSurfaceInfo {
  *     union {
  *         HWND hwnd;
@@ -39,7 +39,7 @@ import org.lwjgl.system.windows.User32;
  *     };
  *     HDC hdc;
  *     HPALETTE hpalette;
- * }</code></pre>
+ * }</pre></code>
  */
 @NativeType("struct JAWT_Win32DrawingSurfaceInfo")
 public class JAWTWin32DrawingSurfaceInfo extends Struct {
@@ -47,7 +47,6 @@ public class JAWTWin32DrawingSurfaceInfo extends Struct {
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */

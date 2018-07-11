@@ -18,11 +18,11 @@ import static org.lwjgl.system.MemoryStack.*;
 /**
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct nk_input {
  *     {@link NkKeyboard struct nk_keyboard} keyboard;
  *     {@link NkMouse struct nk_mouse} mouse;
- * }</code></pre>
+ * }</pre></code>
  */
 @NativeType("struct nk_input")
 public class NkInput extends Struct implements NativeResource {
@@ -30,7 +30,6 @@ public class NkInput extends Struct implements NativeResource {
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */

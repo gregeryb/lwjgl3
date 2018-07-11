@@ -130,7 +130,7 @@ public class GLXSGIXFBConfig {
      */
     @Nullable
     @NativeType("GLXFBConfigSGIX *")
-    public static PointerBuffer glXChooseFBConfigSGIX(@NativeType("Display *") long display, int screen, @Nullable @NativeType("int const *") IntBuffer attrib_list) {
+    public static PointerBuffer glXChooseFBConfigSGIX(@NativeType("Display *") long display, int screen, @Nullable @NativeType("const int *") IntBuffer attrib_list) {
         if (CHECKS) {
             checkNTSafe(attrib_list);
         }
@@ -237,7 +237,7 @@ public class GLXSGIXFBConfig {
         return nglXGetFBConfigFromVisualSGIX(display, vis.address());
     }
 
-    /** Array version of: {@link #glXGetFBConfigAttribSGIX GetFBConfigAttribSGIX} */
+    /** register Array version of: {@link #glXGetFBConfigAttribSGIX GetFBConfigAttribSGIX} */
     public static int glXGetFBConfigAttribSGIX(@NativeType("Display *") long display, @NativeType("GLXFBConfigSGIX") long config, int attribute, @NativeType("int *") int[] value) {
         long __functionAddress = GL.getCapabilitiesGLXClient().glXGetFBConfigAttribSGIX;
         if (CHECKS) {
@@ -249,10 +249,10 @@ public class GLXSGIXFBConfig {
         return callPPPI(__functionAddress, display, config, attribute, value);
     }
 
-    /** Array version of: {@link #glXChooseFBConfigSGIX ChooseFBConfigSGIX} */
+    /** register Array version of: {@link #glXChooseFBConfigSGIX ChooseFBConfigSGIX} */
     @Nullable
     @NativeType("GLXFBConfigSGIX *")
-    public static PointerBuffer glXChooseFBConfigSGIX(@NativeType("Display *") long display, int screen, @Nullable @NativeType("int const *") int[] attrib_list) {
+    public static PointerBuffer glXChooseFBConfigSGIX(@NativeType("Display *") long display, int screen, @Nullable @NativeType("const int *") int[] attrib_list) {
         long __functionAddress = GL.getCapabilitiesGLXClient().glXChooseFBConfigSGIX;
         if (CHECKS) {
             check(__functionAddress);

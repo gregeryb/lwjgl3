@@ -129,12 +129,12 @@ public class ARBOcclusionQuery {
      *
      * @param ids an array of query objects to be deleted
      */
-    public static void glDeleteQueriesARB(@NativeType("GLuint const *") IntBuffer ids) {
+    public static void glDeleteQueriesARB(@NativeType("const GLuint *") IntBuffer ids) {
         nglDeleteQueriesARB(ids.remaining(), memAddress(ids));
     }
 
     /** Deletes named query objects. */
-    public static void glDeleteQueriesARB(@NativeType("GLuint const *") int id) {
+    public static void glDeleteQueriesARB(@NativeType("const GLuint *") int id) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
             IntBuffer ids = stack.ints(id);
@@ -284,7 +284,7 @@ public class ARBOcclusionQuery {
         }
     }
 
-    /** Array version of: {@link #glGenQueriesARB GenQueriesARB} */
+    /** register Array version of: {@link #glGenQueriesARB GenQueriesARB} */
     public static void glGenQueriesARB(@NativeType("GLuint *") int[] ids) {
         long __functionAddress = GL.getICD().glGenQueriesARB;
         if (CHECKS) {
@@ -293,8 +293,8 @@ public class ARBOcclusionQuery {
         callPV(__functionAddress, ids.length, ids);
     }
 
-    /** Array version of: {@link #glDeleteQueriesARB DeleteQueriesARB} */
-    public static void glDeleteQueriesARB(@NativeType("GLuint const *") int[] ids) {
+    /** register Array version of: {@link #glDeleteQueriesARB DeleteQueriesARB} */
+    public static void glDeleteQueriesARB(@NativeType("const GLuint *") int[] ids) {
         long __functionAddress = GL.getICD().glDeleteQueriesARB;
         if (CHECKS) {
             check(__functionAddress);
@@ -302,7 +302,7 @@ public class ARBOcclusionQuery {
         callPV(__functionAddress, ids.length, ids);
     }
 
-    /** Array version of: {@link #glGetQueryivARB GetQueryivARB} */
+    /** register Array version of: {@link #glGetQueryivARB GetQueryivARB} */
     public static void glGetQueryivARB(@NativeType("GLenum") int target, @NativeType("GLenum") int pname, @NativeType("GLint *") int[] params) {
         long __functionAddress = GL.getICD().glGetQueryivARB;
         if (CHECKS) {
@@ -312,7 +312,7 @@ public class ARBOcclusionQuery {
         callPV(__functionAddress, target, pname, params);
     }
 
-    /** Array version of: {@link #glGetQueryObjectivARB GetQueryObjectivARB} */
+    /** register Array version of: {@link #glGetQueryObjectivARB GetQueryObjectivARB} */
     public static void glGetQueryObjectivARB(@NativeType("GLuint") int id, @NativeType("GLenum") int pname, @NativeType("GLint *") int[] params) {
         long __functionAddress = GL.getICD().glGetQueryObjectivARB;
         if (CHECKS) {
@@ -322,7 +322,7 @@ public class ARBOcclusionQuery {
         callPV(__functionAddress, id, pname, params);
     }
 
-    /** Array version of: {@link #glGetQueryObjectuivARB GetQueryObjectuivARB} */
+    /** register Array version of: {@link #glGetQueryObjectuivARB GetQueryObjectuivARB} */
     public static void glGetQueryObjectuivARB(@NativeType("GLuint") int id, @NativeType("GLenum") int pname, @NativeType("GLuint *") int[] params) {
         long __functionAddress = GL.getICD().glGetQueryObjectuivARB;
         if (CHECKS) {

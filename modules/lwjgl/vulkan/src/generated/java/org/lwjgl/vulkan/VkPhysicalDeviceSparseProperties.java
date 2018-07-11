@@ -28,21 +28,20 @@ import static org.lwjgl.system.MemoryUtil.*;
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct VkPhysicalDeviceSparseProperties {
  *     VkBool32 residencyStandard2DBlockShape;
  *     VkBool32 residencyStandard2DMultisampleBlockShape;
  *     VkBool32 residencyStandard3DBlockShape;
  *     VkBool32 residencyAlignedMipSize;
  *     VkBool32 residencyNonResidentStrict;
- * }</code></pre>
+ * }</pre></code>
  */
 public class VkPhysicalDeviceSparseProperties extends Struct {
 
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */

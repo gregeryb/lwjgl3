@@ -27,7 +27,7 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct VRVulkanTextureData_t {
  *     uint64_t m_nImage;
  *     VkDevice_T * m_pDevice;
@@ -39,7 +39,7 @@ import static org.lwjgl.system.MemoryStack.*;
  *     uint32_t m_nHeight;
  *     uint32_t m_nFormat;
  *     uint32_t m_nSampleCount;
- * }</code></pre>
+ * }</pre></code>
  */
 @NativeType("struct VRVulkanTextureData_t")
 public class VRVulkanTextureData extends Struct implements NativeResource {
@@ -47,7 +47,6 @@ public class VRVulkanTextureData extends Struct implements NativeResource {
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */

@@ -16,7 +16,7 @@ import static org.lwjgl.system.JNI.*;
 import static org.lwjgl.system.MemoryUtil.*;
 
 /** The OpenCL 1.2 OpenGL interoperability functionality. */
-public class CL12GL extends CL10GL {
+public class CL12GL {
 
     /** cl_gl_object_type */
     public static final int
@@ -48,6 +48,8 @@ public class CL12GL extends CL10GL {
     }
 
     /**
+     * <p><a target="_blank" href="https://www.khronos.org/registry/OpenCL/sdk/2.1/docs/man/xhtml/clCreateFromGLTexture.html">Reference Page</a></p>
+     * 
      * Creates one of the following:
      * 
      * <ul>
@@ -94,8 +96,6 @@ public class CL12GL extends CL10GL {
      *         <li>{@link CL10#CL_OUT_OF_RESOURCES OUT_OF_RESOURCES} if there is a failure to allocate resources required by the OpenCL implementation on the device.</li>
      *         <li>{@link CL10#CL_OUT_OF_HOST_MEMORY OUT_OF_HOST_MEMORY} if there is a failure to allocate resources required by the OpenCL implementation on the host.</li>
      *         </ul>
-     * 
-     * @see <a target="_blank" href="https://www.khronos.org/registry/OpenCL/sdk/2.1/docs/man/xhtml/clCreateFromGLTexture.html">Reference Page</a>
      */
     @NativeType("cl_mem")
     public static long clCreateFromGLTexture(@NativeType("cl_context") long context, @NativeType("cl_mem_flags") long flags, @NativeType("GLenum") int texture_target, @NativeType("GLint") int miplevel, @NativeType("GLuint") int texture, @Nullable @NativeType("cl_int *") IntBuffer errcode_ret) {
@@ -106,9 +106,9 @@ public class CL12GL extends CL10GL {
     }
 
     /**
-     * Array version of: {@link #clCreateFromGLTexture CreateFromGLTexture}
+     * <p><a target="_blank" href="https://www.khronos.org/registry/OpenCL/sdk/2.1/docs/man/xhtml/clCreateFromGLTexture.html">Reference Page</a></p>
      * 
-     * @see <a target="_blank" href="https://www.khronos.org/registry/OpenCL/sdk/2.1/docs/man/xhtml/clCreateFromGLTexture.html">Reference Page</a>
+     * register Array version of: {@link #clCreateFromGLTexture CreateFromGLTexture}
      */
     @NativeType("cl_mem")
     public static long clCreateFromGLTexture(@NativeType("cl_context") long context, @NativeType("cl_mem_flags") long flags, @NativeType("GLenum") int texture_target, @NativeType("GLint") int miplevel, @NativeType("GLuint") int texture, @Nullable @NativeType("cl_int *") int[] errcode_ret) {

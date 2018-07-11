@@ -76,10 +76,9 @@ public class KHRExternalSemaphoreWin32 {
         throw new UnsupportedOperationException();
     }
 
-    static boolean checkCapsDevice(FunctionProvider provider, java.util.Map<String, Long> caps, java.util.Set<String> ext) {
-        return ext.contains("VK_KHR_external_semaphore_win32") && VK.checkExtension("VK_KHR_external_semaphore_win32",
-               VK.isSupported(provider, "vkImportSemaphoreWin32HandleKHR", caps)
-            && VK.isSupported(provider, "vkGetSemaphoreWin32HandleKHR", caps)
+    static boolean isAvailable(VKCapabilitiesDevice caps) {
+        return checkFunctions(
+            caps.vkImportSemaphoreWin32HandleKHR, caps.vkGetSemaphoreWin32HandleKHR
         );
     }
 
@@ -102,10 +101,10 @@ public class KHRExternalSemaphoreWin32 {
      * 
      * <p>To import a semaphore payload from a Windows handle, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * VkResult vkImportSemaphoreWin32HandleKHR(
      *     VkDevice                                    device,
-     *     const VkImportSemaphoreWin32HandleInfoKHR*  pImportSemaphoreWin32HandleInfo);</code></pre>
+     *     const VkImportSemaphoreWin32HandleInfoKHR*  pImportSemaphoreWin32HandleInfo);</pre></code>
      * 
      * <h5>Description</h5>
      * 
@@ -130,7 +129,7 @@ public class KHRExternalSemaphoreWin32 {
      * <dt>On failure, this command returns</dt>
      * <dd><ul>
      * <li>{@link VK10#VK_ERROR_OUT_OF_HOST_MEMORY ERROR_OUT_OF_HOST_MEMORY}</li>
-     * <li>{@link VK11#VK_ERROR_INVALID_EXTERNAL_HANDLE ERROR_INVALID_EXTERNAL_HANDLE}</li>
+     * <li>{@link KHRExternalMemory#VK_ERROR_INVALID_EXTERNAL_HANDLE_KHR ERROR_INVALID_EXTERNAL_HANDLE_KHR}</li>
      * </ul></dd>
      * </dl>
      * 
@@ -142,7 +141,7 @@ public class KHRExternalSemaphoreWin32 {
      * @param pImportSemaphoreWin32HandleInfo points to a {@link VkImportSemaphoreWin32HandleInfoKHR} structure specifying the semaphore and import parameters.
      */
     @NativeType("VkResult")
-    public static int vkImportSemaphoreWin32HandleKHR(VkDevice device, @NativeType("VkImportSemaphoreWin32HandleInfoKHR const *") VkImportSemaphoreWin32HandleInfoKHR pImportSemaphoreWin32HandleInfo) {
+    public static int vkImportSemaphoreWin32HandleKHR(VkDevice device, @NativeType("const VkImportSemaphoreWin32HandleInfoKHR *") VkImportSemaphoreWin32HandleInfoKHR pImportSemaphoreWin32HandleInfo) {
         return nvkImportSemaphoreWin32HandleKHR(device, pImportSemaphoreWin32HandleInfo.address());
     }
 
@@ -164,11 +163,11 @@ public class KHRExternalSemaphoreWin32 {
      * 
      * <p>To export a Windows handle representing the payload of a semaphore, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * VkResult vkGetSemaphoreWin32HandleKHR(
      *     VkDevice                                    device,
      *     const VkSemaphoreGetWin32HandleInfoKHR*     pGetWin32HandleInfo,
-     *     HANDLE*                                     pHandle);</code></pre>
+     *     HANDLE*                                     pHandle);</pre></code>
      * 
      * <h5>Description</h5>
      * 
@@ -207,7 +206,7 @@ public class KHRExternalSemaphoreWin32 {
      * @param pHandle             will return the Windows handle representing the semaphore state.
      */
     @NativeType("VkResult")
-    public static int vkGetSemaphoreWin32HandleKHR(VkDevice device, @NativeType("VkSemaphoreGetWin32HandleInfoKHR const *") VkSemaphoreGetWin32HandleInfoKHR pGetWin32HandleInfo, @NativeType("HANDLE *") PointerBuffer pHandle) {
+    public static int vkGetSemaphoreWin32HandleKHR(VkDevice device, @NativeType("const VkSemaphoreGetWin32HandleInfoKHR *") VkSemaphoreGetWin32HandleInfoKHR pGetWin32HandleInfo, @NativeType("HANDLE *") PointerBuffer pHandle) {
         if (CHECKS) {
             check(pHandle, 1);
         }

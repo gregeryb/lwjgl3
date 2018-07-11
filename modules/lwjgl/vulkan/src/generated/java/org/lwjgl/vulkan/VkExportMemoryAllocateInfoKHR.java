@@ -16,18 +16,66 @@ import static org.lwjgl.system.MemoryUtil.*;
 import static org.lwjgl.system.MemoryStack.*;
 
 /**
- * See {@link VkExportMemoryAllocateInfo}.
+ * Specify exportable handle types for a device memory object.
+ * 
+ * <h5>Valid Usage</h5>
+ * 
+ * <ul>
+ * <li>The bits in {@code handleTypes} <b>must</b> be supported and compatible, as reported by {@link VkExternalImageFormatPropertiesKHR} or {@link VkExternalBufferPropertiesKHR}.</li>
+ * </ul>
+ * 
+ * <h5>Valid Usage (Implicit)</h5>
+ * 
+ * <ul>
+ * <li>{@code sType} <b>must</b> be {@link KHRExternalMemory#VK_STRUCTURE_TYPE_EXPORT_MEMORY_ALLOCATE_INFO_KHR STRUCTURE_TYPE_EXPORT_MEMORY_ALLOCATE_INFO_KHR}</li>
+ * <li>{@code pNext} <b>must</b> be {@code NULL}</li>
+ * <li>{@code handleTypes} <b>must</b> be a valid combination of {@code VkExternalMemoryHandleTypeFlagBitsKHR} values</li>
+ * </ul>
+ * 
+ * <h3>Member documentation</h3>
+ * 
+ * <ul>
+ * <li>{@code sType} &ndash; the type of this structure.</li>
+ * <li>{@code pNext} &ndash; {@code NULL} or a pointer to an extension-specific structure.</li>
+ * <li>{@code handleTypes} &ndash; a bitmask of {@code VkExternalMemoryHandleTypeFlagBitsKHR} specifying one or more memory handle types the application <b>can</b> export from the resulting allocation. The application <b>can</b> request multiple handle types for the same allocation.</li>
+ * </ul>
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct VkExportMemoryAllocateInfoKHR {
  *     VkStructureType sType;
- *     void const * pNext;
- *     VkExternalMemoryHandleTypeFlags handleTypes;
- * }</code></pre>
+ *     const void * pNext;
+ *     VkExternalMemoryHandleTypeFlagsKHR handleTypes;
+ * }</pre></code>
  */
-public class VkExportMemoryAllocateInfoKHR extends VkExportMemoryAllocateInfo {
+public class VkExportMemoryAllocateInfoKHR extends Struct implements NativeResource {
+
+    /** The struct size in bytes. */
+    public static final int SIZEOF;
+
+    public static final int ALIGNOF;
+
+    /** The struct member offsets. */
+    public static final int
+        STYPE,
+        PNEXT,
+        HANDLETYPES;
+
+    static {
+        Layout layout = __struct(
+            __member(4),
+            __member(POINTER_SIZE),
+            __member(4)
+        );
+
+        SIZEOF = layout.getSize();
+        ALIGNOF = layout.getAlignment();
+
+        STYPE = layout.offsetof(0);
+        PNEXT = layout.offsetof(1);
+        HANDLETYPES = layout.offsetof(2);
+    }
 
     VkExportMemoryAllocateInfoKHR(long address, @Nullable ByteBuffer container) {
         super(address, container);
@@ -43,18 +91,27 @@ public class VkExportMemoryAllocateInfoKHR extends VkExportMemoryAllocateInfo {
         this(memAddress(container), __checkContainer(container, SIZEOF));
     }
 
-    /** Sets the specified value to the {@code sType} field. */
     @Override
+    public int sizeof() { return SIZEOF; }
+
+    /** Returns the value of the {@code sType} field. */
+    @NativeType("VkStructureType")
+    public int sType() { return nsType(address()); }
+    /** Returns the value of the {@code pNext} field. */
+    @NativeType("const void *")
+    public long pNext() { return npNext(address()); }
+    /** Returns the value of the {@code handleTypes} field. */
+    @NativeType("VkExternalMemoryHandleTypeFlagsKHR")
+    public int handleTypes() { return nhandleTypes(address()); }
+
+    /** Sets the specified value to the {@code sType} field. */
     public VkExportMemoryAllocateInfoKHR sType(@NativeType("VkStructureType") int value) { nsType(address(), value); return this; }
     /** Sets the specified value to the {@code pNext} field. */
-    @Override
-    public VkExportMemoryAllocateInfoKHR pNext(@NativeType("void const *") long value) { npNext(address(), value); return this; }
+    public VkExportMemoryAllocateInfoKHR pNext(@NativeType("const void *") long value) { npNext(address(), value); return this; }
     /** Sets the specified value to the {@code handleTypes} field. */
-    @Override
-    public VkExportMemoryAllocateInfoKHR handleTypes(@NativeType("VkExternalMemoryHandleTypeFlags") int value) { nhandleTypes(address(), value); return this; }
+    public VkExportMemoryAllocateInfoKHR handleTypes(@NativeType("VkExternalMemoryHandleTypeFlagsKHR") int value) { nhandleTypes(address(), value); return this; }
 
     /** Initializes this struct with the specified values. */
-    @Override
     public VkExportMemoryAllocateInfoKHR set(
         int sType,
         long pNext,
@@ -220,8 +277,24 @@ public class VkExportMemoryAllocateInfoKHR extends VkExportMemoryAllocateInfo {
 
     // -----------------------------------
 
+    /** Unsafe version of {@link #sType}. */
+    public static int nsType(long struct) { return memGetInt(struct + VkExportMemoryAllocateInfoKHR.STYPE); }
+    /** Unsafe version of {@link #pNext}. */
+    public static long npNext(long struct) { return memGetAddress(struct + VkExportMemoryAllocateInfoKHR.PNEXT); }
+    /** Unsafe version of {@link #handleTypes}. */
+    public static int nhandleTypes(long struct) { return memGetInt(struct + VkExportMemoryAllocateInfoKHR.HANDLETYPES); }
+
+    /** Unsafe version of {@link #sType(int) sType}. */
+    public static void nsType(long struct, int value) { memPutInt(struct + VkExportMemoryAllocateInfoKHR.STYPE, value); }
+    /** Unsafe version of {@link #pNext(long) pNext}. */
+    public static void npNext(long struct, long value) { memPutAddress(struct + VkExportMemoryAllocateInfoKHR.PNEXT, value); }
+    /** Unsafe version of {@link #handleTypes(int) handleTypes}. */
+    public static void nhandleTypes(long struct, int value) { memPutInt(struct + VkExportMemoryAllocateInfoKHR.HANDLETYPES, value); }
+
+    // -----------------------------------
+
     /** An array of {@link VkExportMemoryAllocateInfoKHR} structs. */
-    public static class Buffer extends VkExportMemoryAllocateInfo.Buffer {
+    public static class Buffer extends StructBuffer<VkExportMemoryAllocateInfoKHR, Buffer> implements NativeResource {
 
         /**
          * Creates a new {@link VkExportMemoryAllocateInfoKHR.Buffer} instance backed by the specified container.
@@ -233,7 +306,7 @@ public class VkExportMemoryAllocateInfoKHR extends VkExportMemoryAllocateInfo {
          * <p>The created buffer instance holds a strong reference to the container object.</p>
          */
         public Buffer(ByteBuffer container) {
-            super(container);
+            super(container, container.remaining() / SIZEOF);
         }
 
         public Buffer(long address, int cap) {
@@ -259,15 +332,27 @@ public class VkExportMemoryAllocateInfoKHR extends VkExportMemoryAllocateInfo {
             return new VkExportMemoryAllocateInfoKHR(address, container);
         }
 
-        /** Sets the specified value to the {@code sType} field. */
         @Override
+        public int sizeof() {
+            return SIZEOF;
+        }
+
+        /** Returns the value of the {@code sType} field. */
+        @NativeType("VkStructureType")
+        public int sType() { return VkExportMemoryAllocateInfoKHR.nsType(address()); }
+        /** Returns the value of the {@code pNext} field. */
+        @NativeType("const void *")
+        public long pNext() { return VkExportMemoryAllocateInfoKHR.npNext(address()); }
+        /** Returns the value of the {@code handleTypes} field. */
+        @NativeType("VkExternalMemoryHandleTypeFlagsKHR")
+        public int handleTypes() { return VkExportMemoryAllocateInfoKHR.nhandleTypes(address()); }
+
+        /** Sets the specified value to the {@code sType} field. */
         public VkExportMemoryAllocateInfoKHR.Buffer sType(@NativeType("VkStructureType") int value) { VkExportMemoryAllocateInfoKHR.nsType(address(), value); return this; }
         /** Sets the specified value to the {@code pNext} field. */
-        @Override
-        public VkExportMemoryAllocateInfoKHR.Buffer pNext(@NativeType("void const *") long value) { VkExportMemoryAllocateInfoKHR.npNext(address(), value); return this; }
+        public VkExportMemoryAllocateInfoKHR.Buffer pNext(@NativeType("const void *") long value) { VkExportMemoryAllocateInfoKHR.npNext(address(), value); return this; }
         /** Sets the specified value to the {@code handleTypes} field. */
-        @Override
-        public VkExportMemoryAllocateInfoKHR.Buffer handleTypes(@NativeType("VkExternalMemoryHandleTypeFlags") int value) { VkExportMemoryAllocateInfoKHR.nhandleTypes(address(), value); return this; }
+        public VkExportMemoryAllocateInfoKHR.Buffer handleTypes(@NativeType("VkExternalMemoryHandleTypeFlagsKHR") int value) { VkExportMemoryAllocateInfoKHR.nhandleTypes(address(), value); return this; }
 
     }
 

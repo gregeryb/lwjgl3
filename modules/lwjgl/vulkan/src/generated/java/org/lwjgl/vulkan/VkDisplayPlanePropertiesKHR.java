@@ -27,18 +27,17 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct VkDisplayPlanePropertiesKHR {
  *     VkDisplayKHR currentDisplay;
  *     uint32_t currentStackIndex;
- * }</code></pre>
+ * }</pre></code>
  */
 public class VkDisplayPlanePropertiesKHR extends Struct implements NativeResource {
 
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */

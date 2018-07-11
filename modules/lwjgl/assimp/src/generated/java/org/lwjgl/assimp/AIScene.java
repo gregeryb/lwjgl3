@@ -60,7 +60,7 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct aiScene {
  *     unsigned int mFlags;
  *     {@link AINode struct aiNode} * mRootNode;
@@ -78,7 +78,7 @@ import static org.lwjgl.system.MemoryStack.*;
  *     {@link AICamera struct aiCamera} ** mCameras;
  *     {@link AIMetaData struct aiMetadata} * mMetaData;
  *     char * mPrivate;
- * }</code></pre>
+ * }</pre></code>
  */
 @NativeType("struct aiScene")
 public class AIScene extends Struct implements NativeResource {
@@ -86,7 +86,6 @@ public class AIScene extends Struct implements NativeResource {
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */
@@ -242,14 +241,14 @@ public class AIScene extends Struct implements NativeResource {
     /** Initializes this struct with the specified values. */
     public AIScene set(
         int mFlags,
-        @Nullable AINode mRootNode,
-        @Nullable PointerBuffer mMeshes,
-        @Nullable PointerBuffer mMaterials,
-        @Nullable PointerBuffer mAnimations,
-        @Nullable PointerBuffer mTextures,
-        @Nullable PointerBuffer mLights,
-        @Nullable PointerBuffer mCameras,
-        @Nullable AIMetaData mMetaData
+        AINode mRootNode,
+        PointerBuffer mMeshes,
+        PointerBuffer mMaterials,
+        PointerBuffer mAnimations,
+        PointerBuffer mTextures,
+        PointerBuffer mLights,
+        PointerBuffer mCameras,
+        AIMetaData mMetaData
     ) {
         mFlags(mFlags);
         mRootNode(mRootNode);
@@ -487,10 +486,6 @@ public class AIScene extends Struct implements NativeResource {
      * @param struct the struct to validate
      */
     public static void validate(long struct) {
-        long mRootNode = memGetAddress(struct + AIScene.MROOTNODE);
-        if (mRootNode != NULL) {
-            AINode.validate(mRootNode);
-        }
         if (nmNumMeshes(struct) != 0) {
             check(memGetAddress(struct + AIScene.MMESHES));
         }

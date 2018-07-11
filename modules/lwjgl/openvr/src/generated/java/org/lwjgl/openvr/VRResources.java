@@ -37,10 +37,13 @@ public class VRResources {
     /**
      * Loads the specified resource into the provided buffer if large enough.
      *
+     * @param pchResourceName 
+     * @param pchBuffer       
+     *
      * @return the size in bytes of the buffer required to hold the specified resource
      */
     @NativeType("uint32_t")
-    public static int VRResources_LoadSharedResource(@NativeType("char const *") ByteBuffer pchResourceName, @Nullable @NativeType("char *") ByteBuffer pchBuffer) {
+    public static int VRResources_LoadSharedResource(@NativeType("const char *") ByteBuffer pchResourceName, @Nullable @NativeType("char *") ByteBuffer pchBuffer) {
         if (CHECKS) {
             checkNT1(pchResourceName);
         }
@@ -50,10 +53,13 @@ public class VRResources {
     /**
      * Loads the specified resource into the provided buffer if large enough.
      *
+     * @param pchResourceName 
+     * @param pchBuffer       
+     *
      * @return the size in bytes of the buffer required to hold the specified resource
      */
     @NativeType("uint32_t")
-    public static int VRResources_LoadSharedResource(@NativeType("char const *") CharSequence pchResourceName, @Nullable @NativeType("char *") ByteBuffer pchBuffer) {
+    public static int VRResources_LoadSharedResource(@NativeType("const char *") CharSequence pchResourceName, @Nullable @NativeType("char *") ByteBuffer pchBuffer) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
             ByteBuffer pchResourceNameEncoded = stack.ASCII(pchResourceName);
@@ -66,10 +72,13 @@ public class VRResources {
     /**
      * Loads the specified resource into the provided buffer if large enough.
      *
+     * @param pchResourceName 
+     * @param unBufferLen     
+     *
      * @return the size in bytes of the buffer required to hold the specified resource
      */
     @NativeType("uint32_t")
-    public static String VRResources_LoadSharedResource(@NativeType("char const *") CharSequence pchResourceName, @NativeType("uint32_t") int unBufferLen) {
+    public static String VRResources_LoadSharedResource(@NativeType("const char *") CharSequence pchResourceName, @NativeType("uint32_t") int unBufferLen) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
             ByteBuffer pchResourceNameEncoded = stack.ASCII(pchResourceName);
@@ -95,9 +104,13 @@ public class VRResources {
     /**
      * Provides the full path to the specified resource. Resource names can include named directories for drivers and other things, and this resolves all of
      * those and returns the actual physical path. {@code pchResourceTypeDirectory} is the subdirectory of resources to look in.
+     *
+     * @param pchResourceName          
+     * @param pchResourceTypeDirectory 
+     * @param pchPathBuffer            
      */
     @NativeType("uint32_t")
-    public static int VRResources_GetResourceFullPath(@NativeType("char const *") ByteBuffer pchResourceName, @NativeType("char const *") ByteBuffer pchResourceTypeDirectory, @Nullable @NativeType("char *") ByteBuffer pchPathBuffer) {
+    public static int VRResources_GetResourceFullPath(@NativeType("const char *") ByteBuffer pchResourceName, @NativeType("const char *") ByteBuffer pchResourceTypeDirectory, @Nullable @NativeType("char *") ByteBuffer pchPathBuffer) {
         if (CHECKS) {
             checkNT1(pchResourceName);
             checkNT1(pchResourceTypeDirectory);
@@ -108,9 +121,13 @@ public class VRResources {
     /**
      * Provides the full path to the specified resource. Resource names can include named directories for drivers and other things, and this resolves all of
      * those and returns the actual physical path. {@code pchResourceTypeDirectory} is the subdirectory of resources to look in.
+     *
+     * @param pchResourceName          
+     * @param pchResourceTypeDirectory 
+     * @param pchPathBuffer            
      */
     @NativeType("uint32_t")
-    public static int VRResources_GetResourceFullPath(@NativeType("char const *") CharSequence pchResourceName, @NativeType("char const *") CharSequence pchResourceTypeDirectory, @Nullable @NativeType("char *") ByteBuffer pchPathBuffer) {
+    public static int VRResources_GetResourceFullPath(@NativeType("const char *") CharSequence pchResourceName, @NativeType("const char *") CharSequence pchResourceTypeDirectory, @Nullable @NativeType("char *") ByteBuffer pchPathBuffer) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
             ByteBuffer pchResourceNameEncoded = stack.ASCII(pchResourceName);
@@ -124,9 +141,13 @@ public class VRResources {
     /**
      * Provides the full path to the specified resource. Resource names can include named directories for drivers and other things, and this resolves all of
      * those and returns the actual physical path. {@code pchResourceTypeDirectory} is the subdirectory of resources to look in.
+     *
+     * @param pchResourceName          
+     * @param pchResourceTypeDirectory 
+     * @param unBufferLen              
      */
     @NativeType("uint32_t")
-    public static String VRResources_GetResourceFullPath(@NativeType("char const *") CharSequence pchResourceName, @NativeType("char const *") CharSequence pchResourceTypeDirectory, @NativeType("uint32_t") int unBufferLen) {
+    public static String VRResources_GetResourceFullPath(@NativeType("const char *") CharSequence pchResourceName, @NativeType("const char *") CharSequence pchResourceTypeDirectory, @NativeType("uint32_t") int unBufferLen) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
             ByteBuffer pchResourceNameEncoded = stack.ASCII(pchResourceName);

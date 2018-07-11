@@ -16,7 +16,7 @@ import static org.lwjgl.system.MemoryUtil.*;
 /**
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct YGCachedMeasurement {
  *     float availableWidth;
  *     float availableHeight;
@@ -24,14 +24,13 @@ import static org.lwjgl.system.MemoryUtil.*;
  *     YGMeasureMode heightMeasureMode;
  *     float computedWidth;
  *     float computedHeight;
- * }</code></pre>
+ * }</pre></code>
  */
 public class YGCachedMeasurement extends Struct {
 
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */

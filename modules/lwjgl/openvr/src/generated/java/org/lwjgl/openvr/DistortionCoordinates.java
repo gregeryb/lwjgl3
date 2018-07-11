@@ -31,12 +31,12 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct DistortionCoordinates_t {
  *     float rfRed[2];
  *     float rfGreen[2];
  *     float rfBlue[2];
- * }</code></pre>
+ * }</pre></code>
  */
 @NativeType("struct DistortionCoordinates_t")
 public class DistortionCoordinates extends Struct implements NativeResource {
@@ -44,7 +44,6 @@ public class DistortionCoordinates extends Struct implements NativeResource {
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */
@@ -246,19 +245,22 @@ public class DistortionCoordinates extends Struct implements NativeResource {
     public static FloatBuffer nrfRed(long struct) { return memFloatBuffer(struct + DistortionCoordinates.RFRED, 2); }
     /** Unsafe version of {@link #rfRed(int) rfRed}. */
     public static float nrfRed(long struct, int index) {
-        return memGetFloat(struct + DistortionCoordinates.RFRED + check(index, 2) * 4);
+        if (CHECKS) { check(index, 2); }
+        return memGetFloat(struct + DistortionCoordinates.RFRED + index * 4);
     }
     /** Unsafe version of {@link #rfGreen}. */
     public static FloatBuffer nrfGreen(long struct) { return memFloatBuffer(struct + DistortionCoordinates.RFGREEN, 2); }
     /** Unsafe version of {@link #rfGreen(int) rfGreen}. */
     public static float nrfGreen(long struct, int index) {
-        return memGetFloat(struct + DistortionCoordinates.RFGREEN + check(index, 2) * 4);
+        if (CHECKS) { check(index, 2); }
+        return memGetFloat(struct + DistortionCoordinates.RFGREEN + index * 4);
     }
     /** Unsafe version of {@link #rfBlue}. */
     public static FloatBuffer nrfBlue(long struct) { return memFloatBuffer(struct + DistortionCoordinates.RFBLUE, 2); }
     /** Unsafe version of {@link #rfBlue(int) rfBlue}. */
     public static float nrfBlue(long struct, int index) {
-        return memGetFloat(struct + DistortionCoordinates.RFBLUE + check(index, 2) * 4);
+        if (CHECKS) { check(index, 2); }
+        return memGetFloat(struct + DistortionCoordinates.RFBLUE + index * 4);
     }
 
     // -----------------------------------

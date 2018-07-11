@@ -24,10 +24,10 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct RenderModel_ControllerMode_State_t {
  *     bool bScrollWheelVisible;
- * }</code></pre>
+ * }</pre></code>
  */
 @NativeType("struct RenderModel_ControllerMode_State_t")
 public class RenderModelControllerModeState extends Struct implements NativeResource {
@@ -35,7 +35,6 @@ public class RenderModelControllerModeState extends Struct implements NativeReso
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */

@@ -16,12 +16,12 @@ import static org.lwjgl.system.dyncall.DynCallback.*;
  * 
  * <h3>Type</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * void (*) (
  *     GLFWwindow *window,
  *     unsigned int codepoint,
  *     int mods
- * )</code></pre>
+ * )</pre></code>
  *
  * @since version 3.1
  */

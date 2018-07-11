@@ -23,23 +23,23 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <p>The following code illustrates some of the key flags:</p>
  * 
- * <pre><code>
+ * <code><pre>
  * void cmdProcessAllSequences(cmd, objectTable, indirectCommandsLayout, pIndirectCommandsTokens, sequencesCount, indexbuffer, indexbufferoffset)
  * {
- *   for (s = 0; s &lt; sequencesCount; s++)
+ *   for (s = 0; s < sequencesCount; s++)
  *   {
  *     sequence = s;
  * 
- *     if (indirectCommandsLayout.flags &amp; VK_INDIRECT_COMMANDS_LAYOUT_USAGE_UNORDERED_SEQUENCES_BIT_NVX) {
+ *     if (indirectCommandsLayout.flags & VK_INDIRECT_COMMANDS_LAYOUT_USAGE_UNORDERED_SEQUENCES_BIT_NVX) {
  *       sequence = incoherent_implementation_dependent_permutation[ sequence ];
  *     }
- *     if (indirectCommandsLayout.flags &amp; VK_INDIRECT_COMMANDS_LAYOUT_USAGE_INDEXED_SEQUENCES_BIT_NVX) {
+ *     if (indirectCommandsLayout.flags & VK_INDIRECT_COMMANDS_LAYOUT_USAGE_INDEXED_SEQUENCES_BIT_NVX) {
  *       sequence = indexbuffer.load_uint32( sequence * sizeof(uint32_t) + indexbufferoffset);
  *     }
  * 
  *     cmdProcessSequence( cmd, objectTable, indirectCommandsLayout, pIndirectCommandsTokens, sequence );
  *   }
- * }</code></pre>
+ * }</pre></code>
  * 
  * <h5>Valid Usage</h5>
  * 
@@ -80,22 +80,21 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct VkIndirectCommandsLayoutCreateInfoNVX {
  *     VkStructureType sType;
- *     void const * pNext;
+ *     const void * pNext;
  *     VkPipelineBindPoint pipelineBindPoint;
  *     VkIndirectCommandsLayoutUsageFlagsNVX flags;
  *     uint32_t tokenCount;
- *     {@link VkIndirectCommandsLayoutTokenNVX VkIndirectCommandsLayoutTokenNVX const} * pTokens;
- * }</code></pre>
+ *     const {@link VkIndirectCommandsLayoutTokenNVX VkIndirectCommandsLayoutTokenNVX} * pTokens;
+ * }</pre></code>
  */
 public class VkIndirectCommandsLayoutCreateInfoNVX extends Struct implements NativeResource {
 
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */
@@ -149,7 +148,7 @@ public class VkIndirectCommandsLayoutCreateInfoNVX extends Struct implements Nat
     @NativeType("VkStructureType")
     public int sType() { return nsType(address()); }
     /** Returns the value of the {@code pNext} field. */
-    @NativeType("void const *")
+    @NativeType("const void *")
     public long pNext() { return npNext(address()); }
     /** Returns the value of the {@code pipelineBindPoint} field. */
     @NativeType("VkPipelineBindPoint")
@@ -161,19 +160,19 @@ public class VkIndirectCommandsLayoutCreateInfoNVX extends Struct implements Nat
     @NativeType("uint32_t")
     public int tokenCount() { return ntokenCount(address()); }
     /** Returns a {@link VkIndirectCommandsLayoutTokenNVX.Buffer} view of the struct array pointed to by the {@code pTokens} field. */
-    @NativeType("VkIndirectCommandsLayoutTokenNVX const *")
+    @NativeType("const VkIndirectCommandsLayoutTokenNVX *")
     public VkIndirectCommandsLayoutTokenNVX.Buffer pTokens() { return npTokens(address()); }
 
     /** Sets the specified value to the {@code sType} field. */
     public VkIndirectCommandsLayoutCreateInfoNVX sType(@NativeType("VkStructureType") int value) { nsType(address(), value); return this; }
     /** Sets the specified value to the {@code pNext} field. */
-    public VkIndirectCommandsLayoutCreateInfoNVX pNext(@NativeType("void const *") long value) { npNext(address(), value); return this; }
+    public VkIndirectCommandsLayoutCreateInfoNVX pNext(@NativeType("const void *") long value) { npNext(address(), value); return this; }
     /** Sets the specified value to the {@code pipelineBindPoint} field. */
     public VkIndirectCommandsLayoutCreateInfoNVX pipelineBindPoint(@NativeType("VkPipelineBindPoint") int value) { npipelineBindPoint(address(), value); return this; }
     /** Sets the specified value to the {@code flags} field. */
     public VkIndirectCommandsLayoutCreateInfoNVX flags(@NativeType("VkIndirectCommandsLayoutUsageFlagsNVX") int value) { nflags(address(), value); return this; }
     /** Sets the address of the specified {@link VkIndirectCommandsLayoutTokenNVX.Buffer} to the {@code pTokens} field. */
-    public VkIndirectCommandsLayoutCreateInfoNVX pTokens(@NativeType("VkIndirectCommandsLayoutTokenNVX const *") VkIndirectCommandsLayoutTokenNVX.Buffer value) { npTokens(address(), value); return this; }
+    public VkIndirectCommandsLayoutCreateInfoNVX pTokens(@NativeType("const VkIndirectCommandsLayoutTokenNVX *") VkIndirectCommandsLayoutTokenNVX.Buffer value) { npTokens(address(), value); return this; }
 
     /** Initializes this struct with the specified values. */
     public VkIndirectCommandsLayoutCreateInfoNVX set(
@@ -442,7 +441,7 @@ public class VkIndirectCommandsLayoutCreateInfoNVX extends Struct implements Nat
         @NativeType("VkStructureType")
         public int sType() { return VkIndirectCommandsLayoutCreateInfoNVX.nsType(address()); }
         /** Returns the value of the {@code pNext} field. */
-        @NativeType("void const *")
+        @NativeType("const void *")
         public long pNext() { return VkIndirectCommandsLayoutCreateInfoNVX.npNext(address()); }
         /** Returns the value of the {@code pipelineBindPoint} field. */
         @NativeType("VkPipelineBindPoint")
@@ -454,19 +453,19 @@ public class VkIndirectCommandsLayoutCreateInfoNVX extends Struct implements Nat
         @NativeType("uint32_t")
         public int tokenCount() { return VkIndirectCommandsLayoutCreateInfoNVX.ntokenCount(address()); }
         /** Returns a {@link VkIndirectCommandsLayoutTokenNVX.Buffer} view of the struct array pointed to by the {@code pTokens} field. */
-        @NativeType("VkIndirectCommandsLayoutTokenNVX const *")
+        @NativeType("const VkIndirectCommandsLayoutTokenNVX *")
         public VkIndirectCommandsLayoutTokenNVX.Buffer pTokens() { return VkIndirectCommandsLayoutCreateInfoNVX.npTokens(address()); }
 
         /** Sets the specified value to the {@code sType} field. */
         public VkIndirectCommandsLayoutCreateInfoNVX.Buffer sType(@NativeType("VkStructureType") int value) { VkIndirectCommandsLayoutCreateInfoNVX.nsType(address(), value); return this; }
         /** Sets the specified value to the {@code pNext} field. */
-        public VkIndirectCommandsLayoutCreateInfoNVX.Buffer pNext(@NativeType("void const *") long value) { VkIndirectCommandsLayoutCreateInfoNVX.npNext(address(), value); return this; }
+        public VkIndirectCommandsLayoutCreateInfoNVX.Buffer pNext(@NativeType("const void *") long value) { VkIndirectCommandsLayoutCreateInfoNVX.npNext(address(), value); return this; }
         /** Sets the specified value to the {@code pipelineBindPoint} field. */
         public VkIndirectCommandsLayoutCreateInfoNVX.Buffer pipelineBindPoint(@NativeType("VkPipelineBindPoint") int value) { VkIndirectCommandsLayoutCreateInfoNVX.npipelineBindPoint(address(), value); return this; }
         /** Sets the specified value to the {@code flags} field. */
         public VkIndirectCommandsLayoutCreateInfoNVX.Buffer flags(@NativeType("VkIndirectCommandsLayoutUsageFlagsNVX") int value) { VkIndirectCommandsLayoutCreateInfoNVX.nflags(address(), value); return this; }
         /** Sets the address of the specified {@link VkIndirectCommandsLayoutTokenNVX.Buffer} to the {@code pTokens} field. */
-        public VkIndirectCommandsLayoutCreateInfoNVX.Buffer pTokens(@NativeType("VkIndirectCommandsLayoutTokenNVX const *") VkIndirectCommandsLayoutTokenNVX.Buffer value) { VkIndirectCommandsLayoutCreateInfoNVX.npTokens(address(), value); return this; }
+        public VkIndirectCommandsLayoutCreateInfoNVX.Buffer pTokens(@NativeType("const VkIndirectCommandsLayoutTokenNVX *") VkIndirectCommandsLayoutTokenNVX.Buffer value) { VkIndirectCommandsLayoutCreateInfoNVX.npTokens(address(), value); return this; }
 
     }
 

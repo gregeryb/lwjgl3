@@ -12,7 +12,7 @@ package org.lwjgl.vulkan;
  * 
  * <h5>Examples</h5>
  * 
- * <pre><code>
+ * <code><pre>
  *     // Create an image with
  *     // VkDedicatedAllocationImageCreateInfoNV::dedicatedAllocation
  *     // set to VK_TRUE
@@ -27,22 +27,22 @@ package org.lwjgl.vulkan;
  *     VkImageCreateInfo imageCreateInfo =
  *     {
  *         VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO,    // sType
- *         &amp;dedicatedImageInfo                     // pNext
+ *         &dedicatedImageInfo                     // pNext
  *         // Other members set as usual
  *     };
  * 
  *     VkImage image;
  *     VkResult result = vkCreateImage(
  *         device,
- *         &amp;imageCreateInfo,
+ *         &imageCreateInfo,
  *         NULL,                       // pAllocator
- *         &amp;image);
+ *         &image);
  * 
  *     VkMemoryRequirements memoryRequirements;
  *     vkGetImageMemoryRequirements(
  *         device,
  *         image,
- *         &amp;memoryRequirements);
+ *         &memoryRequirements);
  * 
  *     // Allocate memory with VkDedicatedAllocationMemoryAllocateInfoNV::image
  *     // pointing to the image we are allocating the memory for
@@ -58,7 +58,7 @@ package org.lwjgl.vulkan;
  *     VkMemoryAllocateInfo memoryAllocateInfo =
  *     {
  *         VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO,                 // sType
- *         &amp;dedicatedInfo,                                         // pNext
+ *         &dedicatedInfo,                                         // pNext
  *         memoryRequirements.size,                                // allocationSize
  *         FindMemoryTypeIndex(memoryRequirements.memoryTypeBits), // memoryTypeIndex
  *     };
@@ -66,9 +66,9 @@ package org.lwjgl.vulkan;
  *     VkDeviceMemory memory;
  *     vkAllocateMemory(
  *         device,
- *         &amp;memoryAllocateInfo,
+ *         &memoryAllocateInfo,
  *         NULL,                       // pAllocator
- *         &amp;memory);
+ *         &memory);
  * 
  *     // Bind the image to the memory
  * 
@@ -76,7 +76,7 @@ package org.lwjgl.vulkan;
  *         device,
  *         image,
  *         memory,
- *         0);</code></pre>
+ *         0);</pre></code>
  * 
  * <dl>
  * <dt><b>Name String</b></dt>
@@ -93,7 +93,7 @@ package org.lwjgl.vulkan;
  * </ul></dd>
  * <dt><b>Contact</b></dt>
  * <dd><ul>
- * <li>Jeff Bolz @jeffbolznv</li>
+ * <li>Jeff Bolz @jbolz</li>
  * </ul></dd>
  * <dt><b>Last Modified Date</b></dt>
  * <dd>2016-05-31</dd>

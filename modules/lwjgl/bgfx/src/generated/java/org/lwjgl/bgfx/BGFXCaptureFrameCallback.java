@@ -16,12 +16,12 @@ import static org.lwjgl.system.MemoryUtil.*;
  * 
  * <h3>Type</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * void (*) (
  *     bgfx_callback_interface_t *_this,
- *     void const *_data,
+ *     const void *_data,
  *     uint32_t _size
- * )</code></pre>
+ * )</pre></code>
  */
 public abstract class BGFXCaptureFrameCallback extends Callback implements BGFXCaptureFrameCallbackI {
 

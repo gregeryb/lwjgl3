@@ -14,11 +14,11 @@ import static org.lwjgl.system.MemoryUtil.*;
 /**
  * <h3>Type</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * void (*) (
- *     char const *message,
+ *     const char *message,
  *     void *user
- * )</code></pre>
+ * )</pre></code>
  */
 public abstract class AILogStreamCallback extends Callback implements AILogStreamCallbackI {
 

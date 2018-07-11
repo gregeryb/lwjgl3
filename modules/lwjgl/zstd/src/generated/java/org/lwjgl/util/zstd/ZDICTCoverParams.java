@@ -31,14 +31,14 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct ZDICT_cover_params_t {
  *     unsigned k;
  *     unsigned d;
  *     unsigned steps;
  *     unsigned nbThreads;
  *     {@link ZDICTParams ZDICT_params_t} zParams;
- * }</code></pre>
+ * }</pre></code>
  */
 @NativeType("struct ZDICT_cover_params_t")
 public class ZDICTCoverParams extends Struct implements NativeResource {
@@ -46,7 +46,6 @@ public class ZDICTCoverParams extends Struct implements NativeResource {
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */
@@ -108,8 +107,6 @@ public class ZDICTCoverParams extends Struct implements NativeResource {
     /** Returns a {@link ZDICTParams} view of the {@code zParams} field. */
     @NativeType("ZDICT_params_t")
     public ZDICTParams zParams() { return nzParams(address()); }
-    /** Passes the {@code zParams} field to the specified {@link java.util.function.Consumer Consumer}. */
-    public ZDICTCoverParams zParams(java.util.function.Consumer<ZDICTParams> consumer) { consumer.accept(zParams()); return this; }
 
     /** Sets the specified value to the {@code k} field. */
     public ZDICTCoverParams k(@NativeType("unsigned") int value) { nk(address(), value); return this; }
@@ -375,8 +372,6 @@ public class ZDICTCoverParams extends Struct implements NativeResource {
         /** Returns a {@link ZDICTParams} view of the {@code zParams} field. */
         @NativeType("ZDICT_params_t")
         public ZDICTParams zParams() { return ZDICTCoverParams.nzParams(address()); }
-        /** Passes the {@code zParams} field to the specified {@link java.util.function.Consumer Consumer}. */
-        public ZDICTCoverParams.Buffer zParams(java.util.function.Consumer<ZDICTParams> consumer) { consumer.accept(zParams()); return this; }
 
         /** Sets the specified value to the {@code k} field. */
         public ZDICTCoverParams.Buffer k(@NativeType("unsigned") int value) { ZDICTCoverParams.nk(address(), value); return this; }

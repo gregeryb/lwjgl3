@@ -73,10 +73,9 @@ public class KHRExternalMemoryFd {
         throw new UnsupportedOperationException();
     }
 
-    static boolean checkCapsDevice(FunctionProvider provider, java.util.Map<String, Long> caps, java.util.Set<String> ext) {
-        return ext.contains("VK_KHR_external_memory_fd") && VK.checkExtension("VK_KHR_external_memory_fd",
-               VK.isSupported(provider, "vkGetMemoryFdKHR", caps)
-            && VK.isSupported(provider, "vkGetMemoryFdPropertiesKHR", caps)
+    static boolean isAvailable(VKCapabilitiesDevice caps) {
+        return checkFunctions(
+            caps.vkGetMemoryFdKHR, caps.vkGetMemoryFdPropertiesKHR
         );
     }
 
@@ -98,11 +97,11 @@ public class KHRExternalMemoryFd {
      * 
      * <p>To export a POSIX file descriptor representing the underlying resources of a Vulkan device memory object, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * VkResult vkGetMemoryFdKHR(
      *     VkDevice                                    device,
      *     const VkMemoryGetFdInfoKHR*                 pGetFdInfo,
-     *     int*                                        pFd);</code></pre>
+     *     int*                                        pFd);</pre></code>
      * 
      * <h5>Description</h5>
      * 
@@ -139,7 +138,7 @@ public class KHRExternalMemoryFd {
      * @param pFd        will return a file descriptor representing the underlying resources of the device memory object.
      */
     @NativeType("VkResult")
-    public static int vkGetMemoryFdKHR(VkDevice device, @NativeType("VkMemoryGetFdInfoKHR const *") VkMemoryGetFdInfoKHR pGetFdInfo, @NativeType("int *") IntBuffer pFd) {
+    public static int vkGetMemoryFdKHR(VkDevice device, @NativeType("const VkMemoryGetFdInfoKHR *") VkMemoryGetFdInfoKHR pGetFdInfo, @NativeType("int *") IntBuffer pFd) {
         if (CHECKS) {
             check(pFd, 1);
         }
@@ -164,12 +163,12 @@ public class KHRExternalMemoryFd {
      * 
      * <p>POSIX file descriptor memory handles compatible with Vulkan <b>may</b> also be created by non-Vulkan APIs using methods beyond the scope of this specification. To determine the correct parameters to use when importing such handles, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * VkResult vkGetMemoryFdPropertiesKHR(
      *     VkDevice                                    device,
-     *     VkExternalMemoryHandleTypeFlagBits          handleType,
+     *     VkExternalMemoryHandleTypeFlagBitsKHR       handleType,
      *     int                                         fd,
-     *     VkMemoryFdPropertiesKHR*                    pMemoryFdProperties);</code></pre>
+     *     VkMemoryFdPropertiesKHR*                    pMemoryFdProperties);</pre></code>
      * 
      * <h5>Valid Usage</h5>
      * 
@@ -182,7 +181,7 @@ public class KHRExternalMemoryFd {
      * 
      * <ul>
      * <li>{@code device} <b>must</b> be a valid {@code VkDevice} handle</li>
-     * <li>{@code handleType} <b>must</b> be a valid {@code VkExternalMemoryHandleTypeFlagBits} value</li>
+     * <li>{@code handleType} <b>must</b> be a valid {@code VkExternalMemoryHandleTypeFlagBitsKHR} value</li>
      * <li>{@code pMemoryFdProperties} <b>must</b> be a valid pointer to a {@link VkMemoryFdPropertiesKHR} structure</li>
      * </ul>
      * 
@@ -195,7 +194,7 @@ public class KHRExternalMemoryFd {
      * </ul></dd>
      * <dt>On failure, this command returns</dt>
      * <dd><ul>
-     * <li>{@link VK11#VK_ERROR_INVALID_EXTERNAL_HANDLE ERROR_INVALID_EXTERNAL_HANDLE}</li>
+     * <li>{@link KHRExternalMemory#VK_ERROR_INVALID_EXTERNAL_HANDLE_KHR ERROR_INVALID_EXTERNAL_HANDLE_KHR}</li>
      * </ul></dd>
      * </dl>
      * 
@@ -209,13 +208,13 @@ public class KHRExternalMemoryFd {
      * @param pMemoryFdProperties will return properties of the handle {@code fd}.
      */
     @NativeType("VkResult")
-    public static int vkGetMemoryFdPropertiesKHR(VkDevice device, @NativeType("VkExternalMemoryHandleTypeFlagBits") int handleType, int fd, @NativeType("VkMemoryFdPropertiesKHR *") VkMemoryFdPropertiesKHR pMemoryFdProperties) {
+    public static int vkGetMemoryFdPropertiesKHR(VkDevice device, @NativeType("VkExternalMemoryHandleTypeFlagBitsKHR") int handleType, int fd, @NativeType("VkMemoryFdPropertiesKHR *") VkMemoryFdPropertiesKHR pMemoryFdProperties) {
         return nvkGetMemoryFdPropertiesKHR(device, handleType, fd, pMemoryFdProperties.address());
     }
 
-    /** Array version of: {@link #vkGetMemoryFdKHR GetMemoryFdKHR} */
+    /** register Array version of: {@link #vkGetMemoryFdKHR GetMemoryFdKHR} */
     @NativeType("VkResult")
-    public static int vkGetMemoryFdKHR(VkDevice device, @NativeType("VkMemoryGetFdInfoKHR const *") VkMemoryGetFdInfoKHR pGetFdInfo, @NativeType("int *") int[] pFd) {
+    public static int vkGetMemoryFdKHR(VkDevice device, @NativeType("const VkMemoryGetFdInfoKHR *") VkMemoryGetFdInfoKHR pGetFdInfo, @NativeType("int *") int[] pFd) {
         long __functionAddress = device.getCapabilities().vkGetMemoryFdKHR;
         if (CHECKS) {
             check(__functionAddress);

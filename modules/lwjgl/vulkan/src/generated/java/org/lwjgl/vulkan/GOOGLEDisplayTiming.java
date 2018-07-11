@@ -26,7 +26,7 @@ import static org.lwjgl.system.MemoryUtil.*;
  * 
  * <div style="margin-left: 26px; border-left: 1px solid gray; padding-left: 14px;"><h5>Note</h5>
  * 
- * <p>The example code for the this extension (like the {@link KHRSurface VK_KHR_surface} and {@code VK_GOOGLE_display_timing} extensions) is contained in the cube demo that is shipped with the official Khronos SDK, and is being kept up-to-date in that location (see: https://github.com/KhronosGroup/Vulkan-Tools/blob/master/cube/cube.c ).</p>
+ * <p>The example code for the this extension (like the {@link KHRSurface VK_KHR_surface} and {@code VK_GOOGLE_display_timing} extensions) is contained in the cube demo that is shipped with the official Khronos SDK, and is being kept up-to-date in that location (see: https://github.com/KhronosGroup/Vulkan-LoaderAndValidationLayers/blob/master/demos/cube.c ).</p>
  * </div>
  * 
  * <dl>
@@ -45,7 +45,7 @@ import static org.lwjgl.system.MemoryUtil.*;
  * </ul></dd>
  * <dt><b>Contact</b></dt>
  * <dd><ul>
- * <li>Ian Elliott @ianelliottus</li>
+ * <li>Ian Elliott mailto:ianelliott@google.com[ianelliott@google.com]</li>
  * </ul></dd>
  * <dt><b>Last Modified Date</b></dt>
  * <dd>2017-02-14</dd>
@@ -73,10 +73,9 @@ public class GOOGLEDisplayTiming {
         throw new UnsupportedOperationException();
     }
 
-    static boolean checkCapsDevice(FunctionProvider provider, java.util.Map<String, Long> caps, java.util.Set<String> ext) {
-        return ext.contains("VK_GOOGLE_display_timing") && VK.checkExtension("VK_GOOGLE_display_timing",
-               VK.isSupported(provider, "vkGetRefreshCycleDurationGOOGLE", caps)
-            && VK.isSupported(provider, "vkGetPastPresentationTimingGOOGLE", caps)
+    static boolean isAvailable(VKCapabilitiesDevice caps) {
+        return checkFunctions(
+            caps.vkGetRefreshCycleDurationGOOGLE, caps.vkGetPastPresentationTimingGOOGLE
         );
     }
 
@@ -98,11 +97,11 @@ public class GOOGLEDisplayTiming {
      * 
      * <p>To query the duration of a refresh cycle (RC) for the presentation engine's display, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * VkResult vkGetRefreshCycleDurationGOOGLE(
      *     VkDevice                                    device,
      *     VkSwapchainKHR                              swapchain,
-     *     VkRefreshCycleDurationGOOGLE*               pDisplayTimingProperties);</code></pre>
+     *     VkRefreshCycleDurationGOOGLE*               pDisplayTimingProperties);</pre></code>
      * 
      * <h5>Valid Usage (Implicit)</h5>
      * 
@@ -170,12 +169,12 @@ public class GOOGLEDisplayTiming {
      * 
      * <p>To asynchronously query the presentation engine, for newly-available timing information about one or more previous presents to a given swapchain, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * VkResult vkGetPastPresentationTimingGOOGLE(
      *     VkDevice                                    device,
      *     VkSwapchainKHR                              swapchain,
      *     uint32_t*                                   pPresentationTimingCount,
-     *     VkPastPresentationTimingGOOGLE*             pPresentationTimings);</code></pre>
+     *     VkPastPresentationTimingGOOGLE*             pPresentationTimings);</pre></code>
      * 
      * <h5>Description</h5>
      * 
@@ -231,7 +230,7 @@ public class GOOGLEDisplayTiming {
         return nvkGetPastPresentationTimingGOOGLE(device, swapchain, memAddress(pPresentationTimingCount), memAddressSafe(pPresentationTimings));
     }
 
-    /** Array version of: {@link #vkGetPastPresentationTimingGOOGLE GetPastPresentationTimingGOOGLE} */
+    /** register Array version of: {@link #vkGetPastPresentationTimingGOOGLE GetPastPresentationTimingGOOGLE} */
     @NativeType("VkResult")
     public static int vkGetPastPresentationTimingGOOGLE(VkDevice device, @NativeType("VkSwapchainKHR") long swapchain, @NativeType("uint32_t *") int[] pPresentationTimingCount, @Nullable @NativeType("VkPastPresentationTimingGOOGLE *") VkPastPresentationTimingGOOGLE.Buffer pPresentationTimings) {
         long __functionAddress = device.getCapabilities().vkGetPastPresentationTimingGOOGLE;

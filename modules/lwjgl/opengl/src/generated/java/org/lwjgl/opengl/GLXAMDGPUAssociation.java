@@ -65,7 +65,12 @@ public class GLXAMDGPUAssociation {
 
     // --- [ glXCreateAssociatedContextAMD ] ---
 
-    /** Creates an associated context. */
+    /**
+     * Creates an associated context.
+     *
+     * @param id         
+     * @param share_list 
+     */
     @NativeType("GLXContext")
     public static long glXCreateAssociatedContextAMD(@NativeType("unsigned int") int id, @NativeType("GLXContext") long share_list) {
         long __functionAddress = GL.getCapabilitiesGLXClient().glXCreateAssociatedContextAMD;
@@ -88,9 +93,15 @@ public class GLXAMDGPUAssociation {
         return callPPP(__functionAddress, id, share_context, attribList);
     }
 
-    /** Creates an associated context and requests a specific GL version. */
+    /**
+     * Creates an associated context and requests a specific GL version.
+     *
+     * @param id            
+     * @param share_context 
+     * @param attribList    
+     */
     @NativeType("GLXContext")
-    public static long glXCreateAssociatedContextAttribsAMD(@NativeType("unsigned int") int id, @NativeType("GLXContext") long share_context, @NativeType("int const *") IntBuffer attribList) {
+    public static long glXCreateAssociatedContextAttribsAMD(@NativeType("unsigned int") int id, @NativeType("GLXContext") long share_context, @NativeType("const int *") IntBuffer attribList) {
         if (CHECKS) {
             checkNT(attribList);
         }
@@ -145,7 +156,12 @@ public class GLXAMDGPUAssociation {
 
     // --- [ glXGetGPUIDsAMD ] ---
 
-    /** Queries the IDs for available GPUs. */
+    /**
+     * Queries the IDs for available GPUs.
+     *
+     * @param maxCount 
+     * @param ids      
+     */
     @NativeType("unsigned int")
     public static int glXGetGPUIDsAMD(@NativeType("unsigned int") int maxCount, @NativeType("unsigned int") int ids) {
         long __functionAddress = GL.getCapabilitiesGLXClient().glXGetGPUIDsAMD;
@@ -169,7 +185,10 @@ public class GLXAMDGPUAssociation {
     /**
      * Queries GPU properties.
      *
+     * @param id       
      * @param property one of:<br><table><tr><td>{@link #GLX_GPU_VENDOR_AMD GPU_VENDOR_AMD}</td><td>{@link #GLX_GPU_RENDERER_STRING_AMD GPU_RENDERER_STRING_AMD}</td><td>{@link #GLX_GPU_OPENGL_VERSION_STRING_AMD GPU_OPENGL_VERSION_STRING_AMD}</td><td>{@link #GLX_GPU_FASTEST_TARGET_GPUS_AMD GPU_FASTEST_TARGET_GPUS_AMD}</td></tr><tr><td>{@link #GLX_GPU_RAM_AMD GPU_RAM_AMD}</td><td>{@link #GLX_GPU_CLOCK_AMD GPU_CLOCK_AMD}</td><td>{@link #GLX_GPU_NUM_PIPES_AMD GPU_NUM_PIPES_AMD}</td><td>{@link #GLX_GPU_NUM_SIMD_AMD GPU_NUM_SIMD_AMD}</td></tr><tr><td>{@link #GLX_GPU_NUM_RB_AMD GPU_NUM_RB_AMD}</td><td>{@link #GLX_GPU_NUM_SPI_AMD GPU_NUM_SPI_AMD}</td></tr></table>
+     * @param dataType 
+     * @param data     
      */
     public static int glXGetGPUInfoAMD(@NativeType("unsigned int") int id, int property, @NativeType("GLenum") int dataType, @NativeType("void *") ByteBuffer data) {
         return nglXGetGPUInfoAMD(id, property, dataType, data.remaining(), memAddress(data));
@@ -192,9 +211,9 @@ public class GLXAMDGPUAssociation {
         return callPI(__functionAddress, ctx) != 0;
     }
 
-    /** Array version of: {@link #glXCreateAssociatedContextAttribsAMD CreateAssociatedContextAttribsAMD} */
+    /** register Array version of: {@link #glXCreateAssociatedContextAttribsAMD CreateAssociatedContextAttribsAMD} */
     @NativeType("GLXContext")
-    public static long glXCreateAssociatedContextAttribsAMD(@NativeType("unsigned int") int id, @NativeType("GLXContext") long share_context, @NativeType("int const *") int[] attribList) {
+    public static long glXCreateAssociatedContextAttribsAMD(@NativeType("unsigned int") int id, @NativeType("GLXContext") long share_context, @NativeType("const int *") int[] attribList) {
         long __functionAddress = GL.getCapabilitiesGLXClient().glXCreateAssociatedContextAttribsAMD;
         if (CHECKS) {
             check(__functionAddress);

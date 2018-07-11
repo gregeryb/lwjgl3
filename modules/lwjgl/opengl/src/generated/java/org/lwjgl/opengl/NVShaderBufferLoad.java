@@ -36,7 +36,7 @@ import static org.lwjgl.system.MemoryUtil.*;
  * <p>As a very simple example, imagine packing a group of similar objects' constants into a single buffer object and pointing your program at object
  * &lt;i&gt; by setting {@code glVertexAttribI1iEXT(attrLoc, i);} and using a shader as such:</p>
  * 
- * <pre><code>
+ * <code><pre>
  * struct MyObjectType {
  *     mat4x4 modelView;
  *     vec4 materialPropertyX;
@@ -48,7 +48,7 @@ import static org.lwjgl.system.MemoryUtil.*;
  * ...
  * 
  * mat4x4 thisObjectsMatrix = allObjects[objectID].modelView;
- * // do transform, shading, etc.</code></pre>
+ * // do transform, shading, etc.</pre></code>
  * 
  * <p>This is beneficial in much the same way that texture arrays allow choosing between similar, but independent, texture maps with a single coordinate
  * identifying which slice of the texture to use. It also resembles instancing, where a lightweight change (incrementing the instance ID) can be used to
@@ -58,12 +58,12 @@ import static org.lwjgl.system.MemoryUtil.*;
  * the use of shaders. Another simple example, showing something you can't do with existing functionality, is to do dependent fetches into many buffer
  * objects:</p>
  * 
- * <pre><code>
+ * <code><pre>
  * GenBuffers(N, dataBuffers);
- * GenBuffers(1, &amp;pointerBuffer);
+ * GenBuffers(1, &pointerBuffer);
  * 
  * GLuint64EXT gpuAddrs[N];
- * for (i = 0; i &lt; N; ++i) {
+ * for (i = 0; i < N; ++i) {
  *     BindBuffer(target, dataBuffers[i]);
  *     BufferData(target, size[i], myData[i], STATIC_DRAW);
  * 
@@ -77,12 +77,12 @@ import static org.lwjgl.system.MemoryUtil.*;
  * BindBuffer(target, pointerBuffer);
  * BufferData(target, sizeof(GLuint64EXT)*N, gpuAddrs, STATIC_DRAW);
  * GetBufferParameterui64vNV(target, BUFFER_GPU_ADDRESS,
- *                           &amp;pointerBufferAddr);
+ *                           &pointerBufferAddr);
  * MakeBufferResidentNV(target, READ_ONLY);
  * 
  * // now in the shader, we can use a double indirection
  * vec4 **ptrToBuffers = pointerBufferAddr;
- * vec4 *ptrToBufferI = ptrToBuffers[i];</code></pre>
+ * vec4 *ptrToBufferI = ptrToBuffers[i];</pre></code>
  * 
  * <p>This allows simultaneous access to more buffers than {@link EXTBindableUniform EXT_bindable_uniform} ({@link EXTBindableUniform#GL_MAX_VERTEX_BINDABLE_UNIFORMS_EXT MAX_VERTEX_BINDABLE_UNIFORMS_EXT}, etc.) and each can be larger than
  * {@link EXTBindableUniform#GL_MAX_BINDABLE_UNIFORM_SIZE_EXT MAX_BINDABLE_UNIFORM_SIZE_EXT}.</p>
@@ -216,7 +216,7 @@ public class NVShaderBufferLoad {
 
     public static native void nglUniformui64vNV(int location, int count, long value);
 
-    public static void glUniformui64vNV(@NativeType("GLint") int location, @NativeType("GLuint64EXT const *") LongBuffer value) {
+    public static void glUniformui64vNV(@NativeType("GLint") int location, @NativeType("const GLuint64EXT *") LongBuffer value) {
         nglUniformui64vNV(location, value.remaining(), memAddress(value));
     }
 
@@ -251,11 +251,11 @@ public class NVShaderBufferLoad {
 
     public static native void nglProgramUniformui64vNV(int program, int location, int count, long value);
 
-    public static void glProgramUniformui64vNV(@NativeType("GLuint") int program, @NativeType("GLint") int location, @NativeType("GLuint64EXT const *") LongBuffer value) {
+    public static void glProgramUniformui64vNV(@NativeType("GLuint") int program, @NativeType("GLint") int location, @NativeType("const GLuint64EXT *") LongBuffer value) {
         nglProgramUniformui64vNV(program, location, value.remaining(), memAddress(value));
     }
 
-    /** Array version of: {@link #glGetBufferParameterui64vNV GetBufferParameterui64vNV} */
+    /** register Array version of: {@link #glGetBufferParameterui64vNV GetBufferParameterui64vNV} */
     public static void glGetBufferParameterui64vNV(@NativeType("GLenum") int target, @NativeType("GLenum") int pname, @NativeType("GLuint64EXT *") long[] params) {
         long __functionAddress = GL.getICD().glGetBufferParameterui64vNV;
         if (CHECKS) {
@@ -265,7 +265,7 @@ public class NVShaderBufferLoad {
         callPV(__functionAddress, target, pname, params);
     }
 
-    /** Array version of: {@link #glGetNamedBufferParameterui64vNV GetNamedBufferParameterui64vNV} */
+    /** register Array version of: {@link #glGetNamedBufferParameterui64vNV GetNamedBufferParameterui64vNV} */
     public static void glGetNamedBufferParameterui64vNV(@NativeType("GLuint") int buffer, @NativeType("GLenum") int pname, @NativeType("GLuint64EXT *") long[] params) {
         long __functionAddress = GL.getICD().glGetNamedBufferParameterui64vNV;
         if (CHECKS) {
@@ -275,7 +275,7 @@ public class NVShaderBufferLoad {
         callPV(__functionAddress, buffer, pname, params);
     }
 
-    /** Array version of: {@link #glGetIntegerui64vNV GetIntegerui64vNV} */
+    /** register Array version of: {@link #glGetIntegerui64vNV GetIntegerui64vNV} */
     public static void glGetIntegerui64vNV(@NativeType("GLenum") int value, @NativeType("GLuint64EXT *") long[] result) {
         long __functionAddress = GL.getICD().glGetIntegerui64vNV;
         if (CHECKS) {
@@ -285,8 +285,8 @@ public class NVShaderBufferLoad {
         callPV(__functionAddress, value, result);
     }
 
-    /** Array version of: {@link #glUniformui64vNV Uniformui64vNV} */
-    public static void glUniformui64vNV(@NativeType("GLint") int location, @NativeType("GLuint64EXT const *") long[] value) {
+    /** register Array version of: {@link #glUniformui64vNV Uniformui64vNV} */
+    public static void glUniformui64vNV(@NativeType("GLint") int location, @NativeType("const GLuint64EXT *") long[] value) {
         long __functionAddress = GL.getICD().glUniformui64vNV;
         if (CHECKS) {
             check(__functionAddress);
@@ -294,7 +294,7 @@ public class NVShaderBufferLoad {
         callPV(__functionAddress, location, value.length, value);
     }
 
-    /** Array version of: {@link #glGetUniformui64vNV GetUniformui64vNV} */
+    /** register Array version of: {@link #glGetUniformui64vNV GetUniformui64vNV} */
     public static void glGetUniformui64vNV(@NativeType("GLuint") int program, @NativeType("GLint") int location, @NativeType("GLuint64EXT *") long[] params) {
         long __functionAddress = GL.getICD().glGetUniformui64vNV;
         if (CHECKS) {
@@ -304,8 +304,8 @@ public class NVShaderBufferLoad {
         callPV(__functionAddress, program, location, params);
     }
 
-    /** Array version of: {@link #glProgramUniformui64vNV ProgramUniformui64vNV} */
-    public static void glProgramUniformui64vNV(@NativeType("GLuint") int program, @NativeType("GLint") int location, @NativeType("GLuint64EXT const *") long[] value) {
+    /** register Array version of: {@link #glProgramUniformui64vNV ProgramUniformui64vNV} */
+    public static void glProgramUniformui64vNV(@NativeType("GLuint") int program, @NativeType("GLint") int location, @NativeType("const GLuint64EXT *") long[] value) {
         long __functionAddress = GL.getICD().glProgramUniformui64vNV;
         if (CHECKS) {
             check(__functionAddress);

@@ -41,9 +41,12 @@ public class VRRenderModels {
      * 
      * <p>The resulting render model is valid until {@link VR#VR_ShutdownInternal ShutdownInternal} is called or until {@link #VRRenderModels_FreeRenderModel FreeRenderModel} is called. When the application is finished with
      * the render model it should call {@link #VRRenderModels_FreeRenderModel FreeRenderModel} to free the memory associated with the model.</p>
+     *
+     * @param pchRenderModelName 
+     * @param ppRenderModel      
      */
     @NativeType("EVRRenderModelError")
-    public static int VRRenderModels_LoadRenderModel_Async(@NativeType("char const *") ByteBuffer pchRenderModelName, @NativeType("RenderModel_t **") PointerBuffer ppRenderModel) {
+    public static int VRRenderModels_LoadRenderModel_Async(@NativeType("const char *") ByteBuffer pchRenderModelName, @NativeType("RenderModel_t **") PointerBuffer ppRenderModel) {
         if (CHECKS) {
             checkNT1(pchRenderModelName);
             check(ppRenderModel, 1);
@@ -57,9 +60,12 @@ public class VRRenderModels {
      * 
      * <p>The resulting render model is valid until {@link VR#VR_ShutdownInternal ShutdownInternal} is called or until {@link #VRRenderModels_FreeRenderModel FreeRenderModel} is called. When the application is finished with
      * the render model it should call {@link #VRRenderModels_FreeRenderModel FreeRenderModel} to free the memory associated with the model.</p>
+     *
+     * @param pchRenderModelName 
+     * @param ppRenderModel      
      */
     @NativeType("EVRRenderModelError")
-    public static int VRRenderModels_LoadRenderModel_Async(@NativeType("char const *") CharSequence pchRenderModelName, @NativeType("RenderModel_t **") PointerBuffer ppRenderModel) {
+    public static int VRRenderModels_LoadRenderModel_Async(@NativeType("const char *") CharSequence pchRenderModelName, @NativeType("RenderModel_t **") PointerBuffer ppRenderModel) {
         if (CHECKS) {
             check(ppRenderModel, 1);
         }
@@ -83,7 +89,11 @@ public class VRRenderModels {
         callPV(__functionAddress, pRenderModel);
     }
 
-    /** Frees a previously returned render model It is safe to call this on a null ptr. */
+    /**
+     * Frees a previously returned render model It is safe to call this on a null ptr.
+     *
+     * @param pRenderModel 
+     */
     public static void VRRenderModels_FreeRenderModel(@Nullable @NativeType("RenderModel_t *") RenderModel pRenderModel) {
         nVRRenderModels_FreeRenderModel(memAddressSafe(pRenderModel));
     }
@@ -99,7 +109,12 @@ public class VRRenderModels {
         return callPI(__functionAddress, textureId, ppTexture);
     }
 
-    /** Loads and returns a texture for use in the application. */
+    /**
+     * Loads and returns a texture for use in the application.
+     *
+     * @param textureId 
+     * @param ppTexture 
+     */
     @NativeType("EVRRenderModelError")
     public static int VRRenderModels_LoadTexture_Async(@NativeType("TextureID_t") int textureId, @NativeType("RenderModel_TextureMap_t **") PointerBuffer ppTexture) {
         if (CHECKS) {
@@ -119,7 +134,11 @@ public class VRRenderModels {
         callPV(__functionAddress, pTexture);
     }
 
-    /** Frees a previously returned texture. It is safe to call this on a null ptr. */
+    /**
+     * Frees a previously returned texture. It is safe to call this on a null ptr.
+     *
+     * @param pTexture 
+     */
     public static void VRRenderModels_FreeTexture(@Nullable @NativeType("RenderModel_TextureMap_t *") RenderModelTextureMap pTexture) {
         nVRRenderModels_FreeTexture(memAddressSafe(pTexture));
     }
@@ -136,7 +155,13 @@ public class VRRenderModels {
         return callPPI(__functionAddress, textureId, pD3D11Device, ppD3D11Texture2D);
     }
 
-    /** Creates a D3D11 texture and loads data into it. */
+    /**
+     * Creates a D3D11 texture and loads data into it.
+     *
+     * @param textureId        
+     * @param pD3D11Device     
+     * @param ppD3D11Texture2D 
+     */
     @NativeType("EVRRenderModelError")
     public static int VRRenderModels_LoadTextureD3D11_Async(@NativeType("TextureID_t") int textureId, @NativeType("void *") long pD3D11Device, @NativeType("void **") PointerBuffer ppD3D11Texture2D) {
         if (CHECKS) {
@@ -147,7 +172,12 @@ public class VRRenderModels {
 
     // --- [ VRRenderModels_LoadIntoTextureD3D11_Async ] ---
 
-    /** Helper function to copy the bits into an existing texture. */
+    /**
+     * Helper function to copy the bits into an existing texture.
+     *
+     * @param textureId   
+     * @param pDstTexture 
+     */
     @NativeType("EVRRenderModelError")
     public static int VRRenderModels_LoadIntoTextureD3D11_Async(@NativeType("TextureID_t") int textureId, @NativeType("void *") long pDstTexture) {
         long __functionAddress = OpenVR.VRRenderModels.LoadIntoTextureD3D11_Async;
@@ -160,7 +190,11 @@ public class VRRenderModels {
 
     // --- [ VRRenderModels_FreeTextureD3D11 ] ---
 
-    /** Use this to free textures created with LoadTextureD3D11_Async instead of calling Release on them. */
+    /**
+     * Use this to free textures created with LoadTextureD3D11_Async instead of calling Release on them.
+     *
+     * @param pD3D11Texture2D 
+     */
     public static void VRRenderModels_FreeTextureD3D11(@NativeType("void *") long pD3D11Texture2D) {
         long __functionAddress = OpenVR.VRRenderModels.FreeTextureD3D11;
         if (CHECKS) {
@@ -185,6 +219,9 @@ public class VRRenderModels {
      * Use this to get the names of available render models. Index does not correlate to a tracked device index, but is only used for iterating over all
      * available render models. If the index is out of range, this function will return 0. Otherwise, it will return the size of the buffer required for the
      * name.
+     *
+     * @param unRenderModelIndex 
+     * @param pchRenderModelName 
      */
     @NativeType("uint32_t")
     public static int VRRenderModels_GetRenderModelName(@NativeType("uint32_t") int unRenderModelIndex, @Nullable @NativeType("char *") ByteBuffer pchRenderModelName) {
@@ -195,6 +232,9 @@ public class VRRenderModels {
      * Use this to get the names of available render models. Index does not correlate to a tracked device index, but is only used for iterating over all
      * available render models. If the index is out of range, this function will return 0. Otherwise, it will return the size of the buffer required for the
      * name.
+     *
+     * @param unRenderModelIndex   
+     * @param unRenderModelNameLen 
      */
     @NativeType("uint32_t")
     public static String VRRenderModels_GetRenderModelName(@NativeType("uint32_t") int unRenderModelIndex, @NativeType("uint32_t") int unRenderModelNameLen) {
@@ -235,9 +275,11 @@ public class VRRenderModels {
      * Returns the number of components of the specified render model.
      * 
      * <p>Components are useful when client application wish to draw, label, or otherwise interact with components of tracked objects.</p>
+     *
+     * @param pchRenderModelName 
      */
     @NativeType("uint32_t")
-    public static int VRRenderModels_GetComponentCount(@NativeType("char const *") ByteBuffer pchRenderModelName) {
+    public static int VRRenderModels_GetComponentCount(@NativeType("const char *") ByteBuffer pchRenderModelName) {
         if (CHECKS) {
             checkNT1(pchRenderModelName);
         }
@@ -248,9 +290,11 @@ public class VRRenderModels {
      * Returns the number of components of the specified render model.
      * 
      * <p>Components are useful when client application wish to draw, label, or otherwise interact with components of tracked objects.</p>
+     *
+     * @param pchRenderModelName 
      */
     @NativeType("uint32_t")
-    public static int VRRenderModels_GetComponentCount(@NativeType("char const *") CharSequence pchRenderModelName) {
+    public static int VRRenderModels_GetComponentCount(@NativeType("const char *") CharSequence pchRenderModelName) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
             ByteBuffer pchRenderModelNameEncoded = stack.ASCII(pchRenderModelName);
@@ -275,9 +319,13 @@ public class VRRenderModels {
      * Use this to get the names of available components. Index does not correlate to a tracked device index, but is only used for iterating over all
      * available components. If the index is out of range, this function will return 0. Otherwise, it will return the size of the buffer required for the
      * name.
+     *
+     * @param pchRenderModelName 
+     * @param unComponentIndex   
+     * @param pchComponentName   
      */
     @NativeType("uint32_t")
-    public static int VRRenderModels_GetComponentName(@NativeType("char const *") ByteBuffer pchRenderModelName, @NativeType("uint32_t") int unComponentIndex, @Nullable @NativeType("char *") ByteBuffer pchComponentName) {
+    public static int VRRenderModels_GetComponentName(@NativeType("const char *") ByteBuffer pchRenderModelName, @NativeType("uint32_t") int unComponentIndex, @Nullable @NativeType("char *") ByteBuffer pchComponentName) {
         if (CHECKS) {
             checkNT1(pchRenderModelName);
         }
@@ -288,9 +336,13 @@ public class VRRenderModels {
      * Use this to get the names of available components. Index does not correlate to a tracked device index, but is only used for iterating over all
      * available components. If the index is out of range, this function will return 0. Otherwise, it will return the size of the buffer required for the
      * name.
+     *
+     * @param pchRenderModelName 
+     * @param unComponentIndex   
+     * @param pchComponentName   
      */
     @NativeType("uint32_t")
-    public static int VRRenderModels_GetComponentName(@NativeType("char const *") CharSequence pchRenderModelName, @NativeType("uint32_t") int unComponentIndex, @Nullable @NativeType("char *") ByteBuffer pchComponentName) {
+    public static int VRRenderModels_GetComponentName(@NativeType("const char *") CharSequence pchRenderModelName, @NativeType("uint32_t") int unComponentIndex, @Nullable @NativeType("char *") ByteBuffer pchComponentName) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
             ByteBuffer pchRenderModelNameEncoded = stack.ASCII(pchRenderModelName);
@@ -304,9 +356,13 @@ public class VRRenderModels {
      * Use this to get the names of available components. Index does not correlate to a tracked device index, but is only used for iterating over all
      * available components. If the index is out of range, this function will return 0. Otherwise, it will return the size of the buffer required for the
      * name.
+     *
+     * @param pchRenderModelName 
+     * @param unComponentIndex   
+     * @param unComponentNameLen 
      */
     @NativeType("uint32_t")
-    public static String VRRenderModels_GetComponentName(@NativeType("char const *") CharSequence pchRenderModelName, @NativeType("uint32_t") int unComponentIndex, @NativeType("uint32_t") int unComponentNameLen) {
+    public static String VRRenderModels_GetComponentName(@NativeType("const char *") CharSequence pchRenderModelName, @NativeType("uint32_t") int unComponentIndex, @NativeType("uint32_t") int unComponentNameLen) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
             ByteBuffer pchRenderModelNameEncoded = stack.ASCII(pchRenderModelName);
@@ -341,9 +397,12 @@ public class VRRenderModels {
      * <div style="margin-left: 26px; border-left: 1px solid gray; padding-left: 14px;"><h5>Note</h5>
      * 
      * <p>A single component may be associated with multiple buttons. Ex: A trackpad which also provides "D-pad" functionality</p></div>
+     *
+     * @param pchRenderModelName 
+     * @param pchComponentName   
      */
     @NativeType("uint64_t")
-    public static long VRRenderModels_GetComponentButtonMask(@NativeType("char const *") ByteBuffer pchRenderModelName, @NativeType("char const *") ByteBuffer pchComponentName) {
+    public static long VRRenderModels_GetComponentButtonMask(@NativeType("const char *") ByteBuffer pchRenderModelName, @NativeType("const char *") ByteBuffer pchComponentName) {
         if (CHECKS) {
             checkNT1(pchRenderModelName);
             checkNT1(pchComponentName);
@@ -363,9 +422,12 @@ public class VRRenderModels {
      * <div style="margin-left: 26px; border-left: 1px solid gray; padding-left: 14px;"><h5>Note</h5>
      * 
      * <p>A single component may be associated with multiple buttons. Ex: A trackpad which also provides "D-pad" functionality</p></div>
+     *
+     * @param pchRenderModelName 
+     * @param pchComponentName   
      */
     @NativeType("uint64_t")
-    public static long VRRenderModels_GetComponentButtonMask(@NativeType("char const *") CharSequence pchRenderModelName, @NativeType("char const *") CharSequence pchComponentName) {
+    public static long VRRenderModels_GetComponentButtonMask(@NativeType("const char *") CharSequence pchRenderModelName, @NativeType("const char *") CharSequence pchComponentName) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
             ByteBuffer pchRenderModelNameEncoded = stack.ASCII(pchRenderModelName);
@@ -390,9 +452,13 @@ public class VRRenderModels {
     /**
      * Use this to get the render model name for the specified rendermode/component combination, to be passed to {@link #VRRenderModels_LoadRenderModel_Async LoadRenderModel_Async}. If the component
      * name is out of range, this function will return 0. Otherwise, it will return the size of the buffer required for the name.
+     *
+     * @param pchRenderModelName          
+     * @param pchComponentName            
+     * @param pchComponentRenderModelName 
      */
     @NativeType("uint32_t")
-    public static int VRRenderModels_GetComponentRenderModelName(@NativeType("char const *") ByteBuffer pchRenderModelName, @NativeType("char const *") ByteBuffer pchComponentName, @Nullable @NativeType("char *") ByteBuffer pchComponentRenderModelName) {
+    public static int VRRenderModels_GetComponentRenderModelName(@NativeType("const char *") ByteBuffer pchRenderModelName, @NativeType("const char *") ByteBuffer pchComponentName, @Nullable @NativeType("char *") ByteBuffer pchComponentRenderModelName) {
         if (CHECKS) {
             checkNT1(pchRenderModelName);
             checkNT1(pchComponentName);
@@ -403,9 +469,13 @@ public class VRRenderModels {
     /**
      * Use this to get the render model name for the specified rendermode/component combination, to be passed to {@link #VRRenderModels_LoadRenderModel_Async LoadRenderModel_Async}. If the component
      * name is out of range, this function will return 0. Otherwise, it will return the size of the buffer required for the name.
+     *
+     * @param pchRenderModelName          
+     * @param pchComponentName            
+     * @param pchComponentRenderModelName 
      */
     @NativeType("uint32_t")
-    public static int VRRenderModels_GetComponentRenderModelName(@NativeType("char const *") CharSequence pchRenderModelName, @NativeType("char const *") CharSequence pchComponentName, @Nullable @NativeType("char *") ByteBuffer pchComponentRenderModelName) {
+    public static int VRRenderModels_GetComponentRenderModelName(@NativeType("const char *") CharSequence pchRenderModelName, @NativeType("const char *") CharSequence pchComponentName, @Nullable @NativeType("char *") ByteBuffer pchComponentRenderModelName) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
             ByteBuffer pchRenderModelNameEncoded = stack.ASCII(pchRenderModelName);
@@ -419,9 +489,13 @@ public class VRRenderModels {
     /**
      * Use this to get the render model name for the specified rendermode/component combination, to be passed to {@link #VRRenderModels_LoadRenderModel_Async LoadRenderModel_Async}. If the component
      * name is out of range, this function will return 0. Otherwise, it will return the size of the buffer required for the name.
+     *
+     * @param pchRenderModelName            
+     * @param pchComponentName              
+     * @param unComponentRenderModelNameLen 
      */
     @NativeType("uint32_t")
-    public static String VRRenderModels_GetComponentRenderModelName(@NativeType("char const *") CharSequence pchRenderModelName, @NativeType("char const *") CharSequence pchComponentName, @NativeType("uint32_t") int unComponentRenderModelNameLen) {
+    public static String VRRenderModels_GetComponentRenderModelName(@NativeType("const char *") CharSequence pchRenderModelName, @NativeType("const char *") CharSequence pchComponentName, @NativeType("uint32_t") int unComponentRenderModelNameLen) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
             ByteBuffer pchRenderModelNameEncoded = stack.ASCII(pchRenderModelName);
@@ -457,9 +531,15 @@ public class VRRenderModels {
      * <div style="margin-left: 26px; border-left: 1px solid gray; padding-left: 14px;"><h5>Note</h5>
      * 
      * <p>For dynamic objects, visibility may be dynamic. (I.e., true/false will be returned based on controller state and controller mode state )</p></div>
+     *
+     * @param pchRenderModelName 
+     * @param pchComponentName   
+     * @param pControllerState   
+     * @param pState             
+     * @param pComponentState    
      */
     @NativeType("bool")
-    public static boolean VRRenderModels_GetComponentState(@NativeType("char const *") ByteBuffer pchRenderModelName, @NativeType("char const *") ByteBuffer pchComponentName, @NativeType("VRControllerState_t const *") VRControllerState pControllerState, @NativeType("RenderModel_ControllerMode_State_t const *") RenderModelControllerModeState pState, @NativeType("RenderModel_ComponentState_t *") RenderModelComponentState pComponentState) {
+    public static boolean VRRenderModels_GetComponentState(@NativeType("const char *") ByteBuffer pchRenderModelName, @NativeType("const char *") ByteBuffer pchComponentName, @NativeType("const VRControllerState_t *") VRControllerState pControllerState, @NativeType("const RenderModel_ControllerMode_State_t *") RenderModelControllerModeState pState, @NativeType("RenderModel_ComponentState_t *") RenderModelComponentState pComponentState) {
         if (CHECKS) {
             checkNT1(pchRenderModelName);
             checkNT1(pchComponentName);
@@ -479,9 +559,15 @@ public class VRRenderModels {
      * <div style="margin-left: 26px; border-left: 1px solid gray; padding-left: 14px;"><h5>Note</h5>
      * 
      * <p>For dynamic objects, visibility may be dynamic. (I.e., true/false will be returned based on controller state and controller mode state )</p></div>
+     *
+     * @param pchRenderModelName 
+     * @param pchComponentName   
+     * @param pControllerState   
+     * @param pState             
+     * @param pComponentState    
      */
     @NativeType("bool")
-    public static boolean VRRenderModels_GetComponentState(@NativeType("char const *") CharSequence pchRenderModelName, @NativeType("char const *") CharSequence pchComponentName, @NativeType("VRControllerState_t const *") VRControllerState pControllerState, @NativeType("RenderModel_ControllerMode_State_t const *") RenderModelControllerModeState pState, @NativeType("RenderModel_ComponentState_t *") RenderModelComponentState pComponentState) {
+    public static boolean VRRenderModels_GetComponentState(@NativeType("const char *") CharSequence pchRenderModelName, @NativeType("const char *") CharSequence pchComponentName, @NativeType("const VRControllerState_t *") VRControllerState pControllerState, @NativeType("const RenderModel_ControllerMode_State_t *") RenderModelControllerModeState pState, @NativeType("RenderModel_ComponentState_t *") RenderModelComponentState pComponentState) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
             ByteBuffer pchRenderModelNameEncoded = stack.ASCII(pchRenderModelName);
@@ -503,9 +589,14 @@ public class VRRenderModels {
         return callPPZ(__functionAddress, pchRenderModelName, pchComponentName);
     }
 
-    /** Returns true if the render model has a component with the specified name. */
+    /**
+     * Returns true if the render model has a component with the specified name.
+     *
+     * @param pchRenderModelName 
+     * @param pchComponentName   
+     */
     @NativeType("bool")
-    public static boolean VRRenderModels_RenderModelHasComponent(@NativeType("char const *") ByteBuffer pchRenderModelName, @NativeType("char const *") ByteBuffer pchComponentName) {
+    public static boolean VRRenderModels_RenderModelHasComponent(@NativeType("const char *") ByteBuffer pchRenderModelName, @NativeType("const char *") ByteBuffer pchComponentName) {
         if (CHECKS) {
             checkNT1(pchRenderModelName);
             checkNT1(pchComponentName);
@@ -513,9 +604,14 @@ public class VRRenderModels {
         return nVRRenderModels_RenderModelHasComponent(memAddress(pchRenderModelName), memAddress(pchComponentName));
     }
 
-    /** Returns true if the render model has a component with the specified name. */
+    /**
+     * Returns true if the render model has a component with the specified name.
+     *
+     * @param pchRenderModelName 
+     * @param pchComponentName   
+     */
     @NativeType("bool")
-    public static boolean VRRenderModels_RenderModelHasComponent(@NativeType("char const *") CharSequence pchRenderModelName, @NativeType("char const *") CharSequence pchComponentName) {
+    public static boolean VRRenderModels_RenderModelHasComponent(@NativeType("const char *") CharSequence pchRenderModelName, @NativeType("const char *") CharSequence pchComponentName) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
             ByteBuffer pchRenderModelNameEncoded = stack.ASCII(pchRenderModelName);
@@ -537,9 +633,15 @@ public class VRRenderModels {
         return callPPPI(__functionAddress, pchRenderModelName, pchThumbnailURL, unThumbnailURLLen, peError);
     }
 
-    /** Returns the URL of the thumbnail image for this rendermodel. */
+    /**
+     * Returns the URL of the thumbnail image for this rendermodel.
+     *
+     * @param pchRenderModelName 
+     * @param pchThumbnailURL    
+     * @param peError            
+     */
     @NativeType("uint32_t")
-    public static int VRRenderModels_GetRenderModelThumbnailURL(@NativeType("char const *") ByteBuffer pchRenderModelName, @Nullable @NativeType("char *") ByteBuffer pchThumbnailURL, @NativeType("EVRRenderModelError *") IntBuffer peError) {
+    public static int VRRenderModels_GetRenderModelThumbnailURL(@NativeType("const char *") ByteBuffer pchRenderModelName, @Nullable @NativeType("char *") ByteBuffer pchThumbnailURL, @NativeType("EVRRenderModelError *") IntBuffer peError) {
         if (CHECKS) {
             checkNT1(pchRenderModelName);
             check(peError, 1);
@@ -547,9 +649,15 @@ public class VRRenderModels {
         return nVRRenderModels_GetRenderModelThumbnailURL(memAddress(pchRenderModelName), memAddressSafe(pchThumbnailURL), remainingSafe(pchThumbnailURL), memAddress(peError));
     }
 
-    /** Returns the URL of the thumbnail image for this rendermodel. */
+    /**
+     * Returns the URL of the thumbnail image for this rendermodel.
+     *
+     * @param pchRenderModelName 
+     * @param pchThumbnailURL    
+     * @param peError            
+     */
     @NativeType("uint32_t")
-    public static int VRRenderModels_GetRenderModelThumbnailURL(@NativeType("char const *") CharSequence pchRenderModelName, @Nullable @NativeType("char *") ByteBuffer pchThumbnailURL, @NativeType("EVRRenderModelError *") IntBuffer peError) {
+    public static int VRRenderModels_GetRenderModelThumbnailURL(@NativeType("const char *") CharSequence pchRenderModelName, @Nullable @NativeType("char *") ByteBuffer pchThumbnailURL, @NativeType("EVRRenderModelError *") IntBuffer peError) {
         if (CHECKS) {
             check(peError, 1);
         }
@@ -562,9 +670,15 @@ public class VRRenderModels {
         }
     }
 
-    /** Returns the URL of the thumbnail image for this rendermodel. */
+    /**
+     * Returns the URL of the thumbnail image for this rendermodel.
+     *
+     * @param pchRenderModelName 
+     * @param unThumbnailURLLen  
+     * @param peError            
+     */
     @NativeType("uint32_t")
-    public static String VRRenderModels_GetRenderModelThumbnailURL(@NativeType("char const *") CharSequence pchRenderModelName, @NativeType("uint32_t") int unThumbnailURLLen, @NativeType("EVRRenderModelError *") IntBuffer peError) {
+    public static String VRRenderModels_GetRenderModelThumbnailURL(@NativeType("const char *") CharSequence pchRenderModelName, @NativeType("uint32_t") int unThumbnailURLLen, @NativeType("EVRRenderModelError *") IntBuffer peError) {
         if (CHECKS) {
             check(peError, 1);
         }
@@ -593,9 +707,13 @@ public class VRRenderModels {
     /**
      * Provides a render model path that will load the unskinned model if the model name provided has been replace by the user. If the model hasn't been
      * replaced the path value will still be a valid path to load the model. Pass this to LoadRenderModel_Async, etc. to load the model.
+     *
+     * @param pchRenderModelName 
+     * @param pchOriginalPath    
+     * @param peError            
      */
     @NativeType("uint32_t")
-    public static int VRRenderModels_GetRenderModelOriginalPath(@NativeType("char const *") ByteBuffer pchRenderModelName, @Nullable @NativeType("char *") ByteBuffer pchOriginalPath, @NativeType("EVRRenderModelError *") IntBuffer peError) {
+    public static int VRRenderModels_GetRenderModelOriginalPath(@NativeType("const char *") ByteBuffer pchRenderModelName, @Nullable @NativeType("char *") ByteBuffer pchOriginalPath, @NativeType("EVRRenderModelError *") IntBuffer peError) {
         if (CHECKS) {
             checkNT1(pchRenderModelName);
             check(peError, 1);
@@ -606,9 +724,13 @@ public class VRRenderModels {
     /**
      * Provides a render model path that will load the unskinned model if the model name provided has been replace by the user. If the model hasn't been
      * replaced the path value will still be a valid path to load the model. Pass this to LoadRenderModel_Async, etc. to load the model.
+     *
+     * @param pchRenderModelName 
+     * @param pchOriginalPath    
+     * @param peError            
      */
     @NativeType("uint32_t")
-    public static int VRRenderModels_GetRenderModelOriginalPath(@NativeType("char const *") CharSequence pchRenderModelName, @Nullable @NativeType("char *") ByteBuffer pchOriginalPath, @NativeType("EVRRenderModelError *") IntBuffer peError) {
+    public static int VRRenderModels_GetRenderModelOriginalPath(@NativeType("const char *") CharSequence pchRenderModelName, @Nullable @NativeType("char *") ByteBuffer pchOriginalPath, @NativeType("EVRRenderModelError *") IntBuffer peError) {
         if (CHECKS) {
             check(peError, 1);
         }
@@ -624,9 +746,13 @@ public class VRRenderModels {
     /**
      * Provides a render model path that will load the unskinned model if the model name provided has been replace by the user. If the model hasn't been
      * replaced the path value will still be a valid path to load the model. Pass this to LoadRenderModel_Async, etc. to load the model.
+     *
+     * @param pchRenderModelName 
+     * @param unOriginalPathLen  
+     * @param peError            
      */
     @NativeType("uint32_t")
-    public static String VRRenderModels_GetRenderModelOriginalPath(@NativeType("char const *") CharSequence pchRenderModelName, @NativeType("uint32_t") int unOriginalPathLen, @NativeType("EVRRenderModelError *") IntBuffer peError) {
+    public static String VRRenderModels_GetRenderModelOriginalPath(@NativeType("const char *") CharSequence pchRenderModelName, @NativeType("uint32_t") int unOriginalPathLen, @NativeType("EVRRenderModelError *") IntBuffer peError) {
         if (CHECKS) {
             check(peError, 1);
         }
@@ -652,9 +778,13 @@ public class VRRenderModels {
         return callP(__functionAddress, error);
     }
 
-    /** Returns a string for a render model error. */
+    /**
+     * Returns a string for a render model error.
+     *
+     * @param error 
+     */
     @Nullable
-    @NativeType("char const *")
+    @NativeType("const char *")
     public static String VRRenderModels_GetRenderModelErrorNameFromEnum(@NativeType("EVRRenderModelError") int error) {
         long __result = nVRRenderModels_GetRenderModelErrorNameFromEnum(error);
         return memASCIISafe(__result);

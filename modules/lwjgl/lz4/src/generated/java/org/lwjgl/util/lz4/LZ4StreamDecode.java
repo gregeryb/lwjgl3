@@ -19,19 +19,18 @@ import static org.lwjgl.util.lz4.LZ4.LZ4_STREAMDECODESIZE_U64;
 /**
  * <h3>Layout</h3>
  * 
- * <pre><code>
- * union LZ4_streamDecode_t {
+ * <code><pre>
+ * union LZ4_streamDecode_u {
  *     unsigned long long table[LZ4_STREAMDECODESIZE_U64];
  *     {@link LZ4StreamDecodeInternal LZ4_streamDecode_t_internal} internal_donotuse;
- * }</code></pre>
+ * }</pre></code>
  */
-@NativeType("union LZ4_streamDecode_t")
+@NativeType("union LZ4_streamDecode_u")
 public class LZ4StreamDecode extends Struct {
 
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */
@@ -114,7 +113,8 @@ public class LZ4StreamDecode extends Struct {
     public static LongBuffer ntable(long struct) { return memLongBuffer(struct + LZ4StreamDecode.TABLE, LZ4_STREAMDECODESIZE_U64); }
     /** Unsafe version of {@link #table(int) table}. */
     public static long ntable(long struct, int index) {
-        return memGetLong(struct + LZ4StreamDecode.TABLE + check(index, LZ4_STREAMDECODESIZE_U64) * 8);
+        if (CHECKS) { check(index, LZ4_STREAMDECODESIZE_U64); }
+        return memGetLong(struct + LZ4StreamDecode.TABLE + index * 8);
     }
     /** Unsafe version of {@link #internal_donotuse}. */
     public static LZ4StreamDecodeInternal ninternal_donotuse(long struct) { return LZ4StreamDecodeInternal.create(struct + LZ4StreamDecode.INTERNAL_DONOTUSE); }

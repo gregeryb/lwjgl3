@@ -25,11 +25,11 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct LZ4F_compressOptions_t {
  *     unsigned stableSrc;
  *     unsigned reserved[3];
- * }</code></pre>
+ * }</pre></code>
  */
 @NativeType("struct LZ4F_compressOptions_t")
 public class LZ4FCompressOptions extends Struct implements NativeResource {
@@ -37,7 +37,6 @@ public class LZ4FCompressOptions extends Struct implements NativeResource {
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */
@@ -262,7 +261,8 @@ public class LZ4FCompressOptions extends Struct implements NativeResource {
     public static IntBuffer nreserved(long struct) { return memIntBuffer(struct + LZ4FCompressOptions.RESERVED, 3); }
     /** Unsafe version of {@link #reserved(int) reserved}. */
     public static int nreserved(long struct, int index) {
-        return memGetInt(struct + LZ4FCompressOptions.RESERVED + check(index, 3) * 4);
+        if (CHECKS) { check(index, 3); }
+        return memGetInt(struct + LZ4FCompressOptions.RESERVED + index * 4);
     }
 
     /** Unsafe version of {@link #stableSrc(int) stableSrc}. */
@@ -274,7 +274,8 @@ public class LZ4FCompressOptions extends Struct implements NativeResource {
     }
     /** Unsafe version of {@link #reserved(int, int) reserved}. */
     public static void nreserved(long struct, int index, int value) {
-        memPutInt(struct + LZ4FCompressOptions.RESERVED + check(index, 3) * 4, value);
+        if (CHECKS) { check(index, 3); }
+        memPutInt(struct + LZ4FCompressOptions.RESERVED + index * 4, value);
     }
 
     // -----------------------------------

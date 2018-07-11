@@ -33,7 +33,7 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct stbtt_pack_range {
  *     float font_size;
  *     int first_unicode_codepoint_in_range;
@@ -42,7 +42,7 @@ import static org.lwjgl.system.MemoryStack.*;
  *     {@link STBTTPackedchar stbtt_packedchar} * chardata_for_range;
  *     unsigned char h_oversample;
  *     unsigned char v_oversample;
- * }</code></pre>
+ * }</pre></code>
  */
 @NativeType("struct stbtt_pack_range")
 public class STBTTPackRange extends Struct implements NativeResource {
@@ -50,7 +50,6 @@ public class STBTTPackRange extends Struct implements NativeResource {
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */
@@ -142,7 +141,7 @@ public class STBTTPackRange extends Struct implements NativeResource {
     public STBTTPackRange set(
         float font_size,
         int first_unicode_codepoint_in_range,
-        @Nullable IntBuffer array_of_unicode_codepoints,
+        IntBuffer array_of_unicode_codepoints,
         int num_chars,
         STBTTPackedchar.Buffer chardata_for_range,
         byte h_oversample,

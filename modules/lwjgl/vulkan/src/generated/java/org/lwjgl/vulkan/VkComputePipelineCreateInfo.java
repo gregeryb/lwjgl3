@@ -66,23 +66,22 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct VkComputePipelineCreateInfo {
  *     VkStructureType sType;
- *     void const * pNext;
+ *     const void * pNext;
  *     VkPipelineCreateFlags flags;
  *     {@link VkPipelineShaderStageCreateInfo VkPipelineShaderStageCreateInfo} stage;
  *     VkPipelineLayout layout;
  *     VkPipeline basePipelineHandle;
  *     int32_t basePipelineIndex;
- * }</code></pre>
+ * }</pre></code>
  */
 public class VkComputePipelineCreateInfo extends Struct implements NativeResource {
 
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */
@@ -139,15 +138,13 @@ public class VkComputePipelineCreateInfo extends Struct implements NativeResourc
     @NativeType("VkStructureType")
     public int sType() { return nsType(address()); }
     /** Returns the value of the {@code pNext} field. */
-    @NativeType("void const *")
+    @NativeType("const void *")
     public long pNext() { return npNext(address()); }
     /** Returns the value of the {@code flags} field. */
     @NativeType("VkPipelineCreateFlags")
     public int flags() { return nflags(address()); }
     /** Returns a {@link VkPipelineShaderStageCreateInfo} view of the {@code stage} field. */
     public VkPipelineShaderStageCreateInfo stage() { return nstage(address()); }
-    /** Passes the {@code stage} field to the specified {@link java.util.function.Consumer Consumer}. */
-    public VkComputePipelineCreateInfo stage(java.util.function.Consumer<VkPipelineShaderStageCreateInfo> consumer) { consumer.accept(stage()); return this; }
     /** Returns the value of the {@code layout} field. */
     @NativeType("VkPipelineLayout")
     public long layout() { return nlayout(address()); }
@@ -161,7 +158,7 @@ public class VkComputePipelineCreateInfo extends Struct implements NativeResourc
     /** Sets the specified value to the {@code sType} field. */
     public VkComputePipelineCreateInfo sType(@NativeType("VkStructureType") int value) { nsType(address(), value); return this; }
     /** Sets the specified value to the {@code pNext} field. */
-    public VkComputePipelineCreateInfo pNext(@NativeType("void const *") long value) { npNext(address(), value); return this; }
+    public VkComputePipelineCreateInfo pNext(@NativeType("const void *") long value) { npNext(address(), value); return this; }
     /** Sets the specified value to the {@code flags} field. */
     public VkComputePipelineCreateInfo flags(@NativeType("VkPipelineCreateFlags") int value) { nflags(address(), value); return this; }
     /** Copies the specified {@link VkPipelineShaderStageCreateInfo} to the {@code stage} field. */
@@ -448,15 +445,13 @@ public class VkComputePipelineCreateInfo extends Struct implements NativeResourc
         @NativeType("VkStructureType")
         public int sType() { return VkComputePipelineCreateInfo.nsType(address()); }
         /** Returns the value of the {@code pNext} field. */
-        @NativeType("void const *")
+        @NativeType("const void *")
         public long pNext() { return VkComputePipelineCreateInfo.npNext(address()); }
         /** Returns the value of the {@code flags} field. */
         @NativeType("VkPipelineCreateFlags")
         public int flags() { return VkComputePipelineCreateInfo.nflags(address()); }
         /** Returns a {@link VkPipelineShaderStageCreateInfo} view of the {@code stage} field. */
         public VkPipelineShaderStageCreateInfo stage() { return VkComputePipelineCreateInfo.nstage(address()); }
-        /** Passes the {@code stage} field to the specified {@link java.util.function.Consumer Consumer}. */
-        public VkComputePipelineCreateInfo.Buffer stage(java.util.function.Consumer<VkPipelineShaderStageCreateInfo> consumer) { consumer.accept(stage()); return this; }
         /** Returns the value of the {@code layout} field. */
         @NativeType("VkPipelineLayout")
         public long layout() { return VkComputePipelineCreateInfo.nlayout(address()); }
@@ -470,7 +465,7 @@ public class VkComputePipelineCreateInfo extends Struct implements NativeResourc
         /** Sets the specified value to the {@code sType} field. */
         public VkComputePipelineCreateInfo.Buffer sType(@NativeType("VkStructureType") int value) { VkComputePipelineCreateInfo.nsType(address(), value); return this; }
         /** Sets the specified value to the {@code pNext} field. */
-        public VkComputePipelineCreateInfo.Buffer pNext(@NativeType("void const *") long value) { VkComputePipelineCreateInfo.npNext(address(), value); return this; }
+        public VkComputePipelineCreateInfo.Buffer pNext(@NativeType("const void *") long value) { VkComputePipelineCreateInfo.npNext(address(), value); return this; }
         /** Sets the specified value to the {@code flags} field. */
         public VkComputePipelineCreateInfo.Buffer flags(@NativeType("VkPipelineCreateFlags") int value) { VkComputePipelineCreateInfo.nflags(address(), value); return this; }
         /** Copies the specified {@link VkPipelineShaderStageCreateInfo} to the {@code stage} field. */

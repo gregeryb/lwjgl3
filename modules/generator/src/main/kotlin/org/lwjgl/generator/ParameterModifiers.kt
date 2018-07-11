@@ -4,6 +4,25 @@
  */
 package org.lwjgl.generator
 
+// General
+
+/** Marks the function parameter or return value as const. */
+object const : FuncParamModifier {
+    override val isSpecial = false
+    override fun validate(func: Func) {
+        if (func.returns.nativeType !is PointerType)
+            throw IllegalArgumentException("The const modifier can only be applied on functions with pointer return types.")
+    }
+
+    override fun validate(param: Parameter) {
+        if (param.nativeType !is PointerType)
+            throw IllegalArgumentException("The const modifier can only be applied on pointer parameters.")
+
+        if (param.paramType != ParameterType.IN && param.nativeType.elementType !is PointerType)
+            throw IllegalArgumentException("The const modifier can only be applied on input parameters.")
+    }
+}
+
 // Parameter
 
 object Virtual : ParameterModifier {
@@ -25,7 +44,7 @@ object UseVariable : ParameterModifier {
 
 class AutoSizeFactor(
     val operator: String,
-    private val operatorInv: String,
+    val operatorInv: String,
     val expression: String
 ) {
     companion object {
@@ -56,6 +75,27 @@ class AutoSizeFactor(
         "$operand $operatorInv $expression"
 }
 
+/** Marks the parameter to be replaced with .remaining() on the buffer parameter specified by reference. */
+fun AutoSize(div: Int, reference: String, vararg dependent: String) =
+    when {
+        div < 1                    -> throw IllegalArgumentException()
+        div == 1                   -> AutoSize(reference, *dependent)
+        Integer.bitCount(div) == 1 -> AutoSizeShr(Integer.numberOfTrailingZeros(div).toString(), reference, *dependent)
+        else                       -> AutoSizeDiv(div.toString(), reference, dependent = *dependent)
+    }
+
+fun AutoSizeDiv(expression: String, reference: String, vararg dependent: String) =
+    AutoSize(reference, *dependent, factor = AutoSizeFactor.div(expression))
+
+fun AutoSizeMul(expression: String, reference: String, vararg dependent: String) =
+    AutoSize(reference, *dependent, factor = AutoSizeFactor.mul(expression))
+
+fun AutoSizeShr(expression: String, reference: String, vararg dependent: String) =
+    AutoSize(reference, *dependent, factor = AutoSizeFactor.shr(expression))
+
+fun AutoSizeShl(expression: String, reference: String, vararg dependent: String) =
+    AutoSize(reference, *dependent, factor = AutoSizeFactor.shl(expression))
+
 class AutoSize(
     override val reference: String,
     vararg val dependent: String,
@@ -69,7 +109,7 @@ class AutoSize(
     override fun validate(param: Parameter) {
         when (param.paramType) {
             ParameterType.IN    ->
-                if (param.nativeType is PointerType<*>) {
+                if (param.nativeType is PointerType) {
                     if (dependent.isNotEmpty())
                         throw IllegalArgumentException("IN pointer parameters with the AutoSize modifier cannot reference dependent parameters.")
                 } else if (when (param.nativeType.mapping) {
@@ -82,7 +122,7 @@ class AutoSize(
                 })
                     throw IllegalArgumentException("IN parameters with the AutoSize modifier must be integer primitive types.")
             ParameterType.INOUT -> {
-                if (param.nativeType !is PointerType<*> || when (param.nativeType.mapping) {
+                if (param.nativeType !is PointerType || when (param.nativeType.mapping) {
                     PointerMapping.DATA_INT,
                     PointerMapping.DATA_POINTER -> false
                     else                        -> true
@@ -139,7 +179,7 @@ class Check(
 ) : ParameterModifier {
     override val isSpecial = expression != "0"
     override fun validate(param: Parameter) {
-        if (param.nativeType !is PointerType<*>)
+        if (param.nativeType !is PointerType)
             throw IllegalArgumentException("The Check modifier can only be applied on pointer types.")
 
         if (param.nativeType.mapping === PointerMapping.OPAQUE_POINTER)
@@ -156,7 +196,7 @@ val Unsafe = Check("0")
 class Nullable internal constructor(val optional: Boolean) : ParameterModifier {
     override val isSpecial = optional
     override fun validate(param: Parameter) {
-        if (param.nativeType !is PointerType<*>)
+        if (param.nativeType !is PointerType)
             throw IllegalArgumentException("The nullable modifier can only be applied on pointer types.")
     }
 }
@@ -170,7 +210,7 @@ val optional = Nullable(true)
 class Terminated(val value: String) : ParameterModifier {
     override val isSpecial = true
     override fun validate(param: Parameter) {
-        if (param.nativeType !is PointerType<*>)
+        if (param.nativeType !is PointerType)
             throw IllegalArgumentException("The NullTerminated modifier can only be applied on pointer types.")
 
         if (param.nativeType.mapping === PointerMapping.OPAQUE_POINTER)
@@ -226,17 +266,17 @@ class MultiType(
             throw IllegalArgumentException("No buffer types specified.")
 
         for (t in types) {
-            if (t === PointerMapping.DATA_BYTE)
-                throw IllegalArgumentException("The DATA_BYTE mapping cannot be used with the MultiType modifier.")
+          if (t === PointerMapping.DATA_BYTE)
+                throw IllegalArgumentException("The DATA_BYTE mapping cannot be used with the MultiType modifier.") 
 
-            if (t === PointerMapping.OPAQUE_POINTER)
+            if (t.byteShift == null)
                 throw IllegalArgumentException("The MultiType modifier can only be applied with concrete PointerMappings.")
         }
     }
 
     override val isSpecial = true
     override fun validate(param: Parameter) {
-        if (param.nativeType !is PointerType<*>)
+        if (param.nativeType !is PointerType)
             throw IllegalArgumentException("The MultiType modifier can only be applied on pointer types.")
 
         if (param.nativeType.mapping === PointerMapping.OPAQUE_POINTER)
@@ -256,7 +296,7 @@ val MultiTypeAll = MultiType(
 
 /** Marks a pointer parameter to become the return value of an alternative method. */
 class Return(
-    /** The parameter that returns the actual buffer size. Use {@code RESULT} if it's the function return value. */
+    /** The parameter that returns the actual buffer size */
     val lengthParam: String,
     /** An expression that defines the maximum length value. If defined, an additional alternative method will be generated. */
     val maxLengthExpression: String? = null,
@@ -267,7 +307,7 @@ class Return(
 ) : ParameterModifier {
     override val isSpecial = true
     override fun validate(param: Parameter) {
-        if (param.nativeType is PointerType<*>) {
+        if (param.nativeType is PointerType) {
             if (param.paramType !== ParameterType.OUT)
                 throw IllegalArgumentException("The Return modifier can only be applied on output parameters.")
 
@@ -296,7 +336,7 @@ val ReturnParam = Return("", null)
 class SingleValue(val newName: String) : ParameterModifier {
     override val isSpecial = true
     override fun validate(param: Parameter) {
-        if (param.nativeType !is PointerType<*>)
+        if (param.nativeType !is PointerType)
             throw IllegalArgumentException("The SingleValue modifier can only be applied on pointer types.")
 
         if (param.nativeType.mapping === PointerMapping.OPAQUE_POINTER)
@@ -310,7 +350,7 @@ class SingleValue(val newName: String) : ParameterModifier {
 /** Marks a pointer parameter as an array of pointers. */
 class PointerArray(
     /** The array element type. */
-    val elementType: PointerType<*>,
+    val elementType: PointerType,
     /** The single version parameter name. */
     val singleName: String,
     /** The parameter that defines the data legth of each element in the array. If null, the elements are assumed to be null-terminated. */
@@ -318,7 +358,7 @@ class PointerArray(
 ) : ParameterModifier {
     override val isSpecial = true
     override fun validate(param: Parameter) {
-        if (param.nativeType !is PointerType<*>)
+        if (param.nativeType !is PointerType)
             throw IllegalArgumentException("The PointerArray modifier can only be applied on pointer types.")
 
         if (param.nativeType.mapping != PointerMapping.DATA_POINTER)

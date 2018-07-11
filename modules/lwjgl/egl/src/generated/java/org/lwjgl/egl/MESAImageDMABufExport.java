@@ -82,7 +82,7 @@ public class MESAImageDMABufExport {
         return neglExportDMABUFImageMESA(dpy, image, memAddressSafe(fds), memAddressSafe(strides), memAddressSafe(offsets)) != 0;
     }
 
-    /** Array version of: {@link #eglExportDMABUFImageQueryMESA ExportDMABUFImageQueryMESA} */
+    /** register Array version of: {@link #eglExportDMABUFImageQueryMESA ExportDMABUFImageQueryMESA} */
     @NativeType("EGLBoolean")
     public static boolean eglExportDMABUFImageQueryMESA(@NativeType("EGLDisplay") long dpy, @NativeType("EGLImageKHR") long image, @Nullable @NativeType("int *") int[] fourcc, @Nullable @NativeType("int *") int[] num_planes, @Nullable @NativeType("EGLuint64KHR *") long[] modifiers) {
         long __functionAddress = EGL.getCapabilities().eglExportDMABUFImageQueryMESA;
@@ -97,7 +97,7 @@ public class MESAImageDMABufExport {
         return callPPPPPI(__functionAddress, dpy, image, fourcc, num_planes, modifiers) != 0;
     }
 
-    /** Array version of: {@link #eglExportDMABUFImageMESA ExportDMABUFImageMESA} */
+    /** register Array version of: {@link #eglExportDMABUFImageMESA ExportDMABUFImageMESA} */
     @NativeType("EGLBoolean")
     public static boolean eglExportDMABUFImageMESA(@NativeType("EGLDisplay") long dpy, @NativeType("EGLImageKHR") long image, @Nullable @NativeType("int *") int[] fds, @Nullable @NativeType("EGLint *") int[] strides, @Nullable @NativeType("EGLint *") int[] offsets) {
         long __functionAddress = EGL.getCapabilities().eglExportDMABUFImageMESA;

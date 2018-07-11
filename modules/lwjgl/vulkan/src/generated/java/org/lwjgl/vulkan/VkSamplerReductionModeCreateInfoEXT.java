@@ -26,6 +26,7 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <ul>
  * <li>{@code sType} <b>must</b> be {@link EXTSamplerFilterMinmax#VK_STRUCTURE_TYPE_SAMPLER_REDUCTION_MODE_CREATE_INFO_EXT STRUCTURE_TYPE_SAMPLER_REDUCTION_MODE_CREATE_INFO_EXT}</li>
+ * <li>{@code pNext} <b>must</b> be {@code NULL}</li>
  * <li>{@code reductionMode} <b>must</b> be a valid {@code VkSamplerReductionModeEXT} value</li>
  * </ul>
  * 
@@ -39,19 +40,18 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct VkSamplerReductionModeCreateInfoEXT {
  *     VkStructureType sType;
- *     void const * pNext;
+ *     const void * pNext;
  *     VkSamplerReductionModeEXT reductionMode;
- * }</code></pre>
+ * }</pre></code>
  */
 public class VkSamplerReductionModeCreateInfoEXT extends Struct implements NativeResource {
 
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */
@@ -96,7 +96,7 @@ public class VkSamplerReductionModeCreateInfoEXT extends Struct implements Nativ
     @NativeType("VkStructureType")
     public int sType() { return nsType(address()); }
     /** Returns the value of the {@code pNext} field. */
-    @NativeType("void const *")
+    @NativeType("const void *")
     public long pNext() { return npNext(address()); }
     /** Returns the value of the {@code reductionMode} field. */
     @NativeType("VkSamplerReductionModeEXT")
@@ -105,7 +105,7 @@ public class VkSamplerReductionModeCreateInfoEXT extends Struct implements Nativ
     /** Sets the specified value to the {@code sType} field. */
     public VkSamplerReductionModeCreateInfoEXT sType(@NativeType("VkStructureType") int value) { nsType(address(), value); return this; }
     /** Sets the specified value to the {@code pNext} field. */
-    public VkSamplerReductionModeCreateInfoEXT pNext(@NativeType("void const *") long value) { npNext(address(), value); return this; }
+    public VkSamplerReductionModeCreateInfoEXT pNext(@NativeType("const void *") long value) { npNext(address(), value); return this; }
     /** Sets the specified value to the {@code reductionMode} field. */
     public VkSamplerReductionModeCreateInfoEXT reductionMode(@NativeType("VkSamplerReductionModeEXT") int value) { nreductionMode(address(), value); return this; }
 
@@ -339,7 +339,7 @@ public class VkSamplerReductionModeCreateInfoEXT extends Struct implements Nativ
         @NativeType("VkStructureType")
         public int sType() { return VkSamplerReductionModeCreateInfoEXT.nsType(address()); }
         /** Returns the value of the {@code pNext} field. */
-        @NativeType("void const *")
+        @NativeType("const void *")
         public long pNext() { return VkSamplerReductionModeCreateInfoEXT.npNext(address()); }
         /** Returns the value of the {@code reductionMode} field. */
         @NativeType("VkSamplerReductionModeEXT")
@@ -348,7 +348,7 @@ public class VkSamplerReductionModeCreateInfoEXT extends Struct implements Nativ
         /** Sets the specified value to the {@code sType} field. */
         public VkSamplerReductionModeCreateInfoEXT.Buffer sType(@NativeType("VkStructureType") int value) { VkSamplerReductionModeCreateInfoEXT.nsType(address(), value); return this; }
         /** Sets the specified value to the {@code pNext} field. */
-        public VkSamplerReductionModeCreateInfoEXT.Buffer pNext(@NativeType("void const *") long value) { VkSamplerReductionModeCreateInfoEXT.npNext(address(), value); return this; }
+        public VkSamplerReductionModeCreateInfoEXT.Buffer pNext(@NativeType("const void *") long value) { VkSamplerReductionModeCreateInfoEXT.npNext(address(), value); return this; }
         /** Sets the specified value to the {@code reductionMode} field. */
         public VkSamplerReductionModeCreateInfoEXT.Buffer reductionMode(@NativeType("VkSamplerReductionModeEXT") int value) { VkSamplerReductionModeCreateInfoEXT.nreductionMode(address(), value); return this; }
 

@@ -17,7 +17,7 @@ import static org.lwjgl.system.MemoryUtil.*;
 /**
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct YGStyle {
  *     YGDirection direction;
  *     YGFlexDirection flexDirection;
@@ -29,9 +29,9 @@ import static org.lwjgl.system.MemoryUtil.*;
  *     YGWrap flexWrap;
  *     YGOverflow overflow;
  *     YGDisplay display;
- *     {@link YGFloatOptional YGFloatOptional} flex;
- *     {@link YGFloatOptional YGFloatOptional} flexGrow;
- *     {@link YGFloatOptional YGFloatOptional} flexShrink;
+ *     float flex;
+ *     float flexGrow;
+ *     float flexShrink;
  *     {@link YGValue YGValue} flexBasis;
  *     {@link YGValue YGValue} margin[9];
  *     {@link YGValue YGValue} positions[9];
@@ -40,15 +40,14 @@ import static org.lwjgl.system.MemoryUtil.*;
  *     {@link YGValue YGValue} dimensions[2];
  *     {@link YGValue YGValue} minDimensions[2];
  *     {@link YGValue YGValue} maxDimensions[2];
- *     {@link YGFloatOptional YGFloatOptional} aspectRatio;
- * }</code></pre>
+ *     float aspectRatio;
+ * }</pre></code>
  */
 public class YGStyle extends Struct {
 
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */
@@ -88,9 +87,9 @@ public class YGStyle extends Struct {
             __member(4),
             __member(4),
             __member(4),
-            __member(YGFloatOptional.SIZEOF, YGFloatOptional.ALIGNOF),
-            __member(YGFloatOptional.SIZEOF, YGFloatOptional.ALIGNOF),
-            __member(YGFloatOptional.SIZEOF, YGFloatOptional.ALIGNOF),
+            __member(4),
+            __member(4),
+            __member(4),
             __member(YGValue.SIZEOF, YGValue.ALIGNOF),
             __array(YGValue.SIZEOF, YGValue.ALIGNOF, 9),
             __array(YGValue.SIZEOF, YGValue.ALIGNOF, 9),
@@ -99,7 +98,7 @@ public class YGStyle extends Struct {
             __array(YGValue.SIZEOF, YGValue.ALIGNOF, 2),
             __array(YGValue.SIZEOF, YGValue.ALIGNOF, 2),
             __array(YGValue.SIZEOF, YGValue.ALIGNOF, 2),
-            __member(YGFloatOptional.SIZEOF, YGFloatOptional.ALIGNOF)
+            __member(4)
         );
 
         SIZEOF = layout.getSize();
@@ -176,16 +175,14 @@ public class YGStyle extends Struct {
     /** Returns the value of the {@code display} field. */
     @NativeType("YGDisplay")
     public int display() { return ndisplay(address()); }
-    /** Returns a {@link YGFloatOptional} view of the {@code flex} field. */
-    public YGFloatOptional flex() { return nflex(address()); }
-    /** Returns a {@link YGFloatOptional} view of the {@code flexGrow} field. */
-    public YGFloatOptional flexGrow() { return nflexGrow(address()); }
-    /** Returns a {@link YGFloatOptional} view of the {@code flexShrink} field. */
-    public YGFloatOptional flexShrink() { return nflexShrink(address()); }
+    /** Returns the value of the {@code flex} field. */
+    public float flex() { return nflex(address()); }
+    /** Returns the value of the {@code flexGrow} field. */
+    public float flexGrow() { return nflexGrow(address()); }
+    /** Returns the value of the {@code flexShrink} field. */
+    public float flexShrink() { return nflexShrink(address()); }
     /** Returns a {@link YGValue} view of the {@code flexBasis} field. */
     public YGValue flexBasis() { return nflexBasis(address()); }
-    /** Passes the {@code flexBasis} field to the specified {@link java.util.function.Consumer Consumer}. */
-    public YGStyle flexBasis(java.util.function.Consumer<YGValue> consumer) { consumer.accept(flexBasis()); return this; }
     /** Returns a {@link YGValue}.Buffer view of the {@code margin} field. */
     @NativeType("YGValue[9]")
     public YGValue.Buffer margin() { return nmargin(address()); }
@@ -221,8 +218,8 @@ public class YGStyle extends Struct {
     public YGValue.Buffer maxDimensions() { return nmaxDimensions(address()); }
     /** Returns a {@link YGValue} view of the struct at the specified index of the {@code maxDimensions} field. */
     public YGValue maxDimensions(int index) { return nmaxDimensions(address(), index); }
-    /** Returns a {@link YGFloatOptional} view of the {@code aspectRatio} field. */
-    public YGFloatOptional aspectRatio() { return naspectRatio(address()); }
+    /** Returns the value of the {@code aspectRatio} field. */
+    public float aspectRatio() { return naspectRatio(address()); }
 
     // -----------------------------------
 
@@ -276,57 +273,64 @@ public class YGStyle extends Struct {
     /** Unsafe version of {@link #display}. */
     public static int ndisplay(long struct) { return memGetInt(struct + YGStyle.DISPLAY); }
     /** Unsafe version of {@link #flex}. */
-    public static YGFloatOptional nflex(long struct) { return YGFloatOptional.create(struct + YGStyle.FLEX); }
+    public static float nflex(long struct) { return memGetFloat(struct + YGStyle.FLEX); }
     /** Unsafe version of {@link #flexGrow}. */
-    public static YGFloatOptional nflexGrow(long struct) { return YGFloatOptional.create(struct + YGStyle.FLEXGROW); }
+    public static float nflexGrow(long struct) { return memGetFloat(struct + YGStyle.FLEXGROW); }
     /** Unsafe version of {@link #flexShrink}. */
-    public static YGFloatOptional nflexShrink(long struct) { return YGFloatOptional.create(struct + YGStyle.FLEXSHRINK); }
+    public static float nflexShrink(long struct) { return memGetFloat(struct + YGStyle.FLEXSHRINK); }
     /** Unsafe version of {@link #flexBasis}. */
     public static YGValue nflexBasis(long struct) { return YGValue.create(struct + YGStyle.FLEXBASIS); }
     /** Unsafe version of {@link #margin}. */
     public static YGValue.Buffer nmargin(long struct) { return YGValue.create(struct + YGStyle.MARGIN, 9); }
     /** Unsafe version of {@link #margin(int) margin}. */
     public static YGValue nmargin(long struct, int index) {
-        return YGValue.create(struct + YGStyle.MARGIN + check(index, 9) * YGValue.SIZEOF);
+        if (CHECKS) { check(index, 9); }
+        return YGValue.create(struct + YGStyle.MARGIN + index * YGValue.SIZEOF);
     }
     /** Unsafe version of {@link #positions}. */
     public static YGValue.Buffer npositions(long struct) { return YGValue.create(struct + YGStyle.POSITIONS, 9); }
     /** Unsafe version of {@link #positions(int) positions}. */
     public static YGValue npositions(long struct, int index) {
-        return YGValue.create(struct + YGStyle.POSITIONS + check(index, 9) * YGValue.SIZEOF);
+        if (CHECKS) { check(index, 9); }
+        return YGValue.create(struct + YGStyle.POSITIONS + index * YGValue.SIZEOF);
     }
     /** Unsafe version of {@link #padding}. */
     public static YGValue.Buffer npadding(long struct) { return YGValue.create(struct + YGStyle.PADDING, 9); }
     /** Unsafe version of {@link #padding(int) padding}. */
     public static YGValue npadding(long struct, int index) {
-        return YGValue.create(struct + YGStyle.PADDING + check(index, 9) * YGValue.SIZEOF);
+        if (CHECKS) { check(index, 9); }
+        return YGValue.create(struct + YGStyle.PADDING + index * YGValue.SIZEOF);
     }
     /** Unsafe version of {@link #border}. */
     public static YGValue.Buffer nborder(long struct) { return YGValue.create(struct + YGStyle.BORDER, 9); }
     /** Unsafe version of {@link #border(int) border}. */
     public static YGValue nborder(long struct, int index) {
-        return YGValue.create(struct + YGStyle.BORDER + check(index, 9) * YGValue.SIZEOF);
+        if (CHECKS) { check(index, 9); }
+        return YGValue.create(struct + YGStyle.BORDER + index * YGValue.SIZEOF);
     }
     /** Unsafe version of {@link #dimensions}. */
     public static YGValue.Buffer ndimensions(long struct) { return YGValue.create(struct + YGStyle.DIMENSIONS, 2); }
     /** Unsafe version of {@link #dimensions(int) dimensions}. */
     public static YGValue ndimensions(long struct, int index) {
-        return YGValue.create(struct + YGStyle.DIMENSIONS + check(index, 2) * YGValue.SIZEOF);
+        if (CHECKS) { check(index, 2); }
+        return YGValue.create(struct + YGStyle.DIMENSIONS + index * YGValue.SIZEOF);
     }
     /** Unsafe version of {@link #minDimensions}. */
     public static YGValue.Buffer nminDimensions(long struct) { return YGValue.create(struct + YGStyle.MINDIMENSIONS, 2); }
     /** Unsafe version of {@link #minDimensions(int) minDimensions}. */
     public static YGValue nminDimensions(long struct, int index) {
-        return YGValue.create(struct + YGStyle.MINDIMENSIONS + check(index, 2) * YGValue.SIZEOF);
+        if (CHECKS) { check(index, 2); }
+        return YGValue.create(struct + YGStyle.MINDIMENSIONS + index * YGValue.SIZEOF);
     }
     /** Unsafe version of {@link #maxDimensions}. */
     public static YGValue.Buffer nmaxDimensions(long struct) { return YGValue.create(struct + YGStyle.MAXDIMENSIONS, 2); }
     /** Unsafe version of {@link #maxDimensions(int) maxDimensions}. */
     public static YGValue nmaxDimensions(long struct, int index) {
-        return YGValue.create(struct + YGStyle.MAXDIMENSIONS + check(index, 2) * YGValue.SIZEOF);
+        if (CHECKS) { check(index, 2); }
+        return YGValue.create(struct + YGStyle.MAXDIMENSIONS + index * YGValue.SIZEOF);
     }
     /** Unsafe version of {@link #aspectRatio}. */
-    public static YGFloatOptional naspectRatio(long struct) { return YGFloatOptional.create(struct + YGStyle.ASPECTRATIO); }
+    public static float naspectRatio(long struct) { return memGetFloat(struct + YGStyle.ASPECTRATIO); }
 
     // -----------------------------------
 
@@ -404,16 +408,14 @@ public class YGStyle extends Struct {
         /** Returns the value of the {@code display} field. */
         @NativeType("YGDisplay")
         public int display() { return YGStyle.ndisplay(address()); }
-        /** Returns a {@link YGFloatOptional} view of the {@code flex} field. */
-        public YGFloatOptional flex() { return YGStyle.nflex(address()); }
-        /** Returns a {@link YGFloatOptional} view of the {@code flexGrow} field. */
-        public YGFloatOptional flexGrow() { return YGStyle.nflexGrow(address()); }
-        /** Returns a {@link YGFloatOptional} view of the {@code flexShrink} field. */
-        public YGFloatOptional flexShrink() { return YGStyle.nflexShrink(address()); }
+        /** Returns the value of the {@code flex} field. */
+        public float flex() { return YGStyle.nflex(address()); }
+        /** Returns the value of the {@code flexGrow} field. */
+        public float flexGrow() { return YGStyle.nflexGrow(address()); }
+        /** Returns the value of the {@code flexShrink} field. */
+        public float flexShrink() { return YGStyle.nflexShrink(address()); }
         /** Returns a {@link YGValue} view of the {@code flexBasis} field. */
         public YGValue flexBasis() { return YGStyle.nflexBasis(address()); }
-        /** Passes the {@code flexBasis} field to the specified {@link java.util.function.Consumer Consumer}. */
-        public YGStyle.Buffer flexBasis(java.util.function.Consumer<YGValue> consumer) { consumer.accept(flexBasis()); return this; }
         /** Returns a {@link YGValue}.Buffer view of the {@code margin} field. */
         @NativeType("YGValue[9]")
         public YGValue.Buffer margin() { return YGStyle.nmargin(address()); }
@@ -449,8 +451,8 @@ public class YGStyle extends Struct {
         public YGValue.Buffer maxDimensions() { return YGStyle.nmaxDimensions(address()); }
         /** Returns a {@link YGValue} view of the struct at the specified index of the {@code maxDimensions} field. */
         public YGValue maxDimensions(int index) { return YGStyle.nmaxDimensions(address(), index); }
-        /** Returns a {@link YGFloatOptional} view of the {@code aspectRatio} field. */
-        public YGFloatOptional aspectRatio() { return YGStyle.naspectRatio(address()); }
+        /** Returns the value of the {@code aspectRatio} field. */
+        public float aspectRatio() { return YGStyle.naspectRatio(address()); }
 
     }
 

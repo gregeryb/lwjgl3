@@ -65,20 +65,19 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct VkImageBlit {
  *     {@link VkImageSubresourceLayers VkImageSubresourceLayers} srcSubresource;
  *     {@link VkOffset3D VkOffset3D} srcOffsets[2];
  *     {@link VkImageSubresourceLayers VkImageSubresourceLayers} dstSubresource;
  *     {@link VkOffset3D VkOffset3D} dstOffsets[2];
- * }</code></pre>
+ * }</pre></code>
  */
 public class VkImageBlit extends Struct implements NativeResource {
 
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */
@@ -124,8 +123,6 @@ public class VkImageBlit extends Struct implements NativeResource {
 
     /** Returns a {@link VkImageSubresourceLayers} view of the {@code srcSubresource} field. */
     public VkImageSubresourceLayers srcSubresource() { return nsrcSubresource(address()); }
-    /** Passes the {@code srcSubresource} field to the specified {@link java.util.function.Consumer Consumer}. */
-    public VkImageBlit srcSubresource(java.util.function.Consumer<VkImageSubresourceLayers> consumer) { consumer.accept(srcSubresource()); return this; }
     /** Returns a {@link VkOffset3D}.Buffer view of the {@code srcOffsets} field. */
     @NativeType("VkOffset3D[2]")
     public VkOffset3D.Buffer srcOffsets() { return nsrcOffsets(address()); }
@@ -133,8 +130,6 @@ public class VkImageBlit extends Struct implements NativeResource {
     public VkOffset3D srcOffsets(int index) { return nsrcOffsets(address(), index); }
     /** Returns a {@link VkImageSubresourceLayers} view of the {@code dstSubresource} field. */
     public VkImageSubresourceLayers dstSubresource() { return ndstSubresource(address()); }
-    /** Passes the {@code dstSubresource} field to the specified {@link java.util.function.Consumer Consumer}. */
-    public VkImageBlit dstSubresource(java.util.function.Consumer<VkImageSubresourceLayers> consumer) { consumer.accept(dstSubresource()); return this; }
     /** Returns a {@link VkOffset3D}.Buffer view of the {@code dstOffsets} field. */
     @NativeType("VkOffset3D[2]")
     public VkOffset3D.Buffer dstOffsets() { return ndstOffsets(address()); }
@@ -328,7 +323,8 @@ public class VkImageBlit extends Struct implements NativeResource {
     public static VkOffset3D.Buffer nsrcOffsets(long struct) { return VkOffset3D.create(struct + VkImageBlit.SRCOFFSETS, 2); }
     /** Unsafe version of {@link #srcOffsets(int) srcOffsets}. */
     public static VkOffset3D nsrcOffsets(long struct, int index) {
-        return VkOffset3D.create(struct + VkImageBlit.SRCOFFSETS + check(index, 2) * VkOffset3D.SIZEOF);
+        if (CHECKS) { check(index, 2); }
+        return VkOffset3D.create(struct + VkImageBlit.SRCOFFSETS + index * VkOffset3D.SIZEOF);
     }
     /** Unsafe version of {@link #dstSubresource}. */
     public static VkImageSubresourceLayers ndstSubresource(long struct) { return VkImageSubresourceLayers.create(struct + VkImageBlit.DSTSUBRESOURCE); }
@@ -336,7 +332,8 @@ public class VkImageBlit extends Struct implements NativeResource {
     public static VkOffset3D.Buffer ndstOffsets(long struct) { return VkOffset3D.create(struct + VkImageBlit.DSTOFFSETS, 2); }
     /** Unsafe version of {@link #dstOffsets(int) dstOffsets}. */
     public static VkOffset3D ndstOffsets(long struct, int index) {
-        return VkOffset3D.create(struct + VkImageBlit.DSTOFFSETS + check(index, 2) * VkOffset3D.SIZEOF);
+        if (CHECKS) { check(index, 2); }
+        return VkOffset3D.create(struct + VkImageBlit.DSTOFFSETS + index * VkOffset3D.SIZEOF);
     }
 
     /** Unsafe version of {@link #srcSubresource(VkImageSubresourceLayers) srcSubresource}. */
@@ -348,7 +345,8 @@ public class VkImageBlit extends Struct implements NativeResource {
     }
     /** Unsafe version of {@link #srcOffsets(int, VkOffset3D) srcOffsets}. */
     public static void nsrcOffsets(long struct, int index, VkOffset3D value) {
-        memCopy(value.address(), struct + VkImageBlit.SRCOFFSETS + check(index, 2) * VkOffset3D.SIZEOF, VkOffset3D.SIZEOF);
+        if (CHECKS) { check(index, 2); }
+        memCopy(value.address(), struct + VkImageBlit.SRCOFFSETS + index * VkOffset3D.SIZEOF, VkOffset3D.SIZEOF);
     }
     /** Unsafe version of {@link #dstSubresource(VkImageSubresourceLayers) dstSubresource}. */
     public static void ndstSubresource(long struct, VkImageSubresourceLayers value) { memCopy(value.address(), struct + VkImageBlit.DSTSUBRESOURCE, VkImageSubresourceLayers.SIZEOF); }
@@ -359,7 +357,8 @@ public class VkImageBlit extends Struct implements NativeResource {
     }
     /** Unsafe version of {@link #dstOffsets(int, VkOffset3D) dstOffsets}. */
     public static void ndstOffsets(long struct, int index, VkOffset3D value) {
-        memCopy(value.address(), struct + VkImageBlit.DSTOFFSETS + check(index, 2) * VkOffset3D.SIZEOF, VkOffset3D.SIZEOF);
+        if (CHECKS) { check(index, 2); }
+        memCopy(value.address(), struct + VkImageBlit.DSTOFFSETS + index * VkOffset3D.SIZEOF, VkOffset3D.SIZEOF);
     }
 
     // -----------------------------------
@@ -410,8 +409,6 @@ public class VkImageBlit extends Struct implements NativeResource {
 
         /** Returns a {@link VkImageSubresourceLayers} view of the {@code srcSubresource} field. */
         public VkImageSubresourceLayers srcSubresource() { return VkImageBlit.nsrcSubresource(address()); }
-        /** Passes the {@code srcSubresource} field to the specified {@link java.util.function.Consumer Consumer}. */
-        public VkImageBlit.Buffer srcSubresource(java.util.function.Consumer<VkImageSubresourceLayers> consumer) { consumer.accept(srcSubresource()); return this; }
         /** Returns a {@link VkOffset3D}.Buffer view of the {@code srcOffsets} field. */
         @NativeType("VkOffset3D[2]")
         public VkOffset3D.Buffer srcOffsets() { return VkImageBlit.nsrcOffsets(address()); }
@@ -419,8 +416,6 @@ public class VkImageBlit extends Struct implements NativeResource {
         public VkOffset3D srcOffsets(int index) { return VkImageBlit.nsrcOffsets(address(), index); }
         /** Returns a {@link VkImageSubresourceLayers} view of the {@code dstSubresource} field. */
         public VkImageSubresourceLayers dstSubresource() { return VkImageBlit.ndstSubresource(address()); }
-        /** Passes the {@code dstSubresource} field to the specified {@link java.util.function.Consumer Consumer}. */
-        public VkImageBlit.Buffer dstSubresource(java.util.function.Consumer<VkImageSubresourceLayers> consumer) { consumer.accept(dstSubresource()); return this; }
         /** Returns a {@link VkOffset3D}.Buffer view of the {@code dstOffsets} field. */
         @NativeType("VkOffset3D[2]")
         public VkOffset3D.Buffer dstOffsets() { return VkImageBlit.ndstOffsets(address()); }

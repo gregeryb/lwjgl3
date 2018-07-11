@@ -36,19 +36,18 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct VkClearRect {
  *     {@link VkRect2D VkRect2D} rect;
  *     uint32_t baseArrayLayer;
  *     uint32_t layerCount;
- * }</code></pre>
+ * }</pre></code>
  */
 public class VkClearRect extends Struct implements NativeResource {
 
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */
@@ -91,8 +90,6 @@ public class VkClearRect extends Struct implements NativeResource {
 
     /** Returns a {@link VkRect2D} view of the {@code rect} field. */
     public VkRect2D rect() { return nrect(address()); }
-    /** Passes the {@code rect} field to the specified {@link java.util.function.Consumer Consumer}. */
-    public VkClearRect rect(java.util.function.Consumer<VkRect2D> consumer) { consumer.accept(rect()); return this; }
     /** Returns the value of the {@code baseArrayLayer} field. */
     @NativeType("uint32_t")
     public int baseArrayLayer() { return nbaseArrayLayer(address()); }
@@ -335,8 +332,6 @@ public class VkClearRect extends Struct implements NativeResource {
 
         /** Returns a {@link VkRect2D} view of the {@code rect} field. */
         public VkRect2D rect() { return VkClearRect.nrect(address()); }
-        /** Passes the {@code rect} field to the specified {@link java.util.function.Consumer Consumer}. */
-        public VkClearRect.Buffer rect(java.util.function.Consumer<VkRect2D> consumer) { consumer.accept(rect()); return this; }
         /** Returns the value of the {@code baseArrayLayer} field. */
         @NativeType("uint32_t")
         public int baseArrayLayer() { return VkClearRect.nbaseArrayLayer(address()); }

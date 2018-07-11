@@ -34,7 +34,7 @@ import static org.lwjgl.system.MemoryUtil.*;
  * </ul></dd>
  * <dt><b>Contact</b></dt>
  * <dd><ul>
- * <li>Jesse Hall @critsec,Ian Elliott @ianelliottus</li>
+ * <li>Jesse Hall @jessehall,Ian Elliott mailto:ianelliott@google.com[ianelliott@google.com]</li>
  * </ul></dd>
  * <dt><b>Last Modified Date</b></dt>
  * <dd>2015-11-28</dd>
@@ -76,10 +76,9 @@ public class KHRXlibSurface {
         throw new UnsupportedOperationException();
     }
 
-    static boolean checkCapsInstance(FunctionProvider provider, java.util.Map<String, Long> caps, java.util.Set<String> ext) {
-        return ext.contains("VK_KHR_xlib_surface") && VK.checkExtension("VK_KHR_xlib_surface",
-               VK.isSupported(provider, "vkCreateXlibSurfaceKHR", caps)
-            && VK.isSupported(provider, "vkGetPhysicalDeviceXlibPresentationSupportKHR", caps)
+    static boolean isAvailable(VKCapabilitiesInstance caps) {
+        return checkFunctions(
+            caps.vkCreateXlibSurfaceKHR, caps.vkGetPhysicalDeviceXlibPresentationSupportKHR
         );
     }
 
@@ -103,12 +102,12 @@ public class KHRXlibSurface {
      * 
      * <p>To create a {@code VkSurfaceKHR} object for an X11 window, using the Xlib client-side library, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * VkResult vkCreateXlibSurfaceKHR(
      *     VkInstance                                  instance,
      *     const VkXlibSurfaceCreateInfoKHR*           pCreateInfo,
      *     const VkAllocationCallbacks*                pAllocator,
-     *     VkSurfaceKHR*                               pSurface);</code></pre>
+     *     VkSurfaceKHR*                               pSurface);</pre></code>
      * 
      * <h5>Valid Usage (Implicit)</h5>
      * 
@@ -143,7 +142,7 @@ public class KHRXlibSurface {
      * @param pSurface    points to a {@code VkSurfaceKHR} handle in which the created surface object is returned.
      */
     @NativeType("VkResult")
-    public static int vkCreateXlibSurfaceKHR(VkInstance instance, @NativeType("VkXlibSurfaceCreateInfoKHR const *") VkXlibSurfaceCreateInfoKHR pCreateInfo, @Nullable @NativeType("VkAllocationCallbacks const *") VkAllocationCallbacks pAllocator, @NativeType("VkSurfaceKHR *") LongBuffer pSurface) {
+    public static int vkCreateXlibSurfaceKHR(VkInstance instance, @NativeType("const VkXlibSurfaceCreateInfoKHR *") VkXlibSurfaceCreateInfoKHR pCreateInfo, @Nullable @NativeType("const VkAllocationCallbacks *") VkAllocationCallbacks pAllocator, @NativeType("VkSurfaceKHR *") LongBuffer pSurface) {
         if (CHECKS) {
             check(pSurface, 1);
         }
@@ -159,12 +158,12 @@ public class KHRXlibSurface {
      * 
      * <p>To determine whether a queue family of a physical device supports presentation to an X11 server, using the Xlib client-side library, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * VkBool32 vkGetPhysicalDeviceXlibPresentationSupportKHR(
      *     VkPhysicalDevice                            physicalDevice,
      *     uint32_t                                    queueFamilyIndex,
      *     Display*                                    dpy,
-     *     VisualID                                    visualID);</code></pre>
+     *     VisualID                                    visualID);</pre></code>
      * 
      * <h5>Description</h5>
      * 
@@ -186,6 +185,7 @@ public class KHRXlibSurface {
      * @param physicalDevice   the physical device.
      * @param queueFamilyIndex the queue family index.
      * @param dpy              a pointer to an Xlib {@code Display} connection to the server.
+     * @param visualID         
      */
     @NativeType("VkBool32")
     public static boolean vkGetPhysicalDeviceXlibPresentationSupportKHR(VkPhysicalDevice physicalDevice, @NativeType("uint32_t") int queueFamilyIndex, @NativeType("Display *") long dpy, @NativeType("VisualID") long visualID) {
@@ -197,9 +197,9 @@ public class KHRXlibSurface {
         return callPPPI(__functionAddress, physicalDevice.address(), queueFamilyIndex, dpy, visualID) != 0;
     }
 
-    /** Array version of: {@link #vkCreateXlibSurfaceKHR CreateXlibSurfaceKHR} */
+    /** register Array version of: {@link #vkCreateXlibSurfaceKHR CreateXlibSurfaceKHR} */
     @NativeType("VkResult")
-    public static int vkCreateXlibSurfaceKHR(VkInstance instance, @NativeType("VkXlibSurfaceCreateInfoKHR const *") VkXlibSurfaceCreateInfoKHR pCreateInfo, @Nullable @NativeType("VkAllocationCallbacks const *") VkAllocationCallbacks pAllocator, @NativeType("VkSurfaceKHR *") long[] pSurface) {
+    public static int vkCreateXlibSurfaceKHR(VkInstance instance, @NativeType("const VkXlibSurfaceCreateInfoKHR *") VkXlibSurfaceCreateInfoKHR pCreateInfo, @Nullable @NativeType("const VkAllocationCallbacks *") VkAllocationCallbacks pAllocator, @NativeType("VkSurfaceKHR *") long[] pSurface) {
         long __functionAddress = instance.getCapabilities().vkCreateXlibSurfaceKHR;
         if (CHECKS) {
             check(__functionAddress);

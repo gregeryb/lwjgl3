@@ -93,7 +93,7 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct DEVMODE {
  *     TCHAR dmDeviceName[32];
  *     WORD dmSpecVersion;
@@ -141,14 +141,13 @@ import static org.lwjgl.system.MemoryStack.*;
  *     DWORD dmReserved2;
  *     DWORD dmPanningWidth;
  *     DWORD dmPanningHeight;
- * }</code></pre>
+ * }</pre></code>
  */
 public class DEVMODE extends Struct implements NativeResource {
 
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */
@@ -341,8 +340,6 @@ public class DEVMODE extends Struct implements NativeResource {
     public short dmPrintQuality() { return ndmPrintQuality(address()); }
     /** Returns a {@link POINTL} view of the {@code dmPosition} field. */
     public POINTL dmPosition() { return ndmPosition(address()); }
-    /** Passes the {@code dmPosition} field to the specified {@link java.util.function.Consumer Consumer}. */
-    public DEVMODE dmPosition(java.util.function.Consumer<POINTL> consumer) { consumer.accept(dmPosition()); return this; }
     /** Returns the value of the {@code dmDisplayOrientation} field. */
     @NativeType("DWORD")
     public int dmDisplayOrientation() { return ndmDisplayOrientation(address()); }
@@ -744,8 +741,6 @@ public class DEVMODE extends Struct implements NativeResource {
         public short dmPrintQuality() { return DEVMODE.ndmPrintQuality(address()); }
         /** Returns a {@link POINTL} view of the {@code dmPosition} field. */
         public POINTL dmPosition() { return DEVMODE.ndmPosition(address()); }
-        /** Passes the {@code dmPosition} field to the specified {@link java.util.function.Consumer Consumer}. */
-        public DEVMODE.Buffer dmPosition(java.util.function.Consumer<POINTL> consumer) { consumer.accept(dmPosition()); return this; }
         /** Returns the value of the {@code dmDisplayOrientation} field. */
         @NativeType("DWORD")
         public int dmDisplayOrientation() { return DEVMODE.ndmDisplayOrientation(address()); }

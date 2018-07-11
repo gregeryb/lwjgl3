@@ -27,7 +27,7 @@ import static org.lwjgl.system.MemoryUtil.*;
  * 
  * <p>Example uses: Create three callback objects. One will log errors and warnings to the debug console using Windows {@code OutputDebugString}. The second will cause the debugger to break at that callback when an error happens and the third will log warnings to stdout.</p>
  * 
- * <pre><code>
+ * <code><pre>
  *     VkResult res;
  *     VkDebugReportCallbackEXT cb1, cb2, cb3;
  * 
@@ -39,14 +39,14 @@ import static org.lwjgl.system.MemoryUtil.*;
  *             myOutputDebugString,                                        // pfnCallback
  *             NULL                                                        // pUserData
  *     };
- *     res = vkCreateDebugReportCallbackEXT(instance, &amp;callback1, &amp;cb1);
+ *     res = vkCreateDebugReportCallbackEXT(instance, &callback1, &cb1);
  *     if (res != VK_SUCCESS)
  *        // Do error handling for VK_ERROR_OUT_OF_MEMORY 
  * 
  *     callback.flags = VK_DEBUG_REPORT_ERROR_BIT_EXT;
  *     callback.pfnCallback = myDebugBreak;
  *     callback.pUserData = NULL;
- *     res = vkCreateDebugReportCallbackEXT(instance, &amp;callback, &amp;cb2);
+ *     res = vkCreateDebugReportCallbackEXT(instance, &callback, &cb2);
  *     if (res != VK_SUCCESS)
  *        // Do error handling for VK_ERROR_OUT_OF_MEMORY 
  * 
@@ -57,7 +57,7 @@ import static org.lwjgl.system.MemoryUtil.*;
  *             mystdOutLogger,                                             // pfnCallback
  *             NULL                                                        // pUserData
  *     };
- *     res = vkCreateDebugReportCallbackEXT(instance, &amp;callback3, &amp;cb3);
+ *     res = vkCreateDebugReportCallbackEXT(instance, &callback3, &cb3);
  *     if (res != VK_SUCCESS)
  *        // Do error handling for VK_ERROR_OUT_OF_MEMORY 
  * 
@@ -66,7 +66,17 @@ import static org.lwjgl.system.MemoryUtil.*;
  *     // remove callbacks when cleaning up 
  *     vkDestroyDebugReportCallbackEXT(instance, cb1);
  *     vkDestroyDebugReportCallbackEXT(instance, cb2);
- *     vkDestroyDebugReportCallbackEXT(instance, cb3);</code></pre>
+ *     vkDestroyDebugReportCallbackEXT(instance, cb3);</pre></code>
+ * 
+ * <div style="margin-left: 26px; border-left: 1px solid gray; padding-left: 14px;"><h5>Note</h5>
+ * 
+ * <p>In the initial release of the {@code VK_EXT_debug_report} extension, the token {@link #VK_STRUCTURE_TYPE_DEBUG_REPORT_CREATE_INFO_EXT STRUCTURE_TYPE_DEBUG_REPORT_CREATE_INFO_EXT} was used. Starting in version 2 of the extension branch, {@link #VK_STRUCTURE_TYPE_DEBUG_REPORT_CALLBACK_CREATE_INFO_EXT STRUCTURE_TYPE_DEBUG_REPORT_CALLBACK_CREATE_INFO_EXT} is used instead for consistency with Vulkan naming rules. The older enum is still available for backwards compatibility.</p>
+ * </div>
+ * 
+ * <div style="margin-left: 26px; border-left: 1px solid gray; padding-left: 14px;"><h5>Note</h5>
+ * 
+ * <p>In the initial release of the {@code VK_EXT_debug_report} extension, the token {@link #VK_DEBUG_REPORT_OBJECT_TYPE_DEBUG_REPORT_EXT DEBUG_REPORT_OBJECT_TYPE_DEBUG_REPORT_EXT} was used. Starting in version 8 of the extension branch, {@link #VK_DEBUG_REPORT_OBJECT_TYPE_DEBUG_REPORT_CALLBACK_EXT_EXT DEBUG_REPORT_OBJECT_TYPE_DEBUG_REPORT_CALLBACK_EXT_EXT} is used instead for consistency with Vulkan naming rules. The older enum is still available for backwards compatibility.</p>
+ * </div>
  * 
  * <dl>
  * <dt><b>Name String</b></dt>
@@ -83,10 +93,10 @@ import static org.lwjgl.system.MemoryUtil.*;
  * </ul></dd>
  * <dt><b>Contact</b></dt>
  * <dd><ul>
- * <li>Courtney Goeltzenleuchter @courtney-g</li>
+ * <li>Courtney Goeltzenleuchter @courtney</li>
  * </ul></dd>
  * <dt><b>Last Modified Date</b></dt>
- * <dd>2017-09-12</dd>
+ * <dd>2017-04-27</dd>
  * <dt><b>IP Status</b></dt>
  * <dd>No known IP claims.</dd>
  * <dt><b>Contributors</b></dt>
@@ -114,20 +124,6 @@ public class EXTDebugReport {
 
     /** Extends {@code VkObjectType}. */
     public static final int VK_OBJECT_TYPE_DEBUG_REPORT_CALLBACK_EXT = 1000011000;
-
-    /**
-     * Extends {@code VkDebugReportObjectTypeEXT}.
-     * 
-     * <h5>Enum values:</h5>
-     * 
-     * <ul>
-     * <li>{@link #VK_DEBUG_REPORT_OBJECT_TYPE_SAMPLER_YCBCR_CONVERSION_EXT DEBUG_REPORT_OBJECT_TYPE_SAMPLER_YCBCR_CONVERSION_EXT}</li>
-     * <li>{@link #VK_DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_EXT DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_EXT}</li>
-     * </ul>
-     */
-    public static final int
-        VK_DEBUG_REPORT_OBJECT_TYPE_SAMPLER_YCBCR_CONVERSION_EXT   = 1000011000,
-        VK_DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_EXT = 1000011000;
 
     /**
      * VkDebugReportObjectTypeEXT - Specify the type of an object handle
@@ -172,7 +168,7 @@ public class EXTDebugReport {
      * <tr><td>{@link #VK_DEBUG_REPORT_OBJECT_TYPE_DISPLAY_MODE_KHR_EXT DEBUG_REPORT_OBJECT_TYPE_DISPLAY_MODE_KHR_EXT}</td><td>{@code VkDisplayModeKHR}</td></tr>
      * <tr><td>{@link #VK_DEBUG_REPORT_OBJECT_TYPE_OBJECT_TABLE_NVX_EXT DEBUG_REPORT_OBJECT_TYPE_OBJECT_TABLE_NVX_EXT}</td><td>{@code VkObjectTableNVX}</td></tr>
      * <tr><td>{@link #VK_DEBUG_REPORT_OBJECT_TYPE_INDIRECT_COMMANDS_LAYOUT_NVX_EXT DEBUG_REPORT_OBJECT_TYPE_INDIRECT_COMMANDS_LAYOUT_NVX_EXT}</td><td>{@code VkIndirectCommandsLayoutNVX}</td></tr>
-     * <tr><td>{@link #VK_DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_EXT DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_EXT}</td><td>{@code VkDescriptorUpdateTemplate}</td></tr>
+     * <tr><td>{@link KHRDescriptorUpdateTemplate#VK_DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_KHR_EXT DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_KHR_EXT}</td><td>{@code VkDescriptorUpdateTemplateKHR}</td></tr>
      * </tbody>
      * </table>
      * 
@@ -255,11 +251,9 @@ public class EXTDebugReport {
         throw new UnsupportedOperationException();
     }
 
-    static boolean checkCapsInstance(FunctionProvider provider, java.util.Map<String, Long> caps, java.util.Set<String> ext) {
-        return ext.contains("VK_EXT_debug_report") && VK.checkExtension("VK_EXT_debug_report",
-               VK.isSupported(provider, "vkCreateDebugReportCallbackEXT", caps)
-            && VK.isSupported(provider, "vkDestroyDebugReportCallbackEXT", caps)
-            && VK.isSupported(provider, "vkDebugReportMessageEXT", caps)
+    static boolean isAvailable(VKCapabilitiesInstance caps) {
+        return checkFunctions(
+            caps.vkCreateDebugReportCallbackEXT, caps.vkDestroyDebugReportCallbackEXT, caps.vkDebugReportMessageEXT
         );
     }
 
@@ -285,12 +279,12 @@ public class EXTDebugReport {
      * 
      * <p>To register a debug report callback, an application uses {@link #vkCreateDebugReportCallbackEXT CreateDebugReportCallbackEXT}.</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * VkResult vkCreateDebugReportCallbackEXT(
      *     VkInstance                                  instance,
      *     const VkDebugReportCallbackCreateInfoEXT*   pCreateInfo,
      *     const VkAllocationCallbacks*                pAllocator,
-     *     VkDebugReportCallbackEXT*                   pCallback);</code></pre>
+     *     VkDebugReportCallbackEXT*                   pCallback);</pre></code>
      * 
      * <h5>Valid Usage (Implicit)</h5>
      * 
@@ -324,7 +318,7 @@ public class EXTDebugReport {
      * @param pCallback   a pointer to record the {@code VkDebugReportCallbackEXT} object created.
      */
     @NativeType("VkResult")
-    public static int vkCreateDebugReportCallbackEXT(VkInstance instance, @NativeType("VkDebugReportCallbackCreateInfoEXT const *") VkDebugReportCallbackCreateInfoEXT pCreateInfo, @Nullable @NativeType("VkAllocationCallbacks const *") VkAllocationCallbacks pAllocator, @NativeType("VkDebugReportCallbackEXT *") LongBuffer pCallback) {
+    public static int vkCreateDebugReportCallbackEXT(VkInstance instance, @NativeType("const VkDebugReportCallbackCreateInfoEXT *") VkDebugReportCallbackCreateInfoEXT pCreateInfo, @Nullable @NativeType("const VkAllocationCallbacks *") VkAllocationCallbacks pAllocator, @NativeType("VkDebugReportCallbackEXT *") LongBuffer pCallback) {
         if (CHECKS) {
             check(pCallback, 1);
         }
@@ -350,11 +344,11 @@ public class EXTDebugReport {
      * 
      * <p>To destroy a {@code VkDebugReportCallbackEXT} object, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * void vkDestroyDebugReportCallbackEXT(
      *     VkInstance                                  instance,
      *     VkDebugReportCallbackEXT                    callback,
-     *     const VkAllocationCallbacks*                pAllocator);</code></pre>
+     *     const VkAllocationCallbacks*                pAllocator);</pre></code>
      * 
      * <h5>Valid Usage</h5>
      * 
@@ -386,7 +380,7 @@ public class EXTDebugReport {
      * @param callback   the {@code VkDebugReportCallbackEXT} object to destroy. {@code callback} is an externally synchronized object and <b>must</b> not be used on more than one thread at a time. This means that {@link #vkDestroyDebugReportCallbackEXT DestroyDebugReportCallbackEXT} <b>must</b> not be called when a callback is active.
      * @param pAllocator controls host memory allocation as described in the <a target="_blank" href="https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation">Memory Allocation</a> chapter.
      */
-    public static void vkDestroyDebugReportCallbackEXT(VkInstance instance, @NativeType("VkDebugReportCallbackEXT") long callback, @Nullable @NativeType("VkAllocationCallbacks const *") VkAllocationCallbacks pAllocator) {
+    public static void vkDestroyDebugReportCallbackEXT(VkInstance instance, @NativeType("VkDebugReportCallbackEXT") long callback, @Nullable @NativeType("const VkAllocationCallbacks *") VkAllocationCallbacks pAllocator) {
         nvkDestroyDebugReportCallbackEXT(instance, callback, memAddressSafe(pAllocator));
     }
 
@@ -408,7 +402,7 @@ public class EXTDebugReport {
      * 
      * <p>To inject its own messages into the debug stream, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * void vkDebugReportMessageEXT(
      *     VkInstance                                  instance,
      *     VkDebugReportFlagsEXT                       flags,
@@ -417,7 +411,7 @@ public class EXTDebugReport {
      *     size_t                                      location,
      *     int32_t                                     messageCode,
      *     const char*                                 pLayerPrefix,
-     *     const char*                                 pMessage);</code></pre>
+     *     const char*                                 pMessage);</pre></code>
      * 
      * <h5>Description</h5>
      * 
@@ -442,7 +436,7 @@ public class EXTDebugReport {
      * </ul>
      *
      * @param instance     the debug stream&#8217;s {@code VkInstance}.
-     * @param flags        specifies the {@code VkDebugReportFlagBitsEXT} classification of this event/message.
+     * @param flags        indicates the {@code VkDebugReportFlagBitsEXT} classification of this event/message.
      * @param objectType   a {@code VkDebugReportObjectTypeEXT} specifying the type of object being used or created at the time the event was triggered.
      * @param object       this is the object where the issue was detected. {@code object} <b>can</b> be {@link VK10#VK_NULL_HANDLE NULL_HANDLE} if there is no object associated with the event.
      * @param location     an application defined value.
@@ -450,7 +444,7 @@ public class EXTDebugReport {
      * @param pLayerPrefix the abbreviation of the component making this event/message.
      * @param pMessage     a null-terminated string detailing the trigger conditions.
      */
-    public static void vkDebugReportMessageEXT(VkInstance instance, @NativeType("VkDebugReportFlagsEXT") int flags, @NativeType("VkDebugReportObjectTypeEXT") int objectType, @NativeType("uint64_t") long object, @NativeType("size_t") long location, @NativeType("int32_t") int messageCode, @NativeType("char const *") ByteBuffer pLayerPrefix, @NativeType("char const *") ByteBuffer pMessage) {
+    public static void vkDebugReportMessageEXT(VkInstance instance, @NativeType("VkDebugReportFlagsEXT") int flags, @NativeType("VkDebugReportObjectTypeEXT") int objectType, @NativeType("uint64_t") long object, @NativeType("size_t") long location, @NativeType("int32_t") int messageCode, @NativeType("const char *") ByteBuffer pLayerPrefix, @NativeType("const char *") ByteBuffer pMessage) {
         if (CHECKS) {
             checkNT1(pLayerPrefix);
             checkNT1(pMessage);
@@ -465,7 +459,7 @@ public class EXTDebugReport {
      * 
      * <p>To inject its own messages into the debug stream, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * void vkDebugReportMessageEXT(
      *     VkInstance                                  instance,
      *     VkDebugReportFlagsEXT                       flags,
@@ -474,7 +468,7 @@ public class EXTDebugReport {
      *     size_t                                      location,
      *     int32_t                                     messageCode,
      *     const char*                                 pLayerPrefix,
-     *     const char*                                 pMessage);</code></pre>
+     *     const char*                                 pMessage);</pre></code>
      * 
      * <h5>Description</h5>
      * 
@@ -499,7 +493,7 @@ public class EXTDebugReport {
      * </ul>
      *
      * @param instance     the debug stream&#8217;s {@code VkInstance}.
-     * @param flags        specifies the {@code VkDebugReportFlagBitsEXT} classification of this event/message.
+     * @param flags        indicates the {@code VkDebugReportFlagBitsEXT} classification of this event/message.
      * @param objectType   a {@code VkDebugReportObjectTypeEXT} specifying the type of object being used or created at the time the event was triggered.
      * @param object       this is the object where the issue was detected. {@code object} <b>can</b> be {@link VK10#VK_NULL_HANDLE NULL_HANDLE} if there is no object associated with the event.
      * @param location     an application defined value.
@@ -507,7 +501,7 @@ public class EXTDebugReport {
      * @param pLayerPrefix the abbreviation of the component making this event/message.
      * @param pMessage     a null-terminated string detailing the trigger conditions.
      */
-    public static void vkDebugReportMessageEXT(VkInstance instance, @NativeType("VkDebugReportFlagsEXT") int flags, @NativeType("VkDebugReportObjectTypeEXT") int objectType, @NativeType("uint64_t") long object, @NativeType("size_t") long location, @NativeType("int32_t") int messageCode, @NativeType("char const *") CharSequence pLayerPrefix, @NativeType("char const *") CharSequence pMessage) {
+    public static void vkDebugReportMessageEXT(VkInstance instance, @NativeType("VkDebugReportFlagsEXT") int flags, @NativeType("VkDebugReportObjectTypeEXT") int objectType, @NativeType("uint64_t") long object, @NativeType("size_t") long location, @NativeType("int32_t") int messageCode, @NativeType("const char *") CharSequence pLayerPrefix, @NativeType("const char *") CharSequence pMessage) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
             ByteBuffer pLayerPrefixEncoded = stack.UTF8(pLayerPrefix);
@@ -518,9 +512,9 @@ public class EXTDebugReport {
         }
     }
 
-    /** Array version of: {@link #vkCreateDebugReportCallbackEXT CreateDebugReportCallbackEXT} */
+    /** register Array version of: {@link #vkCreateDebugReportCallbackEXT CreateDebugReportCallbackEXT} */
     @NativeType("VkResult")
-    public static int vkCreateDebugReportCallbackEXT(VkInstance instance, @NativeType("VkDebugReportCallbackCreateInfoEXT const *") VkDebugReportCallbackCreateInfoEXT pCreateInfo, @Nullable @NativeType("VkAllocationCallbacks const *") VkAllocationCallbacks pAllocator, @NativeType("VkDebugReportCallbackEXT *") long[] pCallback) {
+    public static int vkCreateDebugReportCallbackEXT(VkInstance instance, @NativeType("const VkDebugReportCallbackCreateInfoEXT *") VkDebugReportCallbackCreateInfoEXT pCreateInfo, @Nullable @NativeType("const VkAllocationCallbacks *") VkAllocationCallbacks pAllocator, @NativeType("VkDebugReportCallbackEXT *") long[] pCallback) {
         long __functionAddress = instance.getCapabilities().vkCreateDebugReportCallbackEXT;
         if (CHECKS) {
             check(__functionAddress);

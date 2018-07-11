@@ -39,7 +39,7 @@ public class DynLoad {
      * @param libpath the dynamic library path
      */
     @NativeType("DLLib *")
-    public static long dlLoadLibrary(@NativeType("char const *") ByteBuffer libpath) {
+    public static long dlLoadLibrary(@NativeType("const char *") ByteBuffer libpath) {
         if (CHECKS) {
             checkNT1(libpath);
         }
@@ -52,7 +52,7 @@ public class DynLoad {
      * @param libpath the dynamic library path
      */
     @NativeType("DLLib *")
-    public static long dlLoadLibrary(@NativeType("char const *") CharSequence libpath) {
+    public static long dlLoadLibrary(@NativeType("const char *") CharSequence libpath) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
             ByteBuffer libpathEncoded = stack.ASCII(libpath);
@@ -92,7 +92,7 @@ public class DynLoad {
      * @param pSymbolName the symbol name
      */
     @NativeType("void *")
-    public static long dlFindSymbol(@NativeType("DLLib *") long pLib, @NativeType("char const *") ByteBuffer pSymbolName) {
+    public static long dlFindSymbol(@NativeType("DLLib *") long pLib, @NativeType("const char *") ByteBuffer pSymbolName) {
         if (CHECKS) {
             check(pLib);
             checkNT1(pSymbolName);
@@ -108,7 +108,7 @@ public class DynLoad {
      * @param pSymbolName the symbol name
      */
     @NativeType("void *")
-    public static long dlFindSymbol(@NativeType("DLLib *") long pLib, @NativeType("char const *") CharSequence pSymbolName) {
+    public static long dlFindSymbol(@NativeType("DLLib *") long pLib, @NativeType("const char *") CharSequence pSymbolName) {
         if (CHECKS) {
             check(pLib);
         }
@@ -116,59 +116,6 @@ public class DynLoad {
         try {
             ByteBuffer pSymbolNameEncoded = stack.ASCII(pSymbolName);
             return ndlFindSymbol(pLib, memAddress(pSymbolNameEncoded));
-        } finally {
-            stack.setPointer(stackPointer);
-        }
-    }
-
-    // --- [ dlGetLibraryPath ] ---
-
-    /**
-     * Unsafe version of: {@link #dlGetLibraryPath GetLibraryPath}
-     *
-     * @param bufSize the size of {@code sOut}, in bytes
-     */
-    public static native int ndlGetLibraryPath(long pLib, long sOut, int bufSize);
-
-    /**
-     * Gets a copy of the path to the library loaded with handle {@code pLib}.
-     * 
-     * <p>The parameter {@code sOut} is a pointer to a buffer of size {@code bufSize} (in bytes), to hold the output string. The return value is the size of the
-     * buffer (in bytes) needed to hold the null-terminated string, or 0 if it can't be looked up. If {@code bufSize >= return value > 1}, a null-terminated
-     * string with the path to the library should be in {@code sOut}. If it returns 0, the library name wasn't able to be found. Please note that this might
-     * happen in some rare cases, so make sure to always check.</p>
-     *
-     * @param pLib the dynamic library
-     * @param sOut pointer to a buffer where the library path will be stored
-     */
-    public static int dlGetLibraryPath(@NativeType("DLLib *") long pLib, @NativeType("char *") ByteBuffer sOut) {
-        if (CHECKS) {
-            check(pLib);
-        }
-        return ndlGetLibraryPath(pLib, memAddress(sOut), sOut.remaining());
-    }
-
-    /**
-     * Gets a copy of the path to the library loaded with handle {@code pLib}.
-     * 
-     * <p>The parameter {@code sOut} is a pointer to a buffer of size {@code bufSize} (in bytes), to hold the output string. The return value is the size of the
-     * buffer (in bytes) needed to hold the null-terminated string, or 0 if it can't be looked up. If {@code bufSize >= return value > 1}, a null-terminated
-     * string with the path to the library should be in {@code sOut}. If it returns 0, the library name wasn't able to be found. Please note that this might
-     * happen in some rare cases, so make sure to always check.</p>
-     *
-     * @param pLib    the dynamic library
-     * @param bufSize the size of {@code sOut}, in bytes
-     */
-    @NativeType("int")
-    public static String dlGetLibraryPath(@NativeType("DLLib *") long pLib, int bufSize) {
-        if (CHECKS) {
-            check(pLib);
-        }
-        MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
-        try {
-            ByteBuffer sOut = stack.malloc(bufSize);
-            int __result = ndlGetLibraryPath(pLib, memAddress(sOut), bufSize);
-            return memASCII(sOut, __result - 1);
         } finally {
             stack.setPointer(stackPointer);
         }
@@ -185,7 +132,7 @@ public class DynLoad {
      * @param libPath the dynamic library path
      */
     @NativeType("DLSyms *")
-    public static long dlSymsInit(@NativeType("char const *") ByteBuffer libPath) {
+    public static long dlSymsInit(@NativeType("const char *") ByteBuffer libPath) {
         if (CHECKS) {
             checkNT1(libPath);
         }
@@ -198,7 +145,7 @@ public class DynLoad {
      * @param libPath the dynamic library path
      */
     @NativeType("DLSyms *")
-    public static long dlSymsInit(@NativeType("char const *") CharSequence libPath) {
+    public static long dlSymsInit(@NativeType("const char *") CharSequence libPath) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
             ByteBuffer libPathEncoded = stack.ASCII(libPath);
@@ -251,9 +198,10 @@ public class DynLoad {
      * Returns the symbol name exported by the specified library at the specified index.
      *
      * @param pSyms a {@code DLSyms} object
+     * @param index 
      */
     @Nullable
-    @NativeType("char const *")
+    @NativeType("const char *")
     public static String dlSymsName(@NativeType("DLSyms *") long pSyms, int index) {
         if (CHECKS) {
             check(pSyms);
@@ -274,7 +222,7 @@ public class DynLoad {
      * @param value the symbol address
      */
     @Nullable
-    @NativeType("char const *")
+    @NativeType("const char *")
     public static String dlSymsNameFromValue(@NativeType("DLSyms *") long pSyms, @NativeType("void *") long value) {
         if (CHECKS) {
             check(pSyms);

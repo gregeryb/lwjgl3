@@ -5,6 +5,10 @@
  */
 package org.lwjgl.opengles;
 
+import org.lwjgl.system.*;
+
+import static org.lwjgl.system.Checks.*;
+
 /**
  * Native bindings to the <a target="_blank" href="https://www.khronos.org/registry/OpenGL/extensions/EXT/EXT_texture_filter_minmax.txt">EXT_texture_filter_minmax</a> extension.
  * 
@@ -16,7 +20,7 @@ package org.lwjgl.opengles;
  * minification and magnification filter parameters. The filter parameters are used to identify the set of texels used to produce a final filtered value;
  * the reduction mode identifies how these texels are combined.</p>
  */
-public final class EXTTextureFilterMinmax {
+public class EXTTextureFilterMinmax {
 
     /**
      * Accepted by the {@code pname} parameter to SamplerParameter{i f}{v}, SamplerParameterI{u}iv, GetSamplerParameter{i f}v, GetSamplerParameterI{u}iv,
@@ -33,6 +37,20 @@ public final class EXTTextureFilterMinmax {
      */
     public static final int GL_WEIGHTED_AVERAGE_EXT = 0x9367;
 
-    private EXTTextureFilterMinmax() {}
+    static { GLES.initialize(); }
+
+    protected EXTTextureFilterMinmax() {
+        throw new UnsupportedOperationException();
+    }
+
+    static boolean isAvailable(GLESCapabilities caps) {
+        return checkFunctions(
+            caps.glRasterSamplesEXT
+        );
+    }
+
+    // --- [ glRasterSamplesEXT ] ---
+
+    public static native void glRasterSamplesEXT(@NativeType("GLuint") int samples, @NativeType("GLboolean") boolean fixedsamplelocations);
 
 }

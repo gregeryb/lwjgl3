@@ -52,11 +52,9 @@ extern "C" {
 
 #define ZSTD_STATIC_ASSERT(c) { enum { ZSTD_static_assert = 1/(int)(!!(c)) }; }
 
-#undef RAWLOG
-#undef DEBUGLOG
 #if defined(ZSTD_DEBUG) && (ZSTD_DEBUG>=2)
 #  include <stdio.h>
-extern int g_debuglevel;
+extern int g_debuglog_enable;
 /* recommended values for ZSTD_DEBUG display levels :
  * 1 : no display, enables assert() only
  * 2 : reserved for currently active debug path
@@ -65,11 +63,11 @@ extern int g_debuglevel;
  * 5 : events once per block
  * 6 : events once per sequence (*very* verbose) */
 #  define RAWLOG(l, ...) {                                      \
-                if (l<=g_debuglevel) {                          \
+                if ((g_debuglog_enable) & (l<=ZSTD_DEBUG)) {    \
                     fprintf(stderr, __VA_ARGS__);               \
             }   }
 #  define DEBUGLOG(l, ...) {                                    \
-                if (l<=g_debuglevel) {                          \
+                if ((g_debuglog_enable) & (l<=ZSTD_DEBUG)) {    \
                     fprintf(stderr, __FILE__ ": " __VA_ARGS__); \
                     fprintf(stderr, " \n");                     \
             }   }
@@ -134,15 +132,14 @@ typedef enum { set_basic, set_rle, set_compressed, set_repeat } symbolEncodingTy
 
 #define Litbits  8
 #define MaxLit ((1<<Litbits) - 1)
-#define MaxML   52
-#define MaxLL   35
+#define MaxML  52
+#define MaxLL  35
 #define DefaultMaxOff 28
-#define MaxOff  31
+#define MaxOff 31
 #define MaxSeq MAX(MaxLL, MaxML)   /* Assumption : MaxOff < MaxLL,MaxML */
 #define MLFSELog    9
 #define LLFSELog    9
 #define OffFSELog   8
-#define MaxFSELog  MAX(MAX(MLFSELog, LLFSELog), OffFSELog)
 
 static const U32 LL_bits[MaxLL+1] = { 0, 0, 0, 0, 0, 0, 0, 0,
                                       0, 0, 0, 0, 0, 0, 0, 0,

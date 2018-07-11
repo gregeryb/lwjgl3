@@ -18,13 +18,13 @@ import static org.lwjgl.system.MemoryStack.*;
 /**
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct IntersectionMaskRectangle_t {
  *     float m_flTopLeftX;
  *     float m_flTopLeftY;
  *     float m_flWidth;
  *     float m_flHeight;
- * }</code></pre>
+ * }</pre></code>
  */
 @NativeType("struct IntersectionMaskRectangle_t")
 public class IntersectionMaskRectangle extends Struct implements NativeResource {
@@ -32,7 +32,6 @@ public class IntersectionMaskRectangle extends Struct implements NativeResource 
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */

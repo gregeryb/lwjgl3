@@ -25,11 +25,11 @@ import static org.lwjgl.system.MemoryUtil.*;
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct bgfx_encoder_stats_t {
  *     int64_t cpuTimeBegin;
  *     int64_t cpuTimeEnd;
- * }</code></pre>
+ * }</pre></code>
  */
 @NativeType("struct bgfx_encoder_stats_t")
 public class BGFXEncoderStats extends Struct {
@@ -37,7 +37,6 @@ public class BGFXEncoderStats extends Struct {
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */

@@ -20,7 +20,7 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct stbtt_aligned_quad {
  *     float x0;
  *     float y0;
@@ -30,7 +30,7 @@ import static org.lwjgl.system.MemoryStack.*;
  *     float y1;
  *     float s1;
  *     float t1;
- * }</code></pre>
+ * }</pre></code>
  */
 @NativeType("struct stbtt_aligned_quad")
 public class STBTTAlignedQuad extends Struct implements NativeResource {
@@ -38,7 +38,6 @@ public class STBTTAlignedQuad extends Struct implements NativeResource {
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */

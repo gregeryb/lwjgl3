@@ -30,12 +30,12 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct aiFileIO {
  *     {@link AIFileOpenProcI aiFileOpenProc} OpenProc;
  *     {@link AIFileCloseProcI aiFileCloseProc} CloseProc;
  *     aiUserData UserData;
- * }</code></pre>
+ * }</pre></code>
  */
 @NativeType("struct aiFileIO")
 public class AIFileIO extends Struct implements NativeResource {
@@ -43,7 +43,6 @@ public class AIFileIO extends Struct implements NativeResource {
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */
@@ -279,7 +278,7 @@ public class AIFileIO extends Struct implements NativeResource {
     /** Unsafe version of {@link #CloseProc(AIFileCloseProcI) CloseProc}. */
     public static void nCloseProc(long struct, AIFileCloseProcI value) { memPutAddress(struct + AIFileIO.CLOSEPROC, value.address()); }
     /** Unsafe version of {@link #UserData(long) UserData}. */
-    public static void nUserData(long struct, long value) { memPutAddress(struct + AIFileIO.USERDATA, value); }
+    public static void nUserData(long struct, long value) { memPutAddress(struct + AIFileIO.USERDATA, check(value)); }
 
     /**
      * Validates pointer members that should not be {@code NULL}.
@@ -289,6 +288,7 @@ public class AIFileIO extends Struct implements NativeResource {
     public static void validate(long struct) {
         check(memGetAddress(struct + AIFileIO.OPENPROC));
         check(memGetAddress(struct + AIFileIO.CLOSEPROC));
+        check(memGetAddress(struct + AIFileIO.USERDATA));
     }
 
     /**

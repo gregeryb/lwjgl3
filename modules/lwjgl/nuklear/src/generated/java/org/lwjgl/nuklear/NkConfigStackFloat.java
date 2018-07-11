@@ -17,11 +17,11 @@ import static org.lwjgl.system.MemoryUtil.*;
 /**
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct nk_config_stack_float {
  *     int head;
  *     {@link NkConfigStackFloatElement struct nk_config_stack_float_element} elements[32];
- * }</code></pre>
+ * }</pre></code>
  */
 @NativeType("struct nk_config_stack_float")
 class NkConfigStackFloat extends Struct {
@@ -29,7 +29,6 @@ class NkConfigStackFloat extends Struct {
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */
@@ -113,7 +112,8 @@ class NkConfigStackFloat extends Struct {
     public static NkConfigStackFloatElement.Buffer nelements(long struct) { return NkConfigStackFloatElement.create(struct + NkConfigStackFloat.ELEMENTS, 32); }
     /** Unsafe version of {@link #elements(int) elements}. */
     public static NkConfigStackFloatElement nelements(long struct, int index) {
-        return NkConfigStackFloatElement.create(struct + NkConfigStackFloat.ELEMENTS + check(index, 32) * NkConfigStackFloatElement.SIZEOF);
+        if (CHECKS) { check(index, 32); }
+        return NkConfigStackFloatElement.create(struct + NkConfigStackFloat.ELEMENTS + index * NkConfigStackFloatElement.SIZEOF);
     }
 
     // -----------------------------------

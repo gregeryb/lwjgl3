@@ -40,13 +40,13 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct aiExportDataBlob {
  *     size_t size;
  *     void * data;
  *     {@link AIString struct aiString} name;
  *     {@link AIExportDataBlob struct aiExportDataBlob} * next;
- * }</code></pre>
+ * }</pre></code>
  */
 @NativeType("struct aiExportDataBlob")
 public class AIExportDataBlob extends Struct implements NativeResource {
@@ -54,7 +54,6 @@ public class AIExportDataBlob extends Struct implements NativeResource {
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */
@@ -107,8 +106,6 @@ public class AIExportDataBlob extends Struct implements NativeResource {
     /** Returns a {@link AIString} view of the {@code name} field. */
     @NativeType("struct aiString")
     public AIString name() { return nname(address()); }
-    /** Passes the {@code name} field to the specified {@link java.util.function.Consumer Consumer}. */
-    public AIExportDataBlob name(java.util.function.Consumer<AIString> consumer) { consumer.accept(name()); return this; }
     /** Returns a {@link AIExportDataBlob} view of the struct pointed to by the {@code next} field. */
     @Nullable
     @NativeType("struct aiExportDataBlob *")
@@ -125,7 +122,7 @@ public class AIExportDataBlob extends Struct implements NativeResource {
     public AIExportDataBlob set(
         ByteBuffer data,
         AIString name,
-        @Nullable AIExportDataBlob next
+        AIExportDataBlob next
     ) {
         data(data);
         name(name);
@@ -381,8 +378,6 @@ public class AIExportDataBlob extends Struct implements NativeResource {
         /** Returns a {@link AIString} view of the {@code name} field. */
         @NativeType("struct aiString")
         public AIString name() { return AIExportDataBlob.nname(address()); }
-        /** Passes the {@code name} field to the specified {@link java.util.function.Consumer Consumer}. */
-        public AIExportDataBlob.Buffer name(java.util.function.Consumer<AIString> consumer) { consumer.accept(name()); return this; }
         /** Returns a {@link AIExportDataBlob} view of the struct pointed to by the {@code next} field. */
         @Nullable
         @NativeType("struct aiExportDataBlob *")

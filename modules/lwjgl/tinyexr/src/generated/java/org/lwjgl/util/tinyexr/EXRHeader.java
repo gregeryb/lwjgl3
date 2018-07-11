@@ -22,7 +22,6 @@ import static org.lwjgl.util.tinyexr.TinyEXR.*;
  * <h3>Member documentation</h3>
  * 
  * <ul>
- * <li>{@code num_custom_attributes} &ndash; number of {@code EXRAttribute} in the {@code custom_attributes} array</li>
  * <li>{@code custom_attributes} &ndash; custom attributes (excludes required attributes, e.g. `channels`, `compression`, etc)</li>
  * <li>{@code pixel_types} &ndash; loaded pixel type (TINYEXR_PIXELTYPE_*) of {@code images} for each channel. This is overwritten with {@code requested_pixel_types} when loading.</li>
  * <li>{@code compression_type} &ndash; compression type (TINYEXR_COMPRESSIONTYPE_*)</li>
@@ -31,7 +30,7 @@ import static org.lwjgl.util.tinyexr.TinyEXR.*;
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct EXRHeader {
  *     float pixel_aspect_ratio;
  *     int line_order;
@@ -50,20 +49,19 @@ import static org.lwjgl.util.tinyexr.TinyEXR.*;
  *     int multipart;
  *     unsigned int header_len;
  *     int num_custom_attributes;
- *     {@link EXRAttribute EXRAttribute} * custom_attributes;
+ *     {@link EXRAttribute EXRAttribute} custom_attributes[TINYEXR_MAX_ATTRIBUTES];
  *     {@link EXRChannelInfo EXRChannelInfo} * channels;
  *     int * pixel_types;
  *     int num_channels;
  *     int compression_type;
  *     int * requested_pixel_types;
- * }</code></pre>
+ * }</pre></code>
  */
 public class EXRHeader extends Struct implements NativeResource {
 
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */
@@ -111,7 +109,7 @@ public class EXRHeader extends Struct implements NativeResource {
             __member(4),
             __member(4),
             __member(4),
-            __member(POINTER_SIZE),
+            __array(EXRAttribute.SIZEOF, EXRAttribute.ALIGNOF, TINYEXR_MAX_ATTRIBUTES),
             __member(POINTER_SIZE),
             __member(POINTER_SIZE),
             __member(4),
@@ -212,10 +210,11 @@ public class EXRHeader extends Struct implements NativeResource {
     public int header_len() { return nheader_len(address()); }
     /** Returns the value of the {@code num_custom_attributes} field. */
     public int num_custom_attributes() { return nnum_custom_attributes(address()); }
-    /** Returns a {@link EXRAttribute.Buffer} view of the struct array pointed to by the {@code custom_attributes} field. */
-    @Nullable
-    @NativeType("EXRAttribute *")
+    /** Returns a {@link EXRAttribute}.Buffer view of the {@code custom_attributes} field. */
+    @NativeType("EXRAttribute[TINYEXR_MAX_ATTRIBUTES]")
     public EXRAttribute.Buffer custom_attributes() { return ncustom_attributes(address()); }
+    /** Returns a {@link EXRAttribute} view of the struct at the specified index of the {@code custom_attributes} field. */
+    public EXRAttribute custom_attributes(int index) { return ncustom_attributes(address(), index); }
     /** Returns a {@link EXRChannelInfo.Buffer} view of the struct array pointed to by the {@code channels} field. */
     @NativeType("EXRChannelInfo *")
     public EXRChannelInfo.Buffer channels() { return nchannels(address()); }
@@ -268,10 +267,10 @@ public class EXRHeader extends Struct implements NativeResource {
     public EXRHeader multipart(@NativeType("int") boolean value) { nmultipart(address(), value ? 1 : 0); return this; }
     /** Sets the specified value to the {@code header_len} field. */
     public EXRHeader header_len(@NativeType("unsigned int") int value) { nheader_len(address(), value); return this; }
-    /** Sets the specified value to the {@code num_custom_attributes} field. */
-    public EXRHeader num_custom_attributes(int value) { nnum_custom_attributes(address(), value); return this; }
-    /** Sets the address of the specified {@link EXRAttribute.Buffer} to the {@code custom_attributes} field. */
-    public EXRHeader custom_attributes(@Nullable @NativeType("EXRAttribute *") EXRAttribute.Buffer value) { ncustom_attributes(address(), value); return this; }
+    /** Copies the specified {@link EXRAttribute.Buffer} to the {@code custom_attributes} field. */
+    public EXRHeader custom_attributes(@NativeType("EXRAttribute[TINYEXR_MAX_ATTRIBUTES]") EXRAttribute.Buffer value) { ncustom_attributes(address(), value); return this; }
+    /** Copies the specified {@link EXRAttribute} at the specified index of the {@code custom_attributes} field. */
+    public EXRHeader custom_attributes(int index, EXRAttribute value) { ncustom_attributes(address(), index, value); return this; }
     /** Sets the address of the specified {@link EXRChannelInfo.Buffer} to the {@code channels} field. */
     public EXRHeader channels(@NativeType("EXRChannelInfo *") EXRChannelInfo.Buffer value) { nchannels(address(), value); return this; }
     /** Sets the address of the specified {@link IntBuffer} to the {@code pixel_types} field. */
@@ -301,8 +300,7 @@ public class EXRHeader extends Struct implements NativeResource {
         boolean non_image,
         boolean multipart,
         int header_len,
-        int num_custom_attributes,
-        @Nullable EXRAttribute.Buffer custom_attributes,
+        EXRAttribute.Buffer custom_attributes,
         EXRChannelInfo.Buffer channels,
         IntBuffer pixel_types,
         int num_channels,
@@ -325,7 +323,6 @@ public class EXRHeader extends Struct implements NativeResource {
         non_image(non_image);
         multipart(multipart);
         header_len(header_len);
-        num_custom_attributes(num_custom_attributes);
         custom_attributes(custom_attributes);
         channels(channels);
         pixel_types(pixel_types);
@@ -497,19 +494,22 @@ public class EXRHeader extends Struct implements NativeResource {
     public static IntBuffer ndata_window(long struct) { return memIntBuffer(struct + EXRHeader.DATA_WINDOW, 4); }
     /** Unsafe version of {@link #data_window(int) data_window}. */
     public static int ndata_window(long struct, int index) {
-        return memGetInt(struct + EXRHeader.DATA_WINDOW + check(index, 4) * 4);
+        if (CHECKS) { check(index, 4); }
+        return memGetInt(struct + EXRHeader.DATA_WINDOW + index * 4);
     }
     /** Unsafe version of {@link #display_window}. */
     public static IntBuffer ndisplay_window(long struct) { return memIntBuffer(struct + EXRHeader.DISPLAY_WINDOW, 4); }
     /** Unsafe version of {@link #display_window(int) display_window}. */
     public static int ndisplay_window(long struct, int index) {
-        return memGetInt(struct + EXRHeader.DISPLAY_WINDOW + check(index, 4) * 4);
+        if (CHECKS) { check(index, 4); }
+        return memGetInt(struct + EXRHeader.DISPLAY_WINDOW + index * 4);
     }
     /** Unsafe version of {@link #screen_window_center}. */
     public static FloatBuffer nscreen_window_center(long struct) { return memFloatBuffer(struct + EXRHeader.SCREEN_WINDOW_CENTER, 2); }
     /** Unsafe version of {@link #screen_window_center(int) screen_window_center}. */
     public static float nscreen_window_center(long struct, int index) {
-        return memGetFloat(struct + EXRHeader.SCREEN_WINDOW_CENTER + check(index, 2) * 4);
+        if (CHECKS) { check(index, 2); }
+        return memGetFloat(struct + EXRHeader.SCREEN_WINDOW_CENTER + index * 4);
     }
     /** Unsafe version of {@link #screen_window_width}. */
     public static float nscreen_window_width(long struct) { return memGetFloat(struct + EXRHeader.SCREEN_WINDOW_WIDTH); }
@@ -536,7 +536,12 @@ public class EXRHeader extends Struct implements NativeResource {
     /** Unsafe version of {@link #num_custom_attributes}. */
     public static int nnum_custom_attributes(long struct) { return memGetInt(struct + EXRHeader.NUM_CUSTOM_ATTRIBUTES); }
     /** Unsafe version of {@link #custom_attributes}. */
-    @Nullable public static EXRAttribute.Buffer ncustom_attributes(long struct) { return EXRAttribute.createSafe(memGetAddress(struct + EXRHeader.CUSTOM_ATTRIBUTES), nnum_custom_attributes(struct)); }
+    public static EXRAttribute.Buffer ncustom_attributes(long struct) { return EXRAttribute.create(struct + EXRHeader.CUSTOM_ATTRIBUTES, nnum_custom_attributes(struct)); }
+    /** Unsafe version of {@link #custom_attributes(int) custom_attributes}. */
+    public static EXRAttribute ncustom_attributes(long struct, int index) {
+        if (CHECKS) { check(index, nnum_custom_attributes(struct)); }
+        return EXRAttribute.create(struct + EXRHeader.CUSTOM_ATTRIBUTES + index * EXRAttribute.SIZEOF);
+    }
     /** Unsafe version of {@link #channels}. */
     public static EXRChannelInfo.Buffer nchannels(long struct) { return EXRChannelInfo.create(memGetAddress(struct + EXRHeader.CHANNELS), nnum_channels(struct)); }
     /** Unsafe version of {@link #pixel_types() pixel_types}. */
@@ -559,7 +564,8 @@ public class EXRHeader extends Struct implements NativeResource {
     }
     /** Unsafe version of {@link #data_window(int, int) data_window}. */
     public static void ndata_window(long struct, int index, int value) {
-        memPutInt(struct + EXRHeader.DATA_WINDOW + check(index, 4) * 4, value);
+        if (CHECKS) { check(index, 4); }
+        memPutInt(struct + EXRHeader.DATA_WINDOW + index * 4, value);
     }
     /** Unsafe version of {@link #display_window(IntBuffer) display_window}. */
     public static void ndisplay_window(long struct, IntBuffer value) {
@@ -568,7 +574,8 @@ public class EXRHeader extends Struct implements NativeResource {
     }
     /** Unsafe version of {@link #display_window(int, int) display_window}. */
     public static void ndisplay_window(long struct, int index, int value) {
-        memPutInt(struct + EXRHeader.DISPLAY_WINDOW + check(index, 4) * 4, value);
+        if (CHECKS) { check(index, 4); }
+        memPutInt(struct + EXRHeader.DISPLAY_WINDOW + index * 4, value);
     }
     /** Unsafe version of {@link #screen_window_center(FloatBuffer) screen_window_center}. */
     public static void nscreen_window_center(long struct, FloatBuffer value) {
@@ -577,7 +584,8 @@ public class EXRHeader extends Struct implements NativeResource {
     }
     /** Unsafe version of {@link #screen_window_center(int, float) screen_window_center}. */
     public static void nscreen_window_center(long struct, int index, float value) {
-        memPutFloat(struct + EXRHeader.SCREEN_WINDOW_CENTER + check(index, 2) * 4, value);
+        if (CHECKS) { check(index, 2); }
+        memPutFloat(struct + EXRHeader.SCREEN_WINDOW_CENTER + index * 4, value);
     }
     /** Unsafe version of {@link #screen_window_width(float) screen_window_width}. */
     public static void nscreen_window_width(long struct, float value) { memPutFloat(struct + EXRHeader.SCREEN_WINDOW_WIDTH, value); }
@@ -604,7 +612,16 @@ public class EXRHeader extends Struct implements NativeResource {
     /** Sets the specified value to the {@code num_custom_attributes} field of the specified {@code struct}. */
     public static void nnum_custom_attributes(long struct, int value) { memPutInt(struct + EXRHeader.NUM_CUSTOM_ATTRIBUTES, value); }
     /** Unsafe version of {@link #custom_attributes(EXRAttribute.Buffer) custom_attributes}. */
-    public static void ncustom_attributes(long struct, @Nullable EXRAttribute.Buffer value) { memPutAddress(struct + EXRHeader.CUSTOM_ATTRIBUTES, memAddressSafe(value)); nnum_custom_attributes(struct, value == null ? 0 : value.remaining()); }
+    public static void ncustom_attributes(long struct, EXRAttribute.Buffer value) {
+        if (CHECKS) { checkGT(value, TINYEXR_MAX_ATTRIBUTES); }
+        memCopy(value.address(), struct + EXRHeader.CUSTOM_ATTRIBUTES, value.remaining() * EXRAttribute.SIZEOF);
+        nnum_custom_attributes(struct, value.remaining());
+    }
+    /** Unsafe version of {@link #custom_attributes(int, EXRAttribute) custom_attributes}. */
+    public static void ncustom_attributes(long struct, int index, EXRAttribute value) {
+        if (CHECKS) { check(index, TINYEXR_MAX_ATTRIBUTES); }
+        memCopy(value.address(), struct + EXRHeader.CUSTOM_ATTRIBUTES + index * EXRAttribute.SIZEOF, EXRAttribute.SIZEOF);
+    }
     /** Unsafe version of {@link #channels(EXRChannelInfo.Buffer) channels}. */
     public static void nchannels(long struct, EXRChannelInfo.Buffer value) { memPutAddress(struct + EXRHeader.CHANNELS, value.address()); }
     /** Unsafe version of {@link #pixel_types(IntBuffer) pixel_types}. */
@@ -623,9 +640,10 @@ public class EXRHeader extends Struct implements NativeResource {
      */
     public static void validate(long struct) {
         int num_custom_attributes = nnum_custom_attributes(struct);
-        long custom_attributes = memGetAddress(struct + EXRHeader.CUSTOM_ATTRIBUTES);
-        if (custom_attributes != NULL) {
-            EXRAttribute.validate(custom_attributes, num_custom_attributes);
+        long custom_attributes = struct + EXRHeader.CUSTOM_ATTRIBUTES;
+        for (int i = 0; i < num_custom_attributes; i++) {
+           EXRAttribute.validate(custom_attributes);
+           custom_attributes += POINTER_SIZE;
         }
         check(memGetAddress(struct + EXRHeader.CHANNELS));
         check(memGetAddress(struct + EXRHeader.PIXEL_TYPES));
@@ -738,10 +756,11 @@ public class EXRHeader extends Struct implements NativeResource {
         public int header_len() { return EXRHeader.nheader_len(address()); }
         /** Returns the value of the {@code num_custom_attributes} field. */
         public int num_custom_attributes() { return EXRHeader.nnum_custom_attributes(address()); }
-        /** Returns a {@link EXRAttribute.Buffer} view of the struct array pointed to by the {@code custom_attributes} field. */
-        @Nullable
-        @NativeType("EXRAttribute *")
+        /** Returns a {@link EXRAttribute}.Buffer view of the {@code custom_attributes} field. */
+        @NativeType("EXRAttribute[TINYEXR_MAX_ATTRIBUTES]")
         public EXRAttribute.Buffer custom_attributes() { return EXRHeader.ncustom_attributes(address()); }
+        /** Returns a {@link EXRAttribute} view of the struct at the specified index of the {@code custom_attributes} field. */
+        public EXRAttribute custom_attributes(int index) { return EXRHeader.ncustom_attributes(address(), index); }
         /** Returns a {@link EXRChannelInfo.Buffer} view of the struct array pointed to by the {@code channels} field. */
         @NativeType("EXRChannelInfo *")
         public EXRChannelInfo.Buffer channels() { return EXRHeader.nchannels(address()); }
@@ -794,10 +813,10 @@ public class EXRHeader extends Struct implements NativeResource {
         public EXRHeader.Buffer multipart(@NativeType("int") boolean value) { EXRHeader.nmultipart(address(), value ? 1 : 0); return this; }
         /** Sets the specified value to the {@code header_len} field. */
         public EXRHeader.Buffer header_len(@NativeType("unsigned int") int value) { EXRHeader.nheader_len(address(), value); return this; }
-        /** Sets the specified value to the {@code num_custom_attributes} field. */
-        public EXRHeader.Buffer num_custom_attributes(int value) { EXRHeader.nnum_custom_attributes(address(), value); return this; }
-        /** Sets the address of the specified {@link EXRAttribute.Buffer} to the {@code custom_attributes} field. */
-        public EXRHeader.Buffer custom_attributes(@Nullable @NativeType("EXRAttribute *") EXRAttribute.Buffer value) { EXRHeader.ncustom_attributes(address(), value); return this; }
+        /** Copies the specified {@link EXRAttribute.Buffer} to the {@code custom_attributes} field. */
+        public EXRHeader.Buffer custom_attributes(@NativeType("EXRAttribute[TINYEXR_MAX_ATTRIBUTES]") EXRAttribute.Buffer value) { EXRHeader.ncustom_attributes(address(), value); return this; }
+        /** Copies the specified {@link EXRAttribute} at the specified index of the {@code custom_attributes} field. */
+        public EXRHeader.Buffer custom_attributes(int index, EXRAttribute value) { EXRHeader.ncustom_attributes(address(), index, value); return this; }
         /** Sets the address of the specified {@link EXRChannelInfo.Buffer} to the {@code channels} field. */
         public EXRHeader.Buffer channels(@NativeType("EXRChannelInfo *") EXRChannelInfo.Buffer value) { EXRHeader.nchannels(address(), value); return this; }
         /** Sets the address of the specified {@link IntBuffer} to the {@code pixel_types} field. */

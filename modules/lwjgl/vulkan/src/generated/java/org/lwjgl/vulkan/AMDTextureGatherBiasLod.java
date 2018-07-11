@@ -18,7 +18,7 @@ package org.lwjgl.vulkan;
  * 
  * <h5>Examples</h5>
  * 
- * <pre><code>
+ * <code><pre>
  * struct VkTextureLODGatherFormatPropertiesAMD
  * {
  *     VkStructureType sType;
@@ -28,14 +28,14 @@ package org.lwjgl.vulkan;
  * 
  * // ----------------------------------------------------------------------------------------
  * // How to detect if an image format can be used with the new function prototypes.
- * VkPhysicalDeviceImageFormatInfo2   formatInfo;
- * VkImageFormatProperties2           formatProps;
+ * VkPhysicalDeviceImageFormatInfo2KHR   formatInfo;
+ * VkImageFormatProperties2KHR           formatProps;
  * VkTextureLODGatherFormatPropertiesAMD textureLODGatherSupport;
  * 
  * textureLODGatherSupport.sType = VK_STRUCTURE_TYPE_TEXTURE_LOD_GATHER_FORMAT_PROPERTIES_AMD;
  * textureLODGatherSupport.pNext = nullptr;
  * 
- * formatInfo.sType  = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_FORMAT_INFO_2;
+ * formatInfo.sType  = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_FORMAT_INFO_2_KHR;
  * formatInfo.pNext  = nullptr;
  * formatInfo.format = ...;
  * formatInfo.type   = ...;
@@ -43,10 +43,10 @@ package org.lwjgl.vulkan;
  * formatInfo.usage  = ...;
  * formatInfo.flags  = ...;
  * 
- * formatProps.sType = VK_STRUCTURE_TYPE_IMAGE_FORMAT_PROPERTIES_2;
- * formatProps.pNext = &amp;textureLODGatherSupport;
+ * formatProps.sType = VK_STRUCTURE_TYPE_IMAGE_FORMAT_PROPERTIES_2_KHR;
+ * formatProps.pNext = &textureLODGatherSupport;
  * 
- * vkGetPhysicalDeviceImageFormatProperties2(physical_device, &amp;formatInfo, &amp;formatProps);
+ * vkGetPhysicalDeviceImageFormatProperties2KHR(physical_device, &formatInfo, &formatProps);
  * 
  * if (textureLODGatherSupport.supportsTextureGatherLODBiasAMD == VK_TRUE)
  * {
@@ -57,7 +57,7 @@ package org.lwjgl.vulkan;
  * {
  *     // physical device does not support SPV_AMD_texture_gather_bias_lod for the
  *     // specified format configuration.
- * }</code></pre>
+ * }</pre></code>
  * 
  * <dl>
  * <dt><b>Name String</b></dt>

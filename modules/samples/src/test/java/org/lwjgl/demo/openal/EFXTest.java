@@ -11,6 +11,7 @@ import org.lwjgl.stb.*;
 import java.nio.*;
 
 import static org.lwjgl.demo.openal.OpenALInfo.*;
+import static org.lwjgl.openal.AL10.*;
 import static org.lwjgl.openal.AL11.*;
 import static org.lwjgl.openal.ALC10.*;
 import static org.lwjgl.openal.EXTEfx.*;

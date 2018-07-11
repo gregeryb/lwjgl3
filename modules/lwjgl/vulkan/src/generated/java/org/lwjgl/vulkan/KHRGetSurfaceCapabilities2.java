@@ -76,10 +76,9 @@ public class KHRGetSurfaceCapabilities2 {
         throw new UnsupportedOperationException();
     }
 
-    static boolean checkCapsInstance(FunctionProvider provider, java.util.Map<String, Long> caps, java.util.Set<String> ext) {
-        return ext.contains("VK_KHR_get_surface_capabilities2") && VK.checkExtension("VK_KHR_get_surface_capabilities2",
-               VK.isSupported(provider, "vkGetPhysicalDeviceSurfaceCapabilities2KHR", caps)
-            && VK.isSupported(provider, "vkGetPhysicalDeviceSurfaceFormats2KHR", caps)
+    static boolean isAvailable(VKCapabilitiesInstance caps) {
+        return checkFunctions(
+            caps.vkGetPhysicalDeviceSurfaceCapabilities2KHR, caps.vkGetPhysicalDeviceSurfaceFormats2KHR
         );
     }
 
@@ -101,11 +100,11 @@ public class KHRGetSurfaceCapabilities2 {
      * 
      * <p>To query the basic capabilities of a surface defined by the core or extensions, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * VkResult vkGetPhysicalDeviceSurfaceCapabilities2KHR(
      *     VkPhysicalDevice                            physicalDevice,
      *     const VkPhysicalDeviceSurfaceInfo2KHR*      pSurfaceInfo,
-     *     VkSurfaceCapabilities2KHR*                  pSurfaceCapabilities);</code></pre>
+     *     VkSurfaceCapabilities2KHR*                  pSurfaceCapabilities);</pre></code>
      * 
      * <h5>Description</h5>
      * 
@@ -143,7 +142,7 @@ public class KHRGetSurfaceCapabilities2 {
      * @param pSurfaceCapabilities points to an instance of the {@link VkSurfaceCapabilities2KHR} structure in which the capabilities are returned.
      */
     @NativeType("VkResult")
-    public static int vkGetPhysicalDeviceSurfaceCapabilities2KHR(VkPhysicalDevice physicalDevice, @NativeType("VkPhysicalDeviceSurfaceInfo2KHR const *") VkPhysicalDeviceSurfaceInfo2KHR pSurfaceInfo, @NativeType("VkSurfaceCapabilities2KHR *") VkSurfaceCapabilities2KHR pSurfaceCapabilities) {
+    public static int vkGetPhysicalDeviceSurfaceCapabilities2KHR(VkPhysicalDevice physicalDevice, @NativeType("const VkPhysicalDeviceSurfaceInfo2KHR *") VkPhysicalDeviceSurfaceInfo2KHR pSurfaceInfo, @NativeType("VkSurfaceCapabilities2KHR *") VkSurfaceCapabilities2KHR pSurfaceCapabilities) {
         return nvkGetPhysicalDeviceSurfaceCapabilities2KHR(physicalDevice, pSurfaceInfo.address(), pSurfaceCapabilities.address());
     }
 
@@ -169,12 +168,12 @@ public class KHRGetSurfaceCapabilities2 {
      * 
      * <p>To query the supported swapchain format tuples for a surface, call:</p>
      * 
-     * <pre><code>
+     * <code><pre>
      * VkResult vkGetPhysicalDeviceSurfaceFormats2KHR(
      *     VkPhysicalDevice                            physicalDevice,
      *     const VkPhysicalDeviceSurfaceInfo2KHR*      pSurfaceInfo,
      *     uint32_t*                                   pSurfaceFormatCount,
-     *     VkSurfaceFormat2KHR*                        pSurfaceFormats);</code></pre>
+     *     VkSurfaceFormat2KHR*                        pSurfaceFormats);</pre></code>
      * 
      * <h5>Description</h5>
      * 
@@ -215,7 +214,7 @@ public class KHRGetSurfaceCapabilities2 {
      * @param pSurfaceFormats     either {@code NULL} or a pointer to an array of {@link VkSurfaceFormat2KHR} structures.
      */
     @NativeType("VkResult")
-    public static int vkGetPhysicalDeviceSurfaceFormats2KHR(VkPhysicalDevice physicalDevice, @NativeType("VkPhysicalDeviceSurfaceInfo2KHR const *") VkPhysicalDeviceSurfaceInfo2KHR pSurfaceInfo, @NativeType("uint32_t *") IntBuffer pSurfaceFormatCount, @Nullable @NativeType("VkSurfaceFormat2KHR *") VkSurfaceFormat2KHR.Buffer pSurfaceFormats) {
+    public static int vkGetPhysicalDeviceSurfaceFormats2KHR(VkPhysicalDevice physicalDevice, @NativeType("const VkPhysicalDeviceSurfaceInfo2KHR *") VkPhysicalDeviceSurfaceInfo2KHR pSurfaceInfo, @NativeType("uint32_t *") IntBuffer pSurfaceFormatCount, @Nullable @NativeType("VkSurfaceFormat2KHR *") VkSurfaceFormat2KHR.Buffer pSurfaceFormats) {
         if (CHECKS) {
             check(pSurfaceFormatCount, 1);
             checkSafe(pSurfaceFormats, pSurfaceFormatCount.get(pSurfaceFormatCount.position()));
@@ -223,9 +222,9 @@ public class KHRGetSurfaceCapabilities2 {
         return nvkGetPhysicalDeviceSurfaceFormats2KHR(physicalDevice, pSurfaceInfo.address(), memAddress(pSurfaceFormatCount), memAddressSafe(pSurfaceFormats));
     }
 
-    /** Array version of: {@link #vkGetPhysicalDeviceSurfaceFormats2KHR GetPhysicalDeviceSurfaceFormats2KHR} */
+    /** register Array version of: {@link #vkGetPhysicalDeviceSurfaceFormats2KHR GetPhysicalDeviceSurfaceFormats2KHR} */
     @NativeType("VkResult")
-    public static int vkGetPhysicalDeviceSurfaceFormats2KHR(VkPhysicalDevice physicalDevice, @NativeType("VkPhysicalDeviceSurfaceInfo2KHR const *") VkPhysicalDeviceSurfaceInfo2KHR pSurfaceInfo, @NativeType("uint32_t *") int[] pSurfaceFormatCount, @Nullable @NativeType("VkSurfaceFormat2KHR *") VkSurfaceFormat2KHR.Buffer pSurfaceFormats) {
+    public static int vkGetPhysicalDeviceSurfaceFormats2KHR(VkPhysicalDevice physicalDevice, @NativeType("const VkPhysicalDeviceSurfaceInfo2KHR *") VkPhysicalDeviceSurfaceInfo2KHR pSurfaceInfo, @NativeType("uint32_t *") int[] pSurfaceFormatCount, @Nullable @NativeType("VkSurfaceFormat2KHR *") VkSurfaceFormat2KHR.Buffer pSurfaceFormats) {
         long __functionAddress = physicalDevice.getCapabilities().vkGetPhysicalDeviceSurfaceFormats2KHR;
         if (CHECKS) {
             check(__functionAddress);

@@ -51,7 +51,12 @@ public class VRChaperone {
         return callPPZ(__functionAddress, pSizeX, pSizeZ);
     }
 
-    /** Returns the width and depth of the Play Area (formerly named Soft Bounds) in X and Z. Tracking space center(0, 0, 0) is the center of the Play Area. */
+    /**
+     * Returns the width and depth of the Play Area (formerly named Soft Bounds) in X and Z. Tracking space center(0, 0, 0) is the center of the Play Area.
+     *
+     * @param pSizeX 
+     * @param pSizeZ 
+     */
     @NativeType("bool")
     public static boolean VRChaperone_GetPlayAreaSize(@NativeType("float *") FloatBuffer pSizeX, @NativeType("float *") FloatBuffer pSizeZ) {
         if (CHECKS) {
@@ -77,6 +82,8 @@ public class VRChaperone {
      * 
      * <p>Corners are in counter-clockwise order. Standing center (0,0,0) is the center of the Play Area. It's a rectangle. 2 sides are parallel to the X axis
      * and 2 sides are parallel to the Z axis. Height of every corner is 0Y (on the floor).</p>
+     *
+     * @param rect 
      */
     @NativeType("bool")
     public static boolean VRChaperone_GetPlayAreaRect(@NativeType("HmdQuad_t *") HmdQuad rect) {
@@ -105,7 +112,11 @@ public class VRChaperone {
         callPV(__functionAddress, color);
     }
 
-    /** Optionally give the chaperone system a hit about the color and brightness in the scene. */
+    /**
+     * Optionally give the chaperone system a hit about the color and brightness in the scene.
+     *
+     * @param color 
+     */
     public static void VRChaperone_SetSceneColor(@NativeType("HmdColor_t") HmdColor color) {
         nVRChaperone_SetSceneColor(color.address());
     }
@@ -121,7 +132,13 @@ public class VRChaperone {
         callPPV(__functionAddress, pOutputColorArray, nNumOutputColors, flCollisionBoundsFadeDistance, pOutputCameraColor);
     }
 
-    /** Get the current chaperone bounds draw color and brightness. */
+    /**
+     * Get the current chaperone bounds draw color and brightness.
+     *
+     * @param pOutputColorArray             
+     * @param flCollisionBoundsFadeDistance 
+     * @param pOutputCameraColor            
+     */
     public static void VRChaperone_GetBoundsColor(@NativeType("HmdColor_t *") HmdColor.Buffer pOutputColorArray, float flCollisionBoundsFadeDistance, @NativeType("HmdColor_t *") HmdColor pOutputCameraColor) {
         nVRChaperone_GetBoundsColor(pOutputColorArray.address(), pOutputColorArray.remaining(), flCollisionBoundsFadeDistance, pOutputCameraColor.address());
     }
@@ -140,7 +157,11 @@ public class VRChaperone {
 
     // --- [ VRChaperone_ForceBoundsVisible ] ---
 
-    /** Force the bounds to show, mostly for utilities. */
+    /**
+     * Force the bounds to show, mostly for utilities.
+     *
+     * @param bForce 
+     */
     public static void VRChaperone_ForceBoundsVisible(@NativeType("bool") boolean bForce) {
         long __functionAddress = OpenVR.VRChaperone.ForceBoundsVisible;
         if (CHECKS) {

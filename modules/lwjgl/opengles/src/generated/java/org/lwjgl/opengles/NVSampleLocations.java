@@ -69,7 +69,7 @@ public class NVSampleLocations {
 
     public static native void nglFramebufferSampleLocationsfvNV(int target, int start, int count, long v);
 
-    public static void glFramebufferSampleLocationsfvNV(@NativeType("GLenum") int target, @NativeType("GLuint") int start, @NativeType("GLfloat const *") FloatBuffer v) {
+    public static void glFramebufferSampleLocationsfvNV(@NativeType("GLenum") int target, @NativeType("GLuint") int start, @NativeType("const GLfloat *") FloatBuffer v) {
         nglFramebufferSampleLocationsfvNV(target, start, v.remaining(), memAddress(v));
     }
 
@@ -77,7 +77,7 @@ public class NVSampleLocations {
 
     public static native void nglNamedFramebufferSampleLocationsfvNV(int framebuffer, int start, int count, long v);
 
-    public static void glNamedFramebufferSampleLocationsfvNV(@NativeType("GLuint") int framebuffer, @NativeType("GLuint") int start, @NativeType("GLfloat const *") FloatBuffer v) {
+    public static void glNamedFramebufferSampleLocationsfvNV(@NativeType("GLuint") int framebuffer, @NativeType("GLuint") int start, @NativeType("const GLfloat *") FloatBuffer v) {
         nglNamedFramebufferSampleLocationsfvNV(framebuffer, start, v.remaining(), memAddress(v));
     }
 
@@ -85,8 +85,8 @@ public class NVSampleLocations {
 
     public static native void glResolveDepthValuesNV();
 
-    /** Array version of: {@link #glFramebufferSampleLocationsfvNV FramebufferSampleLocationsfvNV} */
-    public static void glFramebufferSampleLocationsfvNV(@NativeType("GLenum") int target, @NativeType("GLuint") int start, @NativeType("GLfloat const *") float[] v) {
+    /** register Array version of: {@link #glFramebufferSampleLocationsfvNV FramebufferSampleLocationsfvNV} */
+    public static void glFramebufferSampleLocationsfvNV(@NativeType("GLenum") int target, @NativeType("GLuint") int start, @NativeType("const GLfloat *") float[] v) {
         long __functionAddress = GLES.getICD().glFramebufferSampleLocationsfvNV;
         if (CHECKS) {
             check(__functionAddress);
@@ -94,8 +94,8 @@ public class NVSampleLocations {
         callPV(__functionAddress, target, start, v.length, v);
     }
 
-    /** Array version of: {@link #glNamedFramebufferSampleLocationsfvNV NamedFramebufferSampleLocationsfvNV} */
-    public static void glNamedFramebufferSampleLocationsfvNV(@NativeType("GLuint") int framebuffer, @NativeType("GLuint") int start, @NativeType("GLfloat const *") float[] v) {
+    /** register Array version of: {@link #glNamedFramebufferSampleLocationsfvNV NamedFramebufferSampleLocationsfvNV} */
+    public static void glNamedFramebufferSampleLocationsfvNV(@NativeType("GLuint") int framebuffer, @NativeType("GLuint") int start, @NativeType("const GLfloat *") float[] v) {
         long __functionAddress = GLES.getICD().glNamedFramebufferSampleLocationsfvNV;
         if (CHECKS) {
             check(__functionAddress);

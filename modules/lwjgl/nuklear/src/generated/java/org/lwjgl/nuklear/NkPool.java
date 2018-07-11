@@ -16,17 +16,17 @@ import static org.lwjgl.system.MemoryUtil.*;
 /**
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct nk_pool {
  *     {@link NkAllocator struct nk_allocator} alloc;
  *     enum nk_allocation_type type;
  *     unsigned int page_count;
- *     struct nk_page * pages;
- *     struct nk_page_element * freelist;
+ *     nk_page * pages;
+ *     nk_page_element * freelist;
  *     unsigned capacity;
  *     nk_size size;
  *     nk_size cap;
- * }</code></pre>
+ * }</pre></code>
  */
 @NativeType("struct nk_pool")
 class NkPool extends Struct {
@@ -34,7 +34,6 @@ class NkPool extends Struct {
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */
@@ -93,8 +92,6 @@ class NkPool extends Struct {
     /** Returns a {@link NkAllocator} view of the {@code alloc} field. */
     @NativeType("struct nk_allocator")
     public NkAllocator alloc() { return nalloc(address()); }
-    /** Passes the {@code alloc} field to the specified {@link java.util.function.Consumer Consumer}. */
-    public NkPool alloc(java.util.function.Consumer<NkAllocator> consumer) { consumer.accept(alloc()); return this; }
     /** Returns the value of the {@code type} field. */
     @NativeType("enum nk_allocation_type")
     public int type() { return ntype(address()); }
@@ -102,10 +99,10 @@ class NkPool extends Struct {
     @NativeType("unsigned int")
     public int page_count() { return npage_count(address()); }
     /** Returns the value of the {@code pages} field. */
-    @NativeType("struct nk_page *")
+    @NativeType("nk_page *")
     public long pages() { return npages(address()); }
     /** Returns the value of the {@code freelist} field. */
-    @NativeType("struct nk_page_element *")
+    @NativeType("nk_page_element *")
     public long freelist() { return nfreelist(address()); }
     /** Returns the value of the {@code capacity} field. */
     @NativeType("unsigned")
@@ -214,8 +211,6 @@ class NkPool extends Struct {
         /** Returns a {@link NkAllocator} view of the {@code alloc} field. */
         @NativeType("struct nk_allocator")
         public NkAllocator alloc() { return NkPool.nalloc(address()); }
-        /** Passes the {@code alloc} field to the specified {@link java.util.function.Consumer Consumer}. */
-        public NkPool.Buffer alloc(java.util.function.Consumer<NkAllocator> consumer) { consumer.accept(alloc()); return this; }
         /** Returns the value of the {@code type} field. */
         @NativeType("enum nk_allocation_type")
         public int type() { return NkPool.ntype(address()); }
@@ -223,10 +218,10 @@ class NkPool extends Struct {
         @NativeType("unsigned int")
         public int page_count() { return NkPool.npage_count(address()); }
         /** Returns the value of the {@code pages} field. */
-        @NativeType("struct nk_page *")
+        @NativeType("nk_page *")
         public long pages() { return NkPool.npages(address()); }
         /** Returns the value of the {@code freelist} field. */
-        @NativeType("struct nk_page_element *")
+        @NativeType("nk_page_element *")
         public long freelist() { return NkPool.nfreelist(address()); }
         /** Returns the value of the {@code capacity} field. */
         @NativeType("unsigned")

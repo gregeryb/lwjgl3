@@ -42,14 +42,9 @@ JNIEXPORT jint JNICALL Java_org_lwjgl_system_rpmalloc_RPmalloc_nrpmalloc_1initia
 }
 
 JNIEXPORT jint JNICALL Java_org_lwjgl_system_rpmalloc_RPmalloc_nrpmalloc_1initialize_1config(JNIEnv *__env, jclass clazz, jlong configAddress) {
-    rpmalloc_config_t const *config = (rpmalloc_config_t const *)(intptr_t)configAddress;
+    const rpmalloc_config_t *config = (const rpmalloc_config_t *)(intptr_t)configAddress;
     UNUSED_PARAMS(__env, clazz)
     return (jint)rpmalloc_initialize_config(config);
-}
-
-JNIEXPORT jlong JNICALL Java_org_lwjgl_system_rpmalloc_RPmalloc_nrpmalloc_1config(JNIEnv *__env, jclass clazz) {
-    UNUSED_PARAMS(__env, clazz)
-    return (jlong)(intptr_t)rpmalloc_config();
 }
 
 JNIEXPORT void JNICALL Java_org_lwjgl_system_rpmalloc_RPmalloc_rpmalloc_1finalize(JNIEnv *__env, jclass clazz) {

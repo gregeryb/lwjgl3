@@ -19,20 +19,19 @@ import static org.lwjgl.system.MemoryStack.*;
 /**
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct SQL_NUMERIC_STRUCT {
  *     SQLCHAR precision;
  *     SQLSCHAR scale;
  *     SQLCHAR sign;
  *     SQLCHAR val[16];
- * }</code></pre>
+ * }</pre></code>
  */
 public class SQL_NUMERIC_STRUCT extends Struct implements NativeResource {
 
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */
@@ -281,7 +280,8 @@ public class SQL_NUMERIC_STRUCT extends Struct implements NativeResource {
     public static ByteBuffer nval(long struct) { return memByteBuffer(struct + SQL_NUMERIC_STRUCT.VAL, 16); }
     /** Unsafe version of {@link #val(int) val}. */
     public static byte nval(long struct, int index) {
-        return memGetByte(struct + SQL_NUMERIC_STRUCT.VAL + check(index, 16) * 1);
+        if (CHECKS) { check(index, 16); }
+        return memGetByte(struct + SQL_NUMERIC_STRUCT.VAL + index * 1);
     }
 
     /** Unsafe version of {@link #precision(byte) precision}. */
@@ -297,7 +297,8 @@ public class SQL_NUMERIC_STRUCT extends Struct implements NativeResource {
     }
     /** Unsafe version of {@link #val(int, byte) val}. */
     public static void nval(long struct, int index, byte value) {
-        memPutByte(struct + SQL_NUMERIC_STRUCT.VAL + check(index, 16) * 1, value);
+        if (CHECKS) { check(index, 16); }
+        memPutByte(struct + SQL_NUMERIC_STRUCT.VAL + index * 1, value);
     }
 
     // -----------------------------------

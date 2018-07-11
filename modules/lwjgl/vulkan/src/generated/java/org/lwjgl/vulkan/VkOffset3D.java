@@ -28,19 +28,18 @@ import static org.lwjgl.system.MemoryStack.*;
  * 
  * <h3>Layout</h3>
  * 
- * <pre><code>
+ * <code><pre>
  * struct VkOffset3D {
  *     int32_t x;
  *     int32_t y;
  *     int32_t z;
- * }</code></pre>
+ * }</pre></code>
  */
 public class VkOffset3D extends Struct implements NativeResource {
 
     /** The struct size in bytes. */
     public static final int SIZEOF;
 
-    /** The struct alignment in bytes. */
     public static final int ALIGNOF;
 
     /** The struct member offsets. */

@@ -11,6 +11,7 @@ import org.lwjgl.system.*;
 import java.nio.*;
 import java.util.concurrent.*;
 
+import static org.lwjgl.opencl.CL10.*;
 import static org.lwjgl.opencl.CL11.*;
 import static org.lwjgl.opencl.InfoUtil.*;
 import static org.lwjgl.opencl.KHRICD.*;

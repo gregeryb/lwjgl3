@@ -14,7 +14,7 @@ import static org.lwjgl.glfw.Callbacks.*;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.nanovg.NanoVG.*;
 import static org.lwjgl.nanovg.NanoVGGL3.*;
-import static org.lwjgl.opengl.GL11C.*;
+import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryUtil.*;
 
 /*
@@ -188,8 +188,6 @@ public final class ExampleGL3 extends Demo {
         System.out.printf("Average Frame Time: %.2f ms\n", getGraphAverage(fps) * 1000.0f);
         System.out.printf("          CPU Time: %.2f ms\n", getGraphAverage(cpuGraph) * 1000.0f);
         System.out.printf("          GPU Time: %.2f ms\n", getGraphAverage(gpuGraph) * 1000.0f);
-
-        GL.setCapabilities(null);
 
         glfwFreeCallbacks(window);
         glfwTerminate();
