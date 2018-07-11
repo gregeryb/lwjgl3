@@ -394,7 +394,6 @@
             <compileBinding binding="egl"/>
             <compileBinding binding="openal"/>
             <compileBinding binding="opencl"/>
-            <compileBinding binding="openvr"/>
             <compileBinding binding="stb"/>
             <compileBinding binding="vulkan"/>
         </parallel>
