@@ -145,7 +145,6 @@
 
     <target name="clean-java" description="Deletes Java binary files produced by this script">
         <delete dir="${bin.lwjgl}"/>
-        <delete dir="${bin.samples}"/>
         <delete dir="${bin.test}"/>
     </target>
 
@@ -392,32 +391,12 @@
         </lwjgl.javac>
 
         <parallel threadsPerProcessor="1">
-            <compileBinding binding="assimp"/>
-            <compileBinding binding="bgfx"/>
             <compileBinding binding="egl"/>
-            <compileBinding binding="jawt"/>
-            <compileBinding binding="jemalloc"/>
-            <compileBinding binding="lmdb"/>
-            <compileBinding binding="lz4"/>
-            <compileBinding binding="nanovg"/>
-            <compileBinding binding="nfd"/>
-            <compileBinding binding="nuklear"/>
-            <compileBinding binding="odbc"/>
             <compileBinding binding="openal"/>
             <compileBinding binding="opencl"/>
             <compileBinding binding="openvr"/>
-            <compileBinding binding="par"/>
-            <compileBinding binding="remotery"/>
-            <compileBinding binding="rpmalloc"/>
-            <compileBinding binding="sse"/>
             <compileBinding binding="stb"/>
-            <compileBinding binding="tinyexr"/>
-            <compileBinding binding="tinyfd"/>
-            <compileBinding binding="tootle"/>
             <compileBinding binding="vulkan"/>
-            <compileBinding binding="xxhash"/>
-            <compileBinding binding="yoga"/>
-            <compileBinding binding="zstd"/>
         </parallel>
 
         <parallel threadsPerProcessor="1">
@@ -429,9 +408,6 @@
             </compileBinding>
             <compileBinding binding="glfw">
                 <pathelement path="${bin.lwjgl}/egl"/>
-                <pathelement path="${bin.lwjgl}/vulkan"/>
-            </compileBinding>
-            <compileBinding binding="ovr">
                 <pathelement path="${bin.lwjgl}/vulkan"/>
             </compileBinding>
         </parallel>
@@ -464,14 +440,6 @@
             </lwjgl.javac>
         </forEachModule>
 
-        <local name="test.bgfx"/>
-        <condition property="test.bgfx">
-            <and>
-                <istrue value="${binding.bgfx}"/>
-                <istrue value="${binding.glfw}"/>
-            </and>
-        </condition>
-
         <local name="test.egl"/>
         <condition property="test.egl">
             <and>
@@ -486,38 +454,6 @@
             <and>
                 <istrue value="${binding.glfw}"/>
                 <istrue value="${binding.opengl}"/>
-            </and>
-        </condition>
-
-        <local name="test.jawt"/>
-        <condition property="test.jawt">
-            <and>
-                <istrue value="${binding.jawt}"/>
-                <istrue value="${binding.opengl}"/>
-            </and>
-        </condition>
-
-        <local name="test.nanovg"/>
-        <condition property="test.nanovg">
-            <and>
-                <istrue value="${test.glfw}"/>
-                <istrue value="${binding.nanovg}"/>
-            </and>
-        </condition>
-
-        <local name="test.nuklear"/>
-        <condition property="test.nuklear">
-            <and>
-                <istrue value="${test.glfw}"/>
-                <istrue value="${binding.nuklear}"/>
-            </and>
-        </condition>
-
-        <local name="test.nfd"/>
-        <condition property="test.nfd">
-            <and>
-                <istrue value="${test.glfw}"/>
-                <istrue value="${binding.nfd}"/>
             </and>
         </condition>
 
@@ -537,16 +473,6 @@
             </and>
         </condition>
 
-        <local name="test.par"/>
-        <condition property="test.par">
-            <and>
-                <istrue value="${binding.glfw}"/>
-                <istrue value="${binding.nfd}"/>
-                <istrue value="${binding.par}"/>
-                <istrue value="${binding.stb}"/>
-            </and>
-        </condition>
-
         <local name="test.stb"/>
         <condition property="test.stb">
             <and>
@@ -554,33 +480,6 @@
                 <istrue value="${binding.glfw}"/>
             </and>
         </condition>
-
-        <local name="test.tinyexr"/>
-        <condition property="test.tinyexr">
-            <and>
-                <istrue value="${test.glfw}"/>
-                <istrue value="${binding.tinyexr}"/>
-                <istrue value="${binding.tinyfd}"/>
-            </and>
-        </condition>
-
-        <local name="test.tinyfd"/>
-        <condition property="test.tinyfd">
-            <and>
-                <istrue value="${test.glfw}"/>
-                <istrue value="${binding.tinyfd}"/>
-            </and>
-        </condition>
-
-        <local name="test.tootle"/>
-        <condition property="test.tootle">
-            <and>
-                <istrue value="${binding.assimp}"/>
-                <istrue value="${binding.par}"/>
-                <istrue value="${binding.tootle}"/>
-            </and>
-        </condition>
-
         <local name="test.vulkan"/>
         <condition property="test.vulkan">
             <and>
@@ -589,62 +488,6 @@
             </and>
         </condition>
 
-        <local name="test.yoga"/>
-        <condition property="test.yoga">
-            <and>
-                <istrue value="${test.glfw}"/>
-                <istrue value="${binding.stb}"/>
-                <istrue value="${binding.yoga}"/>
-            </and>
-        </condition>
-
-        <mkdir dir="${bin.samples}"/>
-        <lwjgl.javac srcdir="modules/samples/src/test/java" destdir="${bin.samples}" taskname="javac: Samples">
-            <classpath>
-                <pathelement path="${module.classpath}"/>
-                <pathelement path="${bin.test}"/>
-                <pathelement path="${lib}/java/jsr305.jar"/>
-                <pathelement path="${lib}/java/joml.jar"/>
-            </classpath>
-
-            <!-- Demos -->
-            <include name="org/lwjgl/demo/assimp/**" if:true="${binding.assimp}"/>
-            <include name="org/lwjgl/demo/bgfx/**" if:set="test.bgfx"/>
-            <include name="org/lwjgl/demo/egl/**" if:set="test.egl"/>
-            <include name="org/lwjgl/demo/glfw/**" if:set="test.glfw"/>
-            <include name="org/lwjgl/demo/nanovg/**" if:set="test.nanovg"/>
-            <include name="org/lwjgl/demo/nuklear/**" if:set="test.nuklear"/>
-
-            <include name="org/lwjgl/demo/openal/**" if:true="${binding.openal}"/>
-            <exclude name="org/lwjgl/demo/openal/ALCDemo.java" unless:set="test.openal"/>
-            <exclude name="org/lwjgl/demo/openal/EFXTest.java" unless:set="test.openal"/>
-            <exclude name="org/lwjgl/demo/openal/HRTFDemo.java" unless:set="test.openal"/>
-
-            <include name="org/lwjgl/demo/opencl/**" if:set="test.opencl"/>
-            <include name="org/lwjgl/demo/opencl/CLDemo.java" if:true="${binding.opencl}"/>
-
-            <include name="org/lwjgl/demo/opengl/**" if:true="${binding.opengl}"/>
-
-            <include name="org/lwjgl/demo/openvr/**" if:true="${binding.openvr}"/>
-            <include name="org/lwjgl/demo/ovr/**" if:true="${binding.ovr}"/>
-            <include name="org/lwjgl/demo/stb/**" if:set="test.stb"/>
-
-            <include name="org/lwjgl/demo/system/jawt/**" if:set="test.jawt"/>
-
-            <include name="org/lwjgl/demo/util/*.java"/>
-            <include name="org/lwjgl/demo/util/lmdb/**" if:true="${binding.lmdb}"/>
-            <include name="org/lwjgl/demo/util/lz4/**" if:true="${binding.lz4}"/>
-            <include name="org/lwjgl/demo/util/nfd/**" if:set="test.nfd"/>
-            <include name="org/lwjgl/demo/util/par/**" if:set="test.par"/>
-            <include name="org/lwjgl/demo/util/tinyexr/**" if:set="test.tinyexr"/>
-            <include name="org/lwjgl/demo/util/tinyfd/**" if:set="test.tinyfd"/>
-            <include name="org/lwjgl/demo/util/tootle/**" if:set="test.tootle"/>
-            <include name="org/lwjgl/demo/util/xxhash/**" if:true="${binding.xxhash}"/>
-            <include name="org/lwjgl/demo/util/yoga/**" if:set="test.yoga"/>
-            <include name="org/lwjgl/demo/util/zstd/**" if:true="${binding.zstd}"/>
-
-            <include name="org/lwjgl/demo/vulkan/**" if:set="test.vulkan"/>
-        </lwjgl.javac>
     </target>
 
     <target name="tests" description="Runs the LWJGL test suite" depends="compile-tests, compile-native">
@@ -684,7 +527,6 @@
         <java classname="${class}" fork="true" failonerror="${failonerror}" spawn="${spawn}" taskname="Demo">
             <classpath>
                 <pathelement path="${module.classpath}"/>
-                <pathelement path="${bin.samples}"/>
                 <pathelement path="${test.resources}"/>
                 <pathelement path="${lib}/java/testng.jar"/>
                 <pathelement path="${lib}/java/joml.jar"/>
@@ -996,11 +838,6 @@
         </copy>
         <release-module package="org.lwjgl" name="core" native-library="lwjgl" license="dyncall" title="Core"/>
 
-        <!-- Assimp -->
-        <release-module package="org.lwjgl.assimp" name="assimp" native-library="assimp" title="assimp" if:true="${binding.assimp}"/>
-
-        <!-- bgfx -->
-        <release-module package="org.lwjgl.bgfx" name="bgfx" native-library="bgfx" title="bgfx" if:true="${binding.bgfx}"/>
 
         <!-- EGL -->
         <release-module package="org.lwjgl.egl" name="egl" title="EGL" license="khronos" if:true="${binding.egl}"/>
@@ -1022,30 +859,6 @@
             </natives>
         </release-module>
 
-        <!-- JAWT -->
-        <release-module package="org.lwjgl.system.jawt" name="jawt" title="JAWT" if:true="${binding.jawt}"/>
-
-        <!-- jemalloc -->
-        <release-module package="org.lwjgl.system.jemalloc" name="jemalloc" native-library="jemalloc" title="jemalloc" if:true="${binding.jemalloc}"/>
-
-        <!-- LMDB -->
-        <release-module package="org.lwjgl.util.lmdb" name="lmdb" native-library="lwjgl_lmdb" title="LMDB" if:true="${binding.lmdb}"/>
-
-        <!-- lz4 -->
-        <release-module package="org.lwjgl.util.lz4" name="lz4" native-library="lwjgl_lz4" title="lz4" if:true="${binding.lz4}"/>
-
-        <!-- NanoVG -->
-        <release-module package="org.lwjgl.nanovg" name="nanovg" native-library="lwjgl_nanovg" title="NanoVG" license="nano" if:true="${binding.nanovg}"/>
-
-        <!-- Native File Dialog -->
-        <release-module package="org.lwjgl.util.nfd" name="nfd" native-library="lwjgl_nfd" title="Native File Dialog" if:true="${binding.nfd}"/>
-
-        <!-- Nuklear -->
-        <release-module package="org.lwjgl.nuklear" name="nuklear" native-library="lwjgl_nuklear" title="Nuklear" if:true="${binding.nuklear}"/>
-
-        <!-- ODBC -->
-        <release-module package="org.lwjgl.odbc" name="odbc" title="ODBC" if:true="${binding.odbc}"/>
-
         <!-- OpenAL -->
         <release-module package="org.lwjgl.openal" name="openal" title="OpenAL" if:true="${binding.openal}">
  
@@ -1060,54 +873,11 @@
         <!-- OpenGL ES -->
         <release-module package="org.lwjgl.opengles" name="opengles" native-library="lwjgl_opengles" title="OpenGL ES" license="khronos" if:true="${binding.opengles}"/>
 
-        <!-- OpenVR -->
-        <release-module package="org.lwjgl.openvr" name="openvr" title="OpenVR" if:true="${binding.openvr}">
- 
-        </release-module>
-
-        <!-- LibOVR -->
-        <release-module package="org.lwjgl.ovr" name="ovr" title="LibOVR" license="oculus" if:true="${binding.ovr}">
-            <natives>
-                <get-release url="windows/x64/lwjgl_ovr.dll"/>
-                <get-release url="windows/x86/lwjgl_ovr32.dll"/>
-            </natives>
-        </release-module>
-
-        <!-- Par -->
-        <release-module package="org.lwjgl.util.par" name="par" native-library="lwjgl_par" title="par" if:true="${binding.par}"/>
-
-        <!-- Remotery -->
-        <release-module package="org.lwjgl.util.remotery" name="remotery" native-library="lwjgl_remotery" title="remotery" if:true="${binding.remotery}"/>
-
-        <!-- rpmalloc -->
-        <release-module package="org.lwjgl.system.rpmalloc" name="rpmalloc" native-library="lwjgl_rpmalloc" title="rpmalloc" if:true="${binding.rpmalloc}"/>
-
-        <!-- SSE -->
-        <release-module package="org.lwjgl.util.simd" name="sse" native-library="lwjgl_sse" title="SSE" if:true="${binding.sse}"/>
-
         <!-- stb -->
         <release-module package="org.lwjgl.stb" name="stb" native-library="lwjgl_stb" title="stb" if:true="${binding.stb}"/>
 
-        <!-- Tiny OpenEXR -->
-        <release-module package="org.lwjgl.util.tinyexr" name="tinyexr" native-library="lwjgl_tinyexr" title="Tiny OpenEXR" if:true="${binding.tinyexr}"/>
-
-        <!-- tiny file dialogs -->
-        <release-module package="org.lwjgl.util.tinyfd" name="tinyfd" native-library="lwjgl_tinyfd" title="tiny file dialogs" if:true="${binding.tinyfd}"/>
-
-        <!-- AMD Tootle -->
-        <release-module package="org.lwjgl.util.tootle" name="tootle" native-library="lwjgl_tootle" title="tootle" if:true="${binding.tootle}"/>
-
         <!-- Vulkan -->
         <release-module package="org.lwjgl.vulkan" name="vulkan" title="Vulkan" license="khronos" if:true="${binding.vulkan}"/>
-
-        <!-- xxHash -->
-        <release-module package="org.lwjgl.util.xxhash" name="xxhash" native-library="lwjgl_xxhash" title="xxHash" if:true="${binding.xxhash}"/>
-
-        <!-- yoga -->
-        <release-module package="org.lwjgl.util.yoga" name="yoga" native-library="lwjgl_yoga" title="yoga" if:true="${binding.yoga}"/>
-
-        <!-- zstd -->
-        <release-module package="org.lwjgl.util.zstd" name="zstd" native-library="lwjgl_zstd" title="zstd" if:true="${binding.zstd}"/>
 
         </parallel>
     </target>

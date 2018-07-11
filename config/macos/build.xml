@@ -173,163 +173,14 @@
             </link>
         </build>
 
-        <!-- LMDB -->
-        <build module="lmdb" simple="true" if:true="${binding.lmdb}">
-            <beforeCompile>
-                <compile flags="-Wno-format-extra-args">
-                    <arg value="-I${src.main.rel}"/>
-                    <fileset dir="." includes="${src.main}/*.c"/>
-                </compile>
-            </beforeCompile>
-        </build>
-
-        <!-- LZ4 -->
-        <build module="lz4" simple="true" if:true="${binding.lz4}">
-            <beforeCompile>
-                <compile>
-                    <arg value="-I${src.main.rel}"/>
-                    <arg value="-I${module.lwjgl.rel}/xxhash/src/main/c"/>
-                    <fileset dir="." includes="${src.main}/*.c"/>
-                    <fileset dir="." includes="${module.lwjgl}/xxhash/src/main/c/*.c"/>
-                </compile>
-            </beforeCompile>
-        </build>
-
-        <!-- NanoVG -->
-        <build module="nanovg" simple="true" if:true="${binding.nanovg}">
-            <source>
-                <arg value="-I${module.lwjgl.rel}/stb/src/main/c"/>
-            </source>
-        </build>
-
-        <!-- NativeFileDialog -->
-        <build module="nfd" simple="true" if:true="${binding.nfd}">
-            <source>
-                <arg value="-I${src.main.rel}/include"/>
-                <fileset dir="." includes="${src.main}/nfd_common.c"/>
-                <fileset dir="." includes="${src.main}/nfd_cocoa.m"/>
-            </source>
-            <link>
-                <arg line="-framework AppKit"/>
-            </link>
-        </build>
-
-        <!-- Nuklear -->
-        <build_simple module="nuklear"/>
-
         <!-- OpenGL -->
         <build_simple module="opengl"/>
 
         <!-- OpenGL ES -->
         <build_simple module="opengles"/>
 
-        <!-- OpenVR -->
-        <build_simple module="openvr"/>
-
-        <!-- ParShapes -->
-        <build_simple module="par"/>
-
-        <!-- Remotery -->
-        <build module="remotery" simple="true" if:true="${binding.remotery}">
-            <link>
-                <arg line="-framework Foundation"/>
-            </link>
-        </build>
-
-        <!-- rpmalloc -->
-        <build_simple module="rpmalloc"/>
-
-        <!-- SSE -->
-        <build_simple module="sse"/>
-
         <!-- stb -->
         <build_simple module="stb"/>
-
-        <!-- tinyexr -->
-        <build module="tinyexr" simple="true" linker="clang++" if:true="${binding.tinyexr}">
-            <beforeCompile>
-                <compile lang="c++">
-                    <arg value="-I${src.main.rel}"/>
-                    <fileset dir="." includes="${src.main}/*.cc"/>
-                </compile>
-            </beforeCompile>
-        </build>
-
-        <!-- tiny file dialogs -->
-        <build module="tinyfd" simple="true" if:true="${binding.tinyfd}">
-            <beforeCompile>
-                <compile>
-                    <arg value="-I${src.main.rel}"/>
-                    <fileset dir="." includes="${src.main}/*.c"/>
-                </compile>
-            </beforeCompile>
-        </build>
-
-        <!-- AMD Tootle -->
-        <build module="tootle" lang="c++" if:true="${binding.tootle}">
-            <beforeCompile>
-                <compile flags="-D_SOFTWARE_ONLY_VERSION -D_LINUX">
-                    <arg value="-I${src.main.rel}"/>
-                    <fileset dir="." includes="${src.main}/*.c"/>
-                </compile>
-                <compile lang="c++" flags="-D_SOFTWARE_ONLY_VERSION -D_LINUX">
-                    <arg value="-I${src.main.rel}"/>
-                    <arg value="-I${src.main.rel}/include"/>
-                    <arg value="-I${src.main.rel}/RayTracer"/>
-                    <arg value="-I${src.main.rel}/RayTracer/JRT"/>
-                    <arg value="-I${src.main.rel}/RayTracer/Math"/>
-                    <fileset dir=".">
-                        <include name="${src.main}/*.cpp"/>
-                        <exclude name="${src.main}/d3d*.cpp"/>
-                        <exclude name="${src.main}/gdi*.cpp"/>
-                    </fileset>
-                    <fileset dir="." includes="${src.main}/RayTracer/*.cpp"/>
-                    <fileset dir="." includes="${src.main}/RayTracer/JRT/*.cpp"/>
-                    <fileset dir="." includes="${src.main}/RayTracer/Math/*.cpp"/>
-                </compile>
-            </beforeCompile>
-            <source>
-                <arg value="-D_LINUX"/>
-                <arg value="-I${src.main.rel}/include"/>
-                <fileset dir="." includes="${src.generated}/*.cpp"/>
-            </source>
-        </build>
-
-        <!-- xxHash -->
-        <build_simple module="xxhash"/>
-
-        <!-- yoga -->
-        <build module="yoga" simple="true" linker="clang++" if:true="${binding.yoga}">
-            <beforeCompile>
-                <compile lang="c++">
-                    <arg value="-I${src.main.rel}"/>
-                    <fileset dir="." includes="${src.main}/*.cpp"/>
-                </compile>
-            </beforeCompile>
-        </build>
-
-        <!-- zstd -->
-        <build module="zstd" simple="true" if:true="${binding.zstd}">
-            <beforeCompile>
-                <compile flags="-DZSTD_MULTITHREAD">
-                    <arg value="-I${src.main.rel}"/>
-                    <arg value="-I${src.main.rel}/common"/>
-                    <arg value="-I${src.main.rel}/compress"/>
-                    <arg value="-I${src.main.rel}/decompress"/>
-                    <arg value="-I${src.main.rel}/dictBuilder"/>
-                    <arg value="-I${module.lwjgl.rel}/xxhash/src/main/c"/>
-                    <fileset dir="." includes="${src.main}/common/*.c"/>
-                    <fileset dir="." includes="${src.main}/compress/*.c"/>
-                    <fileset dir="." includes="${src.main}/decompress/*.c"/>
-                    <fileset dir="." includes="${src.main}/dictBuilder/*.c"/>
-                    <fileset dir="." includes="${module.lwjgl}/xxhash/src/main/c/*.c"/>
-                </compile>
-            </beforeCompile>
-            <source>
-                <arg value="-I${src.main.rel}/common"/>
-                <arg value="-I${src.main.rel}/dictBuilder"/>
-            </source>
-        </build>
 
         </parallel>
 
@@ -348,12 +199,8 @@
 
             <parallel threadsPerProcessor="4" failonany="true">
 
-            <update-dependency name="Assimp" artifact="x64/libassimp.dylib" dest="${lib}" if:true="${binding.assimp}"/>
-            <update-dependency name="bgfx" artifact="x64/libbgfx.dylib" dest="${lib}" if:true="${binding.bgfx}"/>
-            <update-dependency name="jemalloc" artifact="x64/libjemalloc.dylib" dest="${lib}" if:true="${binding.jemalloc}"/>
             <update-dependency name="GLFW" artifact="x64/libglfw.dylib" dest="${lib}" if:true="${binding.glfw}"/>
             <update-dependency name="OpenAL32" artifact="x64/libopenal.dylib" dest="${lib}" if:true="${binding.openal}"/>
-            <update-dependency name="OpenVR" artifact="x64/libopenvr_api.dylib" dest="${lib}" if:true="${binding.openvr}"/>
 
             </parallel>
 

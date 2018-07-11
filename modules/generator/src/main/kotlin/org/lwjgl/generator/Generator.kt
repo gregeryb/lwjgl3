@@ -45,36 +45,14 @@ enum class Module(
     CORE_MACOS("core.macos", "org.lwjgl.system.macosx"),
     CORE_WINDOWS("core.windows", "org.lwjgl.system.windows"),
 
-    ASSIMP("binding.assimp", "org.lwjgl.assimp"),
-    BGFX("binding.bgfx", "org.lwjgl.bgfx"),
     EGL("binding.egl", "org.lwjgl.egl"),
     GLFW("binding.glfw", "org.lwjgl.glfw"),
-    JAWT("binding.jawt", "org.lwjgl.system.jawt"),
-    JEMALLOC("binding.jemalloc", "org.lwjgl.system.jemalloc"),
-    LMDB("binding.lmdb", "org.lwjgl.util.lmdb"),
-    LZ4("binding.lz4", "org.lwjgl.util.lz4", arrayOverloads = false),
-    NANOVG("binding.nanovg", "org.lwjgl.nanovg"),
-    NFD("binding.nfd", "org.lwjgl.util.nfd"),
-    NUKLEAR("binding.nuklear", "org.lwjgl.nuklear"),
-    ODBC("binding.odbc", "org.lwjgl.odbc", arrayOverloads = false),
     OPENAL("binding.openal", "org.lwjgl.openal"),
     OPENCL("binding.opencl", "org.lwjgl.opencl"),
     OPENGL("binding.opengl", "org.lwjgl.opengl"),
     OPENGLES("binding.opengles", "org.lwjgl.opengles"),
-    OPENVR("binding.openvr", "org.lwjgl.openvr", arrayOverloads = false),
-    OVR("binding.ovr", "org.lwjgl.ovr"),
-    PAR("binding.par", "org.lwjgl.util.par"),
-    REMOTERY("binding.remotery", "org.lwjgl.util.remotery", arrayOverloads = false),
-    RPMALLOC("binding.rpmalloc", "org.lwjgl.system.rpmalloc", arrayOverloads = false),
-    SSE("binding.sse", "org.lwjgl.util.simd"),
     STB("binding.stb", "org.lwjgl.stb"),
-    TINYEXR("binding.tinyexr", "org.lwjgl.util.tinyexr", arrayOverloads = false),
-    TINYFD("binding.tinyfd", "org.lwjgl.util.tinyfd"),
-    TOOTLE("binding.tootle", "org.lwjgl.util.tootle", arrayOverloads = false),
-    VULKAN("binding.vulkan", "org.lwjgl.vulkan"),
-    XXHASH("binding.xxhash", "org.lwjgl.util.xxhash"),
-    YOGA("binding.yoga", "org.lwjgl.util.yoga", arrayOverloads = false),
-    ZSTD("binding.zstd", "org.lwjgl.util.zstd", arrayOverloads = false);
+    VULKAN("binding.vulkan", "org.lwjgl.vulkan");
 
     companion object {
         internal val CHECKS = !System.getProperty("binding.DISABLE_CHECKS", "false").toBoolean()
